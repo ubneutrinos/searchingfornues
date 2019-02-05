@@ -6,9 +6,9 @@ NuSelection: {
     PFPproducer: "pandora"
     SHRproducer: "pandora"
     TRKproducer: "pandora"
+    MCTproducer: "generator"
     SelectionTool: {
-        tool_type: "SelectionExample"
-        multiplicity: 3
+        tool_type: "ShowerSelection"
         }
 }
 
@@ -45,6 +45,7 @@ outputs:
          module_type: RootOutput
          fileName:    "neutrinoselection.root"    #default file name, can override from command line with -o or --output
          fastCloning: false
+         dataTier: "ana"
     } 
 }
 

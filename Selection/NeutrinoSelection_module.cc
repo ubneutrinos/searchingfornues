@@ -20,11 +20,18 @@
 #include "lardataobj/RecoBase/PFParticle.h"
 #include "lardataobj/RecoBase/Shower.h"
 #include "lardataobj/RecoBase/Track.h"
+#include "nusimdata/SimulationBase/MCTruth.h"
+#include "lardataobj/MCBase/MCShower.h"
 #include "lardataobj/RecoBase/PFParticleMetadata.h"
 #include "lardata/Utilities/FindManyInChainP.h"
 
 // selection tool
 #include "SelectionTools/SelectionToolBase.h"
+
+// saving output
+#include "art/Framework/Services/Optional/TFileService.h"
+#include "TTree.h"
+#include "TVector3.h"
 
 class NeutrinoSelection;
 
@@ -53,7 +60,19 @@ private:
   art::InputTag fPFPproducer;
   art::InputTag fSHRproducer;
   art::InputTag fTRKproducer;
+  art::InputTag fMCTproducer;
   bool fVerbose;
+
+  // TTree
+  TTree* _tree;
+  int   _run, _sub, _evt;       // event info
+  float _nu_e;                  // neutrino energy [GeV]
+  float _vtx_x, _vtx_y, _vtx_z; // neutrino interaction vertex coordinates [cm]
+  int   _nu_pdg;                // neutrino PDG code
+  int   _ccnc;                  // CC or NC tag from GENIE
+  float _lep_e;                 // lepton energy (if one exists) [GeV]
+  int  _pass;                   // does the slice pass the selection
+  
 
   // a map linking the PFP Self() attribute used for hierarchy building to the PFP index in the event record
   std::map<unsigned int, unsigned int> _pfpmap;
@@ -87,6 +106,16 @@ private:
 		    const art::ValidHandle<std::vector<recob::PFParticle> >& pfp_h,
 		    std::vector<art::Ptr<recob::PFParticle> > &slice_v);
 
+  /**
+   * @brief Save truth info for event associated to neutrino
+   */
+  void SaveTruth(art::Event const& e);
+
+  /**
+   * @brief reset ttree
+   */
+  void ResetTTree();
+
 };
 
 
@@ -98,80 +127,113 @@ NeutrinoSelection::NeutrinoSelection(fhicl::ParameterSet const& p)
   fPFPproducer = p.get< art::InputTag > ("PFPproducer");
   fSHRproducer = p.get< art::InputTag > ("SHRproducer");
   fTRKproducer = p.get< art::InputTag > ("TRKproducer");
+  fMCTproducer = p.get< art::InputTag > ("MCTproducer");
   fVerbose     = p.get< bool >          ("Verbose");
+
+  art::ServiceHandle<art::TFileService> tfs;
+  _tree = tfs->make<TTree>("NeutrinoSelection", "Neutrino Selection TTree");
+  _tree->Branch("_nu_e"  ,&_nu_e  ,"nu_e/F"  );
+  _tree->Branch("_vtx_x" ,&_vtx_x ,"vtx_x/F" );
+  _tree->Branch("_vtx_y" ,&_vtx_y ,"vtx_y/F" );
+  _tree->Branch("_vtx_z" ,&_vtx_z ,"vtx_z/F" );
+  _tree->Branch("_nu_pdg",&_nu_pdg,"nu_pdg/I");
+  _tree->Branch("_ccnc"  ,&_ccnc  ,"ccnc/I"  );
+  _tree->Branch("_lep_e" ,&_lep_e ,"lep_e/F" );
+  _tree->Branch("_pass"  ,&_pass  ,"pass/I"  );
+  _tree->Branch("_run"   ,&_run   ,"run/I"   );
+  _tree->Branch("_sub"   ,&_sub   ,"sub/I"   );
+  _tree->Branch("_evt"   ,&_evt   ,"evt/I"   );
+
 
   // configure and construct Selection Tool
   const fhicl::ParameterSet& selection_pset = p.get<fhicl::ParameterSet>("SelectionTool");  
   _selectionTool = art::make_tool<::selection::SelectionToolBase>(selection_pset);
 
+  // pass the TTree to the selection tool so that any branch can be added to it
+  _selectionTool->setBranches(_tree);
+  
 }
 
 void NeutrinoSelection::analyze(art::Event const& e)
 {
 
-  if (fVerbose) { std::cout << "new event : [run,event] : [" << e.run() << ", " << e.event() << "]" << std::endl; }
-    
-    // grab PFParticles in event
-    auto const& pfp_h = e.getValidHandle<std::vector<recob::PFParticle> >(fPFPproducer);
-
-    // build PFParticle map  for this event
-    BuildPFPMap(pfp_h);
+  ResetTTree();
   
-    // grab tracks associated with PFParticles
-    art::FindManyP<recob::Track>  pfp_track_assn_v (pfp_h, e, fTRKproducer);
-    // grab showers associated with PFParticles
-    art::FindManyP<recob::Shower> pfp_shower_assn_v(pfp_h, e, fSHRproducer);
-    // grab associated metadata
-    art::FindManyP< larpandoraobj::PFParticleMetadata > pfPartToMetadataAssoc(pfp_h, e, fPFPproducer);
+  _evt = e.event();
+  _sub = e.subRun();
+  _run = e.run();
+  
+  // SaveTruth
+  SaveTruth(e);
 
-    // loop through PFParticles
-    for (size_t p=0; p < pfp_h->size(); p++) {
-      
-      const art::Ptr<recob::PFParticle> pfp_ptr(pfp_h, p );
-      
-      // get metadata for this PFP
-      const std::vector< art::Ptr<larpandoraobj::PFParticleMetadata> > &pfParticleMetadataList(pfPartToMetadataAssoc.at(p));
-      
-      //  find neutrino candidate
-      if (pfp_ptr->IsPrimary() == false) continue;
-      
-      auto PDG = fabs(pfp_ptr->PdgCode());
-      if ( (PDG == 12) || (PDG == 14) ) {
-	
-	if (fVerbose) printPFParticleMetadata(pfp_ptr,pfParticleMetadataList);
-
-	// collect PFParticle hierarchy originating from this neutrino candidate
-	std::vector<art::Ptr<recob::PFParticle> > slice_pfp_v;
-	AddDaughters(pfp_ptr, pfp_h, slice_pfp_v);
-	if (fVerbose) { std::cout << "This slice has " << slice_pfp_v.size() << " daughter PFParticles" << std::endl; }
-
-	// create list of tracks and showers associated to this slice
-	std::vector<art::Ptr<recob::Track>  > sliceTracks;
-	std::vector<art::Ptr<recob::Shower> > sliceShowers;
-	
-	for (size_t pfpidx = 0; pfpidx < slice_pfp_v.size(); pfpidx++) {
-	  auto pfpkey = slice_pfp_v.at(pfpidx).key();
-	  // if there is a track associated to the PFParticle, add it
-	  auto const& ass_trk_v = pfp_track_assn_v.at( pfpkey );
-	  if (ass_trk_v.size() == 1) sliceTracks.push_back( ass_trk_v.at(0) );
-	  // if there is a shower associated to the PFParticle, add it
-	  auto const& ass_shr_v = pfp_shower_assn_v.at( pfpkey );
-	  if (ass_shr_v.size() == 1) sliceShowers.push_back( ass_shr_v.at(0) );
-	}// for all PFParticles in the slice
-
-	// check that # of PFP and # trk + shr matches
-	if ( (slice_pfp_v.size()-1) != (sliceTracks.size() + sliceShowers.size()) )
-	  std::cout << "ERROR : there are "  << slice_pfp_v.size() << " PFP but " << sliceTracks.size() << " + " << sliceShowers.size() << " tracks + showers" << std::endl;
-	
-	// run selection on this slice
-	bool selected = _selectionTool->selectEvent(e, sliceTracks, sliceShowers);
-	if (fVerbose && selected) { std::cout << "SLICE was selected!" << std::endl; }
-	
-      }// if a neutrino PFParticle
-      
-    }// for all PFParticles
+  
+  if (fVerbose) { std::cout << "new event : [run,event] : [" << e.run() << ", " << e.event() << "]" << std::endl; }
+  
+  // grab PFParticles in event
+  auto const& pfp_h = e.getValidHandle<std::vector<recob::PFParticle> >(fPFPproducer);
+  
+  // build PFParticle map  for this event
+  BuildPFPMap(pfp_h);
+  
+  // grab tracks associated with PFParticles
+  art::FindManyP<recob::Track>  pfp_track_assn_v (pfp_h, e, fTRKproducer);
+  // grab showers associated with PFParticles
+  art::FindManyP<recob::Shower> pfp_shower_assn_v(pfp_h, e, fSHRproducer);
+  // grab associated metadata
+  art::FindManyP< larpandoraobj::PFParticleMetadata > pfPartToMetadataAssoc(pfp_h, e, fPFPproducer);
+  
+  // loop through PFParticles
+  for (size_t p=0; p < pfp_h->size(); p++) {
     
-    return;
+    const art::Ptr<recob::PFParticle> pfp_ptr(pfp_h, p );
+    
+    // get metadata for this PFP
+    const std::vector< art::Ptr<larpandoraobj::PFParticleMetadata> > &pfParticleMetadataList(pfPartToMetadataAssoc.at(p));
+    
+    //  find neutrino candidate
+    if (pfp_ptr->IsPrimary() == false) continue;
+    
+    auto PDG = fabs(pfp_ptr->PdgCode());
+    if ( (PDG == 12) || (PDG == 14) ) {
+      
+      if (fVerbose) printPFParticleMetadata(pfp_ptr,pfParticleMetadataList);
+      
+      // collect PFParticle hierarchy originating from this neutrino candidate
+      std::vector<art::Ptr<recob::PFParticle> > slice_pfp_v;
+      AddDaughters(pfp_ptr, pfp_h, slice_pfp_v);
+      if (fVerbose) { std::cout << "This slice has " << slice_pfp_v.size() << " daughter PFParticles" << std::endl; }
+      
+      // create list of tracks and showers associated to this slice
+      std::vector<art::Ptr<recob::Track>  > sliceTracks;
+      std::vector<art::Ptr<recob::Shower> > sliceShowers;
+      
+      for (size_t pfpidx = 0; pfpidx < slice_pfp_v.size(); pfpidx++) {
+	auto pfpkey = slice_pfp_v.at(pfpidx).key();
+	// if there is a track associated to the PFParticle, add it
+	auto const& ass_trk_v = pfp_track_assn_v.at( pfpkey );
+	if (ass_trk_v.size() == 1) sliceTracks.push_back( ass_trk_v.at(0) );
+	// if there is a shower associated to the PFParticle, add it
+	auto const& ass_shr_v = pfp_shower_assn_v.at( pfpkey );
+	if (ass_shr_v.size() == 1) sliceShowers.push_back( ass_shr_v.at(0) );
+      }// for all PFParticles in the slice
+      
+      // check that # of PFP and # trk + shr matches
+      if ( (slice_pfp_v.size()-1) != (sliceTracks.size() + sliceShowers.size()) )
+	std::cout << "ERROR : there are "  << slice_pfp_v.size() << " PFP but " << sliceTracks.size() << " + " << sliceShowers.size() << " tracks + showers" << std::endl;
+      
+      // run selection on this slice
+      bool selected = _selectionTool->selectEvent(e, sliceTracks, sliceShowers);
+      if (fVerbose && selected) { std::cout << "SLICE was selected!" << std::endl; }
+      
+      if (selected) { _pass = 1; }
+      
+      _tree->Fill();
+
+    }// if a neutrino PFParticle
+    
+  }// for all PFParticles
+  
+  return;
 }
 
 void NeutrinoSelection::beginJob()
@@ -239,6 +301,42 @@ void NeutrinoSelection::AddDaughters(const art::Ptr<recob::PFParticle>& pfp_ptr,
   
   return;
 }// AddDaughters
+
+void NeutrinoSelection::ResetTTree() {
+
+  _run     = std::numeric_limits<int>::min();
+  _sub     = std::numeric_limits<int>::min();
+  _evt     = std::numeric_limits<int>::min();
+  _nu_e    = std::numeric_limits<float>::min();
+  _nu_pdg  = std::numeric_limits<int>::min();
+  _ccnc    = std::numeric_limits<int>::min();
+  _pass    = 0;
+  _vtx_x   = std::numeric_limits<float>::min();
+  _vtx_y   = std::numeric_limits<float>::min();
+  _vtx_z   = std::numeric_limits<float>::min();
+
+  _selectionTool->resetTTree(_tree);
+
+}
+
+void NeutrinoSelection::SaveTruth(art::Event const& e) {
+
+  // load MCTruth
+  auto const& mct_h = e.getValidHandle<std::vector<simb::MCTruth> >(fMCTproducer);
+
+  auto mct      = mct_h->at(0);
+  auto neutrino = mct.GetNeutrino();
+  auto nu       = neutrino.Nu();
+
+  _ccnc = neutrino.CCNC();
+  _nu_pdg = nu.PdgCode();
+  _nu_e  = nu.Trajectory().E(0);
+  _vtx_x = nu.EndX();
+  _vtx_y = nu.EndY();
+  _vtx_z = nu.EndZ();
+  
+  return;
+}
 
 
 DEFINE_ART_MODULE(NeutrinoSelection)

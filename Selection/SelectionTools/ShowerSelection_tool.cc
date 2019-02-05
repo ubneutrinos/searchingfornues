@@ -8,8 +8,8 @@ namespace selection
 {
     ////////////////////////////////////////////////////////////////////////
     //
-    // Class:       SelectionExample
-    // File:        SelectionExample.cc
+    // Class:       ShowerSelection
+    // File:        ShowerSelection.cc
     //
     //              A basic selection example
     //
@@ -21,7 +21,7 @@ namespace selection
     //
     ////////////////////////////////////////////////////////////////////////
     
-  class SelectionExample : public SelectionToolBase {
+  class ShowerSelection : public SelectionToolBase {
 
   public:
 
@@ -30,12 +30,12 @@ namespace selection
      *
      *  @param  pset
      */
-    SelectionExample(const fhicl::ParameterSet& pset);
+    ShowerSelection(const fhicl::ParameterSet& pset);
     
     /**
      *  @brief  Destructor
      */
-    ~SelectionExample(){};
+    ~ShowerSelection(){};
     
     // provide for initialization
     void configure(fhicl::ParameterSet const & pset);
@@ -50,17 +50,18 @@ namespace selection
     /**
      * @brief set branches for TTree
      */
-    void setBranches(TTree* _tree){};
+    void setBranches(TTree* _tree);
 
     /**
      * @brief reset ttree branches
      */
-    void resetTTree(TTree* _tree){};
+    void resetTTree(TTree* _tree);
     
   private:
 
-    // multiplicity requirement on slice
-    unsigned int _multiplicity;
+    // TTree variables
+    int _nshower;
+    int _ntrack;
     
   };
   
@@ -71,9 +72,8 @@ namespace selection
   ///
   /// pset - Fcl parameters.
   ///
-  SelectionExample::SelectionExample(const fhicl::ParameterSet& pset)
+  ShowerSelection::ShowerSelection(const fhicl::ParameterSet& pset)
   {
-    _multiplicity = 0;
     configure(pset);
   }
   
@@ -84,31 +84,50 @@ namespace selection
   ///
   /// pset - Fcl parameter set.
   ///
-  void SelectionExample::configure(fhicl::ParameterSet const & pset)
-  {
-    _multiplicity = pset.get<unsigned int>("multiplicity");
-  }
+  void ShowerSelection::configure(fhicl::ParameterSet const & pset)
+  {}
   
   //----------------------------------------------------------------------------
-  /// Reconfigure method.
+  /// selectEvent
   ///
   /// Arguments:
   ///
-  /// pset - Fcl parameter set.
+  /// art::Event
+  /// slice track pointer vector
+  /// slice shower pointer vector
   ///
-  bool SelectionExample::selectEvent(art::Event const& e,
+  bool ShowerSelection::selectEvent(art::Event const& e,
 				     const std::vector<art::Ptr<recob::Track>  >& trkptr_v,
 				     const std::vector<art::Ptr<recob::Shower> >& shrptr_v)
   {
     
-    if ( (trkptr_v.size() + shrptr_v.size()) >= _multiplicity )
+    _nshower = shrptr_v.size();
+    _ntrack  = trkptr_v.size();
+
+    if ( _nshower >= 1)
       return true;
     
     return false;
   }
+
+  void ShowerSelection::setBranches(TTree* _tree) {
+
+    _tree->Branch("_nshower",&_nshower,"nshower/I");
+    _tree->Branch("_ntrack" ,&_ntrack ,"ntrack/I" );
+
+    return;
+  }
+
+  void ShowerSelection::resetTTree(TTree* _tree) {
+
+    _nshower = std::numeric_limits<int>::min();
+    _ntrack  = std::numeric_limits<int>::min();
+
+    return;
+  }
   
   
-  DEFINE_ART_CLASS_TOOL(SelectionExample)
+  DEFINE_ART_CLASS_TOOL(ShowerSelection)
 } // namespace selection
 
 #endif

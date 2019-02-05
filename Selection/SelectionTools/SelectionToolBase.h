@@ -26,6 +26,9 @@
 #include "lardataobj/RecoBase/Shower.h"
 #include "lardataobj/RecoBase/Track.h"
 
+#include "TTree.h"
+#include <limits>
+
 namespace selection {
 
 class SelectionToolBase {
@@ -52,6 +55,17 @@ public:
     virtual bool selectEvent(art::Event const& e,
 			     const std::vector<art::Ptr<recob::Track>  >& trkptr_v,
 			     const std::vector<art::Ptr<recob::Shower> >& shrptr_v) = 0;
+
+    /**
+     * @brief set branches for TTree
+     */
+    virtual void setBranches(TTree* _tree) = 0;
+
+    
+    /**
+     * @brief resetset TTree branches
+     */
+    virtual void resetTTree(TTree* _tree) = 0;
 
 };
 
