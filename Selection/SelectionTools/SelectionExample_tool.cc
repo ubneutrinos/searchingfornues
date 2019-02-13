@@ -2,7 +2,7 @@
 #define SELECTION_SELECTIONEXAMPLE_CXX
 
 #include <iostream>
-#include "ubana/searchingfornues/Selection/SelectionTools/SelectionToolBase.h"
+#include "SelectionToolBase.h"
 
 namespace selection
 {
