@@ -3,6 +3,7 @@
 NuSelection: {
     module_type: NeutrinoSelection
     Verbose: true
+    IsData: false
     PFPproducer: "pandora"
     SHRproducer: "pandora"
     TRKproducer: "pandora"

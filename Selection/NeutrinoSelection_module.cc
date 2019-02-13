@@ -24,6 +24,7 @@
 #include "lardataobj/MCBase/MCShower.h"
 #include "lardataobj/RecoBase/PFParticleMetadata.h"
 #include "lardata/Utilities/FindManyInChainP.h"
+#include "larcoreobj/SummaryData/POTSummary.h"
 
 // selection tool
 #include "SelectionTools/SelectionToolBase.h"
@@ -52,8 +53,7 @@ public:
   void analyze(art::Event const& e) override;
 
   // Selected optional functions.
-  void beginJob() override;
-  void endJob() override;
+  void endSubRun(art::SubRun &subrun);
 
 private:
 
@@ -62,6 +62,7 @@ private:
   art::InputTag fTRKproducer;
   art::InputTag fMCTproducer;
   bool fVerbose;
+  bool fData;
 
   // TTree
   TTree* _tree;
@@ -72,6 +73,11 @@ private:
   int   _ccnc;                  // CC or NC tag from GENIE
   float _lep_e;                 // lepton energy (if one exists) [GeV]
   int  _pass;                   // does the slice pass the selection
+
+  TTree* _subrun_tree;
+  int _run_sr;                  // The run number
+  int _sub_sr;                  // The subRun number
+  float _pot;                   // The total amount of POT for the current sub run
   
 
   // a map linking the PFP Self() attribute used for hierarchy building to the PFP index in the event record
@@ -129,6 +135,7 @@ NeutrinoSelection::NeutrinoSelection(fhicl::ParameterSet const& p)
   fTRKproducer = p.get< art::InputTag > ("TRKproducer");
   fMCTproducer = p.get< art::InputTag > ("MCTproducer");
   fVerbose     = p.get< bool >          ("Verbose");
+  fData     = p.get< bool >          ("IsData");
 
   art::ServiceHandle<art::TFileService> tfs;
   _tree = tfs->make<TTree>("NeutrinoSelection", "Neutrino Selection TTree");
@@ -143,6 +150,12 @@ NeutrinoSelection::NeutrinoSelection(fhicl::ParameterSet const& p)
   _tree->Branch("_run"   ,&_run   ,"run/I"   );
   _tree->Branch("_sub"   ,&_sub   ,"sub/I"   );
   _tree->Branch("_evt"   ,&_evt   ,"evt/I"   );
+
+  _subrun_tree = tfs->make<TTree>("SubRun", "SubRun TTree");
+  _subrun_tree->Branch("run"   , &_run_sr   , "run/I");
+  _subrun_tree->Branch("subRun", &_sub_sr   , "subRun/I");
+  if (!fData)
+        _subrun_tree->Branch("pot", &_pot, "pot/F");
 
 
   // configure and construct Selection Tool
@@ -236,16 +249,6 @@ void NeutrinoSelection::analyze(art::Event const& e)
   return;
 }
 
-void NeutrinoSelection::beginJob()
-{
-  // Implementation of optional member function here.
-}
-
-void NeutrinoSelection::endJob()
-{
-  // Implementation of optional member function here.
-}
-
 void NeutrinoSelection::printPFParticleMetadata(const art::Ptr<recob::PFParticle>& pfp_ptr,
 						const std::vector< art::Ptr<larpandoraobj::PFParticleMetadata> > &pfParticleMetadataList) {
   
@@ -336,6 +339,20 @@ void NeutrinoSelection::SaveTruth(art::Event const& e) {
   _vtx_z = nu.EndZ();
   
   return;
+}
+
+void NeutrinoSelection::endSubRun(art::SubRun &subrun)
+{
+    if (!fData)
+    {
+        art::Handle<sumdata::POTSummary> potSummaryHandle;
+        _pot = subrun.getByLabel(fMCTproducer, potSummaryHandle) ? static_cast<float>(potSummaryHandle->totpot) : 0.f;
+        std::cout << "[LArPandoraExternalEventBuilding::endSubRun] Storing POT info!" << std::endl;
+    }
+
+    _run_sr = subrun.run();
+    _sub_sr = subrun.subRun();
+    _subrun_tree->Fill();  
 }
 
 
