@@ -44,8 +44,7 @@ namespace selection
      * @brief Selection function
      */
     bool selectEvent(art::Event const& e,
-		     const std::vector<art::Ptr<recob::Track>  >& trkptr_v,
-		     const std::vector<art::Ptr<recob::Shower> >& shrptr_v);
+		     const std::vector<ProxyPfpElem_t>& pfp_pxy_v);
 
     /**
      * @brief set branches for TTree
@@ -97,11 +96,10 @@ namespace selection
   /// pset - Fcl parameter set.
   ///
   bool SelectionExample::selectEvent(art::Event const& e,
-				     const std::vector<art::Ptr<recob::Track>  >& trkptr_v,
-				     const std::vector<art::Ptr<recob::Shower> >& shrptr_v)
+				     const std::vector<ProxyPfpElem_t>& pfp_pxy_v)
   {
     
-    if ( (trkptr_v.size() + shrptr_v.size()) >= _multiplicity )
+    if ( pfp_pxy_v.size() >= _multiplicity )
       return true;
     
     return false;

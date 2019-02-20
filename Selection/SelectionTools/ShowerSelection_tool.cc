@@ -44,8 +44,7 @@ namespace selection
      * @brief Selection function
      */
     bool selectEvent(art::Event const& e,
-		     const std::vector<art::Ptr<recob::Track>  >& trkptr_v,
-		     const std::vector<art::Ptr<recob::Shower> >& shrptr_v);
+		     const std::vector<ProxyPfpElem_t>& pfp_pxy_v);
 
     /**
      * @brief set branches for TTree
@@ -97,12 +96,15 @@ namespace selection
   /// slice shower pointer vector
   ///
   bool ShowerSelection::selectEvent(art::Event const& e,
-				     const std::vector<art::Ptr<recob::Track>  >& trkptr_v,
-				     const std::vector<art::Ptr<recob::Shower> >& shrptr_v)
+				    const std::vector<ProxyPfpElem_t>& pfp_pxy_v)
   {
     
-    _nshower = shrptr_v.size();
-    _ntrack  = trkptr_v.size();
+    _nshower = 0;
+    _ntrack  = 0;
+    for (const auto& pfp_pxy : pfp_pxy_v) {
+      _nshower += pfp_pxy.get<recob::Shower>().size();
+      _ntrack += pfp_pxy.get<recob::Track>().size();
+    }
 
     if ( _nshower >= 1)
       return true;

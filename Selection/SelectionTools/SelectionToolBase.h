@@ -26,10 +26,20 @@
 #include "lardataobj/RecoBase/Shower.h"
 #include "lardataobj/RecoBase/Track.h"
 
+#include "lardataobj/RecoBase/PFParticleMetadata.h"
+#include "lardata/RecoBaseProxy/ProxyBase.h"
+
 #include "TTree.h"
 #include <limits>
 
 namespace selection {
+
+using ProxyPfpColl_t = decltype(proxy::getCollection<std::vector<recob::PFParticle> >(
+					      std::declval<art::Event>(),std::declval<art::InputTag>(),
+                                              proxy::withAssociated<larpandoraobj::PFParticleMetadata>(std::declval<art::InputTag>()),
+                                              proxy::withAssociated<recob::Track>(std::declval<art::InputTag>()),
+                                              proxy::withAssociated<recob::Shower>(std::declval<art::InputTag>())) );
+using ProxyPfpElem_t = ProxyPfpColl_t::element_proxy_t;
 
 class SelectionToolBase {
 
@@ -53,8 +63,7 @@ public:
      * @param art::Event event record for selection
      */
     virtual bool selectEvent(art::Event const& e,
-			     const std::vector<art::Ptr<recob::Track>  >& trkptr_v,
-			     const std::vector<art::Ptr<recob::Shower> >& shrptr_v) = 0;
+			     const std::vector<ProxyPfpElem_t>& pfp_pxy_v) = 0;
 
     /**
      * @brief set branches for TTree
