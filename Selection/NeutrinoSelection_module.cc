@@ -20,12 +20,22 @@
 #include "lardataobj/RecoBase/PFParticle.h"
 #include "lardataobj/RecoBase/Shower.h"
 #include "lardataobj/RecoBase/Track.h"
+#include "lardataobj/RecoBase/Cluster.h"
+#include "lardataobj/RecoBase/Hit.h"
 #include "nusimdata/SimulationBase/MCTruth.h"
 #include "lardataobj/MCBase/MCShower.h"
 #include "lardataobj/RecoBase/PFParticleMetadata.h"
 #include "lardata/Utilities/FindManyInChainP.h"
 #include "larcoreobj/SummaryData/POTSummary.h"
 #include "lardata/RecoBaseProxy/ProxyBase.h"
+
+// backtracking tools
+#include "lardataobj/AnalysisBase/BackTrackerMatchingData.h"
+
+// services for detector properties
+#include "larevt/SpaceChargeServices/SpaceChargeService.h"
+#include "lardata/DetectorInfoServices/DetectorPropertiesService.h"
+#include "lardata/DetectorInfoServices/DetectorClocksService.h"
 
 // selection tool
 #include "SelectionTools/SelectionToolBase.h"
@@ -63,8 +73,11 @@ public:
 private:
 
   art::InputTag fPFPproducer;
-  art::InputTag fSHRproducer;
-  art::InputTag fTRKproducer;
+  art::InputTag fCLSproducer; // cluster associated to PFP
+  art::InputTag fHITproducer; // hit associated to cluster
+  art::InputTag fSHRproducer; // shower associated to PFP
+  art::InputTag fVTXproducer; // vertex associated to PFP
+  art::InputTag fTRKproducer; // track associated to PFP
   art::InputTag fMCTproducer;
   bool fVerbose;
   bool fData;
@@ -74,10 +87,13 @@ private:
   int   _run, _sub, _evt;       // event info
   float _nu_e;                  // neutrino energy [GeV]
   float _vtx_x, _vtx_y, _vtx_z; // neutrino interaction vertex coordinates [cm]
+  float _vtx_t;                 // neutrino generation time 
+  int   _pi0;                   // is there a final-state pi0 from the neutrino? [1=yes 0=no]
   int   _nu_pdg;                // neutrino PDG code
   int   _ccnc;                  // CC or NC tag from GENIE
   float _lep_e;                 // lepton energy (if one exists) [GeV]
   int  _pass;                   // does the slice pass the selection
+  float _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset; // offsets for generation time and SCE
 
   TTree* _subrun_tree;
   int _run_sr;                  // The run number
@@ -123,6 +139,11 @@ private:
   void SaveTruth(art::Event const& e);
 
   /**
+   * @brief shift coordinates for truth particles according to SCE offsets + time offsets
+   */
+  void ApplyDetectorOffsets();
+
+  /**
    * @brief reset ttree
    */
   void ResetTTree();
@@ -137,6 +158,9 @@ NeutrinoSelection::NeutrinoSelection(fhicl::ParameterSet const& p)
   
   fPFPproducer = p.get< art::InputTag > ("PFPproducer");
   fSHRproducer = p.get< art::InputTag > ("SHRproducer");
+  fHITproducer = p.get< art::InputTag > ("HITproducer");
+  fCLSproducer = p.get< art::InputTag > ("CLSproducer");
+  fVTXproducer = p.get< art::InputTag > ("VTXproducer");
   fTRKproducer = p.get< art::InputTag > ("TRKproducer");
   fMCTproducer = p.get< art::InputTag > ("MCTproducer");
   fVerbose     = p.get< bool >          ("Verbose");
@@ -148,6 +172,7 @@ NeutrinoSelection::NeutrinoSelection(fhicl::ParameterSet const& p)
   _tree->Branch("_vtx_x" ,&_vtx_x ,"vtx_x/F" );
   _tree->Branch("_vtx_y" ,&_vtx_y ,"vtx_y/F" );
   _tree->Branch("_vtx_z" ,&_vtx_z ,"vtx_z/F" );
+  _tree->Branch("_pi0"   ,&_pi0   ,"pi0/I"   );
   _tree->Branch("_nu_pdg",&_nu_pdg,"nu_pdg/I");
   _tree->Branch("_ccnc"  ,&_ccnc  ,"ccnc/I"  );
   _tree->Branch("_lep_e" ,&_lep_e ,"lep_e/F" );
@@ -155,6 +180,10 @@ NeutrinoSelection::NeutrinoSelection(fhicl::ParameterSet const& p)
   _tree->Branch("_run"   ,&_run   ,"run/I"   );
   _tree->Branch("_sub"   ,&_sub   ,"sub/I"   );
   _tree->Branch("_evt"   ,&_evt   ,"evt/I"   );
+  _tree->Branch("_xtimeoffset",&_xtimeoffset,"xtimeoffset/F");
+  _tree->Branch("_xsceoffset" ,&_xsceoffset ,"xsceoffset/F" );
+  _tree->Branch("_ysceoffset" ,&_ysceoffset ,"ysceoffset/F" );
+  _tree->Branch("_zsceoffset" ,&_zsceoffset ,"zsceoffset/F" );
 
   _subrun_tree = tfs->make<TTree>("SubRun", "SubRun TTree");
   _subrun_tree->Branch("run"   , &_run_sr   , "run/I");
@@ -189,17 +218,21 @@ void NeutrinoSelection::analyze(art::Event const& e)
   
   // grab PFParticles in event
   ProxyPfpColl_t const& pfp_proxy = proxy::getCollection<std::vector<recob::PFParticle> >(e,fPFPproducer,
-								       proxy::withAssociated<larpandoraobj::PFParticleMetadata>(fPFPproducer),
-								       proxy::withAssociated<recob::Track>(fTRKproducer),
-								       proxy::withAssociated<recob::Shower>(fSHRproducer));
-
+											  proxy::withAssociated<larpandoraobj::PFParticleMetadata>(fPFPproducer),
+											  proxy::withAssociated<recob::Cluster>(fCLSproducer),
+											  proxy::withAssociated<recob::Track>(fTRKproducer),
+											  proxy::withAssociated<recob::Vertex>(fVTXproducer),
+											  proxy::withAssociated<recob::Shower>(fSHRproducer));
+  
+  
   // build PFParticle map  for this event
   BuildPFPMap(pfp_proxy);
+
   
   // loop through PFParticles
   size_t p=0;
   for (const ProxyPfpElem_t& pfp_pxy : pfp_proxy) {
-    
+
     // get metadata for this PFP
     const auto& pfParticleMetadataList = pfp_pxy.get<larpandoraobj::PFParticleMetadata>();
     
@@ -343,9 +376,37 @@ void NeutrinoSelection::SaveTruth(art::Event const& e) {
   _vtx_x = nu.EndX();
   _vtx_y = nu.EndY();
   _vtx_z = nu.EndZ();
+  _vtx_t = nu.T();
+  _pi0 = 0;
+
+  size_t npart = mct.NParticles();
+  for (size_t i=0; i < npart; i++){
+    auto const& part = mct.GetParticle(i);
+    if ( (part.PdgCode() == 111) and (part.StatusCode() == 1) )
+      _pi0 = 1;
+  }// for all MCParticles
+
+  ApplyDetectorOffsets();
   
   return;
 }
+
+// calculate offsets for truth neutrino vertex
+void NeutrinoSelection::ApplyDetectorOffsets() {
+
+  auto const& detProperties = lar::providerFrom<detinfo::DetectorPropertiesService>(); 
+  auto const& detClocks = lar::providerFrom<detinfo::DetectorClocksService>();
+  double g4Ticks = detClocks->TPCG4Time2Tick(_vtx_t) + detProperties->GetXTicksOffset(0, 0, 0) - detProperties->TriggerOffset();
+  _xtimeoffset = detProperties->ConvertTicksToX(g4Ticks, 0, 0, 0);
+
+  auto const *SCE = lar::providerFrom<spacecharge::SpaceChargeService>();
+  auto offset = SCE->GetPosOffsets(geo::Point_t(_vtx_x,_vtx_y,_vtx_z));
+  _xsceoffset = offset.X();
+  _ysceoffset = offset.Y();
+  _zsceoffset = offset.Z();
+
+}// apply SCE corrections + time-shifts
+
 
 void NeutrinoSelection::endSubRun(art::SubRun &subrun)
 {
