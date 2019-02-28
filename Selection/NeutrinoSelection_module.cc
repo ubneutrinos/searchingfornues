@@ -114,6 +114,7 @@ private:
 
   // reco PFParticle backtracking. One entry for PFParticle in the slice
   std::vector<int>   _backtracked_idx;    // index of PFP [key]
+  std::vector<int>   _backtracked_tid;    // TrackID of backtracked MCParticle
   std::vector<int>   _backtracked_pdg;    // PDG code of backtracked particle
   std::vector<float> _backtracked_e;      // energy of backtracked particle
   std::vector<float> _backtracked_purity; // purity of backtracking
@@ -263,6 +264,7 @@ NeutrinoSelection::NeutrinoSelection(fhicl::ParameterSet const& p)
 
   // PFParticle backtracking
   _tree->Branch("_backtracked_idx"   ,"std::vector<int>"  ,&_backtracked_idx   );
+  _tree->Branch("_backtracked_tid"   ,"std::vector<int>"  ,&_backtracked_tid   );
   _tree->Branch("_backtracked_pdg"   ,"std::vector<int>"  ,&_backtracked_pdg   );
   _tree->Branch("_backtracked_e"     ,"std::vector<float>",&_backtracked_e     );
   _tree->Branch("_backtracked_purity","std::vector<float>",&_backtracked_purity);
@@ -272,6 +274,7 @@ NeutrinoSelection::NeutrinoSelection(fhicl::ParameterSet const& p)
   _tree->Branch("_run"   ,&_run   ,"run/I"   );
   _tree->Branch("_sub"   ,&_sub   ,"sub/I"   );
   _tree->Branch("_evt"   ,&_evt   ,"evt/I"   );
+
   _tree->Branch("_xtimeoffset",&_xtimeoffset,"xtimeoffset/F");
   _tree->Branch("_xsceoffset" ,&_xsceoffset ,"xsceoffset/F" );
   _tree->Branch("_ysceoffset" ,&_ysceoffset ,"ysceoffset/F" );
@@ -370,13 +373,20 @@ void NeutrinoSelection::analyze(art::Event const& e)
 	    float purity, completeness;
 	    auto mcp = getAssocMCParticle(e, hit_v, purity, completeness);
 	    if (mcp){
+	      auto PDG = mcp->PdgCode();
 	      _backtracked_idx.push_back(0);
+	      _backtracked_tid.push_back(mcp->TrackId());
 	      _backtracked_e.push_back(mcp->Momentum().E());
-	      _backtracked_pdg.push_back(mcp->PdgCode());
+	      _backtracked_pdg.push_back(PDG);
 	      _backtracked_purity.push_back(purity);
+	      // if this is n interesting particle, save it to the TTree
+	      if (fabs(PDG) == 13) {
+		_muon_p = purity;
+	      }
 	    }
 	    else{
 	      _backtracked_idx.push_back(0);
+	      _backtracked_tid.push_back(0);
 	      _backtracked_e.push_back(0);
 	      _backtracked_pdg.push_back(0);
 	      _backtracked_purity.push_back(0.);
@@ -521,6 +531,7 @@ void NeutrinoSelection::ResetTTree() {
   _p2_c = 0;
 
   _backtracked_idx.clear();
+  _backtracked_tid.clear();
   _backtracked_e.clear();
   _backtracked_pdg.clear();
   _backtracked_purity.clear();
@@ -642,7 +653,7 @@ art::Ptr<simb::MCParticle> NeutrinoSelection::getAssocMCParticle(art::Event cons
     //loop over particles
     for(size_t i_p=0; i_p<particle_vec.size(); ++i_p){
       trkide[ particle_vec[i_p]->TrackId() ] += match_vec[i_p]->energy; //store energy per track id
-      trkq  [ particle_vec[i_p]->TrackId() ] += h->Integral(); //store hit integral associated to this hit
+      trkq  [ particle_vec[i_p]->TrackId() ] += h->Integral()  * match_vec[i_p]->ideFraction; //store hit integral associated to this hit
       tote += match_vec[i_p]->energy; //calculate total energy deposited
       if( trkide[ particle_vec[i_p]->TrackId() ] > maxe ){ //keep track of maximum
 	maxe = trkide[ particle_vec[i_p]->TrackId() ];
