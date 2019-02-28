@@ -46,6 +46,12 @@ using ProxyPfpColl_t = decltype(proxy::getCollection<std::vector<recob::PFPartic
                                               proxy::withAssociated<recob::Shower>(std::declval<art::InputTag>())) );
 using ProxyPfpElem_t = ProxyPfpColl_t::element_proxy_t;
 
+ using ProxyClusColl_t = decltype(proxy::getCollection<std::vector<recob::Cluster> >(
+										     std::declval<art::Event>(),std::declval<art::InputTag>(),
+										     proxy::withAssociated<recob::Hit>(std::declval<art::InputTag>()) ) );
+ 
+ using ProxyClusElem_t = ProxyClusColl_t::element_proxy_t;
+
 class SelectionToolBase {
 
 public:

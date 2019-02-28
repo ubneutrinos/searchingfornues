@@ -72,3 +72,4 @@ physics:
  end_paths:     [  ana  ] 
 }
 
+physics.analyzers.nuselection.BacktrackTag: "gaushitTruthMatch"
