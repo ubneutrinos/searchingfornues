@@ -58,11 +58,40 @@ namespace selection
     
   private:
 
+    /**
+     * @brief calculate PFP energy based on hits associated to clusters
+     */
+    template <typename T> float PFPEnergy(const T& ass_clus_v);
+
     // TTree variables
     int _nshower;
     int _ntrack;
+    float _emin, _emax;
+    float _rc_vtx_x, _rc_vtx_y, _rc_vtx_z; // reco neutrino vertex
     
   };
+
+  template <typename T> float ShowerSelection::PFPEnergy(const T& ass_clus_v) {
+
+    float energy0 = 0;
+    float energy1 = 0;
+    float energy2 = 0;
+    
+    for (auto ass_clus : ass_clus_v) {
+
+      //auto clus = clus_v[ass_clus.key()];
+      
+      std::cout << "cluster integral : " << ass_clus->Integral() << std::endl;
+
+      if (ass_clus->View() == 0) { energy0 = ass_clus->Integral(); }
+      if (ass_clus->View() == 1) { energy1 = ass_clus->Integral(); }
+      if (ass_clus->View() == 2) { energy2 = ass_clus->Integral(); }
+
+    }// for all clusters
+
+    if (energy2 != 0) return energy2;
+    return (energy1+energy0)/2.;
+  }// calculte PFP energy based on associated hit charge
   
   //----------------------------------------------------------------------------
   /// Constructor.
@@ -101,9 +130,24 @@ namespace selection
     
     _nshower = 0;
     _ntrack  = 0;
+
+
     for (const auto& pfp_pxy : pfp_pxy_v) {
-      _nshower += pfp_pxy.get<recob::Shower>().size();
-      _ntrack += pfp_pxy.get<recob::Track>().size();
+
+      auto nshr = pfp_pxy.get<recob::Shower>().size();
+      auto ntrk = pfp_pxy.get<recob::Track>().size();
+
+      _nshower += nshr;
+      _ntrack  += ntrk;
+      
+      // grab cluster associated
+      if (nshr == 1) {
+	auto ass_clus_v =  pfp_pxy.get<recob::Cluster>();// clus_pxy_v[pfp_pxy.key()];
+	float energy = PFPEnergy(ass_clus_v);
+	if (energy > _emax) { _emax = energy; }
+	if (energy < _emin) { _emin = energy; }
+      }// if pfp is shower-like
+
     }
 
     if ( _nshower >= 1)
@@ -116,14 +160,26 @@ namespace selection
 
     _tree->Branch("_nshower",&_nshower,"nshower/I");
     _tree->Branch("_ntrack" ,&_ntrack ,"ntrack/I" );
+    _tree->Branch("_emin",&_emin,"emin/F");
+    _tree->Branch("_emax",&_emax,"emax/F");
+    _tree->Branch("_rc_vtx_x",&_rc_vtx_x,"rc_vtx_x/F");
+    _tree->Branch("_rc_vtx_y",&_rc_vtx_y,"rc_vtx_y/F");
+    _tree->Branch("_rc_vtx_z",&_rc_vtx_z,"rc_vtx_z/F");
 
     return;
   }
 
   void ShowerSelection::resetTTree(TTree* _tree) {
 
+    _emin    = 1e6;
+    _emax    = 0.;
+
     _nshower = std::numeric_limits<int>::min();
     _ntrack  = std::numeric_limits<int>::min();
+
+    _rc_vtx_x = std::numeric_limits<int>::min();
+    _rc_vtx_y = std::numeric_limits<int>::min();
+    _rc_vtx_z = std::numeric_limits<int>::min();
 
     return;
   }
