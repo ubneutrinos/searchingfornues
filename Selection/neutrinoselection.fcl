@@ -16,6 +16,25 @@ NuSelection: {
         }
 }
 
+
+#NuSelectionFilter: 
+NuSelectionFilter:{
+    module_type: NeutrinoSelectionFilter
+    Verbose: true
+    IsData: false
+    PFPproducer: "pandora"
+    CLSproducer: "pandora"
+    SHRproducer: "pandora"
+    HITproducer: "pandora"
+    VTXproducer: "pandora"
+    TRKproducer: "pandora"
+    MCTproducer: "generator"
+    SelectionTool: {
+        tool_type: "ShowerSelection"
+        }
+
+    }
+
 Pi0Selection: @local::NuSelection
 Pi0Selection.SelectionTool: {
     tool_type: "Pi0Selection"
