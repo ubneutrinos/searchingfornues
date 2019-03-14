@@ -22,6 +22,7 @@ NuSelectionFilter:{
     module_type: NeutrinoSelectionFilter
     Verbose: true
     IsData: false
+    Filter: true
     PFPproducer: "pandora"
     CLSproducer: "pandora"
     SHRproducer: "pandora"
@@ -34,6 +35,10 @@ NuSelectionFilter:{
         }
 
     }
+
+
+NuSelectionFilterEmpty: @local::NuSelectionFilter
+NuSelectionFilterEmpty.SelectionTool: { tool_type: "EmptySelection" }
 
 Pi0Selection: @local::NuSelection
 Pi0Selection.SelectionTool: {

@@ -131,33 +131,60 @@ namespace selection
     _nshower = 0;
     _ntrack  = 0;
 
+    TVector3 nuvtx;
+    Double_t xyz[3] = {};
 
     for (const auto& pfp_pxy : pfp_pxy_v) {
 
-      auto nshr = pfp_pxy.get<recob::Shower>().size();
-      auto ntrk = pfp_pxy.get<recob::Track>().size();
+      auto PDG = fabs(pfp_pxy->PdgCode());
 
-      _nshower += nshr;
-      _ntrack  += ntrk;
+      if ( (PDG == 12) || (PDG == 14) ) {
+	
+	// grab vertex
+	auto vtx = pfp_pxy.get<recob::Vertex>();
+	if (vtx.size() != 1) {
+	  std::cout << "ERROR. Found neutrino PFP w/ != 1 associated vertices..." << std::endl;
+	  return false;
+	}
+	
+	// save vertex to array
+	vtx.at(0)->XYZ(xyz);
+	nuvtx = TVector3(xyz[0],xyz[1],xyz[2]);
+
+	_rc_vtx_x = nuvtx.X();
+	_rc_vtx_y = nuvtx.Y();
+	_rc_vtx_z = nuvtx.Z();
+
+      }// if neutrino PFP
+
+      else {
+	
+	auto nshr = pfp_pxy.get<recob::Shower>().size();
+	auto ntrk = pfp_pxy.get<recob::Track>().size();
+	
+	_nshower += nshr;
+	_ntrack  += ntrk;
+	
+	// grab cluster associated
+	if (nshr == 1) {
+	  auto ass_clus_v =  pfp_pxy.get<recob::Cluster>();// clus_pxy_v[pfp_pxy.key()];
+	  float energy = PFPEnergy(ass_clus_v);
+	  if (energy > _emax) { _emax = energy; }
+	  if (energy < _emin) { _emin = energy; }
+	}// if pfp is shower-like
+	
+      }// if not neutrino
+
+    }// for all PFP
       
-      // grab cluster associated
-      if (nshr == 1) {
-	auto ass_clus_v =  pfp_pxy.get<recob::Cluster>();// clus_pxy_v[pfp_pxy.key()];
-	float energy = PFPEnergy(ass_clus_v);
-	if (energy > _emax) { _emax = energy; }
-	if (energy < _emin) { _emin = energy; }
-      }// if pfp is shower-like
-
-    }
-
     if ( _nshower >= 1)
       return true;
     
     return false;
   }
-
+  
   void ShowerSelection::setBranches(TTree* _tree) {
-
+    
     _tree->Branch("_nshower",&_nshower,"nshower/I");
     _tree->Branch("_ntrack" ,&_ntrack ,"ntrack/I" );
     _tree->Branch("_emin",&_emin,"emin/F");

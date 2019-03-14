@@ -86,6 +86,7 @@ private:
   art::InputTag fBacktrackTag;
   bool fVerbose;
   bool fData;
+  bool fFilter;
 
   // TTree
   TTree* _tree;
@@ -114,6 +115,9 @@ private:
   int   _npion;                    // how many pions are there?
   int   _pion;                     // is there a final-state charged pion from the neutrino? [1=yes 0=no]
   float _pion_e, _pion_p, _pion_c; // energy, purity, completeness.
+
+  // number of slices in the event
+  int _nslice;
 
   // reco PFParticle backtracking. One entry for PFParticle in the slice
   std::vector<int>   _backtracked_idx;    // index of PFP [key]
@@ -218,6 +222,7 @@ NeutrinoSelectionFilter::NeutrinoSelectionFilter(fhicl::ParameterSet const& p)
   fBacktrackTag = p.get< art::InputTag > ("BacktrackTag");
   fVerbose     = p.get< bool >          ("Verbose");
   fData     = p.get< bool >          ("IsData");
+  fFilter   = p.get< bool >          ("Filter",false);
 
   art::ServiceHandle<art::TFileService> tfs;
   _tree = tfs->make<TTree>("NeutrinoSelectionFilter", "Neutrino Selection TTree");
@@ -264,6 +269,8 @@ NeutrinoSelectionFilter::NeutrinoSelectionFilter(fhicl::ParameterSet const& p)
   _tree->Branch("_p2_e",&_p2_e,"p2_e/F");
   _tree->Branch("_p2_c",&_p2_c,"p2_c/F");
   _tree->Branch("_p2_p",&_p2_p,"p2_p/F");
+
+  _tree->Branch("_nslice",&_nslice,"nslice/I");
 
   // PFParticle backtracking
   _tree->Branch("_backtracked_idx"   ,"std::vector<int>"  ,&_backtracked_idx   );
@@ -414,20 +421,22 @@ bool NeutrinoSelectionFilter::filter(art::Event & e)
 	std::cout << "ERROR : there are "  << slice_pfp_v.size() << " PFP but " << sliceTracks.size() << " + " << sliceShowers.size() << " tracks + showers" << std::endl;
       
       // run selection on this slice
-      // bool selected = _selectionTool->selectEvent(e, sliceTracks, sliceShowers);
+      _nslice += 1;
       bool selected = _selectionTool->selectEvent(e, slice_pfp_v);
       if (fVerbose && selected) { std::cout << "SLICE was selected!" << std::endl; }
       
       if (selected) { _pass = 1; keepEvent = true; }
       
-      _tree->Fill();
-
-
     }// if a neutrino PFParticle
     p++;
   }// for all PFParticles
+
+  _tree->Fill();
+
+  if (fFilter == true)
+    return keepEvent;
   
-  return keepEvent;
+  return true;
 }
 
 template <typename T> void NeutrinoSelectionFilter::printPFParticleMetadata(const ProxyPfpElem_t& pfp_pxy,
@@ -440,9 +449,9 @@ template <typename T> void NeutrinoSelectionFilter::printPFParticleMetadata(cons
 	const art::Ptr<larpandoraobj::PFParticleMetadata> &pfParticleMetadata(pfParticleMetadataList.at(j));
 	auto pfParticlePropertiesMap = pfParticleMetadata->GetPropertiesMap();
 	if (!pfParticlePropertiesMap.empty()) {
-	  std::cout << " Found PFParticle " << pfp_pxy->Self() << " with: " << std::endl;
+	  if (fVerbose) std::cout << " Found PFParticle " << pfp_pxy->Self() << " with: " << std::endl;
 	  for (std::map<std::string, float>::const_iterator it = pfParticlePropertiesMap.begin(); it != pfParticlePropertiesMap.end(); ++it) {
-	    std::cout << "  - " << it->first << " = " << it->second << std::endl;
+	    if (fVerbose) std::cout << "  - " << it->first << " = " << it->second << std::endl;
 	  }
 	}
       }
@@ -504,6 +513,8 @@ void NeutrinoSelectionFilter::ResetTTree() {
   _vtx_x   = std::numeric_limits<float>::min();
   _vtx_y   = std::numeric_limits<float>::min();
   _vtx_z   = std::numeric_limits<float>::min();
+
+  _nslice = 0;
 
   _nmuon = 0;
   _muon_e = 0;

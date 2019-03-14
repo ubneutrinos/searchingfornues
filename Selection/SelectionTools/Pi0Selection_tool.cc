@@ -4,6 +4,8 @@
 #include <iostream>
 #include "SelectionToolBase.h"
 
+#include "nusimdata/SimulationBase/MCTruth.h"
+
 namespace selection
 {
     ////////////////////////////////////////////////////////////////////////
@@ -65,9 +67,24 @@ cioe'     * @brief set branches for TTree
      */
     template <typename T> float PFPEnergy(const T& ass_clus_v);
 
+    /**
+     * @brief read truth info associated to pi0
+     */
+    void ReadTruth(art::Event const& e);
+
     void Reset();
 
     // TTree variables
+    
+    // truth variables
+    int _ispi0;
+    TVector3 _mcgamma0_mom, _mcgamma1_mom;
+    float _mcgamma0_e, _mcgamma0_px, _mcgamma0_py, _mcgamma0_pz;
+    float _mcgamma1_e, _mcgamma1_px, _mcgamma1_py, _mcgamma1_pz;
+    float _mcrcdot0, _mcrcdot1; // dot product between MC gamma and RC gamma. Each MC gamma matched to best RC gamma
+    float _mcrce0, _mcrce1; // energy of reconstructed photon associated to the MC one
+
+    // reco variables
     int _nshower;
     int _ntrack;
     int _ngamma;
@@ -131,6 +148,8 @@ cioe'     * @brief set branches for TTree
 
     Reset();
 
+    ReadTruth(e);
+
     TVector3 gammadir1, gammadir2;
 
     // loop over all PFPs and get metadata, find the neutrino and save its vertex
@@ -166,13 +185,29 @@ cioe'     * @brief set branches for TTree
 	auto nshr = pfp_pxy.get<recob::Shower>().size();
 	auto ntrk = pfp_pxy.get<recob::Track>().size();
 
+	TVector3 gammadir;
+	auto vtxcompat = VtxCompatibility(nuvtx,pfp_pxy, gammadir);
+
+	// if a shower, try matching to true photon 
+	if (nshr == 1) {
+	  float dot = gammadir.Dot(_mcgamma0_mom);
+	  if (dot > _mcrcdot0) {
+	    _mcrcdot0 = dot;
+	    _mcrce0   = energy;
+	  }// if new most aligned shower
+	  dot = gammadir.Dot(_mcgamma1_mom);
+	  if (dot > _mcrcdot1) {
+	    _mcrcdot1 = dot;
+	    _mcrce1   = energy;
+	  }// if new most aligned shower
+	}// try matching to true photon
+
 	_nshower += nshr;
 	_ntrack  += ntrk;
 	
 	if ( (nshr != 1) && (_onlyshower) ) continue;
 	
-	TVector3 gammadir;
-	auto vtxcompat = VtxCompatibility(nuvtx,pfp_pxy, gammadir);
+
 	
 	// if blank result, continue
 	if ( (vtxcompat.first == -1) && (vtxcompat.second == -1) ) continue;
@@ -210,6 +245,21 @@ cioe'     * @brief set branches for TTree
   
   void Pi0Selection::setBranches(TTree* _tree) {
 
+    // truth
+    _tree->Branch("_mcgamma0_e" ,&_mcgamma0_e ,"mcgamma0_e/F" );
+    _tree->Branch("_mcgamma0_px",&_mcgamma0_px,"mcgamma0_px/F");
+    _tree->Branch("_mcgamma0_py",&_mcgamma0_py,"mcgamma0_py/F");
+    _tree->Branch("_mcgamma0_pz",&_mcgamma0_pz,"mcgamma0_pz/F");
+    _tree->Branch("_mcrcdot0",&_mcrcdot0,"mcrcdot0/F");
+    _tree->Branch("_mcrce0",&_mcrce0,"mcrce0/F");
+    _tree->Branch("_mcgamma1_e" ,&_mcgamma1_e ,"mcgamma1_e/F" );
+    _tree->Branch("_mcgamma1_px",&_mcgamma1_px,"mcgamma1_px/F");
+    _tree->Branch("_mcgamma1_py",&_mcgamma1_py,"mcgamma1_py/F");
+    _tree->Branch("_mcgamma1_pz",&_mcgamma1_pz,"mcgamma1_pz/F");
+    _tree->Branch("_mcrcdot1",&_mcrcdot1,"mcrcdot1/F");
+    _tree->Branch("_mcrce1",&_mcrce1,"mcrce1/F");
+
+    // reco
     _tree->Branch("_nshower",&_nshower,"nshower/I");
     _tree->Branch("_ntrack" ,&_ntrack ,"ntrack/I" );
     _tree->Branch("_ngamma",&_ngamma,"ngamma/I");
@@ -315,7 +365,163 @@ cioe'     * @brief set branches for TTree
     return (energy1+energy0)/2.;
   }// calculte PFP energy based on associated hit charge
 
+  void Pi0Selection::ReadTruth(art::Event const& e) {
+
+  auto const& mct_h = e.getValidHandle<std::vector<simb::MCTruth> >("generator");
+  auto const& mcp_h = e.getValidHandle<std::vector<simb::MCParticle> >("largeant");
+
+  _ispi0 = 0;
+
+  auto mct = mct_h->at(0);
+  size_t npart = mct.NParticles();
+
+  int pi0trkid = -1;
+  double pi0_vtx_x, pi0_vtx_y, pi0_vtx_z;
+
+  for (size_t i=0; i < npart; i++){
+    auto const& part = mct.GetParticle(i);
+    if ( (part.PdgCode() == 111) and (part.StatusCode() == 1) ){
+      pi0_vtx_x = part.Trajectory().X(0);
+      pi0_vtx_y = part.Trajectory().Y(0);
+      pi0_vtx_z = part.Trajectory().Z(0);
+      pi0trkid = part.TrackId();
+      std::cout << "DAVIDC found a pi0! " << std::endl;
+      break;
+    }
+  }
+
+  if (pi0trkid < 0) return;
+
+  // how many photons from the pi0 did we find?
+  int ngamma = 0;
+
+  // go through MCParticles and find photons
+  for (size_t i=0; i < mcp_h->size(); i++) {
+
+    auto mcp = mcp_h->at(i);
+    
+    if (mcp.PdgCode() != 22) continue;
+
+    double x = mcp.Trajectory().X(0);
+    double y = mcp.Trajectory().Y(0);
+    double z = mcp.Trajectory().Z(0);
+    double d = sqrt( ( (pi0_vtx_x - x) * (pi0_vtx_x - x) ) +
+		     ( (pi0_vtx_y - y) * (pi0_vtx_y - y) ) +
+		     ( (pi0_vtx_z - z) * (pi0_vtx_z - z) ) );
+
+    if ( d < 0.01 ) {
+
+      std::cout << "DAVIDC ngamma is " << ngamma << std::endl;
+
+      if (ngamma == 0) {
+	std::cout << "DAVIDC gamma0 " << std::endl;
+	_mcgamma0_e = mcp.E(0);
+	_mcgamma0_mom = mcp.Momentum(0).Vect().Unit();
+	_mcgamma0_px = _mcgamma0_mom.X();
+	_mcgamma0_py = _mcgamma0_mom.Y();
+	_mcgamma0_pz = _mcgamma0_mom.Z();
+      }
+
+      if (ngamma == 1) {
+	std::cout << "DAVIDC gamma1 " << std::endl;
+	_mcgamma1_e = mcp.E(0);
+	_mcgamma1_mom = mcp.Momentum(0).Vect().Unit();
+	_mcgamma1_px = _mcgamma1_mom.X();
+	_mcgamma1_py = _mcgamma1_mom.Y();
+	_mcgamma1_pz = _mcgamma1_mom.Z();
+      }
+      
+      ngamma += 1; // update photon count
+
+      std::cout << "DAVIDC found " << mcp.PdgCode() << " with pi0 parent " << std::endl;
+      std::cout << "DAVIDC found " << mcp.PdgCode() << " with pi0 parent " << std::endl;
+
+    }// if a pi0 induced gamma
+      
+  }// for all mcparticles
+
+  /*
+  if ( (foundShowers == true) && fPDG == 111) {
+    
+    size_t idx_1 = 0;
+    size_t idx_2 = 0;
+    size_t n_found = 0;
+    for (size_t i=0; i < mcs_h->size(); i++){
+      auto const& mcs = mcs_h->at(i);
+      // distance from vertex                                                                
+      double x = mcs.Start().X();
+      double y = mcs.Start().Y();
+      double z = mcs.Start().Z();
+      double d = sqrt( ( (_mc_vtx_x - x) * (_mc_vtx_x - x) ) +
+		       ( (_mc_vtx_y - y) * (_mc_vtx_y - y) ) +
+		       ( (_mc_vtx_z - z) * (_mc_vtx_z - z) ) );
+      if ( d < 0.01 ){
+	if (n_found == 0){
+	  idx_1 = i;
+	  n_found += 1;
+	}
+	else if (n_found == 1){
+	  idx_2 = i;
+	  n_found += 1;
+	}
+	else
+	  n_found += 1;
+      }// if mother is a Pi0   
+    }// for all MCShowers                                                               
+    
+    
+    size_t idxLARGE = idx_1;
+    size_t idxSMALL = idx_2;
+    
+    if (mcs_h->at(idx_1).Start().E() < mcs_h->at(idx_2).Start().E() )
+      { idxLARGE = idx_2; idxSMALL = idx_1; }
+    
+    auto const& mcshr1 = mcs_h->at(idxLARGE);
+    auto const& mcshr2 = mcs_h->at(idxSMALL);
+    
+    _pi0_e  = mcshr1.MotherEnd().E();
+    
+    _mc_shr1_e  = mcshr1.Start().E();
+    _mc_shr1_edep  = mcshr1.DetProfile().E();
+    _mc_shr1_x  = mcshr1.DetProfile().X();
+    _mc_shr1_y  = mcshr1.DetProfile().Y();
+    _mc_shr1_z  = mcshr1.DetProfile().Z();
+
+    double mom1 = mcshr1.Start().Momentum().Vect().Mag();    
+    _mc_shr1_px = mcshr1.Start().Px() / mom1;
+    _mc_shr1_py = mcshr1.Start().Py() / mom1;
+    _mc_shr1_pz = mcshr1.Start().Pz() / mom1;
+    
+    _mc_shr2_e  = mcshr2.Start().E();
+    _mc_shr2_edep  = mcshr2.DetProfile().E();
+    _mc_shr2_x  = mcshr2.DetProfile().X();
+    _mc_shr2_y  = mcshr2.DetProfile().Y();
+    _mc_shr2_z  = mcshr2.DetProfile().Z();
+
+    double mom2 = mcshr2.Start().Momentum().Vect().Mag();    
+    _mc_shr2_px = mcshr2.Start().Px() / mom2;
+    _mc_shr2_py = mcshr2.Start().Py() / mom2;
+    _mc_shr2_pz = mcshr2.Start().Pz() / mom2;
+  */
+
+  return;
+  }
+
   void Pi0Selection::Reset() {
+
+    _ispi0 = 0;
+    _mcgamma0_e = 0;
+    _mcgamma0_px = 0;
+    _mcgamma0_py = 0;
+    _mcgamma0_pz = 0;
+    _mcgamma1_e = 0;
+    _mcgamma1_px = 0;
+    _mcgamma1_py = 0;
+    _mcgamma1_pz = 0;
+    _mcrce0 = 0;
+    _mcrce1 = 0;
+    _mcrcdot0 = -1;
+    _mcrcdot1 = -1;
 
     _dot1 = -1;
     _dot2 = -1;
