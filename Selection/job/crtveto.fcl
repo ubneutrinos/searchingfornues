@@ -1,0 +1,9 @@
+#include "UBCRTCosmicFilter.fcl"
+
+BEGIN_PROLOG
+
+CRTVetoOnBeam:  @local::UBCRTCosmicFilterBNBON
+
+CRTVetoOffBeam: @local::UBCRTCosmicFilterBNBOFF
+
+END_PROLOG

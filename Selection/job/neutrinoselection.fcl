@@ -1,23 +1,5 @@
 #include "services_microboone.fcl"
 
-NuSelection: {
-    module_type: NeutrinoSelection
-    Verbose: true
-    IsData: false
-    PFPproducer: "pandora"
-    CLSproducer: "pandora"
-    SHRproducer: "pandora"
-    HITproducer: "pandora"
-    VTXproducer: "pandora"
-    TRKproducer: "pandora"
-    MCTproducer: "generator"
-    SelectionTool: {
-        tool_type: "ShowerSelection"
-        }
-}
-
-
-#NuSelectionFilter: 
 NuSelectionFilter:{
     module_type: NeutrinoSelectionFilter
     Verbose: true
@@ -31,7 +13,7 @@ NuSelectionFilter:{
     TRKproducer: "pandora"
     MCTproducer: "generator"
     SelectionTool: {
-        tool_type: "ShowerSelection"
+        tool_type: "EmptySelection"
         }
 
     }
@@ -40,10 +22,16 @@ NuSelectionFilter:{
 NuSelectionFilterEmpty: @local::NuSelectionFilter
 NuSelectionFilterEmpty.SelectionTool: { tool_type: "EmptySelection" }
 
-Pi0Selection: @local::NuSelection
+Pi0Selection: @local::NuSelectionFilter
 Pi0Selection.SelectionTool: {
     tool_type: "Pi0Selection"
     onlyshower: false
     dotmin: 0.5
     dmin: 2.
 }
+
+
+# run 3 neutrino selection [ w/ crt veto ]
+NuSelectionFilterRun3: @local::NuSelectionFilter
+NuSelectionFilterRun3.CRTVetoproducer: "crtveto"
+

@@ -25,6 +25,8 @@
 #include "lardataobj/RecoBase/Track.h"
 #include "lardataobj/RecoBase/Cluster.h"
 #include "lardataobj/RecoBase/Hit.h"
+#include "ubobj/CRT/CRTHit.hh"
+#include "lardataobj/RecoBase/OpFlash.h"
 #include "lardata/Utilities/AssociationUtil.h"
 #include "nusimdata/SimulationBase/MCTruth.h"
 #include "lardataobj/MCBase/MCShower.h"
@@ -83,6 +85,7 @@ private:
   art::InputTag fVTXproducer; // vertex associated to PFP
   art::InputTag fTRKproducer; // track associated to PFP
   art::InputTag fMCTproducer;
+  art::InputTag fCRTVetoproducer; // producer for CRT veto ass tag [anab::T0 <-> recob::OpFlash]
   art::InputTag fBacktrackTag;
   bool fVerbose;
   bool fData;
@@ -118,6 +121,8 @@ private:
 
   // number of slices in the event
   int _nslice;
+  int _crtveto; // is the event vetoed by the CRT Veto?
+  float _crthitpe; // pe associated to CRT hit
 
   // reco PFParticle backtracking. One entry for PFParticle in the slice
   std::vector<int>   _backtracked_idx;    // index of PFP [key]
@@ -219,6 +224,7 @@ NeutrinoSelectionFilter::NeutrinoSelectionFilter(fhicl::ParameterSet const& p)
   fVTXproducer = p.get< art::InputTag > ("VTXproducer");
   fTRKproducer = p.get< art::InputTag > ("TRKproducer");
   fMCTproducer = p.get< art::InputTag > ("MCTproducer");
+  fCRTVetoproducer = p.get< art::InputTag > ("CRTVetoproducer",""); // default is no CRT veto
   fBacktrackTag = p.get< art::InputTag > ("BacktrackTag");
   fVerbose     = p.get< bool >          ("Verbose");
   fData     = p.get< bool >          ("IsData");
@@ -270,7 +276,9 @@ NeutrinoSelectionFilter::NeutrinoSelectionFilter(fhicl::ParameterSet const& p)
   _tree->Branch("_p2_c",&_p2_c,"p2_c/F");
   _tree->Branch("_p2_p",&_p2_p,"p2_p/F");
 
-  _tree->Branch("_nslice",&_nslice,"nslice/I");
+  _tree->Branch("_nslice"  ,&_nslice  ,"nslice/I"  );
+  _tree->Branch("_crtveto" ,&_crtveto ,"crtveto/I" );
+  _tree->Branch("_crthitpe",&_crthitpe,"crthitpe/F");
 
   // PFParticle backtracking
   _tree->Branch("_backtracked_idx"   ,"std::vector<int>"  ,&_backtracked_idx   );
@@ -322,6 +330,16 @@ bool NeutrinoSelectionFilter::filter(art::Event & e)
 
   
   if (fVerbose) { std::cout << "new event : [run,event] : [" << e.run() << ", " << e.event() << "]" << std::endl; }
+
+
+  // Grab CRT veto information if available
+  if (fCRTVetoproducer != "") {
+    art::Handle< art::Assns<crt::CRTHit,recob::OpFlash,void> > crtveto_h;
+    e.getByLabel(fCRTVetoproducer,crtveto_h);
+    _crtveto = crtveto_h->size();
+    if (_crtveto == 1) 
+      _crthitpe = crtveto_h->at(0).first->peshit;
+  }// if the CRT veto label has been defined
   
   // grab PFParticles in event
   selection::ProxyPfpColl_t const& pfp_proxy = proxy::getCollection<std::vector<recob::PFParticle> >(e,fPFPproducer,
@@ -515,6 +533,8 @@ void NeutrinoSelectionFilter::ResetTTree() {
   _vtx_z   = std::numeric_limits<float>::min();
 
   _nslice = 0;
+  _crtveto = 0;
+  _crthitpe = 0;
 
   _nmuon = 0;
   _muon_e = 0;
