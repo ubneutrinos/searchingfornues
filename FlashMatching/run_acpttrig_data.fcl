@@ -1,0 +1,96 @@
+#include "services_microboone.fcl"
+#include "triggeralgo_service.fcl"
+#include "flash_neutrino_id.fcl"
+#include "MuCSTrackTagger_module.fcl"
+#include "photpropservices_microboone.fcl"
+#include "flashmatchsetup.fcl"
+
+process_name: ACPTFlashMatch
+
+services:
+{
+  scheduler:               { defaultExceptions: false }    # Make all uncaught exceptions fatal.
+  # Load the service that manages root files for histograms.
+  TFileService:            { fileName: "stopmu_ana.root" }
+  TimeTracker:             {}
+  ExptGeoHelperInterface:         @local::microboone_geometry_helper
+  Geometry:                       @local::microboone_geo
+  DetectorPropertiesService:             @local::microboone_detproperties
+  LArProperties:                  @local::microboone_properties
+  DetectorClocksService:          @local::microboone_detectorclocks
+  #MemoryTracker:           { ignoreTotal: 1 } # default is one
+  RandomNumberGenerator:   {} #ART native random number generator
+  message:                 @local::microboone_message_services_prod_debug
+  FileCatalogMetadata:     @local::art_file_catalog_mc
+  OpDigiProperties:           @local::microboone_opdigiproperties
+  PhotonVisibilityService:    @local::microboone_photonvisibilityservice
+                              @table::microboone_services_reco
+
+  #@table::microboone_reco_mcc8_services
+}
+
+services.DetectorPropertiesService.NumberTimeSamples: 6400
+services.DetectorPropertiesService.ReadOutWindowSize: 6400
+services.DetectorClocksService.InheritClockConfig:       false
+services.DetectorClocksService.TriggerOffsetTPC:         -0.400e3
+
+services.SpaceCharge.EnableCorrSCE: true
+services.SpaceCharge.EnableSimEFieldSCE: true
+services.SpaceCharge.EnableSimSpatialSCE: true
+
+services.PmtGainService: @local::PMTService
+
+
+#source is now a root file
+source:
+{
+  module_type: RootInput
+  maxEvents:   -1        # Number of events to create
+  #inputCommands: ["keep *_*_*_*","drop *_*_*_DetSim", "drop *_*_*_G4"]#, "keep sim::MCTrack_*_*_*", "keep recob::Track_*_pandoraCosmic_*" ]
+
+}
+
+#source.inputCommands: ["keep *_*_*_*", "drop anab::T0_*_*_*" ]
+
+# Define and configure some modules to do work on each event.
+# First modules are defined; they are scheduled later.
+# Modules are grouped by type.
+physics:
+{
+
+    producers:
+    {
+      #rs:                 { module_type: RandomNumberSaver }
+      #pandoracaloN: @local::microboone_calodata
+        mucstagger: @local::microboone_MuCSTrackTagger
+    }
+    analyzers:
+    {
+        fmatch: { module_type: ACPTTrigFlashMatch
+                      PFPproducer: "pandoraCosmic"
+                      Trackproducer: "pandoraCosmic"
+                      SpacePointproducer: "pandoraCosmic"
+                      T0producer: "acpttrig"
+                      SliceTool: @local::SliceToolACPTDATA
+                      OnlyTagged: true
+                      }
+    }
+
+  reco: [ ]
+  ana: [ fmatch ]
+
+
+
+ #define the output stream, there could be more than one if using filters
+ stream1:  [ out1 ]
+
+ #trigger_paths is a keyword and contains the paths that modify the art::event,
+ #ie filters and producers
+ trigger_paths: [reco]
+
+ #end_paths is a keyword and contains the paths that do not modify the art::Event,
+ #ie analyzers and output streams.  these all run simultaneously
+ #end_paths:     [stream1,ana]
+ end_paths:     [ana]
+}
+

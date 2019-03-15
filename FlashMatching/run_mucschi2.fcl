@@ -1,0 +1,178 @@
+#include "services_microboone.fcl"
+#include "triggeralgo_service.fcl"
+#include "flash_neutrino_id.fcl"
+#include "MuCSTrackTagger_module.fcl"
+#include "photpropservices_microboone.fcl"
+
+
+process_name: PFPAna
+
+services:
+{
+  scheduler:               { defaultExceptions: false }    # Make all uncaught exceptions fatal.
+  # Load the service that manages root files for histograms.
+  TFileService:            { fileName: "stopmu_ana.root" }
+  TimeTracker:             {}
+  ExptGeoHelperInterface:         @local::microboone_geometry_helper
+  Geometry:                       @local::microboone_geo
+  DetectorPropertiesService:             @local::microboone_detproperties
+  LArProperties:                  @local::microboone_properties
+  DetectorClocksService:          @local::microboone_detectorclocks
+  #MemoryTracker:           { ignoreTotal: 1 } # default is one
+  RandomNumberGenerator:   {} #ART native random number generator
+  message:                 @local::microboone_message_services_prod_debug
+  FileCatalogMetadata:     @local::art_file_catalog_mc
+  OpDigiProperties:           @local::microboone_opdigiproperties
+  PhotonVisibilityService:    @local::microboone_photonvisibilityservice
+                              @table::microboone_services_reco
+
+  #@table::microboone_reco_mcc8_services
+}
+
+services.DetectorPropertiesService.NumberTimeSamples: 6400
+services.DetectorPropertiesService.ReadOutWindowSize: 6400
+services.DetectorClocksService.InheritClockConfig:       false
+services.DetectorClocksService.TriggerOffsetTPC:         -0.400e3
+
+services.SpaceCharge.EnableCorrSCE: true
+services.SpaceCharge.EnableSimEFieldSCE: true
+services.SpaceCharge.EnableSimSpatialSCE: true
+
+services.PmtGainService: {
+    CalibrationHelper: {
+        EventMixingModuleLabel: "retriever"
+        }
+    PmtGainProvider: {
+        DatabaseRetrievalAlg: {
+            AlgName: "DatabaseRetrievalAlg"
+            DBFolderName: "detpmtgains_data"
+            DBTag: "v1r0"
+            DBUrl: "http://dbdata0vm.fnal.gov:8186/uboonecon_prod/app/"
+            }
+        DefaultAmplitudeGain: 20
+        DefaultAmplitudeGainErr: 1e-2
+        DefaultBaselineMean: 0
+        DefaultBaselineRms: 6e-1
+        DefaultGain: 130
+        DefaultGainErr: 1e-1
+        UseDB: true
+        UseFile: false
+        }
+    service_provider: "UboonePmtGainService"
+    }
+
+#source is now a root file
+source:
+{
+  module_type: RootInput
+  maxEvents:   -1        # Number of events to create
+  #inputCommands: ["keep *_*_*_*","drop *_*_*_DetSim", "drop *_*_*_G4"]#, "keep sim::MCTrack_*_*_*", "keep recob::Track_*_pandoraCosmic_*" ]
+
+}
+
+#source.inputCommands: ["keep *_*_*_*", "drop anab::T0_*_*_*" ]
+
+# Define and configure some modules to do work on each event.
+# First modules are defined; they are scheduled later.
+# Modules are grouped by type.
+physics:
+{
+
+    producers:
+    {
+      #rs:                 { module_type: RandomNumberSaver }
+      #pandoracaloN: @local::microboone_calodata
+        mucstagger: @local::microboone_MuCSTrackTagger
+    }
+    analyzers:
+    {
+        fmatch: { module_type: MuCSFlashMatch
+                      PFPproducer: "pandora"
+                      Trackproducer: "pandora"
+                      SpacePointproducer: "pandora"
+                      CTagproducer: "mucstagger" #"MuCSTrackTaggerpandora" #"mucstagger"
+                      SliceTool: @local::flash_neutrino_id_tool
+                      OnlyTagged: true
+                      }
+    }
+
+  reco: [ ]#mucstagger ]#rns, pandoracaloN ]
+  ana: [ fmatch ]
+
+
+
+ #define the output stream, there could be more than one if using filters
+ stream1:  [ out1 ]
+
+ #trigger_paths is a keyword and contains the paths that modify the art::event,
+ #ie filters and producers
+ trigger_paths: [reco]
+
+ #end_paths is a keyword and contains the paths that do not modify the art::Event,
+ #ie analyzers and output streams.  these all run simultaneously
+ #end_paths:     [stream1,ana]
+ end_paths:     [ana]
+}
+
+physics.analyzers.fmatch.SliceTool.tool_type: "FlashMatchingTool"
+#physics.analyzers.pfpana.SliceTool.FlashMatchConfig.QLLMatch
+
+#physics.producers.pandoracaloN.TrackModuleLabel: "pandoraTrack"
+#physics.producers.pandoracaloN.SpacePointModuleLabel: "pandora"
+
+
+
+#block to define where the output goes.  if you defined a filter in the physics
+#block and put it in the trigger_paths then you need to put a SelectEvents: {SelectEvents: [XXX]}
+#entry in the output stream you want those to go to, where XXX is the label of the filter module(s)
+outputs:
+{
+ out1:
+ {
+   module_type: RootOutput
+   fileName:    "stopmu.root"
+   dataTier:    "reco"
+   compressionLevel: 1
+   #SelectEvents: [reco]
+   }
+}
+
+physics.producers.mucstagger.BoxExtension: 20
+physics.producers.mucstagger.TrackModuleLabel: "pandora"
+physics.producers.mucstagger.Debug: false
+physics.producers.mucstagger.UsePMTCalib: true
+
+#physics.producers.mucstagger.BoxExtension: 20
+#physics.producers.mucstagger.TrackModuleLabel: "pandora"
+#physics.producers.mucstagger.Debug: false
+#physics.producers.mucstagger.UsePMTCalib: true
+
+physics.analyzers.fmatch.SliceTool.FlashMatchConfig.FlashMatchManager.MatchAlgo: "Chi2Match"
+physics.analyzers.fmatch.SliceTool.ChargeToNPhotonsTrack: 164. # 240 e-/ADC x 23.6/1e6 MeV/e- x 29,000 gamma/MeV = 164.  [*1.22 = 208]
+physics.analyzers.fmatch.SliceTool.BeamWindowStartTime: -1.5
+physics.analyzers.fmatch.SliceTool.BeamWindowEndTime: -0.5
+physics.analyzers.fmatch.SliceTool.BeamFlashPEThreshold: 5.0
+physics.analyzers.fmatch.SliceTool.FlashLabel: "simpleFlashCosmic"
+
+physics.analyzers.fmatch.SliceTool.FlashMatchConfig.Chi2Match:
+{
+  RecordHistory: false
+  NormalizeHypothesis: false
+  QLLMode: 0 # 0 for Chi2, 1 for LLHD
+  PEPenaltyThreshold: [10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10]
+  PEPenaltyValue: [4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]
+  #PEPenaltyThreshold: [10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10]
+  #PEPenaltyValue: [4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]
+  XPenaltyThreshold: 30
+  ZPenaltyThreshold: 30
+  OnePMTScoreThreshold:  0.00001
+  OnePMTXDiffThreshold:  35.
+  OnePMTPESumThreshold:  500
+  OnePMTPEFracThreshold: 0.3
+}
+
+#physics.analyzers.fmatch.SliceTool.FlashMatchConfig.PhotonLibHypothesis.CCVCorrection: [0.5325103114632755, 0.6356549960869228, 0.9554831892113691, 1.0105209018634707, 0.8722078680592333, 1.0006751769631232, 0.71326680659067, 0.9824800234892691, 1.301527385734628, 1.082574573484727, 1.3639998287484516, 1.0320664081254907, 1.3465986136421444, 1.1865306728136935, 1.084154931071456, 1.2470692903699134, 1.3681173585989252, 1.3458473409311302, 1.3971228965126081, 1.3196694927961163, 1.1790985117807222, 1.3184169832075163, 1.0355565893872416, 1.38098086109309, 0.9504623629770623, 1.42, 1.4199999981722438, 1.4199999999999917, 0.3791262497971681, 1.4199999998513078, 0.7784904484729742, 0.539271919377476]
+
+physics.analyzers.fmatch.SliceTool.FlashMatchConfig.PhotonLibHypothesis.CCVCorrection: [0.7489052066036354, 0.7564374954728633, 0.6997853135521171, 0.5467824053471095, 0.633882989698585, 0.6402162742433503, 0.9420430785591766, 0.9731594265462439, 0.9221839552499294, 0.8704154014221974, 1.2585117352619157, 1.155558523314934, 1.2778487426580285, 1.1055601566068654, 0.9923187889935589, 1.1671869272518283, 1.2249982063231757, 0.9257839205673805, 1.2042501218375428, 1.1615777833873993, 1.231483473717375, 1.1746672501678075, 1.0887455327936724, 0.8565988433044325, 0.9523734341569552, 0.5274391697820715, 0.7040478803380821, 0.6241313503164108, 0.49209705526049713, 0.5905057253158486, 0.4845475445151299, 1.0011952477794523]# [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+### Here we include the file giving us run/data dependent overrides

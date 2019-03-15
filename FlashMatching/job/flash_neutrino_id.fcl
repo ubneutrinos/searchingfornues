@@ -1,0 +1,50 @@
+#include "flashmatchalg.fcl"
+
+BEGIN_PROLOG
+
+flash_neutrino_id_tool :
+{
+    tool_type: "FlashNeutrinoId"
+
+    # Input producers
+    FlashLabel:              "simpleFlashBeam"
+    PandoraAllOutcomesLabel: "pandoraPatRec:allOutcomes"
+
+    # PMT reordering
+    ShouldRemapPMTs:          false
+    OrderedPMTList:           [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 31, 26, 28, 29, 30, 25, 27]
+
+    # Beam flash conditions
+    BeamWindowStartTime:      3.2
+    BeamWindowEndTime:        4.8
+    BeamFlashPEThreshold:     50.0
+    
+    # Coefficient linking the chargelightration and the x-dependence
+    CoefXCL:                  190
+        
+    # Pre-selection cut values
+    MaxDeltaY:                95.0
+    MaxDeltaZ:                105.0
+    MaxDeltaYSigma:           2.1 
+    MaxDeltaZSigma:           1.0
+    MinChargeToLightRatio:    50.0 #2.0
+    MaxChargeToLightRatio:    250.0 #200.0
+
+    # Flash matching congifuration
+    ChargeToNPhotonsTrack:    164. #363.636 
+    ChargeToNPhotonsShower:   512.815
+    FlashMatchConfig:         @local::flashmatch_config
+
+    # Debug
+    ShouldWriteToFile:        true
+    HasMCNeutrino:            true
+    MCTruthLabel:             "generator" 
+    MCParticleLabel:          "largeant"
+    HitLabel:                 "gaushit"
+    BacktrackerLabel:         "gaushitTruthMatch"
+}
+    
+flash_neutrino_id_tool.FlashMatchConfig.FlashMatchManager.AllowReuseFlash: true
+flash_neutrino_id_tool.FlashMatchConfig.QLLMatch.NormalizeHypothesis:      false
+
+END_PROLOG
