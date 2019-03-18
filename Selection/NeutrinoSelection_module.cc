@@ -93,6 +93,7 @@ private:
   int   _ccnc;                  // CC or NC tag from GENIE
   float _vtx_x, _vtx_y, _vtx_z; // neutrino interaction vertex coordinates [cm]
   float _vtx_t;                 // neutrino generation time 
+  bool  _isVtxInFiducial;       // true if neutrino in fiducial volume, 0 < x < 256 -116 < y < 116;  0 < z <  1036
   // final state particle information
   int   _nmuon;                    // is there a final-state muon from the neutrino? [1=yes 0=no]
   float _muon_e, _muon_p, _muon_c; // energy, purity, completeness.
@@ -226,6 +227,7 @@ NeutrinoSelection::NeutrinoSelection(fhicl::ParameterSet const& p)
   _tree->Branch("_vtx_x" ,&_vtx_x ,"vtx_x/F" );
   _tree->Branch("_vtx_y" ,&_vtx_y ,"vtx_y/F" );
   _tree->Branch("_vtx_z" ,&_vtx_z ,"vtx_z/F" );
+  _tree->Branch("_isVtxInFiducial" ,&_isVtxInFiducial ,"isVtxInFiducial/O" );
   // individual particles in the neutrino slice
   // legend:
   // _e -> energy of particle in GeV
@@ -497,6 +499,7 @@ void NeutrinoSelection::ResetTTree() {
   _vtx_y   = std::numeric_limits<float>::min();
   _vtx_z   = std::numeric_limits<float>::min();
 
+  _isVtxInFiducial = false;
   _nmuon = 0;
   _muon_e = 0;
   _muon_p = 0;
@@ -556,6 +559,11 @@ void NeutrinoSelection::SaveTruth(art::Event const& e) {
   _vtx_y = nu.EndY();
   _vtx_z = nu.EndZ();
   _vtx_t = nu.T();
+
+  if (_vtx_x <  256. && _vtx_x >    0. && 
+      _vtx_y < -116. && _vtx_y >  116. && 
+      _vtx_z <    0. && _vtx_z > 1036.   ) {_isVtxInFiducial = true;}
+  else _isVtxInFiducial = false;
 
   _nelec   = 0;
   _nmuon   = 0;

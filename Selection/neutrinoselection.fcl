@@ -42,3 +42,11 @@ Pi0Selection.SelectionTool: {
     dotmin: 0.5
     dmin: 2.
 }
+
+
+CRTApproachSelection: @local::NuSelection
+CRTApproachSelection.SelectionTool: {
+    tool_type: "CRTApproachSelection"
+    fTrackAssnModuleLabel:"trackmatch"
+    
+}
