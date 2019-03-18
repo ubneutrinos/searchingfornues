@@ -7,18 +7,10 @@
 #include "ubobj/CRT/CRTHit.hh"
 #include "lardataobj/RecoBase/OpFlash.h"
 
-#include "nusimdata/SimulationBase/MCParticle.h"
 #include "nusimdata/SimulationBase/MCTruth.h"
 
 // backtracking tools
-#include "lardataobj/AnalysisBase/BackTrackerMatchingData.h"
-
-// services for detector properties
-#include "larevt/SpaceChargeServices/SpaceChargeService.h"
-#include "lardata/DetectorInfoServices/DetectorPropertiesService.h"
-#include "lardata/DetectorInfoServices/DetectorClocksService.h"
-
-#include "lardata/Utilities/FindManyInChainP.h"
+#include "ubana/ubana/searchingfornues/Selection/CommonDefs/BacktrackingFuncs.h"
 
 namespace analysis
 {
@@ -71,18 +63,6 @@ namespace analysis
      */
     void SaveTruth(art::Event const& e);
     
-    /**
-     * @brief shift coordinates for truth particles according to SCE offsets + time offsets
-     */
-    void ApplyDetectorOffsets();
-
-    /**
-     * @brief BackTrack a single hit collection (i.e. from a PFParticle)
-     */
-    art::Ptr<simb::MCParticle> getAssocMCParticle(art::Event const& e,
-						  const std::vector<art::Ptr<recob::Hit> >& hits,
-						  float& purity, float& completeness);
-
     /**
      * @brief set branches for TTree
      */
@@ -204,6 +184,12 @@ namespace analysis
     ProxyClusColl_t const& clus_proxy = proxy::getCollection<std::vector<recob::Cluster> >(e, fCLSproducer,
 											   proxy::withAssociated<recob::Hit>(fCLSproducer));
 
+    // load backtrack information
+    art::InputTag BacktrackTag { fBacktrackTag };
+    auto const& gaushit_h = e.getValidHandle<std::vector<recob::Hit> > ("gaushit");
+    art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData> hittruth(gaushit_h,e,BacktrackTag);
+    //const auto& hittruth = std::unique_ptr<art::FindMany<simb::MCParticle,anab::BackTrackerHitMatchingData> > (new art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData>(gaushit_h,e,BacktrackTag));
+
     for (auto pfp :  slice_pfp_v) {
       // backtrack PFParticles in the slice
       if (!fData) {
@@ -220,7 +206,7 @@ namespace analysis
 	  }// for all clusters associated to PFP
 	  
 	  float purity, completeness;
-	  auto mcp = getAssocMCParticle(e, hit_v, purity, completeness);
+	  auto mcp = searchingfornues::getAssocMCParticle(hittruth, hit_v, purity, completeness);
 	  if (mcp){
 	    auto PDG = mcp->PdgCode();
 	    _backtracked_idx.push_back(0);
@@ -435,70 +421,9 @@ void DefaultAnalysis::SaveTruth(art::Event const& e) {
     }// if proton
   }// for all MCParticles
 
-  ApplyDetectorOffsets();
+  searchingfornues::ApplyDetectorOffsets(_vtx_t,_vtx_x,_vtx_y,_vtx_z,_xtimeoffset,_xsceoffset,_ysceoffset,_zsceoffset);
   
   return;
-}
-
-// calculate offsets for truth neutrino vertex
-void DefaultAnalysis::ApplyDetectorOffsets() {
-
-  auto const& detProperties = lar::providerFrom<detinfo::DetectorPropertiesService>(); 
-  auto const& detClocks = lar::providerFrom<detinfo::DetectorClocksService>();
-  double g4Ticks = detClocks->TPCG4Time2Tick(_vtx_t) + detProperties->GetXTicksOffset(0, 0, 0) - detProperties->TriggerOffset();
-  _xtimeoffset = detProperties->ConvertTicksToX(g4Ticks, 0, 0, 0);
-
-  auto const *SCE = lar::providerFrom<spacecharge::SpaceChargeService>();
-  auto offset = SCE->GetPosOffsets(geo::Point_t(_vtx_x,_vtx_y,_vtx_z));
-  _xsceoffset = offset.X();
-  _ysceoffset = offset.Y();
-  _zsceoffset = offset.Z();
-
-}// apply SCE corrections + time-shifts
-
-art::Ptr<simb::MCParticle> DefaultAnalysis::getAssocMCParticle(art::Event const& e,
-							       const std::vector<art::Ptr<recob::Hit> >& hits,
-							       float& purity, float& completeness) {
-
-  // load backtrack information
-  art::InputTag BacktrackTag { fBacktrackTag };
-  auto const& gaushit_h = e.getValidHandle<std::vector<recob::Hit> > ("gaushit");
-  art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData> hittruth(gaushit_h,e,BacktrackTag);
-  //const auto& hittruth = std::unique_ptr<art::FindMany<simb::MCParticle,anab::BackTrackerHitMatchingData> > (new art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData>(gaushit_h,e,BacktrackTag));
-  
-  // store total charge from hits
-  float pfpcharge = 0; // total hit charge from clusters
-  float maxcharge = 0; // charge backtracked to best match
-  
-  //credit: Wes Ketchum
-  std::unordered_map<int,double> trkide;
-  std::unordered_map<int,float> trkq;
-  double maxe=-1, tote=0;
-  art::Ptr<simb::MCParticle> maxp_me; //pointer for the particle match we will calculate
-  //simb::MCParticle* maxp_me; //pointer for the particle match we will calculate
-  for (auto h : hits) {
-    pfpcharge += h->Integral();
-    //const std::vector<const simb::MCParticle*> particle_vec = hittruth.at(h.key());
-    std::vector<art::Ptr<simb::MCParticle> > particle_vec = hittruth.at(h.key());
-    //auto particle_vec = hittruth.at(h.key());
-    std::vector<anab::BackTrackerHitMatchingData const*> match_vec = hittruth.data(h.key());;
-    //loop over particles
-    for(size_t i_p=0; i_p<particle_vec.size(); ++i_p){
-      trkide[ particle_vec[i_p]->TrackId() ] += match_vec[i_p]->energy; //store energy per track id
-      trkq  [ particle_vec[i_p]->TrackId() ] += h->Integral()  * match_vec[i_p]->ideFraction; //store hit integral associated to this hit
-      tote += match_vec[i_p]->energy; //calculate total energy deposited
-      if( trkide[ particle_vec[i_p]->TrackId() ] > maxe ){ //keep track of maximum
-	maxe = trkide[ particle_vec[i_p]->TrackId() ];
-	maxp_me = particle_vec[i_p];
-	maxcharge = trkq[ particle_vec[i_p]->TrackId() ];
-      }
-    }//end loop over particles per hit
-  }
-
-  purity       = maxcharge / pfpcharge;
-  completeness = 0;
-
-  return maxp_me;
 }
 
   DEFINE_ART_CLASS_TOOL(DefaultAnalysis)
