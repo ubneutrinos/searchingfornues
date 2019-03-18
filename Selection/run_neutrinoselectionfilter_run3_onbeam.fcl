@@ -88,5 +88,5 @@ physics:
 
 physics.filters.crtveto.useAsFilter: false
 
-physics.filters.nuselection.BacktrackTag: "" #"gaushitTruthMatch"
+physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "" #"gaushitTruthMatch"
 physics.filters.nuselection.IsData: true

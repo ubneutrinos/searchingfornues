@@ -91,5 +91,5 @@ physics:
  end_paths:     [  ana]#,e1  ] 
 }
 
-physics.filters.nuselection.BacktrackTag: "gaushitTruthMatch"
+physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
 #physics.filters.nuselection.IsData: true
