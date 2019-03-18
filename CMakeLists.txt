@@ -1,1 +1,2 @@
 add_subdirectory(Selection)
+add_subdirectory(FlashMatching)

@@ -2,6 +2,8 @@ include_directories( $ENV{PANDORA_INC} )
 include_directories( $ENV{LARPANDORACONTENT_INC} )
 
 add_subdirectory(SelectionTools)
+add_subdirectory(AnalysisTools)
+add_subdirectory(job)
 
 art_make( MODULE_LIBRARIES larcorealg_Geometry
                            larcore_Geometry_Geometry_service

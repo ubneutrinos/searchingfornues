@@ -1,0 +1,49 @@
+#include "services_microboone.fcl"
+
+DefaultAnalysisTool: {
+    tool_type: "DefaultAnalysis"
+    CRTVetoproducer: ""
+    CLSproducer: "pandora"
+    MCTproducer: "generator"
+    BacktrackTag: ""
+}
+
+NuSelectionFilter:{
+    module_type: NeutrinoSelectionFilter
+    Verbose: true
+    IsData: false
+    Filter: true
+    PFPproducer: "pandora"
+    SHRproducer: "pandora"
+    HITproducer: "pandora"
+    CLSproducer: "pandora"
+    VTXproducer: "pandora"
+    TRKproducer: "pandora"
+    MCTproducer: "generator"
+    SelectionTool: {
+        tool_type: "EmptySelection"
+        }
+    AnalysisTools: {
+        default: @local::DefaultAnalysisTool
+        # you can add more analysis tools here
+    }
+
+    }
+
+
+NuSelectionFilterEmpty: @local::NuSelectionFilter
+NuSelectionFilterEmpty.SelectionTool: { tool_type: "EmptySelection" }
+
+Pi0Selection: @local::NuSelectionFilter
+Pi0Selection.SelectionTool: {
+    tool_type: "Pi0Selection"
+    onlyshower: false
+    dotmin: 0.5
+    dmin: 2.
+}
+
+
+# run 3 neutrino selection [ w/ crt veto ]
+NuSelectionFilterRun3: @local::NuSelectionFilter
+NuSelectionFilterRun3.AnalysisTools.default.CRTVetoproducer: "crtveto"
+

@@ -1,19 +1,7 @@
-#ifndef SELECTIONTOOLBASE_H
-#define SELECTIONTOOLBASE_H
-////////////////////////////////////////////////////////////////////////
-//
-// Class:       IHitEfficiencyHistogramTool
-// Module Type: tool
-// File:        IHitEfficiencyHistogramTool.h
-//
-//              This provides an interface for tools which do histogramming
-//              of various quantities associated to recob::Hit objects
-//
-// Created by David Caratelli (davidc@fnal.gov) on January 30 2019
-//
-////////////////////////////////////////////////////////////////////////
+#ifndef ANALYSISTOOLBASE_H
+#define ANALYSISTOOLBASE_H
 
-// art TOOLS
+// art TOOL
 #include "art/Utilities/ToolMacros.h"
 #include "art/Utilities/make_tool.h"
 
@@ -27,21 +15,19 @@
 #include "TTree.h"
 #include <limits>
 
-namespace selection {
+namespace analysis {
 
-  using ProxyPfpColl_t = searchingfornues::ProxyPfpColl_t;
   using ProxyPfpElem_t = searchingfornues::ProxyPfpElem_t;
   using ProxyClusColl_t = searchingfornues::ProxyClusColl_t;
-  using ProxyClusElem_t = searchingfornues::ProxyClusElem_t;
-
-class SelectionToolBase {
+  
+class AnalysisToolBase {
 
 public:
 
     /**
      *  @brief  Virtual Destructor
      */
-    virtual ~SelectionToolBase() noexcept = default;
+    virtual ~AnalysisToolBase() noexcept = default;
     
     /**
      *  @brief Interface for configuring the particular algorithm tool
@@ -51,12 +37,18 @@ public:
     void configure(const fhicl::ParameterSet&){};
 
     /**
-     * @brief Selection function
+     * @brief Analysis function
      *
-     * @param art::Event event record for selection
+     * @param art::Event event record for analysis
      */
-    virtual bool selectEvent(art::Event const& e,
-			     const std::vector<ProxyPfpElem_t>& pfp_pxy_v) = 0;
+    virtual void analyzeEvent(art::Event const& e, bool fData) = 0;
+
+    /**
+     * @brief Analysis function
+     *
+     * @param art::Event event record for analysis
+     */
+    virtual void analyzeSlice(art::Event const& e, std::vector<ProxyPfpElem_t>& slice_pfp_v, bool fData, bool selected) = 0;
 
     /**
      * @brief set branches for TTree
@@ -72,6 +64,6 @@ public:
 
 };
 
-} // selection namespace
+} // analysis namespace
 
 #endif

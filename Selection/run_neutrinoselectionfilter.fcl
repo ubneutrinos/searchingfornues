@@ -1,6 +1,14 @@
 #include "services_microboone.fcl"
 #include "neutrinoselection.fcl"
 
+Pi0SelectionFilter: @local::NuSelectionFilter
+Pi0SelectionFilter.SelectionTool: {
+    tool_type: "Pi0Selection"
+    onlyshower: false
+    dotmin: 0.5
+    dmin: 2.
+}
+
 process_name: NeutrinoSelectionFilter
 
 services:
@@ -60,7 +68,7 @@ physics:
  producers:{}
  filters:  
  {
-        nuselection: @local::NuSelectionFilter
+        nuselection: @local::NuSelectionFilterEmpty
  } 
  analyzers:{ 
             
@@ -80,8 +88,8 @@ physics:
  #end_paths is a keyword and contains the paths that do not modify the art::Event, 
  #ie analyzers and output streams.  these all run simultaneously
  #end_paths:     [ stream1, ana ] 
- end_paths:     [  ana,e1  ] 
+ end_paths:     [  ana]#,e1  ] 
 }
 
-physics.filters.nuselection.BacktrackTag: "gaushitTruthMatch"
-physics.filters.nuselection.IsData: true
+physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
+#physics.filters.nuselection.IsData: true

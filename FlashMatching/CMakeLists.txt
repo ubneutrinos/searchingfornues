@@ -1,0 +1,110 @@
+add_subdirectory(job)
+
+art_make( 
+	  LIB_LIBRARIES
+			larevt_CalibrationDBI_IOVData
+			larcorealg_Geometry
+                        larcore_Geometry_Geometry_service
+                        larsim_Simulation lardataobj_Simulation
+                        lardataobj_RawData
+                        lardataobj_RecoBase
+                        lardataobj_AnalysisBase
+                        lardata_ArtDataHelper
+                        lardata_Utilities
+                        larreco_RecoAlg_ClusterRecoUtil
+                        larreco_RecoAlg
+                        larreco_ClusterFinder
+                        larreco_Calorimetry
+                        ${PANDORASDK}
+                        ${PANDORAMONITORING}
+                        nusimdata_SimulationBase
+                        ${ART_FRAMEWORK_CORE}
+                        ${ART_FRAMEWORK_PRINCIPAL}
+                        ${ART_FRAMEWORK_SERVICES_REGISTRY}
+                        ${ART_FRAMEWORK_SERVICES_BASIC}
+                        ${ART_FRAMEWORK_SERVICES_OPTIONAL}
+                        ${ART_FRAMEWORK_SERVICES_OPTIONAL_TFILESERVICE_SERVICE}	
+                        art_Persistency_Common
+                        art_Persistency_Provenance
+                        art_Utilities
+                        canvas
+                        ${MF_MESSAGELOGGER}
+                        ${FHICLCPP}
+                        cetlib cetlib_except
+                        ${Boost_SYSTEM_LIBRARY}
+                        ${Boost_FILESYSTEM_LIBRARY}
+                        ${ROOT_GEOM}
+                        ${ROOT_BASIC_LIB_LIST}
+                        ${ROOT_GENVECTOR}
+                        ubana_SelectionTool_OpT0FinderBase
+                        ubana_SelectionTool_OpT0FinderAlgorithms
+	  TOOL_LIBRARIES
+			larevt_CalibrationDBI_IOVData
+			larcorealg_Geometry
+                        larcore_Geometry_Geometry_service
+                        larsim_Simulation lardataobj_Simulation
+                        lardataobj_RawData
+                        lardataobj_RecoBase
+                        lardataobj_AnalysisBase
+                        lardata_ArtDataHelper
+                        lardata_Utilities
+                        larreco_RecoAlg_ClusterRecoUtil
+                        larreco_RecoAlg
+                        larreco_ClusterFinder
+                        larreco_Calorimetry
+                        ${PANDORASDK}
+                        ${PANDORAMONITORING}
+                        nusimdata_SimulationBase
+                        ${ART_FRAMEWORK_CORE}
+                        ${ART_FRAMEWORK_PRINCIPAL}
+                        ${ART_FRAMEWORK_SERVICES_REGISTRY}
+                        ${ART_FRAMEWORK_SERVICES_BASIC}
+                        ${ART_FRAMEWORK_SERVICES_OPTIONAL}
+                        ${ART_FRAMEWORK_SERVICES_OPTIONAL_TFILESERVICE_SERVICE}	
+                        art_Persistency_Common
+                        art_Persistency_Provenance
+                        art_Utilities
+                        canvas
+                        ${MF_MESSAGELOGGER}
+                        ${FHICLCPP}
+                        cetlib cetlib_except
+                        ${Boost_SYSTEM_LIBRARY}
+                        ${Boost_FILESYSTEM_LIBRARY}
+                        ${ROOT_GEOM}
+                        ${ROOT_BASIC_LIB_LIST}
+                        ${ROOT_GENVECTOR}
+                        ubreco_SelectionTool_OpT0FinderBase
+                        ubreco_SelectionTool_OpT0FinderAlgorithms
+
+     MODULE_LIBRARIES 
+			larevt_CalibrationDBI_IOVData
+			#larpandora_LArPandoraEventBuilding
+			art_Framework_Core
+			art_Framework_Services_Registry
+			art_Framework_Principal
+			art_Persistency_Provenance
+			${ART_FRAMEWORK_CORE}
+			larcorealg_Geometry	
+			lardataobj_RecoBase
+		   	larcorealg_Geometry		
+			#larpandora_LArPandoraObjects
+                        #LArPandoraContent
+                        #larpandoraobj
+            		${PANDORASDK}	
+			larcore_Geometry_Geometry_service	
+			art_Utilities canvas
+                        ${MF_MESSAGELOGGER}
+                        ${MF_UTILITIES}
+                        ${CETLIB} cetlib_except
+                        ${Boost_SYSTEM_LIBRARY}
+                        ${ROOT_BASIC_LIB_LIST}
+		   	${ART_FRAMEWORK_SERVICES_REGISTRY}
+		   	${ART_FRAMEWORK_SERVICES_OPTIONAL}
+                        ${ART_FRAMEWORK_SERVICES_OPTIONAL_TFILESERVICE_SERVICE}	
+                        ubreco_SelectionTool_OpT0FinderBase
+                        ubreco_SelectionTool_OpT0FinderAlgorithms
+)
+
+install_headers()
+install_fhicl()
+install_source()
