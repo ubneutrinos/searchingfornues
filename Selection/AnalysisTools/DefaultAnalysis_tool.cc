@@ -74,10 +74,14 @@ namespace analysis
     void resetTTree(TTree* _tree) override;
     
   private:
+
     art::InputTag fCRTVetoproducer; // producer for CRT veto ass tag [anab::T0 <-> recob::OpFlash]
     art::InputTag fCLSproducer; // cluster associated to PFP
     art::InputTag fMCTproducer;
     art::InputTag fBacktrackTag;
+
+    // kinematic thresholds to define signal
+    float fProtonThreshold;
 
     int   _run, _sub, _evt;       // event info
     // neutrino information
@@ -96,12 +100,8 @@ namespace analysis
     int   _pi0;                      // is there a final-state pi0 from the neutrino? [1=yes 0=no]
     float _pi0_e, _pi0_p, _pi0_c;    // energy, purity, completeness.
     int   _nproton;                  // how many protons are there?
-    int   _p0;                       // is there a final-state proton from the neutrino? [1=yes 0=no]
-    float _p0_e, _p0_p, _p0_c;       // energy, purity, completeness.
-    int   _p1;                       // is there a final-state proton from the neutrino? [1=yes 0=no]
-    float _p1_e, _p1_p, _p1_c;       // energy, purity, completeness.
-    int   _p2;                       // is there a final-state proton from the neutrino? [1=yes 0=no]
-    float _p2_e, _p2_p, _p2_c;       // energy, purity, completeness.  
+    int   _proton;                       // is there a final-state proton from the neutrino? [1=yes 0=no]
+    float _proton_e, _proton_p, _proton_c;       // energy, purity, completeness.
     int   _npion;                    // how many pions are there?
     int   _pion;                     // is there a final-state charged pion from the neutrino? [1=yes 0=no]
     float _pion_e, _pion_p, _pion_c; // energy, purity, completeness.
@@ -136,6 +136,8 @@ namespace analysis
     fCLSproducer = p.get< art::InputTag > ("CLSproducer");
     fMCTproducer = p.get< art::InputTag > ("MCTproducer");
     fBacktrackTag = p.get< art::InputTag > ("BacktrackTag");
+    // kinematic thresholds for defining signal
+    fProtonThreshold = p.get< float > ("ProtonThreshold");
   }
   
   //----------------------------------------------------------------------------
@@ -265,20 +267,10 @@ namespace analysis
     _tree->Branch("_pi0_c",&_pi0_c,"pi0_c/F");
     _tree->Branch("_pi0_p",&_pi0_p,"pi0_p/F");
     // first [highest momentum] proton
-    _tree->Branch("_p0"   ,&_p0   ,"p0/I");
-    _tree->Branch("_p0_e",&_p0_e,"p0_e/F");
-    _tree->Branch("_p0_c",&_p0_c,"p0_c/F");
-    _tree->Branch("_p0_p",&_p0_p,"p0_p/F");
-    // second proton
-    _tree->Branch("_p1"   ,&_p1   ,"p1/I");
-    _tree->Branch("_p1_e",&_p1_e,"p1_e/F");
-    _tree->Branch("_p1_c",&_p1_c,"p1_c/F");
-    _tree->Branch("_p1_p",&_p1_p,"p1_p/F");
-    // third proton
-    _tree->Branch("_p2"   ,&_p2   ,"p2/I");
-    _tree->Branch("_p2_e",&_p2_e,"p2_e/F");
-    _tree->Branch("_p2_c",&_p2_c,"p2_c/F");
-    _tree->Branch("_p2_p",&_p2_p,"p2_p/F");
+    _tree->Branch("_proton"   ,&_proton   ,"proton/I");
+    _tree->Branch("_proton_e",&_proton_e,"proton_e/F");
+    _tree->Branch("_proton_c",&_proton_c,"proton_c/F");
+    _tree->Branch("_proton_p",&_proton_p,"proton_p/F");
 
     _tree->Branch("_nslice"  ,&_nslice  ,"nslice/I"  );
     _tree->Branch("_crtveto" ,&_crtveto ,"crtveto/I" );
@@ -321,7 +313,6 @@ namespace analysis
     _crtveto = 0;
     _crthitpe = 0;
     
-    
     _nmuon = 0;
     _muon_e = 0;
     _muon_p = 0;
@@ -343,17 +334,9 @@ namespace analysis
     _pion_c = 0;
 
     _nproton = 0;
-    _p0_e = 0;
-    _p0_p = 0;
-    _p0_c = 0;
-
-    _p1_e = 0;
-    _p1_p = 0;
-    _p1_c = 0;
-
-    _p2_e = 0;
-    _p2_p = 0;
-    _p2_c = 0;
+    _proton_e = 0;
+    _proton_p = 0;
+    _proton_c = 0;
 
     _backtracked_idx.clear();
     _backtracked_tid.clear();
@@ -414,19 +397,17 @@ void DefaultAnalysis::SaveTruth(art::Event const& e) {
     // if proton
     if ( (part.PdgCode() == 2212) and (part.StatusCode() == 1) ){
       if (_nproton == 0) {
-	_p0_e = part.Momentum(0).E();
+	// if highest energy, update energy
+	if (part.Momentum(0).E() > _proton_e)
+	  _proton_e = part.Momentum(0).E();
+	if (part.Momentum(0).E() > fProtonThreshold)
+	  _nproton += 1;
       }
-      if (_nproton == 1) {
-	_p1_e = part.Momentum(0).E();
-      }
-      if (_nproton == 2) {
-	_p2_e = part.Momentum(0).E();
-      }
-      _nproton += 1;
     }// if proton
     // if pion
     if ( (fabs(part.PdgCode()) == 211) and (part.StatusCode() == 1) ){
-      _pion_e = part.Momentum(0).E();
+      if (part.Momentum(0).E() > _pion_e)
+	_pion_e = part.Momentum(0).E();
       _npion += 1;
     }// if proton
   }// for all MCParticles
