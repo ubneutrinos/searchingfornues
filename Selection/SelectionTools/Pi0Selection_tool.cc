@@ -148,7 +148,8 @@ cioe'     * @brief set branches for TTree
 
     Reset();
 
-    ReadTruth(e);
+    if (!fData)
+      ReadTruth(e);
 
     TVector3 gammadir1, gammadir2;
 
@@ -367,82 +368,84 @@ cioe'     * @brief set branches for TTree
 
   void Pi0Selection::ReadTruth(art::Event const& e) {
 
-  auto const& mct_h = e.getValidHandle<std::vector<simb::MCTruth> >("generator");
-  auto const& mcp_h = e.getValidHandle<std::vector<simb::MCParticle> >("largeant");
-
-  _ispi0 = 0;
-
-  auto mct = mct_h->at(0);
-  size_t npart = mct.NParticles();
-
-  int pi0trkid = -1;
-  double pi0_vtx_x, pi0_vtx_y, pi0_vtx_z;
-
-  for (size_t i=0; i < npart; i++){
-    auto const& part = mct.GetParticle(i);
-    if ( (part.PdgCode() == 111) and (part.StatusCode() == 1) ){
-      pi0_vtx_x = part.Trajectory().X(0);
-      pi0_vtx_y = part.Trajectory().Y(0);
-      pi0_vtx_z = part.Trajectory().Z(0);
-      pi0trkid = part.TrackId();
-      std::cout << "DAVIDC found a pi0! " << std::endl;
-      break;
+    std::cout << "DAVIDC reading mctruth " << std::endl;
+    
+    auto const& mct_h = e.getValidHandle<std::vector<simb::MCTruth> >("generator");
+    auto const& mcp_h = e.getValidHandle<std::vector<simb::MCParticle> >("largeant");
+    
+    _ispi0 = 0;
+    
+    auto mct = mct_h->at(0);
+    size_t npart = mct.NParticles();
+    
+    int pi0trkid = -1;
+    double pi0_vtx_x, pi0_vtx_y, pi0_vtx_z;
+    
+    for (size_t i=0; i < npart; i++){
+      auto const& part = mct.GetParticle(i);
+      if ( (part.PdgCode() == 111) and (part.StatusCode() == 1) ){
+	pi0_vtx_x = part.Trajectory().X(0);
+	pi0_vtx_y = part.Trajectory().Y(0);
+	pi0_vtx_z = part.Trajectory().Z(0);
+	pi0trkid = part.TrackId();
+	std::cout << "DAVIDC found a pi0! " << std::endl;
+	break;
+      }
     }
-  }
-
-  if (pi0trkid < 0) return;
-
-  // how many photons from the pi0 did we find?
-  int ngamma = 0;
-
-  // go through MCParticles and find photons
-  for (size_t i=0; i < mcp_h->size(); i++) {
-
-    auto mcp = mcp_h->at(i);
     
-    if (mcp.PdgCode() != 22) continue;
-
-    double x = mcp.Trajectory().X(0);
-    double y = mcp.Trajectory().Y(0);
-    double z = mcp.Trajectory().Z(0);
-    double d = sqrt( ( (pi0_vtx_x - x) * (pi0_vtx_x - x) ) +
-		     ( (pi0_vtx_y - y) * (pi0_vtx_y - y) ) +
-		     ( (pi0_vtx_z - z) * (pi0_vtx_z - z) ) );
-
-    if ( d < 0.01 ) {
-
-      std::cout << "DAVIDC ngamma is " << ngamma << std::endl;
-
-      if (ngamma == 0) {
-	std::cout << "DAVIDC gamma0 " << std::endl;
-	_mcgamma0_e = mcp.E(0);
-	_mcgamma0_mom = mcp.Momentum(0).Vect().Unit();
-	_mcgamma0_px = _mcgamma0_mom.X();
-	_mcgamma0_py = _mcgamma0_mom.Y();
-	_mcgamma0_pz = _mcgamma0_mom.Z();
-      }
-
-      if (ngamma == 1) {
-	std::cout << "DAVIDC gamma1 " << std::endl;
-	_mcgamma1_e = mcp.E(0);
-	_mcgamma1_mom = mcp.Momentum(0).Vect().Unit();
-	_mcgamma1_px = _mcgamma1_mom.X();
-	_mcgamma1_py = _mcgamma1_mom.Y();
-	_mcgamma1_pz = _mcgamma1_mom.Z();
-      }
-      
-      ngamma += 1; // update photon count
-
-      std::cout << "DAVIDC found " << mcp.PdgCode() << " with pi0 parent " << std::endl;
-      std::cout << "DAVIDC found " << mcp.PdgCode() << " with pi0 parent " << std::endl;
-
-    }// if a pi0 induced gamma
-      
-  }// for all mcparticles
-
-  /*
-  if ( (foundShowers == true) && fPDG == 111) {
+    if (pi0trkid < 0) return;
     
+    // how many photons from the pi0 did we find?
+    int ngamma = 0;
+    
+    // go through MCParticles and find photons
+    for (size_t i=0; i < mcp_h->size(); i++) {
+      
+      auto mcp = mcp_h->at(i);
+      
+      if (mcp.PdgCode() != 22) continue;
+      
+      double x = mcp.Trajectory().X(0);
+      double y = mcp.Trajectory().Y(0);
+      double z = mcp.Trajectory().Z(0);
+      double d = sqrt( ( (pi0_vtx_x - x) * (pi0_vtx_x - x) ) +
+		       ( (pi0_vtx_y - y) * (pi0_vtx_y - y) ) +
+		       ( (pi0_vtx_z - z) * (pi0_vtx_z - z) ) );
+      
+      if ( d < 0.01 ) {
+	
+	std::cout << "DAVIDC ngamma is " << ngamma << std::endl;
+	
+	if (ngamma == 0) {
+	  std::cout << "DAVIDC gamma0 " << std::endl;
+	  _mcgamma0_e = mcp.E(0);
+	  _mcgamma0_mom = mcp.Momentum(0).Vect().Unit();
+	  _mcgamma0_px = _mcgamma0_mom.X();
+	  _mcgamma0_py = _mcgamma0_mom.Y();
+	  _mcgamma0_pz = _mcgamma0_mom.Z();
+	}
+	
+	if (ngamma == 1) {
+	  std::cout << "DAVIDC gamma1 " << std::endl;
+	  _mcgamma1_e = mcp.E(0);
+	  _mcgamma1_mom = mcp.Momentum(0).Vect().Unit();
+	  _mcgamma1_px = _mcgamma1_mom.X();
+	  _mcgamma1_py = _mcgamma1_mom.Y();
+	  _mcgamma1_pz = _mcgamma1_mom.Z();
+	}
+	
+	ngamma += 1; // update photon count
+	
+	std::cout << "DAVIDC found " << mcp.PdgCode() << " with pi0 parent " << std::endl;
+	std::cout << "DAVIDC found " << mcp.PdgCode() << " with pi0 parent " << std::endl;
+	
+      }// if a pi0 induced gamma
+      
+    }// for all mcparticles
+    
+    /*
+      if ( (foundShowers == true) && fPDG == 111) {
+      
     size_t idx_1 = 0;
     size_t idx_2 = 0;
     size_t n_found = 0;

@@ -187,6 +187,9 @@ NeutrinoSelectionFilter::NeutrinoSelectionFilter(fhicl::ParameterSet const& p)
 
   // pass the TTree to the selection tool so that any branch can be added to it
   _selectionTool->setBranches(_tree);
+
+  // set whether data
+  _selectionTool->SetData(fData);
   
   // configure and construct Analysis Tool
   auto const tool_psets = p.get<fhicl::ParameterSet>("AnalysisTools");
