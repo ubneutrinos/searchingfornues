@@ -219,7 +219,16 @@ namespace analysis
 	    _backtracked_purity.push_back(purity);
 	    // if this is n interesting particle, save it to the TTree
 	    if (fabs(PDG) == 13) {
-	      _muon_p = purity;
+	      if ( fabs(mcp->Momentum().E() - _muon_e) < 0.01 )
+		_muon_p = purity;
+	    }
+	    if (fabs(PDG) == 11) {
+	      if ( fabs(mcp->Momentum().E() - _elec_e) < 0.01 )
+		_elec_p = purity;
+	    }
+	    if (fabs(PDG) == 2212) {
+	      if ( fabs(mcp->Momentum().E() - _proton_e) < 0.01 )
+		_proton_p = purity;
 	    }
 	  }
 	  else{
