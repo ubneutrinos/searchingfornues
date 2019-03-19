@@ -6,11 +6,16 @@
 
 #include "ubobj/CRT/CRTHit.hh"
 #include "lardataobj/RecoBase/OpFlash.h"
+#include "lardataobj/RecoBase/SpacePoint.h"
+#include "lardataobj/AnalysisBase/T0.h"
 
-#include "nusimdata/SimulationBase/MCTruth.h"
+#include "lardata/Utilities/AssociationUtil.h"
+#include "lardata/Utilities/FindManyInChainP.h"
 
 // backtracking tools
 #include "ubana/ubana/searchingfornues/Selection/CommonDefs/BacktrackingFuncs.h"
+// flash-matching tools
+#include "ubana/ubana/searchingfornues/FlashMatching/FlashMatchingToolBase_tool.h"
 
 namespace analysis
 {
@@ -70,10 +75,24 @@ namespace analysis
     
   private:
 
-    art::InputTag fCRTVetoproducer; // producer for CRT veto ass tag [anab::T0 <-> recob::OpFlash]
-    art::InputTag fCLSproducer; // cluster associated to PFP
-    art::InputTag fMCTproducer;
-    art::InputTag fBacktrackTag;
+    void AddDaughters(const art::Ptr<recob::PFParticle>& pfp_ptr,  const art::ValidHandle<std::vector<recob::PFParticle> >& pfp_h, std::vector<art::Ptr<recob::PFParticle> > &pfp_v);
+
+    bool TrackInTime(const art::Ptr<recob::Track>& pfp_track_assn_v);
+
+    art::InputTag fPFPproducer;
+    art::InputTag fSpacePointproducer;
+
+    float _obvious_flashmatch_score;
+    float _score;
+    int   _obvious; // is the best score an obvious?
+    int   _obvious_cosmics;
+
+    std::vector<float> _peSpectrum, _peHypothesis;
+    
+    // PFP map
+    std::map<unsigned int, unsigned int> _pfpmap;
+    
+    std::unique_ptr<flashmatch::FlashMatchingToolBase> _flashmatchTool;             ///< The slice id tool
 
   };
   
@@ -86,10 +105,14 @@ namespace analysis
   ///
   ObviousCosmicFlashMatching::ObviousCosmicFlashMatching(const fhicl::ParameterSet& p)
   {
-    fCRTVetoproducer = p.get< art::InputTag > ("CRTVetoproducer",""); // default is no CRT veto
-    fCLSproducer = p.get< art::InputTag > ("CLSproducer");
-    fMCTproducer = p.get< art::InputTag > ("MCTproducer");
-    fBacktrackTag = p.get< art::InputTag > ("BacktrackTag");
+
+    fPFPproducer         = p.get< art::InputTag >("PFPproducer");
+    fSpacePointproducer  = p.get< art::InputTag >("SpacePointproducer");
+
+    const fhicl::ParameterSet& flashconfig = p.get<fhicl::ParameterSet>("SliceTool");  
+    
+    _flashmatchTool = art::make_tool<flashmatch::FlashMatchingToolBase>(flashconfig);
+
   }
   
   //----------------------------------------------------------------------------
@@ -113,7 +136,6 @@ namespace analysis
   void ObviousCosmicFlashMatching::analyzeEvent(art::Event const& e, bool fData)
   {
 
-    /*
     // grab PFParticles in event
     auto const& pfp_h = e.getValidHandle<std::vector<recob::PFParticle> >(fPFPproducer);
     
@@ -137,8 +159,8 @@ namespace analysis
     
     std::cout << "There are " << pfp_h->size() << " pfparticles in the event " << std::endl;
     
-    _best_score = 1e5;
-    _obvious = 0;
+    _obvious_flashmatch_score = 1e5;
+    _obvious_cosmics = 0;
     
     // fill map: pfparticle Self() -> index/key
     _pfpmap.clear();
@@ -148,9 +170,30 @@ namespace analysis
     for (unsigned int p=0; p < pfp_h->size(); p++){
       
       auto const& pfp = pfp_h->at(p);
-      
+
       // start from primary PFParticles
       if (pfp.IsPrimary() == false) continue;
+
+      bool clearCosmic = false;
+
+      // get metadata for this PFP
+      const std::vector< art::Ptr<larpandoraobj::PFParticleMetadata> > &pfParticleMetadataList(pfPartToMetadataAssoc.at(p));
+
+      if (pfParticleMetadataList.empty()) continue;
+	
+      for (unsigned int j=0; j<pfParticleMetadataList.size(); ++j) {
+	const art::Ptr<larpandoraobj::PFParticleMetadata> &pfParticleMetadata(pfParticleMetadataList.at(j));
+	auto pfParticlePropertiesMap = pfParticleMetadata->GetPropertiesMap();
+	if (!pfParticlePropertiesMap.empty())
+	  for (std::map<std::string, float>::const_iterator it = pfParticlePropertiesMap.begin(); it != pfParticlePropertiesMap.end(); ++it) {
+	    if ( it->first == "IsClearCosmic" ) {
+	      clearCosmic = true;
+	      break;
+	    }
+	  }// for all metadata items in the particle metadata
+      }// for entries in list
+
+      //if (clearCosmic == false) continue;
       
       const art::Ptr<recob::PFParticle> pfp_ptr(pfp_h, p);
       
@@ -200,20 +243,22 @@ namespace analysis
       
       // do not attempt flash-matching with tracks not in time with the beam drift window
       if ( TrackInTime(trk) == false ) continue;
+
+      _obvious_cosmics += 1;
       
       // ready to call flash-matching
       _score = _flashmatchTool->ClassifySlice(e, pfp_ptr_v, spacepoint_v_v, hit_v_v, _peSpectrum, _peHypothesis);
+      std::cout << "match score = " << _score << std::endl;
       if (_score <= 0) continue;
       
-      if (_score < _best_score) { 
-	_best_score = _score; 
+      if (_score < _obvious_flashmatch_score) { 
+	if (clearCosmic) { _obvious = 1; }
+	else { _obvious  = 0; }
+	_obvious_flashmatch_score = _score;
 	// is this hierarchy an obvious cosmic?
-	_obvious = 0;
-	if ( ObviousCosmic(pfp_track_assn_v.at(p)) ) _obvious = 1;
       }// if the best score yet
       
     }// for all PFParticles
-    */
     
     return;
   }
@@ -226,13 +271,51 @@ namespace analysis
   
   void ObviousCosmicFlashMatching::setBranches(TTree* _tree) 
   {
-    //_tree->Branch("_evt"   ,&_evt   ,"evt/I"   );
-
+    _tree->Branch("_obvious_flashmatch_score"   ,&_obvious_flashmatch_score   ,"obvious_flashmatch_score/F");
+    _tree->Branch("_obvious_cosmics"            ,&_obvious_cosmics            ,"obvious_cosmics/I"         );
+    _tree->Branch("_obvious"                    ,&_obvious                    ,"obvious/I"                 );
   }
 
   void ObviousCosmicFlashMatching::resetTTree(TTree* _tree)
   {
+    _obvious_flashmatch_score = 1e6;
+    _obvious_cosmics = 0;
+  }
 
+
+  bool ObviousCosmicFlashMatching::TrackInTime(const art::Ptr<recob::Track>& trk) {
+    
+    auto vtx = trk->Vertex();
+    auto end = trk->End();
+    
+    if (vtx.X() < -10 || vtx.X() > 260.) return false;
+    if (end.X() < -10 || end.X() > 260.) return false;
+    
+    return true;
+  }// is the track in time with the beam?
+
+  void ObviousCosmicFlashMatching::AddDaughters(const art::Ptr<recob::PFParticle>& pfp_ptr,  const art::ValidHandle<std::vector<recob::PFParticle> >& pfp_h, std::vector<art::Ptr<recob::PFParticle> > &pfp_v) {
+    
+    auto daughters = pfp_ptr->Daughters();
+    
+    pfp_v.push_back(pfp_ptr);
+    
+    std::cout << "\t PFP w/ PdgCode " << pfp_ptr->PdgCode() << " has " << daughters.size() << " daughters" << std::endl;
+    
+    for(auto const& daughterid : daughters) {
+      
+      if (_pfpmap.find(daughterid) == _pfpmap.end()) {
+	std::cout << "Did not find DAUGHTERID in map! error"<< std::endl;
+	continue;
+      }
+      
+      const art::Ptr<recob::PFParticle> pfp_ptr(pfp_h, _pfpmap.at(daughterid) );
+      
+      AddDaughters(pfp_ptr, pfp_h, pfp_v);
+      
+    }// for all daughters
+    
+    return;
   }
 
   DEFINE_ART_CLASS_TOOL(ObviousCosmicFlashMatching)
