@@ -6,6 +6,7 @@ DefaultAnalysisTool: {
     CLSproducer: "pandora"
     MCTproducer: "generator"
     BacktrackTag: ""
+    ProtonThreshold: 0.04 # GeV
 }
 
 NuSelectionFilter:{
