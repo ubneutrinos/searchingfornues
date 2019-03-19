@@ -20,25 +20,11 @@
 #include "fhiclcpp/ParameterSet.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
-#include "lardataobj/RecoBase/PFParticle.h"
-#include "lardataobj/RecoBase/Shower.h"
-#include "lardataobj/RecoBase/Track.h"
-#include "lardataobj/RecoBase/Cluster.h"
-#include "lardataobj/RecoBase/Hit.h"
 #include "lardata/Utilities/AssociationUtil.h"
 #include "lardataobj/MCBase/MCShower.h"
 #include "lardataobj/RecoBase/PFParticleMetadata.h"
-#include "lardata/Utilities/FindManyInChainP.h"
 #include "larcoreobj/SummaryData/POTSummary.h"
 #include "lardata/RecoBaseProxy/ProxyBase.h"
-
-// backtracking tools
-#include "lardataobj/AnalysisBase/BackTrackerMatchingData.h"
-
-// services for detector properties
-#include "larevt/SpaceChargeServices/SpaceChargeService.h"
-#include "lardata/DetectorInfoServices/DetectorPropertiesService.h"
-#include "lardata/DetectorInfoServices/DetectorClocksService.h"
 
 // selection tool
 #include "SelectionTools/SelectionToolBase.h"

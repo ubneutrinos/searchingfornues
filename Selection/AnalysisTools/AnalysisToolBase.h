@@ -1,16 +1,24 @@
 #ifndef ANALYSISTOOLBASE_H
 #define ANALYSISTOOLBASE_H
 
-// art TOOLS
-#include "ubana/ubana/searchingfornues/Selection/SelectionTools/SelectionToolBase.h"
+// art TOOL
+#include "art/Utilities/ToolMacros.h"
+#include "art/Utilities/make_tool.h"
+
+#include "fhiclcpp/ParameterSet.h"
+#include "art/Framework/Services/Registry/ServiceHandle.h"
+#include "art/Framework/Services/Optional/TFileService.h"
+#include "art/Framework/Principal/Event.h"
+
+#include "ubana/ubana/searchingfornues/Selection/CommonDefs/Typedefs.h"
 
 #include "TTree.h"
 #include <limits>
 
 namespace analysis {
 
-  using ProxyPfpElem_t = selection::ProxyPfpElem_t;
-  using ProxyClusColl_t = selection::ProxyClusColl_t;
+  using ProxyPfpElem_t = searchingfornues::ProxyPfpElem_t;
+  using ProxyClusColl_t = searchingfornues::ProxyClusColl_t;
   
 class AnalysisToolBase {
 
