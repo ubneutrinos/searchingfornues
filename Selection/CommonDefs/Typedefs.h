@@ -6,6 +6,7 @@
 #include "lardataobj/RecoBase/PFParticle.h"
 #include "lardataobj/RecoBase/Cluster.h"
 #include "lardataobj/RecoBase/Hit.h"
+#include "lardataobj/RecoBase/Slice.h"
 #include "lardataobj/RecoBase/Shower.h"
 #include "lardataobj/RecoBase/Track.h"
 #include "lardataobj/RecoBase/Vertex.h"
@@ -21,7 +22,8 @@ namespace searchingfornues {
                                               proxy::withAssociated<recob::Cluster>(std::declval<art::InputTag>()),
                                               proxy::withAssociated<recob::Track>(std::declval<art::InputTag>()),
                                               proxy::withAssociated<recob::Vertex>(std::declval<art::InputTag>()),
-                                              proxy::withAssociated<recob::Shower>(std::declval<art::InputTag>())) );
+                                              proxy::withAssociated<recob::Shower>(std::declval<art::InputTag>()),
+					      proxy::withAssociated<recob::Slice>(std::declval<art::InputTag>())) );
   using ProxyPfpElem_t = ProxyPfpColl_t::element_proxy_t;
 
   using ProxyClusColl_t = decltype(proxy::getCollection<std::vector<recob::Cluster> >(

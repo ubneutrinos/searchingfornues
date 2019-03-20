@@ -70,6 +70,7 @@ private:
   art::InputTag fSHRproducer; // shower associated to PFP
   art::InputTag fVTXproducer; // vertex associated to PFP
   art::InputTag fTRKproducer; // track associated to PFP
+  art::InputTag fSLCproducer; // slice associated to PFP
   art::InputTag fMCTproducer;
   bool fVerbose;
   bool fData;
@@ -152,6 +153,7 @@ NeutrinoSelectionFilter::NeutrinoSelectionFilter(fhicl::ParameterSet const& p)
   fCLSproducer = p.get< art::InputTag > ("CLSproducer");
   fVTXproducer = p.get< art::InputTag > ("VTXproducer");
   fTRKproducer = p.get< art::InputTag > ("TRKproducer");
+  fSLCproducer = p.get< art::InputTag > ("SLCproducer");
   fMCTproducer = p.get< art::InputTag > ("MCTproducer");
   fVerbose     = p.get< bool >          ("Verbose");
   fData     = p.get< bool >          ("IsData");
@@ -202,7 +204,9 @@ bool NeutrinoSelectionFilter::filter(art::Event & e)
 												     proxy::withAssociated<recob::Cluster>(fCLSproducer),
 												     proxy::withAssociated<recob::Track>(fTRKproducer),
 												     proxy::withAssociated<recob::Vertex>(fVTXproducer),
-												     proxy::withAssociated<recob::Shower>(fSHRproducer));  
+												     proxy::withAssociated<recob::Shower>(fSHRproducer),
+												     proxy::withAssociated<recob::Slice>(fSLCproducer));  
+  
   
   // build PFParticle map  for this event
   BuildPFPMap(pfp_proxy);
