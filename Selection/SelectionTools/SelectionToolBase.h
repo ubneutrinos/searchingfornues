@@ -70,6 +70,18 @@ public:
     virtual void resetTTree(TTree* _tree) = 0;
 
 
+    /**
+     * @brief set if data
+     */
+    void SetData(bool isdata) { fData = isdata; }
+
+
+ protected:
+
+
+    bool fData;
+
+
 };
 
 } // selection namespace
