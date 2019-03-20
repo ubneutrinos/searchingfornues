@@ -1,4 +1,4 @@
 #include "run_neutrinoselectionfilter_run3_onbeam.fcl"
 
-physics.filters.crtveto: @local::UBCRTCosmicFilterBNBON
+physics.filters.crtveto: @local::UBCRTCosmicFilterBNBOFF
 physics.filters.crtveto.useAsFilter: false

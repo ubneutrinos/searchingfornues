@@ -62,7 +62,7 @@ physics:
  producers:{}
  filters:  
  {
-        crtveto: @local::UBCRTCosmicFilterBNBOFF
+        crtveto: @local::UBCRTCosmicFilterBNBON
         nuselection: @local::NuSelectionFilterRun3
  } 
  analyzers:{ 

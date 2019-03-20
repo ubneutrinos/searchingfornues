@@ -27,10 +27,9 @@ NuSelectionFilter:{
         }
     AnalysisTools: {
         default: @local::DefaultAnalysisTool
-       
+        crtApproach:@local::CRTApproachAnalysisTool
         # you can add more analysis tools here
-    }
-
+        }
     }
 
 
