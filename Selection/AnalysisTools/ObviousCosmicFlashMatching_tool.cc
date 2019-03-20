@@ -86,6 +86,9 @@ namespace analysis
     float _score;
     int   _obvious; // is the best score an obvious?
     int   _obvious_cosmics;
+    float _obvious_trklen;
+    float _obvious_startx, _obvious_starty, _obvious_startz;
+    float _obvious_endx, _obvious_endy, _obvious_endz;
 
     std::vector<float> _peSpectrum, _peHypothesis;
     
@@ -161,6 +164,7 @@ namespace analysis
     
     _obvious_flashmatch_score = 1e5;
     _obvious_cosmics = 0;
+    _obvious_trklen  = 0;
     
     // fill map: pfparticle Self() -> index/key
     _pfpmap.clear();
@@ -254,7 +258,16 @@ namespace analysis
       if (_score < _obvious_flashmatch_score) { 
 	if (clearCosmic) { _obvious = 1; }
 	else { _obvious  = 0; }
+	_obvious_trklen = trk->Length();
 	_obvious_flashmatch_score = _score;
+	auto vtx = trk->Vertex();
+	auto end = trk->End();
+	_obvious_startx = vtx.X();
+	_obvious_starty = vtx.Y();
+	_obvious_startz = vtx.Z();
+	_obvious_endx = end.X();
+	_obvious_endy = end.Y();
+	_obvious_endz = end.Z();
 	// is this hierarchy an obvious cosmic?
       }// if the best score yet
       
@@ -273,6 +286,13 @@ namespace analysis
   {
     _tree->Branch("_obvious_flashmatch_score"   ,&_obvious_flashmatch_score   ,"obvious_flashmatch_score/F");
     _tree->Branch("_obvious_cosmics"            ,&_obvious_cosmics            ,"obvious_cosmics/I"         );
+    _tree->Branch("_obvious_trklen"             ,&_obvious_trklen             ,"obvious_trklen/F"          );
+    _tree->Branch("_obvious_startx"             ,&_obvious_startx             ,"obvious_startx/F"          );
+    _tree->Branch("_obvious_starty"             ,&_obvious_starty             ,"obvious_starty/F"          );
+    _tree->Branch("_obvious_startz"             ,&_obvious_startz             ,"obvious_startz/F"          );
+    _tree->Branch("_obvious_endx"               ,&_obvious_endx               ,"obvious_endx/F"            );
+    _tree->Branch("_obvious_endy"               ,&_obvious_endy               ,"obvious_endy/F"            );
+    _tree->Branch("_obvious_endz"               ,&_obvious_endz               ,"obvious_endz/F"            );
     _tree->Branch("_obvious"                    ,&_obvious                    ,"obvious/I"                 );
   }
 
