@@ -194,7 +194,7 @@ namespace analysis
     for (auto pfp :  slice_pfp_v) {
       // backtrack PFParticles in the slice
       if (!fData) {
-	// get hits associated to this PFParticle through the clusters
+	// get h  its associated to this PFParticle through the clusters
 	std::vector<art::Ptr<recob::Hit> > hit_v;
 	auto clus_pxy_v = pfp.get<recob::Cluster>();
 	if (clus_pxy_v.size() != 0) {

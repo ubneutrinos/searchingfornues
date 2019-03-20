@@ -8,6 +8,7 @@ DefaultAnalysisTool: {
     BacktrackTag: ""
 }
 
+
 NuSelectionFilter:{
     module_type: NeutrinoSelectionFilter
     Verbose: true
@@ -25,11 +26,17 @@ NuSelectionFilter:{
         }
     AnalysisTools: {
         default: @local::DefaultAnalysisTool
+       
         # you can add more analysis tools here
     }
 
     }
 
+
+CRTApproachAnalysisTool: {
+    tool_type: "CRTApproachAnalysis"
+    TrackAssnModuleLabel:"trackmatch"
+    }
 
 NuSelectionFilterEmpty: @local::NuSelectionFilter
 NuSelectionFilterEmpty.SelectionTool: { tool_type: "EmptySelection" }
