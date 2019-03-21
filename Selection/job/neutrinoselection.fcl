@@ -9,6 +9,13 @@ DefaultAnalysisTool: {
     ProtonThreshold: 0.04 # GeV
 }
 
+
+CRTApproachAnalysisTool: {
+    tool_type: "CRTApproachAnalysis"
+    TrackAssnModuleLabel:"trackmatch"
+    }
+
+
 NuSelectionFilter:{
     module_type: NeutrinoSelectionFilter
     Verbose: true
@@ -27,8 +34,8 @@ NuSelectionFilter:{
     AnalysisTools: {
         default: @local::DefaultAnalysisTool
         # you can add more analysis tools here
-    }
-
+        crtApproach:@local::CRTApproachAnalysisTool
+        }
     }
 
 
