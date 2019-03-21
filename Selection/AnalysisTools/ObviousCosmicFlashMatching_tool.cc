@@ -83,6 +83,7 @@ namespace analysis
     art::InputTag fSpacePointproducer;
 
     float _obvious_flashmatch_score;
+    float _neutrino_score;
     float _score;
     int   _obvious; // is the best score an obvious?
     int   _obvious_cosmics;
@@ -236,6 +237,13 @@ namespace analysis
 	hit_v_v.push_back( hit_ptr_v );
 	
       }// for all pfp pointers
+
+      // ready to call flash-matching
+      _score = _flashmatchTool->ClassifySlice(e, pfp_ptr_v, spacepoint_v_v, hit_v_v, _peSpectrum, _peHypothesis);
+
+      // now decide if neutrino or cosmic
+      if (pfp.PdgCode() == 12 || pfp.PdgCode() == 14) 
+	_neutrino_score = _score;
       
       // ignore events where the primary is not a muon [we are looking for obvious cosmics!]
       if (pfp_track_assn_v.at(p).size() != 1) continue;
@@ -248,15 +256,14 @@ namespace analysis
       // do not attempt flash-matching with tracks not in time with the beam drift window
       if ( TrackInTime(trk) == false ) continue;
 
-      _obvious_cosmics += 1;
-      
-      // ready to call flash-matching
-      _score = _flashmatchTool->ClassifySlice(e, pfp_ptr_v, spacepoint_v_v, hit_v_v, _peSpectrum, _peHypothesis);
       std::cout << "match score = " << _score << std::endl;
       if (_score <= 0) continue;
       
       if (_score < _obvious_flashmatch_score) { 
-	if (clearCosmic) { _obvious = 1; }
+	if (clearCosmic) { 
+	  _obvious = 1; 
+	  _obvious_cosmics += 1;
+	}
 	else { _obvious  = 0; }
 	_obvious_trklen = trk->Length();
 	_obvious_flashmatch_score = _score;
@@ -285,6 +292,7 @@ namespace analysis
   void ObviousCosmicFlashMatching::setBranches(TTree* _tree) 
   {
     _tree->Branch("_obvious_flashmatch_score"   ,&_obvious_flashmatch_score   ,"obvious_flashmatch_score/F");
+    _tree->Branch("_neutrino_score"             ,&_neutrino_score              ,"neutrino_score/F"         );
     _tree->Branch("_obvious_cosmics"            ,&_obvious_cosmics            ,"obvious_cosmics/I"         );
     _tree->Branch("_obvious_trklen"             ,&_obvious_trklen             ,"obvious_trklen/F"          );
     _tree->Branch("_obvious_startx"             ,&_obvious_startx             ,"obvious_startx/F"          );
@@ -299,6 +307,7 @@ namespace analysis
   void ObviousCosmicFlashMatching::resetTTree(TTree* _tree)
   {
     _obvious_flashmatch_score = 1e6;
+    _neutrino_score           = 1e6;
     _obvious_cosmics = 0;
   }
 
