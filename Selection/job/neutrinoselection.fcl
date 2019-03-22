@@ -1,4 +1,6 @@
+#include "shrreco3d.fcl"
 #include "services_microboone.fcl"
+#include "flashmatchsetup.fcl"
 
 DefaultAnalysisTool: {
     tool_type: "DefaultAnalysis"
@@ -15,6 +17,22 @@ CRTApproachAnalysisTool: {
     TrackAssnModuleLabel:"trackmatch"
     }
 
+ObviousCosmicFlashMatching: {
+    tool_type: "ObviousCosmicFlashMatching"
+    PFPproducer: "pandora"
+    SpacePointproducer: "pandora"
+    SliceTool: @local::SliceToolNeutrinoMC
+}
+
+shrreco3dDATA: @local::ShrReco3DPandora
+shrreco3dDATA.BacktrackTag:  ""
+shrreco3dDATA.ADCtoE:   [238.4,238.4,238.4] # e-/ADC
+shrreco3dDATA.NeutrinoEvent: false
+
+shrreco3dMC: @local::ShrReco3DPandora
+shrreco3dMC.BacktrackTag:  ""
+shrreco3dMC.ADCtoE:   [248.2,248.2,248.2] # e-/ADC
+shrreco3dMC.NeutrinoEvent: false
 
 NuSelectionFilter:{
     module_type: NeutrinoSelectionFilter
