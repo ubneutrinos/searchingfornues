@@ -52,7 +52,6 @@ NuSelectionFilter:{
     AnalysisTools: {
         default: @local::DefaultAnalysisTool
         # you can add more analysis tools here
-        crtApproach:@local::CRTApproachAnalysisTool
         }
     }
 
@@ -71,5 +70,11 @@ Pi0Selection.SelectionTool: {
 
 # run 3 neutrino selection [ w/ crt veto ]
 NuSelectionFilterRun3: @local::NuSelectionFilter
+
+NuSelectionFilterRun3.AnalysisTools: {
+        default: @local::DefaultAnalysisTool
+        # you can add more analysis tools here
+        crtApproach:@local::CRTApproachAnalysisTool
+        }
 NuSelectionFilterRun3.AnalysisTools.default.CRTVetoproducer: "crtveto"
 
