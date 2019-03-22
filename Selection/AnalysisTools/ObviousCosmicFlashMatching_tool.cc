@@ -91,7 +91,7 @@ namespace analysis
     float _obvious_startx, _obvious_starty, _obvious_startz;
     float _obvious_endx, _obvious_endy, _obvious_endz;
 
-    std::vector<float> _peSpectrum, _peHypothesis;
+    std::vector<float> _peSpectrum, _peHypothesis, _peHypothesisNu, _peHypothesisCosmic;
     
     // PFP map
     std::map<unsigned int, unsigned int> _pfpmap;
@@ -242,8 +242,10 @@ namespace analysis
       _score = _flashmatchTool->ClassifySlice(e, pfp_ptr_v, spacepoint_v_v, hit_v_v, _peSpectrum, _peHypothesis);
 
       // now decide if neutrino or cosmic
-      if (pfp.PdgCode() == 12 || pfp.PdgCode() == 14) 
+      if (pfp.PdgCode() == 12 || pfp.PdgCode() == 14) {
 	_neutrino_score = _score;
+	_peHypothesisNu = _peHypothesis;
+      }
       
       // ignore events where the primary is not a muon [we are looking for obvious cosmics!]
       if (pfp_track_assn_v.at(p).size() != 1) continue;
@@ -267,6 +269,7 @@ namespace analysis
 	else { _obvious  = 0; }
 	_obvious_trklen = trk->Length();
 	_obvious_flashmatch_score = _score;
+	_peHypothesisCosmic = _peHypothesis;
 	auto vtx = trk->Vertex();
 	auto end = trk->End();
 	_obvious_startx = vtx.X();
@@ -302,6 +305,9 @@ namespace analysis
     _tree->Branch("_obvious_endy"               ,&_obvious_endy               ,"obvious_endy/F"            );
     _tree->Branch("_obvious_endz"               ,&_obvious_endz               ,"obvious_endz/F"            );
     _tree->Branch("_obvious"                    ,&_obvious                    ,"obvious/I"                 );
+  _tree->Branch("peSpectrum"  ,"std::vector<float>",&_peSpectrum);
+  _tree->Branch("peHypothesisNu","std::vector<float>",&_peHypothesisNu);
+  _tree->Branch("peHypothesisCosmic","std::vector<float>",&_peHypothesisCosmic);
   }
 
   void ObviousCosmicFlashMatching::resetTTree(TTree* _tree)
@@ -309,6 +315,8 @@ namespace analysis
     _obvious_flashmatch_score = 1e6;
     _neutrino_score           = 1e6;
     _obvious_cosmics = 0;
+    _peHypothesisNu.clear();
+    _peHypothesisCosmic.clear();
   }
 
 

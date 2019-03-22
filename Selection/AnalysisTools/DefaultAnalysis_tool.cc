@@ -83,6 +83,9 @@ namespace analysis
     // kinematic thresholds to define signal
     float fProtonThreshold;
 
+    // neutrino vertx (reco)
+    float _nu_vtx_x, _nu_vtx_y, _nu_vtx_z;
+
     int   _run, _sub, _evt;       // event info
     // neutrino information
     float _nu_e;                  // neutrino energy [GeV]
@@ -194,6 +197,29 @@ namespace analysis
     //const auto& hittruth = std::unique_ptr<art::FindMany<simb::MCParticle,anab::BackTrackerHitMatchingData> > (new art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData>(gaushit_h,e,BacktrackTag));
 
     for (auto pfp :  slice_pfp_v) {
+
+      if ( (pfp->PdgCode() == 12) || (pfp->PdgCode() == 14) ) {
+
+	// grab vertex
+	Double_t xyz[3] = {};
+	
+	auto vtx = pfp.get<recob::Vertex>();
+	if (vtx.size() != 1) {
+	  std::cout << "ERROR. Found neutrino PFP w/ != 1 associated vertices..." << std::endl;
+	}
+	
+	else {
+	  // save vertex to array
+	  vtx.at(0)->XYZ(xyz);
+	  auto nuvtx = TVector3(xyz[0],xyz[1],xyz[2]);
+	  
+	  _nu_vtx_x = nuvtx.X();
+	  _nu_vtx_y = nuvtx.Y();
+	  _nu_vtx_z = nuvtx.Z();
+	}
+	  
+      }
+
       // backtrack PFParticles in the slice
       if (!fData) {
 	// get hits associated to this PFParticle through the clusters
@@ -247,6 +273,10 @@ namespace analysis
   
   void DefaultAnalysis::setBranches(TTree* _tree) 
   {
+    // reconstructed neutrino vertex
+    _tree->Branch("_nu_vtx_x",&_nu_vtx_x,"nu_vtx_x/F");
+    _tree->Branch("_nu_vtx_y",&_nu_vtx_y,"nu_vtx_y/F");
+    _tree->Branch("_nu_vtx_z",&_nu_vtx_z,"nu_vtx_z/F");
     // neutrino information
     _tree->Branch("_nu_pdg",&_nu_pdg,"nu_pdg/I");
     _tree->Branch("_ccnc"  ,&_ccnc  ,"ccnc/I"  );
@@ -316,6 +346,11 @@ namespace analysis
     _vtx_x   = std::numeric_limits<float>::min();
     _vtx_y   = std::numeric_limits<float>::min();
     _vtx_z   = std::numeric_limits<float>::min();
+
+    _nu_vtx_x = std::numeric_limits<float>::min();
+    _nu_vtx_y = std::numeric_limits<float>::min();
+    _nu_vtx_z = std::numeric_limits<float>::min();
+
     _isVtxInFiducial = false; 
 
     _nslice = 0;
