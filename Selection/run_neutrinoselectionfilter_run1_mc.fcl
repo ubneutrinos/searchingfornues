@@ -1,0 +1,4 @@
+#include "run_neutrinoselectionfilter_run1_data.fcl"
+
+physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
+physics.filters.nuselection.IsData: false
