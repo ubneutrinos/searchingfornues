@@ -75,6 +75,12 @@ namespace analysis
     
   private:
 
+    /**
+     * @brief apply SCE corections from reconstruction maps
+     */
+    void ApplySCECorrection(const float& vtx_x, const float& vtx_y, const float& vtx_z,
+			    float& sce_x, float& sce_y, float& sce_z);
+
     art::InputTag fCRTVetoproducer; // producer for CRT veto ass tag [anab::T0 <-> recob::OpFlash]
     art::InputTag fCLSproducer; // cluster associated to PFP
     art::InputTag fMCTproducer;
@@ -85,6 +91,8 @@ namespace analysis
 
     // neutrino vertx (reco)
     float _nu_vtx_x, _nu_vtx_y, _nu_vtx_z;
+    // neutrino vertex SCE position corrections (reco)
+    float _nu_sce_x, _nu_sce_y, _nu_sce_z;
 
     int   _run, _sub, _evt;       // event info
     // neutrino information
@@ -216,9 +224,10 @@ namespace analysis
 	  _nu_vtx_x = nuvtx.X();
 	  _nu_vtx_y = nuvtx.Y();
 	  _nu_vtx_z = nuvtx.Z();
+
+	  ApplySCECorrection(_nu_vtx_x, _nu_vtx_y, _nu_vtx_z, _nu_sce_x, _nu_sce_y, _nu_sce_z);
 	}
-	  
-      }
+      }// if neutrino PFParticle
 
       // backtrack PFParticles in the slice
       if (!fData) {
@@ -277,6 +286,10 @@ namespace analysis
     _tree->Branch("_nu_vtx_x",&_nu_vtx_x,"nu_vtx_x/F");
     _tree->Branch("_nu_vtx_y",&_nu_vtx_y,"nu_vtx_y/F");
     _tree->Branch("_nu_vtx_z",&_nu_vtx_z,"nu_vtx_z/F");
+    _tree->Branch("_nu_sce_x",&_nu_sce_x,"nu_sce_x/F");
+    _tree->Branch("_nu_sce_y",&_nu_sce_y,"nu_sce_y/F");
+    _tree->Branch("_nu_sce_z",&_nu_sce_z,"nu_sce_z/F");
+
     // neutrino information
     _tree->Branch("_nu_pdg",&_nu_pdg,"nu_pdg/I");
     _tree->Branch("_ccnc"  ,&_ccnc  ,"ccnc/I"  );
@@ -350,6 +363,10 @@ namespace analysis
     _nu_vtx_x = std::numeric_limits<float>::min();
     _nu_vtx_y = std::numeric_limits<float>::min();
     _nu_vtx_z = std::numeric_limits<float>::min();
+
+    _nu_sce_x = std::numeric_limits<float>::min();
+    _nu_sce_y = std::numeric_limits<float>::min();
+    _nu_sce_z = std::numeric_limits<float>::min();
 
     _isVtxInFiducial = false; 
 
@@ -460,6 +477,25 @@ void DefaultAnalysis::SaveTruth(art::Event const& e) {
   
   return;
 }
+
+
+  void DefaultAnalysis::ApplySCECorrection(const float& vtx_x, const float& vtx_y, const float& vtx_z,
+					   float& sce_x, float& sce_y, float& sce_z) {
+
+    auto const *SCE = lar::providerFrom<spacecharge::SpaceChargeService>();
+
+    if (SCE->EnableCalSpatialSCE() == true) {
+    
+      auto offset = SCE->GetPosOffsets(geo::Point_t(vtx_x,vtx_y,vtx_z));
+      sce_x = offset.X();
+      sce_y = offset.Y();
+      sce_z = offset.Z();
+
+    }// if spatial offset calibrations are enabled
+
+    return;
+  }
+
 
   DEFINE_ART_CLASS_TOOL(DefaultAnalysis)
 } // namespace analysis
