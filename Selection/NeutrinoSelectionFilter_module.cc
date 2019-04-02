@@ -77,6 +77,7 @@ private:
 
   // TTree
   TTree* _tree;
+  int _selected;
 
   TTree* _subrun_tree;
   int _run_sr;                  // The run number
@@ -154,15 +155,17 @@ NeutrinoSelectionFilter::NeutrinoSelectionFilter(fhicl::ParameterSet const& p)
   fTRKproducer = p.get< art::InputTag > ("TRKproducer");
   fMCTproducer = p.get< art::InputTag > ("MCTproducer");
   fVerbose     = p.get< bool >          ("Verbose");
-  fData     = p.get< bool >          ("IsData");
-  fFilter   = p.get< bool >          ("Filter",false);
+  fData     = p.get< bool >             ("IsData");
+  fFilter   = p.get< bool >             ("Filter",false);
 
   art::ServiceHandle<art::TFileService> tfs;
   _tree = tfs->make<TTree>("NeutrinoSelectionFilter", "Neutrino Selection TTree");
-
+  _tree->Branch("_selected",&_selected,"selected/I");
+  
   _subrun_tree = tfs->make<TTree>("SubRun", "SubRun TTree");
   _subrun_tree->Branch("run"   , &_run_sr   , "run/I");
   _subrun_tree->Branch("subRun", &_sub_sr   , "subRun/I");
+
   if (!fData)
         _subrun_tree->Branch("pot", &_pot, "pot/F");
 
@@ -256,7 +259,7 @@ bool NeutrinoSelectionFilter::filter(art::Event & e)
       bool selected = _selectionTool->selectEvent(e, slice_pfp_v);
       if (fVerbose && selected) { std::cout << "SLICE was selected!" << std::endl; }
       
-      if (selected) { keepEvent = true; }
+      if (selected) { keepEvent = true; _selected = 1; }
 
       for (size_t i=0;i<_analysisToolsVec.size();i++) _analysisToolsVec[i]->analyzeSlice(e, slice_pfp_v, fData, selected);
       
@@ -336,62 +339,12 @@ void NeutrinoSelectionFilter:: AddDaughters(const ProxyPfpElem_t& pfp_pxy,
 
 void NeutrinoSelectionFilter::ResetTTree() {
 
+  _selected = 0;
+
   _selectionTool->resetTTree(_tree);
   for (size_t i=0;i<_analysisToolsVec.size();i++) _analysisToolsVec[i]->resetTTree(_tree);
 
-}
- 
- /*
- size_t NeutrinoSelectionFilter::BackTrack(const art::FindMany<simb::MCParticle,anab::BackTrackerHitMatchingData> backtrack_h,
-				     const std::vector<unsigned int>& trackid_v,
-				     const std::vector<unsigned int>& hit_idx_v, float& completeness, float& purity)
- {
-   
-   float BackTrackEnergy       = 0;
-   float BackTrackShowerEnergy = 0;
-   float BackTrackCharge       = 0;
-   float BackTrackShowerCharge = 0;
-   
-   //std::cout << "\t ANCESTOR comparing with MCShower of energy " << mcs.Start().E() << std::endl;
-   //std::cout << "\t ANCESTOR start is [" << mcs.Start().X() << ", " << mcs.Start().Y() << ", " << mcs.Start().Z() << "]" << std::endl;
-   //std::cout << "\t ANCESTOR HAS " << shrtrackIDs.size() << " particles" << std::endl;
-   
-   std::vector<simb::MCParticle const*> particle_vec;
-   std::vector<anab::BackTrackerHitMatchingData const*> match_vec;  
-   
-   for (auto const& hit_idx : hit_idx_v) {
-     
-     particle_vec.clear(); match_vec.clear();
-     
-     backtrack_h.get(hit_idx, particle_vec, match_vec);
-     
-     // does this hit match to the mcshower?
-     for(size_t i_p=0; i_p<particle_vec.size(); ++i_p){            
-       
-       auto mctrkid = particle_vec.at(i_p)->TrackId();
-       auto charge  = match_vec[i_p]->numElectrons;
-       auto energy  = match_vec[i_p]->energy;
-       
-       BackTrackCharge += charge;
-       BackTrackEnergy += energy;
-       // does this trackID match that of the MCShower?
-       for (auto const& shrtrkid : shrtrackIDs) {
-	 if ( shrtrkid == (unsigned int)mctrkid ){
-	   BackTrackShowerCharge += charge;
-	   BackTrackShowerEnergy += energy;
-	   break;
-	 }
-       }
-     }// for all particles associated to this hit
-   }// for all hits
-   
-   purity       = BackTrackShowerCharge / BackTrackCharge;
-   completeness = BackTrackShowerEnergy / mcs.Start().E();
-   
-   return;
- }// BackTrack function end
- */
- 
+} 
 
 bool NeutrinoSelectionFilter::endSubRun(art::SubRun &subrun)
 {
