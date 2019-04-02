@@ -16,6 +16,7 @@ services:
     DetectorPropertiesService:             @local::microboone_detproperties
     LArProperties:                  @local::microboone_properties
     DetectorClocksService:          @local::microboone_detectorclocks
+    PhotonVisibilityService:    @local::microboone_photonvisibilityservice
     @table::microboone_services_reco
     #@table::microboone_reco_data_services
     message:      @local::standard_info
@@ -29,6 +30,8 @@ services.DetectorClocksService.TriggerOffsetTPC:                          -0.400
 services.SpaceCharge.EnableCorrSCE: true
 services.SpaceCharge.EnableSimEFieldSCE: true
 services.SpaceCharge.EnableSimSpatialSCE: true
+services.SpaceCharge.RepresentationType: "Voxelized_TH3"
+services.SpaceCharge.CalibrationInputFilename: "SpaceCharge/SCEoffsets_dataDriven_combined_bkwd_Jan18.root"
 
 #source is now a root file
 source:
@@ -45,6 +48,7 @@ outputs:
         fileName: "FilteredNuEvents.root"
         compressionLevel: 0
         SelectEvents: [p1]
+        dataTier: "ana"
         }
     
     out1:
