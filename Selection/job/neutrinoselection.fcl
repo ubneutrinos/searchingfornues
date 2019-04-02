@@ -52,6 +52,7 @@ NuSelectionFilter:{
     AnalysisTools: {
         default: @local::DefaultAnalysisTool
         # you can add more analysis tools here
+        #obviouscosmic: @local::ObviousCosmicFlashMatching
         }
     }
 
