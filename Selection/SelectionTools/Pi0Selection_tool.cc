@@ -60,7 +60,10 @@ cioe'     * @brief set branches for TTree
     
   private:
 
-    std::pair<double,double> VtxCompatibility(const TVector3& nuvtx, const ProxyPfpElem_t& pfp_pxy, TVector3& gammadir);
+    std::pair<double,double> VtxCompatibility(const TVector3& nuvtx, const TVector3& shrvtx, const TVector3& shrdir);
+
+    // get shower score
+    float GetTrackShowerScore(const ProxyPfpElem_t& pfp_pxy);
 
     /**
      * @brief calculate PFP energy based on hits associated to clusters
@@ -91,6 +94,7 @@ cioe'     * @brief set branches for TTree
     float _radlen1, _radlen2;
     float _dot1, _dot2;
     float _energy1, _energy2;
+    float _dedx1, _dedx2;
     int _isshower1, _isshower2;
     float _gammadot;
     float _mass;
@@ -98,9 +102,10 @@ cioe'     * @brief set branches for TTree
     
 
     // module-specific settings
-    bool _onlyshower; // should we use only showers to reconstruct pi0s?
-    float _dmin;      // what is the minimum distance of the trk/shr vertex to the neutrino vertex?
-    float _dotmin;    // maximum dot product between shower direction and vtx->start vector
+    bool _onlyshower;   // should we use only showers to reconstruct pi0s?
+    float _dmin;        // what is the minimum distance of the trk/shr vertex to the neutrino vertex?
+    float _dotmin;      // maximum dot product between shower direction and vtx->start vector
+    float _trkshrscore; // score on which to cut for track/shower classification
     
   };
   
@@ -125,9 +130,10 @@ cioe'     * @brief set branches for TTree
   ///
   void Pi0Selection::configure(fhicl::ParameterSet const & pset)
   {
-    _onlyshower = pset.get< bool >  ("onlyshower");
-    _dotmin     = pset.get< float > ("dotmin"    );
-    _dmin       = pset.get< float > ("dmin"      );
+    _onlyshower  = pset.get< bool >  ("onlyshower" );
+    _dotmin      = pset.get< float > ("dotmin"     );
+    _dmin        = pset.get< float > ("dmin"       );
+    _trkshrscore = pset.get< float > ("trkshrscore");
 }
   
   //----------------------------------------------------------------------------
@@ -147,14 +153,23 @@ cioe'     * @brief set branches for TTree
     Double_t xyz[3] = {};
 
     Reset();
-
+    
     if (!fData)
       ReadTruth(e);
 
     TVector3 gammadir1, gammadir2;
 
+    // vector of pfp indices for showers
+    std::vector<float> shr_energy_v;
+    // vector of shower energies
+    std::vector<short> pfp_idx_v;
+
+    short pfp_ctr = 0;
+
     // loop over all PFPs and get metadata, find the neutrino and save its vertex
     for (const auto& pfp_pxy : pfp_pxy_v) {
+
+      pfp_ctr += 1;
 
       auto PDG = fabs(pfp_pxy->PdgCode());
 
@@ -179,67 +194,125 @@ cioe'     * @brief set branches for TTree
 
       else { // if not neutrino PFP
 
-	// grab cluster associated
-	auto ass_clus_v =  pfp_pxy.get<recob::Cluster>();// clus_pxy_v[pfp_pxy.key()];
-	float energy = PFPEnergy(ass_clus_v);
+	// grab shower/track score
+	auto trkshrscore = GetTrackShowerScore(pfp_pxy);
 
 	auto nshr = pfp_pxy.get<recob::Shower>().size();
 	auto ntrk = pfp_pxy.get<recob::Track>().size();
 
-	TVector3 gammadir;
-	auto vtxcompat = VtxCompatibility(nuvtx,pfp_pxy, gammadir);
+	std::cout << "DAVIDC : there are " << nshr << " showers and " << ntrk << " tracks associated to this PFP w/ trackScore " << trkshrscore << std::endl;
 
-	// if a shower, try matching to true photon 
-	if (nshr == 1) {
-	  float dot = gammadir.Dot(_mcgamma0_mom);
-	  if (dot > _mcrcdot0) {
-	    _mcrcdot0 = dot;
-	    _mcrce0   = energy;
-	  }// if new most aligned shower
-	  dot = gammadir.Dot(_mcgamma1_mom);
-	  if (dot > _mcrcdot1) {
-	    _mcrcdot1 = dot;
-	    _mcrce1   = energy;
-	  }// if new most aligned shower
-	}// try matching to true photon
+	// 1 -> track-like
+	if (trkshrscore > _trkshrscore)  continue;
 
-	_nshower += nshr;
-	_ntrack  += ntrk;
-	
-	if ( (nshr != 1) && (_onlyshower) ) continue;
-	
+	if (nshr != 1) continue;
 
+	auto const& shr = pfp_pxy.get<recob::Shower>().at(0);
+
+	auto energy = shr->Energy()[2];
 	
+	auto vtxcompat = VtxCompatibility(nuvtx, shr->ShowerStart(), shr->Direction());
+
 	// if blank result, continue
 	if ( (vtxcompat.first == -1) && (vtxcompat.second == -1) ) continue;
-	
+	// if too close to vertex or too mis-algined, continue
 	if ( (vtxcompat.second < _dmin) || (vtxcompat.first < _dotmin) ) continue;
-	
-	if (_ngamma == 0) {
-	  if (nshr == 1) _isshower1 = 1;
-	  _radlen1 = vtxcompat.second;
-	  _dot1    = vtxcompat.first;
-	  _energy1 = energy;
-	  gammadir1 = gammadir;
-	}
-	
-	if (_ngamma == 1) {
-	  if (nshr == 1) _isshower2 = 1;
-	  _radlen2 = vtxcompat.second;
-	  _dot2    = vtxcompat.first;
-	  _energy2 = energy;
-	  gammadir2 = gammadir;
-	}
-	
-	_ngamma += 1;
 
-      }// if not neutrino
+	shr_energy_v.push_back( energy );
+	pfp_idx_v.push_back( pfp_ctr - 1 );
+
+      }// if not the neutrino PFP
+
+    }// for all PFP
+
+    // if we did not find any shower, return
+    if (shr_energy_v.size() == 0) return false;
+
+    // if a single shower, backtrack and quit
+    if (shr_energy_v.size() == 1) {
+
+      auto shr = pfp_pxy_v.at(pfp_idx_v[0]).get<recob::Shower>().at(0);
       
-    }// loop over all PFParticles
+      float dot = shr->Direction().Dot(_mcgamma0_mom);
+      if (dot > _mcrcdot0) {
+	_mcrcdot0 = dot;
+	_mcrce0   = shr->Energy()[2];
+      }// if new most aligned shower
+      dot = shr->Direction().Dot(_mcgamma1_mom);
+      if (dot > _mcrcdot1) {
+	_mcrcdot1 = dot;
+	_mcrce1   = shr->Energy()[2];
+      }// if new most aligned shower
 
-    _gammadot = gammadir1.Dot(gammadir2);
+      return false;
+    }// if a single shower
+
+    // if two or more, sort by energy
+    double e1 = 0; // energy of highest energy reco shower
+    short  i1 = 0; // pfp index for highest energy reco shower
+    double e2 = 0; // energy of 2nd highest energy reco shower
+    short  i2 = 0; // pfp index for 2nd highest energy reco shower
+
+    // find highest energy shower
+    for (size_t n0=0; n0 < shr_energy_v.size(); n0++) {
+      if (shr_energy_v[n0] > e1) {
+	e1 = shr_energy_v[n0];
+	i1 = pfp_idx_v[n0];
+      } 
+    }
+    // find second highest energy shower
+    for (size_t n0=0; n0 < shr_energy_v.size(); n0++) {
+      if (pfp_idx_v[n0] == i1) continue;
+      if (shr_energy_v[n0] > e2) {
+	e2 = shr_energy_v[n0];
+	i2 = pfp_idx_v[n0];
+      }
+    }
+
+    auto shr1 = pfp_pxy_v.at(i1).get<recob::Shower>().at(0);
+    auto shr2 = pfp_pxy_v.at(i2).get<recob::Shower>().at(0);
+
+    auto vtxcompat1 = VtxCompatibility(nuvtx, shr1->ShowerStart(), shr1->Direction());
+
+    _radlen1  = vtxcompat1.second;
+    _dot1     = vtxcompat1.first;
+    _energy1  = shr1->Energy()[2];
+    _dedx1    = shr1->dEdx()[2];
+    
+    auto vtxcompat2 = VtxCompatibility(nuvtx, shr2->ShowerStart(), shr2->Direction());
+
+    _radlen2 = vtxcompat2.second;
+    _dot2    = vtxcompat2.first;
+    _energy2 = shr2->Energy()[2];
+    _dedx2   = shr2->dEdx()[2];
+    
+    _gammadot = shr1->Direction().Dot(shr2->Direction());
     _mass = sqrt( 2 * _energy1 * _energy2 * (1 - _gammadot ) );
 
+    // backtracking for shower 1
+    float dot1 = shr1->Direction().Dot(_mcgamma0_mom);
+    if (dot1 > _mcrcdot0) {
+      _mcrcdot0 = dot1;
+      _mcrce0   = shr1->Energy()[2];
+    }// if new most aligned shower
+    dot1 = shr1->Direction().Dot(_mcgamma1_mom);
+    if (dot1 > _mcrcdot1) {
+      _mcrcdot1 = dot1;
+      _mcrce1   = shr1->Energy()[2];
+    }// if new most aligned shower
+
+    // backtracking for shower 1
+    float dot2 = shr2->Direction().Dot(_mcgamma0_mom);
+    if (dot2 > _mcrcdot0) {
+      _mcrcdot0 = dot2;
+      _mcrce0   = shr2->Energy()[2];
+    }// if new most aligned shower
+    dot2 = shr2->Direction().Dot(_mcgamma1_mom);
+    if (dot2 > _mcrcdot1) {
+      _mcrcdot1 = dot2;
+      _mcrce1   = shr2->Energy()[2];
+    }// if new most aligned shower
+    
     return true;
   }
   
@@ -270,6 +343,8 @@ cioe'     * @brief set branches for TTree
     _tree->Branch("_dot2",&_dot2,"dot2/F");
     _tree->Branch("_energy1",&_energy1,"energy1/F");
     _tree->Branch("_energy2",&_energy2,"energy2/F");
+    _tree->Branch("_dedx1",&_dedx1,"dedx1/F");
+    _tree->Branch("_dedx2",&_dedx2,"dedx2/F");
     _tree->Branch("_isshower1",&_isshower1,"isshower1/I");
     _tree->Branch("_isshower2",&_isshower2,"isshower2/I");
     _tree->Branch("_gammadot",&_gammadot,"gammadot/F");
@@ -289,40 +364,43 @@ cioe'     * @brief set branches for TTree
     return;
   }
 
-  std::pair<double,double> Pi0Selection::VtxCompatibility(const TVector3& nuvtx, const ProxyPfpElem_t& pfp_pxy, TVector3& gammadir) {
+  std::pair<double,double> Pi0Selection::VtxCompatibility(const TVector3& nuvtx, const TVector3& shrvtx, const TVector3& shrdir) {
 
-    auto shr_v = pfp_pxy.get<recob::Shower>();
-    auto trk_v = pfp_pxy.get<recob::Track>();
-
-    if ( (shr_v.size() + trk_v.size()) != 1) {
+    /*
+      auto shr_v = pfp_pxy.get<recob::Shower>();
+      auto trk_v = pfp_pxy.get<recob::Track>(;)
+      
+      if ( (shr_v.size() + trk_v.size()) != 1) {
       std::cout << "\t there are " << shr_v.size() << " showers associated to this PFP" << std::endl;
       std::cout << "\t there are " << trk_v.size() << " tracks  associated to this PFP" << std::endl;
       std::cout << "ERROR. PFP associated with != (shr+trk)." << std::endl;
       return std::make_pair(-1,-1);
-    }
-
-    if (shr_v.size() == 1) {
+      }
+      
+      if (shr_v.size() == 1) {
       
       auto shr = shr_v.at(0);
-      
-      // grab shower start point and direction
-      auto shrvtx = shr->ShowerStart();
-      auto shrdir = shr->Direction();
-      gammadir = shrdir;
-      
-      // assess compatibility
-      auto nuvtx2shrvtx = (shrvtx - nuvtx).Unit();
-      auto shrdirnormed = shrdir.Unit();
-      
-      double dot  = nuvtx2shrvtx.Dot(shrdirnormed);
-      double dist = (nuvtx-shrvtx).Mag();
-      
-      return std::make_pair(dot,dist);
-      
-    }// associated with a shower
+    */
     
-    if (trk_v.size() == 1) {
-
+    // grab shower start point and direction
+    //auto shrvtx = shr->ShowerStart();
+    //auto shrdir = shr->Direction();
+    //gammadir = shrdir;
+    
+    // assess compatibility
+    auto nuvtx2shrvtx = (shrvtx - nuvtx).Unit();
+    auto shrdirnormed = shrdir.Unit();
+    
+    double dot  = nuvtx2shrvtx.Dot(shrdirnormed);
+    double dist = (nuvtx-shrvtx).Mag();
+    
+    return std::make_pair(dot,dist);
+    
+    /*
+      }// associated with a shower
+      
+      if (trk_v.size() == 1) {
+      
       auto trk = trk_v.at(0);
       
       auto trkvtx = trk->Vertex();
@@ -339,9 +417,11 @@ cioe'     * @brief set branches for TTree
       
       return std::make_pair(dot,dist);
       
-    }// associated with a track
+      }// associated with a track
+      
+      return std::make_pair(-1,-1);
+    */
     
-    return std::make_pair(-1,-1);
   }// end of vertex compatibility
 
   template <typename T> float Pi0Selection::PFPEnergy(const T& ass_clus_v) {
@@ -510,6 +590,28 @@ cioe'     * @brief set branches for TTree
   return;
   }
 
+  float Pi0Selection::GetTrackShowerScore(const ProxyPfpElem_t& pfp_pxy) {
+
+    const auto& pfParticleMetadataList = pfp_pxy.get<larpandoraobj::PFParticleMetadata>();
+
+    if (pfParticleMetadataList.size() == 0) 
+      return 1;
+
+    for (unsigned int j=0; j<pfParticleMetadataList.size(); ++j) {
+      
+      const art::Ptr<larpandoraobj::PFParticleMetadata> &pfParticleMetadata(pfParticleMetadataList.at(j));
+      auto pfParticlePropertiesMap = pfParticleMetadata->GetPropertiesMap();
+      if (!pfParticlePropertiesMap.empty()) {
+	for (std::map<std::string, float>::const_iterator it = pfParticlePropertiesMap.begin(); it != pfParticlePropertiesMap.end(); ++it) {
+	  if (it->first == "TrackScore")
+	    return it->second;
+	}// for map elements
+      }// if pfp metadata map not empty
+    }// for list
+
+    return 1;
+  }
+
   void Pi0Selection::Reset() {
 
     _ispi0 = 0;
@@ -532,6 +634,8 @@ cioe'     * @brief set branches for TTree
     _radlen2 = -1;
     _energy1 = -1;
     _energy2 = -1;
+    _dedx1 = -1;
+    _dedx2 = -1;
     _ngamma = 0;
     _ntrack = 0;
     _nshower = 0;
