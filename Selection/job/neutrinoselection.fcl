@@ -11,7 +11,6 @@ DefaultAnalysisTool: {
     ProtonThreshold: 0.04 # GeV
 }
 
-
 CRTApproachAnalysisTool: {
     tool_type: "CRTApproachAnalysis"
     TrackAssnModuleLabel:"trackmatch"
@@ -22,6 +21,16 @@ ObviousCosmicFlashMatching: {
     PFPproducer: "pandora"
     SpacePointproducer: "pandora"
     SliceTool: @local::SliceToolNeutrinoMC
+}
+
+SlicePurComplTool: {
+    tool_type: "SlicePurCompl"
+    CLSproducer: "pandora"
+    SLCproducer: "pandora"
+    MCTproducer: "generator"
+    MCPproducer: "largeant"
+    Hproducer: "gaushit"
+    HTproducer: "gaushitTruthMatch"
 }
 
 shrreco3dDATA: @local::ShrReco3DPandora
@@ -43,6 +52,7 @@ NuSelectionFilter:{
     SHRproducer: "pandora"
     HITproducer: "pandora"
     CLSproducer: "pandora"
+    SLCproducer: "pandora"
     VTXproducer: "pandora"
     TRKproducer: "pandora"
     MCTproducer: "generator"
@@ -53,6 +63,7 @@ NuSelectionFilter:{
         default: @local::DefaultAnalysisTool
         # you can add more analysis tools here
         #obviouscosmic: @local::ObviousCosmicFlashMatching
+        #slicepurcompl: @local::SlicePurComplTool
         }
     }
 

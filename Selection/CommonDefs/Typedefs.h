@@ -5,6 +5,7 @@
 
 #include "lardataobj/RecoBase/PFParticle.h"
 #include "lardataobj/RecoBase/Cluster.h"
+#include "lardataobj/RecoBase/Slice.h"
 #include "lardataobj/RecoBase/Hit.h"
 #include "lardataobj/RecoBase/Shower.h"
 #include "lardataobj/RecoBase/Track.h"
@@ -19,6 +20,7 @@ namespace searchingfornues {
 					      std::declval<art::Event>(),std::declval<art::InputTag>(),
                                               proxy::withAssociated<larpandoraobj::PFParticleMetadata>(std::declval<art::InputTag>()),
                                               proxy::withAssociated<recob::Cluster>(std::declval<art::InputTag>()),
+                                              proxy::withAssociated<recob::Slice>(std::declval<art::InputTag>()),
                                               proxy::withAssociated<recob::Track>(std::declval<art::InputTag>()),
                                               proxy::withAssociated<recob::Vertex>(std::declval<art::InputTag>()),
                                               proxy::withAssociated<recob::Shower>(std::declval<art::InputTag>())) );

@@ -66,6 +66,7 @@ private:
 
   art::InputTag fPFPproducer;
   art::InputTag fCLSproducer; // cluster associated to PFP
+  art::InputTag fSLCproducer; // slice associated to PFP
   art::InputTag fHITproducer; // hit associated to cluster
   art::InputTag fSHRproducer; // shower associated to PFP
   art::InputTag fVTXproducer; // vertex associated to PFP
@@ -151,6 +152,7 @@ NeutrinoSelectionFilter::NeutrinoSelectionFilter(fhicl::ParameterSet const& p)
   fSHRproducer = p.get< art::InputTag > ("SHRproducer");
   fHITproducer = p.get< art::InputTag > ("HITproducer");
   fCLSproducer = p.get< art::InputTag > ("CLSproducer");
+  fSLCproducer = p.get< art::InputTag > ("SLCproducer");
   fVTXproducer = p.get< art::InputTag > ("VTXproducer");
   fTRKproducer = p.get< art::InputTag > ("TRKproducer");
   fMCTproducer = p.get< art::InputTag > ("MCTproducer");
@@ -203,6 +205,7 @@ bool NeutrinoSelectionFilter::filter(art::Event & e)
   selection::ProxyPfpColl_t const& pfp_proxy = proxy::getCollection<std::vector<recob::PFParticle> >(e,fPFPproducer,
 												     proxy::withAssociated<larpandoraobj::PFParticleMetadata>(fPFPproducer),
 												     proxy::withAssociated<recob::Cluster>(fCLSproducer),
+												     proxy::withAssociated<recob::Slice>(fSLCproducer),
 												     proxy::withAssociated<recob::Track>(fTRKproducer),
 												     proxy::withAssociated<recob::Vertex>(fVTXproducer),
 												     proxy::withAssociated<recob::Shower>(fSHRproducer));  
