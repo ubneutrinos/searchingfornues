@@ -55,6 +55,11 @@ namespace selection
      * @brief reset ttree branches
      */
     void resetTTree(TTree* _tree);
+
+    /**
+     * @brief reset module
+     */
+    void Reset();
     
   private:
 
@@ -62,12 +67,26 @@ namespace selection
      * @brief calculate PFP energy based on hits associated to clusters
      */
     template <typename T> float PFPEnergy(const T& ass_clus_v);
+    
+    /**
+     * @brief given a PFP (the neutrino one) grab the associated vertex and store vertex by reference
+     */
+    void StoreVertex(const ProxyPfpElem_t& pfp_pxy, TVector3& nuvtx);
+
+    /*
+    * @brief get shower score
+    */
+    float GetTrackShowerScore(const ProxyPfpElem_t& pfp_pxy);
 
     // TTree variables
     int _nshower;
-    int _ntrack;
-    float _emin, _emax;
-    float _rc_vtx_x, _rc_vtx_y, _rc_vtx_z; // reco neutrino vertex
+    float _shr_score;  // shower classification score (1 = track-like)
+    float _shr_energy; // shower energy
+    float _shr_dedx;   // shower dEdx
+    float _shr_dist;   // shower start point distance to vertex
+
+    // input parameters
+    float _trkshrscore;
     
   };
 
@@ -113,7 +132,9 @@ namespace selection
   /// pset - Fcl parameter set.
   ///
   void ShowerSelection::configure(fhicl::ParameterSet const & pset)
-  {}
+  {
+    _trkshrscore = pset.get< float > ("trkshrscore");
+  }
   
   //----------------------------------------------------------------------------
   /// selectEvent
@@ -127,87 +148,126 @@ namespace selection
   bool ShowerSelection::selectEvent(art::Event const& e,
 				    const std::vector<ProxyPfpElem_t>& pfp_pxy_v)
   {
-    
-    _nshower = 0;
-    _ntrack  = 0;
 
+    Reset();
+
+    // container to store vertex
     TVector3 nuvtx;
-    Double_t xyz[3] = {};
 
+    // loop over all PFPs and get metadata, find the neutrino and save its vertex
     for (const auto& pfp_pxy : pfp_pxy_v) {
-
+      
       auto PDG = fabs(pfp_pxy->PdgCode());
 
-      if ( (PDG == 12) || (PDG == 14) ) {
-	
-	// grab vertex
-	auto vtx = pfp_pxy.get<recob::Vertex>();
-	if (vtx.size() != 1) {
-	  std::cout << "ERROR. Found neutrino PFP w/ != 1 associated vertices..." << std::endl;
-	  return false;
-	}
-	
-	// save vertex to array
-	vtx.at(0)->XYZ(xyz);
-	nuvtx = TVector3(xyz[0],xyz[1],xyz[2]);
-
-	_rc_vtx_x = nuvtx.X();
-	_rc_vtx_y = nuvtx.Y();
-	_rc_vtx_z = nuvtx.Z();
-
-      }// if neutrino PFP
-
+      // skip neutrino PFP
+      if ( (PDG == 12) || (PDG == 14) ) 
+	StoreVertex(pfp_pxy,nuvtx);
+      
+      // if non-neutrino PFP
       else {
 	
+	// grab shower/track score
+	auto trkshrscore = GetTrackShowerScore(pfp_pxy);
+
+	std::cout << "DAVIDC PFP has trkscore : " << trkshrscore << std::endl;
+
+	// 1 -> track-like
+	if (trkshrscore > _trkshrscore)  continue;
+
+	_shr_score = trkshrscore;
+	
 	auto nshr = pfp_pxy.get<recob::Shower>().size();
-	auto ntrk = pfp_pxy.get<recob::Track>().size();
 	
 	_nshower += nshr;
-	_ntrack  += ntrk;
 	
-	// grab cluster associated
-	if (nshr == 1) {
-	  auto ass_clus_v =  pfp_pxy.get<recob::Cluster>();// clus_pxy_v[pfp_pxy.key()];
-	  float energy = PFPEnergy(ass_clus_v);
-	  if (energy > _emax) { _emax = energy; }
-	  if (energy < _emin) { _emin = energy; }
-	}// if pfp is shower-like
+	// 1 -> track-like
+	if (trkshrscore > _trkshrscore)  continue;
 	
-      }// if not neutrino
+	if (nshr != 1) continue;
+	
+	auto const& shr = pfp_pxy.get<recob::Shower>().at(0);
+	
+	// if this is the highest energy shower, save as shower candidate
+	if (shr->Energy()[2] > _shr_energy) {
+	  _shr_energy = shr->Energy()[2];
+	  _shr_dedx   = shr->dEdx()[2];
+	  _shr_dist   = (shr->Direction() - nuvtx).Mag();
+	}// if highest energy shower so far
 
-    }// for all PFP
-      
+      }// if non-neutrino PFP
+    }// for all PFParticles
+
+    
     if ( _nshower >= 1)
       return true;
     
     return false;
   }
+
+  float ShowerSelection::GetTrackShowerScore(const ProxyPfpElem_t& pfp_pxy) {
+
+    const auto& pfParticleMetadataList = pfp_pxy.get<larpandoraobj::PFParticleMetadata>();
+
+    if (pfParticleMetadataList.size() == 0) 
+      return 1;
+
+    for (unsigned int j=0; j<pfParticleMetadataList.size(); ++j) {
+      
+      const art::Ptr<larpandoraobj::PFParticleMetadata> &pfParticleMetadata(pfParticleMetadataList.at(j));
+      auto pfParticlePropertiesMap = pfParticleMetadata->GetPropertiesMap();
+      if (!pfParticlePropertiesMap.empty()) {
+	for (std::map<std::string, float>::const_iterator it = pfParticlePropertiesMap.begin(); it != pfParticlePropertiesMap.end(); ++it) {
+	  if (it->first == "TrackScore")
+	    return it->second;
+	}// for map elements
+      }// if pfp metadata map not empty
+    }// for list
+
+    return 1;
+  }
+  
+  void ShowerSelection::StoreVertex(const ProxyPfpElem_t& pfp_pxy, TVector3& nuvtx) {
+    
+    Double_t xyz[3] = {};
+
+    // grab vertex
+    auto vtx = pfp_pxy.get<recob::Vertex>();
+    if (vtx.size() != 1) {
+      std::cout << "ERROR. Found neutrino PFP w/ != 1 associated vertices..." << std::endl;
+      return;
+    }
+    
+    // save vertex to array
+    vtx.at(0)->XYZ(xyz);
+    nuvtx = TVector3(xyz[0],xyz[1],xyz[2]);
+  
+    return;
+  }// end store vertex
   
   void ShowerSelection::setBranches(TTree* _tree) {
     
     _tree->Branch("_nshower",&_nshower,"nshower/I");
-    _tree->Branch("_ntrack" ,&_ntrack ,"ntrack/I" );
-    _tree->Branch("_emin",&_emin,"emin/F");
-    _tree->Branch("_emax",&_emax,"emax/F");
-    _tree->Branch("_rc_vtx_x",&_rc_vtx_x,"rc_vtx_x/F");
-    _tree->Branch("_rc_vtx_y",&_rc_vtx_y,"rc_vtx_y/F");
-    _tree->Branch("_rc_vtx_z",&_rc_vtx_z,"rc_vtx_z/F");
+    _tree->Branch("_shr_score" ,&_shr_score ,"shr_score/F" );
+    _tree->Branch("_shr_energy",&_shr_energy,"shr_energy/F");
+    _tree->Branch("_shr_dedx"  ,&_shr_dedx  ,"shr_dedx/F"  );
+    _tree->Branch("_shr_dist"  ,&_shr_dist  ,"shr_dist/F"  );
+    
+    return;
+  }
+
+  void ShowerSelection::Reset() {
+
+    _shr_score  = -1;    
+    _shr_energy = 0;
+    _shr_dedx   = 0;
+    _shr_dist   = -1;
+
+    _nshower = 0;
 
     return;
   }
 
   void ShowerSelection::resetTTree(TTree* _tree) {
-
-    _emin    = 1e6;
-    _emax    = 0.;
-
-    _nshower = std::numeric_limits<int>::min();
-    _ntrack  = std::numeric_limits<int>::min();
-
-    _rc_vtx_x = std::numeric_limits<int>::min();
-    _rc_vtx_y = std::numeric_limits<int>::min();
-    _rc_vtx_z = std::numeric_limits<int>::min();
-
     return;
   }
   

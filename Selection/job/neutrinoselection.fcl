@@ -33,6 +33,11 @@ SlicePurComplTool: {
     HTproducer: "gaushitTruthMatch"
 }
 
+ContainmentSelection: {
+    tool_type: "ContainmentSelecton"
+    FV: 10
+}
+
 shrreco3dDATA: @local::ShrReco3DPandora
 shrreco3dDATA.BacktrackTag:  ""
 shrreco3dDATA.ADCtoE:   [238.4,238.4,238.4] # e-/ADC
@@ -62,7 +67,7 @@ NuSelectionFilter:{
     AnalysisTools: {
         default: @local::DefaultAnalysisTool
         # you can add more analysis tools here
-        #obviouscosmic: @local::ObviousCosmicFlashMatching
+        obviouscosmic: @local::ObviousCosmicFlashMatching
         #slicepurcompl: @local::SlicePurComplTool
         }
     }

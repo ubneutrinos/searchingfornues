@@ -1,0 +1,18 @@
+#include "run_neutrinoselectionfilter_run1_data.fcl"
+
+physics.filters.nuselection.SHRproducer: "shrreco3d"
+
+physics.filters.nuselection.SelectionTool: {
+    tool_type: "Pi0Selection"
+    onlyshower: false
+    dotmin: 0.5
+    dmin: 2.
+    trkshrscore: 0.95
+    }
+
+physics.filters.nuselection.AnalysisTools: {
+    default: @local::DefaultAnalysisTool
+    }
+
+physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
+physics.filters.nuselection.IsData: false
