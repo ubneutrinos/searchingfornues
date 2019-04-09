@@ -314,15 +314,20 @@ namespace analysis
     _tree->Branch("_elec_c",&_elec_c,"elec_c/F");
     _tree->Branch("_elec_p",&_elec_p,"elec_p/F");
     // pi0
-    _tree->Branch("_pi0"   ,&_pi0   ,"pi0/I");
+    _tree->Branch("_npi0"   ,&_npi0   ,"npi0/I");
     _tree->Branch("_pi0_e",&_pi0_e,"pi0_e/F");
     _tree->Branch("_pi0_c",&_pi0_c,"pi0_c/F");
     _tree->Branch("_pi0_p",&_pi0_p,"pi0_p/F");
     // first [highest momentum] proton
-    _tree->Branch("_proton"   ,&_proton   ,"proton/I");
+    _tree->Branch("_nproton"   ,&_nproton   ,"nproton/I");
     _tree->Branch("_proton_e",&_proton_e,"proton_e/F");
     _tree->Branch("_proton_c",&_proton_c,"proton_c/F");
     _tree->Branch("_proton_p",&_proton_p,"proton_p/F");
+    // charged pions
+    _tree->Branch("_npion",&_npion,"npion/I");
+    _tree->Branch("_pion_e",&_pion_e,"pion_e/F");
+    _tree->Branch("_pion_c",&_pion_c,"pion_c/F");
+    _tree->Branch("_pion_p",&_pion_p,"pion_p/F");
 
     _tree->Branch("_nslice"  ,&_nslice  ,"nslice/I"  );
     _tree->Branch("_crtveto" ,&_crtveto ,"crtveto/I" );
@@ -457,20 +462,18 @@ void DefaultAnalysis::SaveTruth(art::Event const& e) {
     }// if pi0
     // if proton
     if ( (part.PdgCode() == 2212) and (part.StatusCode() == 1) ){
-      if (_nproton == 0) {
-	// if highest energy, update energy
-	if (part.Momentum(0).E() > _proton_e)
-	  _proton_e = part.Momentum(0).E();
-	if (part.Momentum(0).E() > fProtonThreshold)
-	  _nproton += 1;
-      }
+      // if highest energy, update energy
+      if (part.Momentum(0).E() > _proton_e)
+	_proton_e = part.Momentum(0).E();
+      if (part.Momentum(0).E() > fProtonThreshold)
+	_nproton += 1;
     }// if proton
     // if pion
     if ( (fabs(part.PdgCode()) == 211) and (part.StatusCode() == 1) ){
       if (part.Momentum(0).E() > _pion_e)
 	_pion_e = part.Momentum(0).E();
       _npion += 1;
-    }// if proton
+    }// if pion
   }// for all MCParticles
 
   searchingfornues::ApplyDetectorOffsets(_vtx_t,_vtx_x,_vtx_y,_vtx_z,_xtimeoffset,_xsceoffset,_ysceoffset,_zsceoffset);
