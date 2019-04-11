@@ -247,7 +247,7 @@ namespace analysis
 	  auto mcp = searchingfornues::getAssocMCParticle(hittruth, hit_v, purity, completeness);
 	  if (mcp){
 	    auto PDG = mcp->PdgCode();
-	    _backtracked_idx.push_back(0);
+	    _backtracked_idx.push_back(pfp->Self());
 	    _backtracked_tid.push_back(mcp->TrackId());
 	    _backtracked_e.push_back(mcp->Momentum().E());
 	    _backtracked_pdg.push_back(PDG);
