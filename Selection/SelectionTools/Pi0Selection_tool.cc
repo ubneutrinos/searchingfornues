@@ -350,8 +350,6 @@ cioe'     * @brief set branches for TTree
     _tree->Branch("dedx2",&_dedx2,"dedx2/F");
     _tree->Branch("shrscore1",&_shrscore1,"shrscore1/F");
     _tree->Branch("shrscore2",&_shrscore2,"shrscore2/F");
-    _tree->Branch("isshower1",&_isshower1,"isshower1/I");
-    _tree->Branch("isshower2",&_isshower2,"isshower2/I");
     _tree->Branch("gammadot",&_gammadot,"gammadot/F");
     _tree->Branch("mass",&_mass,"mass/F");
     _tree->Branch("rc_vtx_x",&_rc_vtx_x,"rc_vtx_x/F");
