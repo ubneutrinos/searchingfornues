@@ -8,6 +8,7 @@ physics.filters.nuselection.SelectionTool: {
 
 physics.filters.nuselection.AnalysisTools: {
     default: @local::DefaultAnalysisTool
+    containment:   @local::ContainmentAnalysis
 }
 
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
