@@ -247,7 +247,7 @@ namespace analysis
 	  auto mcp = searchingfornues::getAssocMCParticle(hittruth, hit_v, purity, completeness);
 	  if (mcp){
 	    auto PDG = mcp->PdgCode();
-	    _backtracked_idx.push_back(0);
+	    _backtracked_idx.push_back(pfp->Self());
 	    _backtracked_tid.push_back(mcp->TrackId());
 	    _backtracked_e.push_back(mcp->Momentum().E());
 	    _backtracked_pdg.push_back(PDG);
@@ -283,73 +283,73 @@ namespace analysis
   void DefaultAnalysis::setBranches(TTree* _tree) 
   {
     // reconstructed neutrino vertex
-    _tree->Branch("_nu_vtx_x",&_nu_vtx_x,"nu_vtx_x/F");
-    _tree->Branch("_nu_vtx_y",&_nu_vtx_y,"nu_vtx_y/F");
-    _tree->Branch("_nu_vtx_z",&_nu_vtx_z,"nu_vtx_z/F");
-    _tree->Branch("_nu_sce_x",&_nu_sce_x,"nu_sce_x/F");
-    _tree->Branch("_nu_sce_y",&_nu_sce_y,"nu_sce_y/F");
-    _tree->Branch("_nu_sce_z",&_nu_sce_z,"nu_sce_z/F");
+    _tree->Branch("nu_vtx_x",&_nu_vtx_x,"nu_vtx_x/F");
+    _tree->Branch("nu_vtx_y",&_nu_vtx_y,"nu_vtx_y/F");
+    _tree->Branch("nu_vtx_z",&_nu_vtx_z,"nu_vtx_z/F");
+    _tree->Branch("nu_sce_x",&_nu_sce_x,"nu_sce_x/F");
+    _tree->Branch("nu_sce_y",&_nu_sce_y,"nu_sce_y/F");
+    _tree->Branch("nu_sce_z",&_nu_sce_z,"nu_sce_z/F");
 
     // neutrino information
-    _tree->Branch("_nu_pdg",&_nu_pdg,"nu_pdg/I");
-    _tree->Branch("_ccnc"  ,&_ccnc  ,"ccnc/I"  );
-    _tree->Branch("_nu_e"  ,&_nu_e  ,"nu_e/F"  );
-    _tree->Branch("_vtx_x" ,&_vtx_x ,"vtx_x/F" );
-    _tree->Branch("_vtx_y" ,&_vtx_y ,"vtx_y/F" );
-    _tree->Branch("_vtx_z" ,&_vtx_z ,"vtx_z/F" );
-    _tree->Branch("_isVtxInFiducial" ,&_isVtxInFiducial ,"isVtxInFiducial/O" );
+    _tree->Branch("nu_pdg",&_nu_pdg,"nu_pdg/I");
+    _tree->Branch("ccnc"  ,&_ccnc  ,"ccnc/I"  );
+    _tree->Branch("nu_e"  ,&_nu_e  ,"nu_e/F"  );
+    _tree->Branch("vtx_x" ,&_vtx_x ,"vtx_x/F" );
+    _tree->Branch("vtx_y" ,&_vtx_y ,"vtx_y/F" );
+    _tree->Branch("vtx_z" ,&_vtx_z ,"vtx_z/F" );
+    _tree->Branch("isVtxInFiducial" ,&_isVtxInFiducial ,"isVtxInFiducial/O" );
     // individual particles in the neutrino slice
     // legend:
     // _e -> energy of particle in GeV
     // _c -> completeness from back-tracking [0,1]
     // _p -> purity from back-tracking [0,1]
     // muon
-    _tree->Branch("_nmuon",&_nmuon,"nmuon/I");
-    _tree->Branch("_muon_e",&_muon_e,"muon_e/F");
-    _tree->Branch("_muon_c",&_muon_c,"muon_c/F");
-    _tree->Branch("_muon_p",&_muon_p,"muon_p/F");
+    _tree->Branch("nmuon",&_nmuon,"nmuon/I");
+    _tree->Branch("muon_e",&_muon_e,"muon_e/F");
+    _tree->Branch("muon_c",&_muon_c,"muon_c/F");
+    _tree->Branch("muon_p",&_muon_p,"muon_p/F");
     // electron
-    _tree->Branch("_nelec",&_nelec,"nelec/I");
-    _tree->Branch("_elec_e",&_elec_e,"elec_e/F");
-    _tree->Branch("_elec_c",&_elec_c,"elec_c/F");
-    _tree->Branch("_elec_p",&_elec_p,"elec_p/F");
+    _tree->Branch("nelec",&_nelec,"nelec/I");
+    _tree->Branch("elec_e",&_elec_e,"elec_e/F");
+    _tree->Branch("elec_c",&_elec_c,"elec_c/F");
+    _tree->Branch("elec_p",&_elec_p,"elec_p/F");
     // pi0
-    _tree->Branch("_npi0"   ,&_npi0   ,"npi0/I");
-    _tree->Branch("_pi0_e",&_pi0_e,"pi0_e/F");
-    _tree->Branch("_pi0_c",&_pi0_c,"pi0_c/F");
-    _tree->Branch("_pi0_p",&_pi0_p,"pi0_p/F");
+    _tree->Branch("npi0"   ,&_npi0   ,"npi0/I");
+    _tree->Branch("pi0_e",&_pi0_e,"pi0_e/F");
+    _tree->Branch("pi0_c",&_pi0_c,"pi0_c/F");
+    _tree->Branch("pi0_p",&_pi0_p,"pi0_p/F");
     // first [highest momentum] proton
-    _tree->Branch("_nproton"   ,&_nproton   ,"nproton/I");
-    _tree->Branch("_proton_e",&_proton_e,"proton_e/F");
-    _tree->Branch("_proton_c",&_proton_c,"proton_c/F");
-    _tree->Branch("_proton_p",&_proton_p,"proton_p/F");
+    _tree->Branch("nproton"   ,&_nproton   ,"nproton/I");
+    _tree->Branch("proton_e",&_proton_e,"proton_e/F");
+    _tree->Branch("proton_c",&_proton_c,"proton_c/F");
+    _tree->Branch("proton_p",&_proton_p,"proton_p/F");
     // charged pions
-    _tree->Branch("_npion",&_npion,"npion/I");
-    _tree->Branch("_pion_e",&_pion_e,"pion_e/F");
-    _tree->Branch("_pion_c",&_pion_c,"pion_c/F");
-    _tree->Branch("_pion_p",&_pion_p,"pion_p/F");
+    _tree->Branch("npion",&_npion,"npion/I");
+    _tree->Branch("pion_e",&_pion_e,"pion_e/F");
+    _tree->Branch("pion_c",&_pion_c,"pion_c/F");
+    _tree->Branch("pion_p",&_pion_p,"pion_p/F");
 
-    _tree->Branch("_nslice"  ,&_nslice  ,"nslice/I"  );
-    _tree->Branch("_crtveto" ,&_crtveto ,"crtveto/I" );
-    _tree->Branch("_crthitpe",&_crthitpe,"crthitpe/F");
+    _tree->Branch("nslice"  ,&_nslice  ,"nslice/I"  );
+    _tree->Branch("crtveto" ,&_crtveto ,"crtveto/I" );
+    _tree->Branch("crthitpe",&_crthitpe,"crthitpe/F");
 
     // PFParticle backtracking
-    _tree->Branch("_backtracked_idx"   ,"std::vector<int>"  ,&_backtracked_idx   );
-    _tree->Branch("_backtracked_tid"   ,"std::vector<int>"  ,&_backtracked_tid   );
-    _tree->Branch("_backtracked_pdg"   ,"std::vector<int>"  ,&_backtracked_pdg   );
-    _tree->Branch("_backtracked_e"     ,"std::vector<float>",&_backtracked_e     );
-    _tree->Branch("_backtracked_purity","std::vector<float>",&_backtracked_purity);
+    _tree->Branch("backtracked_idx"   ,"std::vector<int>"  ,&_backtracked_idx   );
+    _tree->Branch("backtracked_tid"   ,"std::vector<int>"  ,&_backtracked_tid   );
+    _tree->Branch("backtracked_pdg"   ,"std::vector<int>"  ,&_backtracked_pdg   );
+    _tree->Branch("backtracked_e"     ,"std::vector<float>",&_backtracked_e     );
+    _tree->Branch("backtracked_purity","std::vector<float>",&_backtracked_purity);
 
-    _tree->Branch("_lep_e" ,&_lep_e ,"lep_e/F" );
-    _tree->Branch("_pass"  ,&_pass  ,"pass/I"  );
-    _tree->Branch("_run"   ,&_run   ,"run/I"   );
-    _tree->Branch("_sub"   ,&_sub   ,"sub/I"   );
-    _tree->Branch("_evt"   ,&_evt   ,"evt/I"   );
+    _tree->Branch("lep_e" ,&_lep_e ,"lep_e/F" );
+    _tree->Branch("pass"  ,&_pass  ,"pass/I"  );
+    _tree->Branch("run"   ,&_run   ,"run/I"   );
+    _tree->Branch("sub"   ,&_sub   ,"sub/I"   );
+    _tree->Branch("evt"   ,&_evt   ,"evt/I"   );
 
-    _tree->Branch("_xtimeoffset",&_xtimeoffset,"xtimeoffset/F");
-    _tree->Branch("_xsceoffset" ,&_xsceoffset ,"xsceoffset/F" );
-    _tree->Branch("_ysceoffset" ,&_ysceoffset ,"ysceoffset/F" );
-    _tree->Branch("_zsceoffset" ,&_zsceoffset ,"zsceoffset/F" );
+    _tree->Branch("xtimeoffset",&_xtimeoffset,"xtimeoffset/F");
+    _tree->Branch("xsceoffset" ,&_xsceoffset ,"xsceoffset/F" );
+    _tree->Branch("ysceoffset" ,&_ysceoffset ,"ysceoffset/F" );
+    _tree->Branch("zsceoffset" ,&_zsceoffset ,"zsceoffset/F" );
   }
 
   void DefaultAnalysis::resetTTree(TTree* _tree)

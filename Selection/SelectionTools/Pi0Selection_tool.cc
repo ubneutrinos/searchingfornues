@@ -323,38 +323,40 @@ cioe'     * @brief set branches for TTree
   void Pi0Selection::setBranches(TTree* _tree) {
 
     // truth
-    _tree->Branch("_mcgamma0_e" ,&_mcgamma0_e ,"mcgamma0_e/F" );
-    _tree->Branch("_mcgamma0_px",&_mcgamma0_px,"mcgamma0_px/F");
-    _tree->Branch("_mcgamma0_py",&_mcgamma0_py,"mcgamma0_py/F");
-    _tree->Branch("_mcgamma0_pz",&_mcgamma0_pz,"mcgamma0_pz/F");
-    _tree->Branch("_mcrcdot0",&_mcrcdot0,"mcrcdot0/F");
-    _tree->Branch("_mcrce0",&_mcrce0,"mcrce0/F");
-    _tree->Branch("_mcgamma1_e" ,&_mcgamma1_e ,"mcgamma1_e/F" );
-    _tree->Branch("_mcgamma1_px",&_mcgamma1_px,"mcgamma1_px/F");
-    _tree->Branch("_mcgamma1_py",&_mcgamma1_py,"mcgamma1_py/F");
-    _tree->Branch("_mcgamma1_pz",&_mcgamma1_pz,"mcgamma1_pz/F");
-    _tree->Branch("_mcrcdot1",&_mcrcdot1,"mcrcdot1/F");
-    _tree->Branch("_mcrce1",&_mcrce1,"mcrce1/F");
+    _tree->Branch("mcgamma0_e" ,&_mcgamma0_e ,"mcgamma0_e/F" );
+    _tree->Branch("mcgamma0_px",&_mcgamma0_px,"mcgamma0_px/F");
+    _tree->Branch("mcgamma0_py",&_mcgamma0_py,"mcgamma0_py/F");
+    _tree->Branch("mcgamma0_pz",&_mcgamma0_pz,"mcgamma0_pz/F");
+    _tree->Branch("mcrcdot0",&_mcrcdot0,"mcrcdot0/F");
+    _tree->Branch("mcrce0",&_mcrce0,"mcrce0/F");
+    _tree->Branch("mcgamma1_e" ,&_mcgamma1_e ,"mcgamma1_e/F" );
+    _tree->Branch("mcgamma1_px",&_mcgamma1_px,"mcgamma1_px/F");
+    _tree->Branch("mcgamma1_py",&_mcgamma1_py,"mcgamma1_py/F");
+    _tree->Branch("mcgamma1_pz",&_mcgamma1_pz,"mcgamma1_pz/F");
+    _tree->Branch("mcrcdot1",&_mcrcdot1,"mcrcdot1/F");
+    _tree->Branch("mcrce1",&_mcrce1,"mcrce1/F");
 
     // reco
-    _tree->Branch("_nshower",&_nshower,"nshower/I");
-    _tree->Branch("_ntrack" ,&_ntrack ,"ntrack/I" );
-    _tree->Branch("_ngamma",&_ngamma,"ngamma/I");
-    _tree->Branch("_radlen1",&_radlen1,"radlen1/F");
-    _tree->Branch("_radlen2",&_radlen2,"radlen2/F");
-    _tree->Branch("_dot1",&_dot1,"dot1/F");
-    _tree->Branch("_dot2",&_dot2,"dot2/F");
-    _tree->Branch("_energy1",&_energy1,"energy1/F");
-    _tree->Branch("_energy2",&_energy2,"energy2/F");
-    _tree->Branch("_dedx1",&_dedx1,"dedx1/F");
-    _tree->Branch("_dedx2",&_dedx2,"dedx2/F");
-    _tree->Branch("_shrscore1",&_shrscore1,"shrscore1/F");
-    _tree->Branch("_shrscore2",&_shrscore2,"shrscore2/F");
-    _tree->Branch("_gammadot",&_gammadot,"gammadot/F");
-    _tree->Branch("_mass",&_mass,"mass/F");
-    _tree->Branch("_rc_vtx_x",&_rc_vtx_x,"rc_vtx_x/F");
-    _tree->Branch("_rc_vtx_y",&_rc_vtx_y,"rc_vtx_y/F");
-    _tree->Branch("_rc_vtx_z",&_rc_vtx_z,"rc_vtx_z/F");
+    _tree->Branch("nshower",&_nshower,"nshower/I");
+    _tree->Branch("ntrack" ,&_ntrack ,"ntrack/I" );
+    _tree->Branch("ngamma",&_ngamma,"ngamma/I");
+    _tree->Branch("radlen1",&_radlen1,"radlen1/F");
+    _tree->Branch("radlen2",&_radlen2,"radlen2/F");
+    _tree->Branch("dot1",&_dot1,"dot1/F");
+    _tree->Branch("dot2",&_dot2,"dot2/F");
+    _tree->Branch("energy1",&_energy1,"energy1/F");
+    _tree->Branch("energy2",&_energy2,"energy2/F");
+    _tree->Branch("dedx1",&_dedx1,"dedx1/F");
+    _tree->Branch("dedx2",&_dedx2,"dedx2/F");
+    _tree->Branch("shrscore1",&_shrscore1,"shrscore1/F");
+    _tree->Branch("shrscore2",&_shrscore2,"shrscore2/F");
+    _tree->Branch("isshower1",&_isshower1,"isshower1/I");
+    _tree->Branch("isshower2",&_isshower2,"isshower2/I");
+    _tree->Branch("gammadot",&_gammadot,"gammadot/F");
+    _tree->Branch("mass",&_mass,"mass/F");
+    _tree->Branch("rc_vtx_x",&_rc_vtx_x,"rc_vtx_x/F");
+    _tree->Branch("rc_vtx_y",&_rc_vtx_y,"rc_vtx_y/F");
+    _tree->Branch("rc_vtx_z",&_rc_vtx_z,"rc_vtx_z/F");
 
     return;
   }
