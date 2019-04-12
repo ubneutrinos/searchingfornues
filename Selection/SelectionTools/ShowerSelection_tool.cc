@@ -64,11 +64,6 @@ namespace selection
   private:
 
     /**
-     * @brief calculate PFP energy based on hits associated to clusters
-     */
-    template <typename T> float PFPEnergy(const T& ass_clus_v);
-    
-    /**
      * @brief given a PFP (the neutrino one) grab the associated vertex and store vertex by reference
      */
     void StoreVertex(const ProxyPfpElem_t& pfp_pxy, TVector3& nuvtx);
@@ -80,38 +75,24 @@ namespace selection
 
     // TTree variables
     int _nshower;
+    int _ntrack;
+    float _maxtrklen; // maximum track length for any track associated in the slice
     float _shr_score;  // shower classification score (1 = track-like)
-    float _shr_energy; // shower energy
-    float _shr_dedx;   // shower dEdx
+    float _shr_energy_Y, _shr_energy_V, _shr_energy_U; // shower energy
+    float _shr_dedx_Y, _shr_dedx_V, _shr_dedx_U;       // shower dEdx
     float _shr_dist;   // shower start point distance to vertex
+    float _shr_x, _shr_y, _shr_z; // shower start poisition
+    float _shr_px, _shr_py, _shr_pz; // shower momentum vector
 
     // input parameters
-    float _trkshrscore;
+    float fTrkShrscore;
+    float fShrdedxmax;
+    float fShrRadlen;
+    float fShrEnergy;
+    float fMaxTrklen;
     
   };
 
-  template <typename T> float ShowerSelection::PFPEnergy(const T& ass_clus_v) {
-
-    float energy0 = 0;
-    float energy1 = 0;
-    float energy2 = 0;
-    
-    for (auto ass_clus : ass_clus_v) {
-
-      //auto clus = clus_v[ass_clus.key()];
-      
-      std::cout << "cluster integral : " << ass_clus->Integral() << std::endl;
-
-      if (ass_clus->View() == 0) { energy0 = ass_clus->Integral(); }
-      if (ass_clus->View() == 1) { energy1 = ass_clus->Integral(); }
-      if (ass_clus->View() == 2) { energy2 = ass_clus->Integral(); }
-
-    }// for all clusters
-
-    if (energy2 != 0) return energy2;
-    return (energy1+energy0)/2.;
-  }// calculte PFP energy based on associated hit charge
-  
   //----------------------------------------------------------------------------
   /// Constructor.
   ///
@@ -133,7 +114,11 @@ namespace selection
   ///
   void ShowerSelection::configure(fhicl::ParameterSet const & pset)
   {
-    _trkshrscore = pset.get< float > ("trkshrscore");
+    fTrkShrscore = pset.get< float > ("TrkShrscore");
+    fShrdedxmax  = pset.get< float > ("Shrdedxmax");
+    fShrRadlen   = pset.get< float > ("ShrRadlen");
+    fShrEnergy   = pset.get< float > ("ShrEnergy");
+    fMaxTrklen   = pset.get< float > ("MaxTrkLen");
   }
   
   //----------------------------------------------------------------------------
@@ -172,36 +157,64 @@ namespace selection
 	std::cout << "DAVIDC PFP has trkscore : " << trkshrscore << std::endl;
 
 	// 1 -> track-like
-	if (trkshrscore > _trkshrscore)  continue;
+	if (trkshrscore > fTrkShrscore)  continue;
 
 	_shr_score = trkshrscore;
 	
 	auto nshr = pfp_pxy.get<recob::Shower>().size();
-	
 	_nshower += nshr;
+
+	auto ntrk = pfp_pxy.get<recob::Track>().size();
+	_ntrack += ntrk;
+
+	// save track-length of longest track
+	if (ntrk == 1) {
+	  if (pfp_pxy.get<recob::Track>()[0]->Length() > _maxtrklen)
+	    _maxtrklen = pfp_pxy.get<recob::Track>()[0]->Length();
+	}// if there is a track associated
 	
 	// 1 -> track-like
-	if (trkshrscore > _trkshrscore)  continue;
+	if (trkshrscore > fTrkShrscore)  continue;
 	
 	if (nshr != 1) continue;
 	
 	auto const& shr = pfp_pxy.get<recob::Shower>().at(0);
 	
 	// if this is the highest energy shower, save as shower candidate
-	if (shr->Energy()[2] > _shr_energy) {
-	  _shr_energy = shr->Energy()[2];
-	  _shr_dedx   = shr->dEdx()[2];
-	  _shr_dist   = (shr->Direction() - nuvtx).Mag();
+	if (shr->Energy()[2] > _shr_energy_Y) {
+	  _shr_energy_Y = shr->Energy()[2];
+	  _shr_dedx_Y   = shr->dEdx()[2];
+	  _shr_energy_V = shr->Energy()[1];
+	  _shr_dedx_V   = shr->dEdx()[1];
+	  _shr_energy_U = shr->Energy()[0];
+	  _shr_dedx_U   = shr->dEdx()[0];
+	  _shr_x        = shr->ShowerStart().X();
+	  _shr_y        = shr->ShowerStart().Y();
+	  _shr_z        = shr->ShowerStart().Z();
+	  _shr_px        = shr->Direction().X();
+	  _shr_py        = shr->Direction().Y();
+	  _shr_pz        = shr->Direction().Z();
+	  _shr_dist   = (shr->ShowerStart() - nuvtx).Mag();
 	}// if highest energy shower so far
 
       }// if non-neutrino PFP
     }// for all PFParticles
 
+
+    if (_nshower < 1)
+      return false;
+    if (_shr_dist > fShrRadlen)
+      return false;
+    if (_shr_dedx_Y > fShrdedxmax)
+      return false;
+    if (_shr_energy_Y < fShrEnergy)
+      return false;
+    if (_shr_score > fTrkShrscore)
+      return false;
+    if (_maxtrklen > fMaxTrklen)
+      return false;
     
-    if ( _nshower >= 1)
-      return true;
-    
-    return false;
+    return true;
   }
 
   float ShowerSelection::GetTrackShowerScore(const ProxyPfpElem_t& pfp_pxy) {
@@ -247,10 +260,22 @@ namespace selection
   void ShowerSelection::setBranches(TTree* _tree) {
     
     _tree->Branch("_nshower",&_nshower,"nshower/I");
+    _tree->Branch("_ntrack" ,&_ntrack ,"ntrack/I" );
+    _tree->Branch("_maxtrklen",&_maxtrklen,"maxtrklen/F");
     _tree->Branch("_shr_score" ,&_shr_score ,"shr_score/F" );
-    _tree->Branch("_shr_energy",&_shr_energy,"shr_energy/F");
-    _tree->Branch("_shr_dedx"  ,&_shr_dedx  ,"shr_dedx/F"  );
+    _tree->Branch("_shr_energy_Y",&_shr_energy_Y,"shr_energy_Y/F");
+    _tree->Branch("_shr_dedx_Y"  ,&_shr_dedx_Y  ,"shr_dedx_Y/F"  );
+    _tree->Branch("_shr_energy_V",&_shr_energy_V,"shr_energy_V/F");
+    _tree->Branch("_shr_dedx_V"  ,&_shr_dedx_V  ,"shr_dedx_V/F"  );
+    _tree->Branch("_shr_energy_U",&_shr_energy_U,"shr_energy_U/F");
+    _tree->Branch("_shr_dedx_U"  ,&_shr_dedx_U  ,"shr_dedx_U/F"  );
     _tree->Branch("_shr_dist"  ,&_shr_dist  ,"shr_dist/F"  );
+    _tree->Branch("_shr_x"  ,&_shr_x  ,"shr_x/F"  );
+    _tree->Branch("_shr_y"  ,&_shr_y  ,"shr_y/F"  );
+    _tree->Branch("_shr_z"  ,&_shr_z  ,"shr_z/F"  );
+    _tree->Branch("_shr_px"  ,&_shr_px  ,"shr_px/F"  );
+    _tree->Branch("_shr_py"  ,&_shr_py  ,"shr_py/F"  );
+    _tree->Branch("_shr_pz"  ,&_shr_pz  ,"shr_pz/F"  );
     
     return;
   }
@@ -258,11 +283,24 @@ namespace selection
   void ShowerSelection::Reset() {
 
     _shr_score  = -1;    
-    _shr_energy = 0;
-    _shr_dedx   = 0;
+    _shr_energy_Y = 0;
+    _shr_dedx_Y   = 0;
+    _shr_energy_V = 0;
+    _shr_dedx_V   = 0;
+    _shr_energy_U = 0;
+    _shr_dedx_U   = 0;
     _shr_dist   = -1;
+    _shr_x        = 0;
+    _shr_y        = 0;
+    _shr_z        = 0;
+    _shr_px       = 0;
+    _shr_py       = 0;
+    _shr_pz       = 0;
+
+    _maxtrklen = 0;
 
     _nshower = 0;
+    _ntrack  = 0;
 
     return;
   }

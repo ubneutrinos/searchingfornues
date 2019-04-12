@@ -2,16 +2,19 @@
 #define SELECTION_CONTAINMENTSELECTION_CXX
 
 #include <iostream>
-#include "SelectionToolBase.h"
+#include "AnalysisToolBase.h"
 
 #include "larevt/SpaceChargeServices/SpaceChargeService.h"
 
-namespace selection
+// backtracking tools
+#include "ubana/ubana/searchingfornues/Selection/CommonDefs/BacktrackingFuncs.h"
+
+namespace analysis
 {
     ////////////////////////////////////////////////////////////////////////
     //
-    // Class:       ContainmentSelection
-    // File:        ContainmentSelection.cc
+    // Class:       ContainmentAnalysis
+    // File:        ContainmentAnalysis.cc
     //
     //              A basic selection example
     //
@@ -23,7 +26,7 @@ namespace selection
     //
     ////////////////////////////////////////////////////////////////////////
     
-  class ContainmentSelection : public SelectionToolBase {
+  class ContainmentAnalysis : public AnalysisToolBase {
 
   public:
 
@@ -32,21 +35,25 @@ namespace selection
      *
      *  @param  pset
      */
-    ContainmentSelection(const fhicl::ParameterSet& pset);
+    ContainmentAnalysis(const fhicl::ParameterSet& pset);
     
     /**
      *  @brief  Destructor
      */
-    ~ContainmentSelection(){};
+    ~ContainmentAnalysis(){};
     
     // provide for initialization
     void configure(fhicl::ParameterSet const & pset);
     
     /**
+     * @brief Analysis function
+     */
+    void analyzeEvent(art::Event const& e, bool fData) override;
+
+    /**
      * @brief Selection function
      */
-    bool selectEvent(art::Event const& e,
-		     const std::vector<ProxyPfpElem_t>& pfp_pxy_v);
+    void analyzeSlice(art::Event const& e, std::vector<ProxyPfpElem_t>& slice_pfp_v, bool fData, bool selected) override;
 
     /**
      * @brief set branches for TTree
@@ -60,12 +67,14 @@ namespace selection
     
   private:
 
-    bool IsFiducial(float x, float y, float z);
+    float DistFiducial(float x, float y, float z);
 
     float _FV; // FV boundary to apply
 
     // TTree variables
     float _rc_vtx_x, _rc_vtx_y, _rc_vtx_z;
+    float _dvtx; // smallest distance between vertex and any boundary
+    float _dtrk;  // smallest distance between any track start/end point and any boundary
     
   };
 
@@ -76,7 +85,7 @@ namespace selection
   ///
   /// pset - Fcl parameters.
   ///
-  ContainmentSelection::ContainmentSelection(const fhicl::ParameterSet& pset)
+  ContainmentAnalysis::ContainmentAnalysis(const fhicl::ParameterSet& pset)
   {
     configure(pset);
   }
@@ -88,11 +97,17 @@ namespace selection
   ///
   /// pset - Fcl parameter set.
   ///
-  void ContainmentSelection::configure(fhicl::ParameterSet const & pset)
+  void ContainmentAnalysis::configure(fhicl::ParameterSet const & pset)
   {
 
     _FV = pset.get<float>("FV");
 }
+
+
+  void ContainmentAnalysis::analyzeEvent(art::Event const& e, bool fData) {
+
+    return;
+  }
   
   //----------------------------------------------------------------------------
   /// selectEvent
@@ -103,18 +118,16 @@ namespace selection
   /// slice track pointer vector
   /// slice shower pointer vector
   ///
-  bool ContainmentSelection::selectEvent(art::Event const& e,
-					 const std::vector<ProxyPfpElem_t>& pfp_pxy_v)
+  void ContainmentAnalysis::analyzeSlice(art::Event const& e, std::vector<ProxyPfpElem_t>& slice_pfp_v, bool fData, bool selected)
   {
     
     TVector3 nuvtx;
     Double_t xyz[3] = {};
-    
-    std::cout << "DAVIDC Containment" << std::endl;
-    
 
+    _dvtx = 1e3;
+    _dtrk = 1e3;
     
-    for (const auto& pfp_pxy : pfp_pxy_v) {
+    for (const auto& pfp_pxy : slice_pfp_v) {
       
       auto PDG = fabs(pfp_pxy->PdgCode());
       
@@ -124,7 +137,7 @@ namespace selection
 	auto vtx = pfp_pxy.get<recob::Vertex>();
 	if (vtx.size() != 1) {
 	  std::cout << "ERROR. Found neutrino PFP w/ != 1 associated vertices..." << std::endl;
-	  return false;
+	  return;
 	}
 	
 	// save vertex to array
@@ -132,10 +145,8 @@ namespace selection
 	nuvtx = TVector3(xyz[0],xyz[1],xyz[2]);
 	
 	
-	if (IsFiducial(nuvtx.X(), nuvtx.Y(), nuvtx.Z()) == false)
-	  return false;
+	_dvtx = DistFiducial(nuvtx.X(), nuvtx.Y(), nuvtx.Z());
 	
-	    
       }// if neutrino PFP
 	
       else { // if not the neutrino PFP
@@ -149,11 +160,11 @@ namespace selection
 	  auto trkstart = trk->Vertex();
 	  auto trkend   = trk->End();
 	  
-	  if (IsFiducial(trkstart.X(), trkstart.Y(), trkstart.Z() ) == false)
-	    return false;
+	  float dstrt = DistFiducial(trkstart.X(), trkstart.Y(), trkstart.Z());
+	  if (dstrt < _dtrk) _dtrk = dstrt;
 	  
-	  if (IsFiducial(trkend.X(), trkend.Y(), trkend.Z() ) == false)
-	    return false;
+	  float dend = DistFiducial(trkend.X(), trkend.Y(), trkend.Z());
+	  if (dend < _dtrk) _dtrk = dend;
 	  
 	}// if associated to a track
 	
@@ -162,28 +173,35 @@ namespace selection
     }// for all PFP
     
     // made it this far, no vertex or track start/end point is out of the FV
-    return true;
+    return;
   }
   
-  void ContainmentSelection::setBranches(TTree* _tree) {
+  void ContainmentAnalysis::setBranches(TTree* _tree) {
     
     _tree->Branch("_rc_vtx_x",&_rc_vtx_x,"rc_vtx_x/F");
     _tree->Branch("_rc_vtx_y",&_rc_vtx_y,"rc_vtx_y/F");
     _tree->Branch("_rc_vtx_z",&_rc_vtx_z,"rc_vtx_z/F");
+    _tree->Branch("_dvtx",&_dvtx,"dvtx/F");
+    _tree->Branch("_dtrk",&_dtrk,"dtrk/F");
 
     return;
   }
 
-  void ContainmentSelection::resetTTree(TTree* _tree) {
+  void ContainmentAnalysis::resetTTree(TTree* _tree) {
 
     _rc_vtx_x = std::numeric_limits<int>::min();
     _rc_vtx_y = std::numeric_limits<int>::min();
     _rc_vtx_z = std::numeric_limits<int>::min();
 
+    _dvtx = std::numeric_limits<int>::max();
+    _dtrk = std::numeric_limits<int>::max();
+
     return;
   }
 
-  bool ContainmentSelection::IsFiducial(float x, float y, float z) {
+  float ContainmentAnalysis::DistFiducial(float x, float y, float z) {
+
+    float dmin = 1e3;
 
     auto const *SCE = lar::providerFrom<spacecharge::SpaceChargeService>();
 
@@ -196,19 +214,29 @@ namespace selection
       
     }// if spatial offset calibrations are enabled
 
-    // are we within the FV?
-    if (x < (0.    + _FV)) return false;
-    if (x > (256.  - _FV)) return false;
-    if (y < (-116. + _FV)) return false;
-    if (y > (116.  - _FV)) return false;
-    if (z < (0.    + _FV)) return false;
-    if (z > (1036. - _FV)) return false;
+    double dxl =  x - 0.;
+    if (dxl < dmin) dmin = dxl;
 
-    return true;
+    double dxh =  256. - x;
+    if (dxh < dmin) dmin = dxh;
+
+    double dyl =  y - -116.;
+    if (dyl < dmin) dmin = dyl;
+
+    double dyh =  116. - y;
+    if (dyh < dmin) dmin = dyh;
+
+    double dzl =  z - 0.;
+    if (dzl < dmin) dmin = dzl;
+
+    double dzh =  1036. - z;
+    if (dzh < dmin) dmin = dzh;
+
+    return dmin;
   }
   
   
-  DEFINE_ART_CLASS_TOOL(ContainmentSelection)
+  DEFINE_ART_CLASS_TOOL(ContainmentAnalysis)
 } // namespace selection
 
 #endif
