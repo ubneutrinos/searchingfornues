@@ -2,6 +2,10 @@
 #include "services_microboone.fcl"
 #include "flashmatchsetup.fcl"
 
+ShowerAnalysisTool: {
+    tool_type: "ShowerAnalysis"
+}
+
 DefaultAnalysisTool: {
     tool_type: "DefaultAnalysis"
     CRTVetoproducer: ""
@@ -35,8 +39,8 @@ SlicePurComplTool: {
     HTproducer: "gaushitTruthMatch"
 }
 
-ContainmentSelection: {
-    tool_type: "ContainmentSelecton"
+ContainmentAnalysis: {
+    tool_type: "ContainmentAnalysis"
     FV: 10
 }
 
@@ -71,6 +75,7 @@ NuSelectionFilter:{
         # you can add more analysis tools here
         obviouscosmic: @local::ObviousCosmicFlashMatching
         slicepurcompl: @local::SlicePurComplTool
+        containment:   @local::ContainmentAnalysis
         }
     }
 
@@ -84,6 +89,15 @@ Pi0Selection.SelectionTool: {
     onlyshower: false
     dotmin: 0.5
     dmin: 2.
+}
+
+ShowerSelectionTool: {
+    tool_type: "ShowerSelection"
+    TrkShrscore: 0.75
+    Shrdedxmax:  3.0
+    ShrRadlen:   3.0
+    ShrEnergy:   50.
+    MaxTrkLen:   20.
 }
 
 

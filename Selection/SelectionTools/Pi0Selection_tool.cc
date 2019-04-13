@@ -95,7 +95,7 @@ cioe'     * @brief set branches for TTree
     float _dot1, _dot2;
     float _energy1, _energy2;
     float _dedx1, _dedx2;
-    int _isshower1, _isshower2;
+    float _shrscore1, _shrscore2;
     float _gammadot;
     float _mass;
     float _rc_vtx_x, _rc_vtx_y, _rc_vtx_z; // reco neutrino vertex
@@ -272,6 +272,9 @@ cioe'     * @brief set branches for TTree
     auto shr1 = pfp_pxy_v.at(i1).get<recob::Shower>().at(0);
     auto shr2 = pfp_pxy_v.at(i2).get<recob::Shower>().at(0);
 
+    _shrscore1 = GetTrackShowerScore(pfp_pxy_v.at(i1));
+    _shrscore2 = GetTrackShowerScore(pfp_pxy_v.at(i2));
+
     auto vtxcompat1 = VtxCompatibility(nuvtx, shr1->ShowerStart(), shr1->Direction());
 
     _radlen1  = vtxcompat1.second;
@@ -345,8 +348,8 @@ cioe'     * @brief set branches for TTree
     _tree->Branch("energy2",&_energy2,"energy2/F");
     _tree->Branch("dedx1",&_dedx1,"dedx1/F");
     _tree->Branch("dedx2",&_dedx2,"dedx2/F");
-    _tree->Branch("isshower1",&_isshower1,"isshower1/I");
-    _tree->Branch("isshower2",&_isshower2,"isshower2/I");
+    _tree->Branch("shrscore1",&_shrscore1,"shrscore1/F");
+    _tree->Branch("shrscore2",&_shrscore2,"shrscore2/F");
     _tree->Branch("gammadot",&_gammadot,"gammadot/F");
     _tree->Branch("mass",&_mass,"mass/F");
     _tree->Branch("rc_vtx_x",&_rc_vtx_x,"rc_vtx_x/F");
@@ -448,8 +451,6 @@ cioe'     * @brief set branches for TTree
 
   void Pi0Selection::ReadTruth(art::Event const& e) {
 
-    std::cout << "DAVIDC reading mctruth " << std::endl;
-    
     auto const& mct_h = e.getValidHandle<std::vector<simb::MCTruth> >("generator");
     auto const& mcp_h = e.getValidHandle<std::vector<simb::MCParticle> >("largeant");
     
@@ -639,8 +640,8 @@ cioe'     * @brief set branches for TTree
     _ngamma = 0;
     _ntrack = 0;
     _nshower = 0;
-    _isshower1 = 0;
-    _isshower2 = 0;
+    _shrscore1 = -1;
+    _shrscore2 = -1;
     _gammadot = -1;
     _mass = -1;
     
