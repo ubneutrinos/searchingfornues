@@ -198,12 +198,10 @@ void ContainmentAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
       }
 
 
-    } // if not the neurino PFP
+    } // if not the neutrino PFP
 
   } // for all PFP
-  std::cout << "Boundary " << _dtrk_boundary[0][0] << std::endl;
-  // made it this far, no vertex or track start/end point is out of the FV
-  return;
+
 }
 
 void ContainmentAnalysis::setBranches(TTree *_tree)
