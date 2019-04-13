@@ -240,22 +240,11 @@ namespace analysis
     assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData> >(new art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData>(inputHits, e, fHTproducer));
     /// std::cout << "N hits=" << inputHits->size() << std::endl;
     int nlephits = 0, nprohits = 0, npi1hits = 0, npi0hits = 0, nneuhits = 0, ngamhits = 0, nothhits = 0;
-    for ( unsigned int ih=0; ih<inputHits->size(); ih++) {
-      auto assmcp = assocMCPart->at(ih);
-      auto assmdt = assocMCPart->data(ih);
-      for (unsigned int ia=0; ia<assmcp.size(); ++ia) {
-	auto mcp = assmcp[ia];
-	auto amd = assmdt[ia];
-	if (amd->isMaxIDE!=1) continue;
-	if (std::find(lepid.begin(),lepid.end(),mcp->TrackId())!=lepid.end()) nlephits++;
-	else if (std::find(proid.begin(),proid.end(),mcp->TrackId())!=proid.end()) nprohits++;
-	else if (std::find(pi1id.begin(),pi1id.end(),mcp->TrackId())!=pi1id.end()) npi1hits++;
-	else if (std::find(pi0id.begin(),pi0id.end(),mcp->TrackId())!=pi0id.end()) npi0hits++;
-	else if (std::find(neuid.begin(),neuid.end(),mcp->TrackId())!=neuid.end()) nneuhits++;
-	else if (std::find(gamid.begin(),gamid.end(),mcp->TrackId())!=gamid.end()) ngamhits++;
-	else if (std::find(othid.begin(),othid.end(),mcp->TrackId())!=othid.end()) nothhits++;
-      }
-    }
+    std::vector<art::Ptr<recob::Hit> > inHitsPtrV;
+    for (unsigned int ih=0; ih<inputHits->size(); ih++) inHitsPtrV.push_back({inputHits,ih});
+    incrementCounts(inHitsPtrV, assocMCPart,
+		    lepid, proid, pi1id, pi0id, neuid, gamid, othid,
+		    nlephits, nprohits, npi1hits, npi0hits, nneuhits, ngamhits, nothhits);
     evnhits = inputHits->size();
     evnunhits = nlephits+nprohits+npi1hits+npi0hits+nneuhits+ngamhits+nothhits;
     evlepnhits = nlephits;

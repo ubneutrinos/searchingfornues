@@ -85,6 +85,8 @@ namespace analysis
     art::InputTag fCLSproducer; // cluster associated to PFP
     art::InputTag fMCTproducer;
     art::InputTag fBacktrackTag;
+    art::InputTag fHproducer;
+    art::InputTag fMCRproducer;
 
     // kinematic thresholds to define signal
     float fProtonThreshold;
@@ -122,12 +124,16 @@ namespace analysis
     int _crtveto; // is the event vetoed by the CRT Veto?
     float _crthitpe; // pe associated to CRT hit
 
+    //
+    std::vector<int>   _pfp_slice_idx;    // index of PFP is vector of PFPs in nu slice
+
     // reco PFParticle backtracking. One entry for PFParticle in the slice
-    std::vector<int>   _backtracked_idx;    // index of PFP [key]
-    std::vector<int>   _backtracked_tid;    // TrackID of backtracked MCParticle
+    // std::vector<int>   _backtracked_idx;    // index of PFP [key]
+    // std::vector<int>   _backtracked_tid;    // TrackID of backtracked MCParticle
     std::vector<int>   _backtracked_pdg;    // PDG code of backtracked particle
     std::vector<float> _backtracked_e;      // energy of backtracked particle
     std::vector<float> _backtracked_purity; // purity of backtracking
+    std::vector<float> _backtracked_completeness; // completeness of backtracking
 
     float _lep_e;                 // lepton energy (if one exists) [GeV]
     int  _pass;                   // does the slice pass the selection
@@ -147,6 +153,8 @@ namespace analysis
     fCLSproducer = p.get< art::InputTag > ("CLSproducer");
     fMCTproducer = p.get< art::InputTag > ("MCTproducer");
     fBacktrackTag = p.get< art::InputTag > ("BacktrackTag");
+    fHproducer = p.get< art::InputTag > ("Hproducer");
+    fMCRproducer = p.get< art::InputTag > ("MCRproducer");
     // kinematic thresholds for defining signal
     fProtonThreshold = p.get< float > ("ProtonThreshold");
   }
@@ -199,11 +207,17 @@ namespace analysis
 											   proxy::withAssociated<recob::Hit>(fCLSproducer));
 
     // load backtrack information
-    art::InputTag BacktrackTag { fBacktrackTag };
-    auto const& gaushit_h = e.getValidHandle<std::vector<recob::Hit> > ("gaushit");
-    art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData> hittruth(gaushit_h,e,BacktrackTag);
-    //const auto& hittruth = std::unique_ptr<art::FindMany<simb::MCParticle,anab::BackTrackerHitMatchingData> > (new art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData>(gaushit_h,e,BacktrackTag));
+    std::vector<searchingfornues::BtPart> btparts_v;
+    std::unique_ptr<art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData> > assocMCPart;
+    if (!fData) {
+      const std::vector<sim::MCShower>& inputMCShower = *(e.getValidHandle<std::vector<sim::MCShower> >(fMCRproducer));
+      const std::vector<sim::MCTrack>& inputMCTrack = *(e.getValidHandle<std::vector<sim::MCTrack> >(fMCRproducer));
+      art::ValidHandle<std::vector<recob::Hit> > inputHits = e.getValidHandle<std::vector<recob::Hit> >(fHproducer);
+      assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData> >(new art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
+      btparts_v = searchingfornues::initBacktrackingParticleVec(inputMCShower, inputMCTrack, *inputHits, assocMCPart);
+    }
 
+    size_t pfpidx = 0;
     for (auto pfp :  slice_pfp_v) {
 
       if ( (pfp->PdgCode() == 12) || (pfp->PdgCode() == 14) ) {
@@ -229,6 +243,8 @@ namespace analysis
 	}
       }// if neutrino PFParticle
 
+      _pfp_slice_idx.push_back(pfpidx++);
+
       // backtrack PFParticles in the slice
       if (!fData) {
 	// get hits associated to this PFParticle through the clusters
@@ -243,35 +259,46 @@ namespace analysis
 	      hit_v.push_back(hit);
 	  }// for all clusters associated to PFP
 	  
-	  float purity, completeness;
-	  auto mcp = searchingfornues::getAssocMCParticle(hittruth, hit_v, purity, completeness);
-	  if (mcp){
-	    auto PDG = mcp->PdgCode();
-	    _backtracked_idx.push_back(pfp->Self());
-	    _backtracked_tid.push_back(mcp->TrackId());
-	    _backtracked_e.push_back(mcp->Momentum().E());
+	  float purity = 0., completeness = 0.;
+	  int ibt = searchingfornues::getAssocBtPart(hit_v,assocMCPart,btparts_v, purity, completeness);
+	  if (ibt>=0){
+	    // std::cout << "pfp matched to ibt=" << ibt << " pdg=" << btparts_v[ibt].pdg << " pur=" << purity << " com=" << completeness << std::endl;
+	    // else std::cout << "pfp not matched" << std::endl;
+	    auto& mcp = btparts_v[ibt];
+	    auto PDG = mcp.pdg;
+	    //_backtracked_idx.push_back(pfp->Self());
+	    //_backtracked_tid.push_back(mcp->TrackId());
+	    _backtracked_e.push_back(mcp.e);
 	    _backtracked_pdg.push_back(PDG);
 	    _backtracked_purity.push_back(purity);
-	    // if this is n interesting particle, save it to the TTree
+	    _backtracked_completeness.push_back(completeness);
+	    // if this is an interesting particle, save it to the TTree
 	    if (fabs(PDG) == 13) {
-	      if ( fabs(mcp->Momentum().E() - _muon_e) < 0.01 )
+	      if ( fabs(mcp.e - _muon_e) < 0.01 ) {
 		_muon_p = purity;
+		_muon_c = completeness;
+	      }
 	    }
 	    if (fabs(PDG) == 11) {
-	      if ( fabs(mcp->Momentum().E() - _elec_e) < 0.01 )
+	      if ( fabs(mcp.e - _elec_e) < 0.01 ) {
 		_elec_p = purity;
+		_elec_c = completeness;
+	      }
 	    }
 	    if (fabs(PDG) == 2212) {
-	      if ( fabs(mcp->Momentum().E() - _proton_e) < 0.01 )
+	      if ( fabs(mcp.e - _proton_e) < 0.01 ) {
 		_proton_p = purity;
+		_proton_c = completeness;
+	      }
 	    }
 	  }
 	  else{
-	    _backtracked_idx.push_back(0);
-	    _backtracked_tid.push_back(0);
+	    // _backtracked_idx.push_back(0);
+	    // _backtracked_tid.push_back(0);
 	    _backtracked_e.push_back(0);
 	    _backtracked_pdg.push_back(0);
 	    _backtracked_purity.push_back(0.);
+	    _backtracked_completeness.push_back(0.);
 	  }
 	}// if there are associated clusters
       }// if MC
@@ -333,12 +360,15 @@ namespace analysis
     _tree->Branch("crtveto" ,&_crtveto ,"crtveto/I" );
     _tree->Branch("crthitpe",&_crthitpe,"crthitpe/F");
 
+    _tree->Branch("pfp_slice_idx"   ,"std::vector<int>"  ,&_pfp_slice_idx   );
+
     // PFParticle backtracking
-    _tree->Branch("backtracked_idx"   ,"std::vector<int>"  ,&_backtracked_idx   );
-    _tree->Branch("backtracked_tid"   ,"std::vector<int>"  ,&_backtracked_tid   );
+    // _tree->Branch("backtracked_idx"   ,"std::vector<int>"  ,&_backtracked_idx   );
+    // _tree->Branch("backtracked_tid"   ,"std::vector<int>"  ,&_backtracked_tid   );
     _tree->Branch("backtracked_pdg"   ,"std::vector<int>"  ,&_backtracked_pdg   );
     _tree->Branch("backtracked_e"     ,"std::vector<float>",&_backtracked_e     );
     _tree->Branch("backtracked_purity","std::vector<float>",&_backtracked_purity);
+    _tree->Branch("backtracked_completeness","std::vector<float>",&_backtracked_completeness);
 
     _tree->Branch("lep_e" ,&_lep_e ,"lep_e/F" );
     _tree->Branch("pass"  ,&_pass  ,"pass/I"  );
@@ -404,11 +434,12 @@ namespace analysis
     _proton_p = 0;
     _proton_c = 0;
 
-    _backtracked_idx.clear();
-    _backtracked_tid.clear();
+    // _backtracked_idx.clear();
+    // _backtracked_tid.clear();
     _backtracked_e.clear();
     _backtracked_pdg.clear();
     _backtracked_purity.clear();
+    _backtracked_completeness.clear();
   }
 
 void DefaultAnalysis::SaveTruth(art::Event const& e) {
@@ -446,12 +477,12 @@ void DefaultAnalysis::SaveTruth(art::Event const& e) {
     auto const& part = mct.GetParticle(i);
 
     // if muon
-    if ( (fabs(part.PdgCode()) == 13) and (part.StatusCode() == 1) ){
+    if ( (std::abs(part.PdgCode()) == 13) and (part.StatusCode() == 1) ){
       _nmuon += 1;
       _muon_e = part.Momentum(0).E();
     }// if muon
     // if electron
-    if ( (fabs(part.PdgCode()) == 11) and (part.StatusCode() == 1) ){
+    if ( (std::abs(part.PdgCode()) == 11) and (part.StatusCode() == 1) ){
       _nelec += 1;
       _elec_e = part.Momentum(0).E();
     }// if electron
@@ -469,7 +500,7 @@ void DefaultAnalysis::SaveTruth(art::Event const& e) {
 	_nproton += 1;
     }// if proton
     // if pion
-    if ( (fabs(part.PdgCode()) == 211) and (part.StatusCode() == 1) ){
+    if ( (std::abs(part.PdgCode()) == 211) and (part.StatusCode() == 1) ){
       if (part.Momentum(0).E() > _pion_e)
 	_pion_e = part.Momentum(0).E();
       _npion += 1;

@@ -7,14 +7,16 @@ DefaultAnalysisTool: {
     CRTVetoproducer: ""
     CLSproducer: "pandora"
     MCTproducer: "generator"
-    BacktrackTag: ""
+    Hproducer: "gaushit"
+    BacktrackTag: "gaushitTruthMatch"
+    MCRproducer: "mcreco"
     ProtonThreshold: 0.04 # GeV
 }
 
 CRTApproachAnalysisTool: {
     tool_type: "CRTApproachAnalysis"
     TrackAssnModuleLabel:"trackmatch"
-    }
+}
 
 ObviousCosmicFlashMatching: {
     tool_type: "ObviousCosmicFlashMatching"
@@ -68,7 +70,7 @@ NuSelectionFilter:{
         default: @local::DefaultAnalysisTool
         # you can add more analysis tools here
         obviouscosmic: @local::ObviousCosmicFlashMatching
-        #slicepurcompl: @local::SlicePurComplTool
+        slicepurcompl: @local::SlicePurComplTool
         }
     }
 

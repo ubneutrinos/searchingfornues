@@ -2,6 +2,7 @@ cet_enable_asserts()
 
 art_make( TOOL_LIBRARIES lardataobj_RecoBase
                          lardataobj_Simulation
+                         lardataobj_MCBase
                          nusimdata_SimulationBase
                          larcorealg_Geometry
                          larcore_Geometry_Geometry_service
