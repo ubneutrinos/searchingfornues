@@ -224,14 +224,9 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("p_vtx", "std::vector< std::vector< double > >", &_p_vtx);
     _tree->Branch("p_e", "std::vector< double >", &_p_e);
 
-    _tree->Branch("shr_dedx", "std::vector< std::vector< double > >", &_shr_dedx);
-    _tree->Branch("shr_energy", "std::vector< std::vector< double > >", &_shr_energy);
-    _tree->Branch("shr_pfp_id", "std::vector< size_t >", &_shr_pfp_id);
-
     _tree->Branch("trk_len", "std::vector< double >", &_trk_len);
     _tree->Branch("trk_pfp_id", "std::vector< size_t >", &_trk_pfp_id);
 
-    _tree->Branch("n_showers", &_n_showers, "n_showers/i");
     _tree->Branch("n_tracks", &_n_tracks, "n_tracks/i");
 }
 
