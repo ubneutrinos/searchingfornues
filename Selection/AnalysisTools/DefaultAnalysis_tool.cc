@@ -39,15 +39,15 @@ namespace analysis
      *  @param  pset
      */
     DefaultAnalysis(const fhicl::ParameterSet& pset);
-    
+
     /**
      *  @brief  Destructor
      */
     ~DefaultAnalysis(){ };
-    
+
     // provide for initialization
     void configure(fhicl::ParameterSet const & pset);
-    
+
     /**
      * @brief Analysis function
      */
@@ -62,7 +62,7 @@ namespace analysis
      * @brief Save truth info for event associated to neutrino
      */
     void SaveTruth(art::Event const& e);
-    
+
     /**
      * @brief set branches for TTree
      */
@@ -72,14 +72,14 @@ namespace analysis
      * @brief reset ttree branches
      */
     void resetTTree(TTree* _tree) override;
-    
+
   private:
 
     /**
      * @brief apply SCE corections from reconstruction maps
      */
     void ApplySCECorrection(const float& vtx_x, const float& vtx_y, const float& vtx_z,
-			    float& sce_x, float& sce_y, float& sce_z);
+                            float& sce_x, float& sce_y, float& sce_z);
 
     art::InputTag fCRTVetoproducer; // producer for CRT veto ass tag [anab::T0 <-> recob::OpFlash]
     art::InputTag fCLSproducer; // cluster associated to PFP
@@ -102,7 +102,7 @@ namespace analysis
     int   _nu_pdg;                // neutrino PDG code
     int   _ccnc;                  // CC or NC tag from GENIE
     float _vtx_x, _vtx_y, _vtx_z; // neutrino interaction vertex coordinates [cm]
-    float _vtx_t;                 // neutrino generation time 
+    float _vtx_t;                 // neutrino generation time
     bool  _isVtxInFiducial;       // true if neutrino in fiducial volume, 0 < x < 256 -116 < y < 116;  0 < z <  1036
     // final state particle information
     int   _nmuon;                    // is there a final-state muon from the neutrino? [1=yes 0=no]
@@ -139,7 +139,7 @@ namespace analysis
     int  _pass;                   // does the slice pass the selection
     float _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset; // offsets for generation time and SCE
   };
-  
+
   //----------------------------------------------------------------------------
   /// Constructor.
   ///
@@ -158,7 +158,7 @@ namespace analysis
     // kinematic thresholds for defining signal
     fProtonThreshold = p.get< float > ("ProtonThreshold");
   }
-  
+
   //----------------------------------------------------------------------------
   /// Reconfigure method.
   ///
@@ -169,7 +169,7 @@ namespace analysis
   void DefaultAnalysis::configure(fhicl::ParameterSet const & p)
   {
   }
-  
+
   //----------------------------------------------------------------------------
   /// Reconfigure method.
   ///
@@ -193,8 +193,8 @@ namespace analysis
       art::Handle< art::Assns<crt::CRTHit,recob::OpFlash,void> > crtveto_h;
       e.getByLabel(fCRTVetoproducer,crtveto_h);
       _crtveto = crtveto_h->size();
-      if (_crtveto == 1) 
-	_crthitpe = crtveto_h->at(0).first->peshit;
+      if (_crtveto == 1)
+        _crthitpe = crtveto_h->at(0).first->peshit;
     }// if the CRT veto label has been defined
 
     return;
@@ -204,7 +204,7 @@ namespace analysis
   {
 
     ProxyClusColl_t const& clus_proxy = proxy::getCollection<std::vector<recob::Cluster> >(e, fCLSproducer,
-											   proxy::withAssociated<recob::Hit>(fCLSproducer));
+                                                                                           proxy::withAssociated<recob::Hit>(fCLSproducer));
 
     // load backtrack information
     std::vector<searchingfornues::BtPart> btparts_v;
@@ -222,48 +222,46 @@ namespace analysis
 
       if ( (pfp->PdgCode() == 12) || (pfp->PdgCode() == 14) ) {
 
-	// grab vertex
-	Double_t xyz[3] = {};
-	
-	auto vtx = pfp.get<recob::Vertex>();
-	if (vtx.size() != 1) {
-	  std::cout << "ERROR. Found neutrino PFP w/ != 1 associated vertices..." << std::endl;
-	}
-	
-	else {
-	  // save vertex to array
-	  vtx.at(0)->XYZ(xyz);
-	  auto nuvtx = TVector3(xyz[0],xyz[1],xyz[2]);
-	  
-	  _nu_vtx_x = nuvtx.X();
-	  _nu_vtx_y = nuvtx.Y();
-	  _nu_vtx_z = nuvtx.Z();
+        // grab vertex
+        Double_t xyz[3] = {};
 
-	  ApplySCECorrection(_nu_vtx_x, _nu_vtx_y, _nu_vtx_z, _nu_sce_x, _nu_sce_y, _nu_sce_z);
-	}
+        auto vtx = pfp.get<recob::Vertex>();
+        if (vtx.size() != 1) {
+          std::cout << "ERROR. Found neutrino PFP w/ != 1 associated vertices..." << std::endl;
+        }
+
+        else {
+          // save vertex to array
+          vtx.at(0)->XYZ(xyz);
+          auto nuvtx = TVector3(xyz[0],xyz[1],xyz[2]);
+
+          _nu_vtx_x = nuvtx.X();
+          _nu_vtx_y = nuvtx.Y();
+          _nu_vtx_z = nuvtx.Z();
+
+          ApplySCECorrection(_nu_vtx_x, _nu_vtx_y, _nu_vtx_z, _nu_sce_x, _nu_sce_y, _nu_sce_z);
+        }
       }// if neutrino PFParticle
 
       _pfp_slice_idx.push_back(pfpidx++);
 
       // backtrack PFParticles in the slice
       if (!fData) {
-	// get hits associated to this PFParticle through the clusters
-	std::vector<art::Ptr<recob::Hit> > hit_v;
-	auto clus_pxy_v = pfp.get<recob::Cluster>();
-	if (clus_pxy_v.size() != 0) {
-	  for (auto ass_clus : clus_pxy_v) {
-	    // get cluster proxy
-	    const auto& clus = clus_proxy[ass_clus.key()];
-	    auto clus_hit_v = clus.get<recob::Hit>();
-	    for (const auto& hit : clus_hit_v)
-	      hit_v.push_back(hit);
-	  }// for all clusters associated to PFP
-	  
+        // get hits associated to this PFParticle through the clusters
+        std::vector<art::Ptr<recob::Hit> > hit_v;
+        auto clus_pxy_v = pfp.get<recob::Cluster>();
+        if (clus_pxy_v.size() != 0) {
+          for (auto ass_clus : clus_pxy_v) {
+            // get cluster proxy
+            const auto& clus = clus_proxy[ass_clus.key()];
+            auto clus_hit_v = clus.get<recob::Hit>();
+            for (const auto& hit : clus_hit_v)
+              hit_v.push_back(hit);
+          }// for all clusters associated to PFP
+
 	  float purity = 0., completeness = 0.;
 	  int ibt = searchingfornues::getAssocBtPart(hit_v,assocMCPart,btparts_v, purity, completeness);
 	  if (ibt>=0){
-	    // std::cout << "pfp matched to ibt=" << ibt << " pdg=" << btparts_v[ibt].pdg << " pur=" << purity << " com=" << completeness << std::endl;
-	    // else std::cout << "pfp not matched" << std::endl;
 	    auto& mcp = btparts_v[ibt];
 	    auto PDG = mcp.pdg;
 	    //_backtracked_idx.push_back(pfp->Self());
@@ -306,8 +304,8 @@ namespace analysis
     _nslice += 1;
     if (selected) _pass = 1;
   }
-  
-  void DefaultAnalysis::setBranches(TTree* _tree) 
+
+  void DefaultAnalysis::setBranches(TTree* _tree)
   {
     // reconstructed neutrino vertex
     _tree->Branch("nu_vtx_x",&_nu_vtx_x,"nu_vtx_x/F");
@@ -403,12 +401,12 @@ namespace analysis
     _nu_sce_y = std::numeric_limits<float>::min();
     _nu_sce_z = std::numeric_limits<float>::min();
 
-    _isVtxInFiducial = false; 
+    _isVtxInFiducial = false;
 
     _nslice = 0;
     _crtveto = 0;
     _crthitpe = 0;
-    
+
     _nmuon = 0;
     _muon_e = 0;
     _muon_p = 0;
@@ -459,8 +457,8 @@ void DefaultAnalysis::SaveTruth(art::Event const& e) {
   _vtx_z = nu.EndZ();
   _vtx_t = nu.T();
 
-  if (_vtx_x <  256. && _vtx_x >    0. && 
-      _vtx_y < -116. && _vtx_y >  116. && 
+  if (_vtx_x <  256. && _vtx_x >    0. &&
+      _vtx_y < -116. && _vtx_y >  116. &&
       _vtx_z <    0. && _vtx_z > 1036.   ) {_isVtxInFiducial = true;}
   else _isVtxInFiducial = false;
 
@@ -508,7 +506,7 @@ void DefaultAnalysis::SaveTruth(art::Event const& e) {
   }// for all MCParticles
 
   searchingfornues::ApplyDetectorOffsets(_vtx_t,_vtx_x,_vtx_y,_vtx_z,_xtimeoffset,_xsceoffset,_ysceoffset,_zsceoffset);
-  
+
   return;
 }
 
@@ -519,7 +517,7 @@ void DefaultAnalysis::SaveTruth(art::Event const& e) {
     auto const *SCE = lar::providerFrom<spacecharge::SpaceChargeService>();
 
     if (SCE->EnableCalSpatialSCE() == true) {
-    
+
       auto offset = SCE->GetPosOffsets(geo::Point_t(vtx_x,vtx_y,vtx_z));
       sce_x = offset.X();
       sce_y = offset.Y();

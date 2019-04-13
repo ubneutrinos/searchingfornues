@@ -20,7 +20,7 @@ namespace searchingfornues {
 void ApplyDetectorOffsets(const float _vtx_t, const float _vtx_x, const float _vtx_y, const float _vtx_z,
                           float& _xtimeoffset, float& _xsceoffset, float& _ysceoffset, float& _zsceoffset) {
 
-  auto const& detProperties = lar::providerFrom<detinfo::DetectorPropertiesService>(); 
+  auto const& detProperties = lar::providerFrom<detinfo::DetectorPropertiesService>();
   auto const& detClocks = lar::providerFrom<detinfo::DetectorClocksService>();
   double g4Ticks = detClocks->TPCG4Time2Tick(_vtx_t) + detProperties->GetXTicksOffset(0, 0, 0) - detProperties->TriggerOffset();
   _xtimeoffset = detProperties->ConvertTicksToX(g4Ticks, 0, 0, 0);
@@ -35,13 +35,13 @@ void ApplyDetectorOffsets(const float _vtx_t, const float _vtx_x, const float _v
 
 // BackTrack a single hit collection (i.e. from a PFParticle)
 art::Ptr<simb::MCParticle> getAssocMCParticle(art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData>& hittruth,
-					      const std::vector<art::Ptr<recob::Hit> >& hits,
-					      float& purity, float& completeness) {
+                                              const std::vector<art::Ptr<recob::Hit> >& hits,
+                                              float& purity, float& completeness) {
 
   // store total charge from hits
   float pfpcharge = 0; // total hit charge from clusters
   float maxcharge = 0; // charge backtracked to best match
-  
+
   //credit: Wes Ketchum
   std::unordered_map<int,double> trkide;
   std::unordered_map<int,float> trkq;
@@ -60,9 +60,9 @@ art::Ptr<simb::MCParticle> getAssocMCParticle(art::FindManyP<simb::MCParticle,an
       trkq  [ particle_vec[i_p]->TrackId() ] += h->Integral()  * match_vec[i_p]->ideFraction; //store hit integral associated to this hit
       tote += match_vec[i_p]->energy; //calculate total energy deposited
       if( trkide[ particle_vec[i_p]->TrackId() ] > maxe ){ //keep track of maximum
-	maxe = trkide[ particle_vec[i_p]->TrackId() ];
-	maxp_me = particle_vec[i_p];
-	maxcharge = trkq[ particle_vec[i_p]->TrackId() ];
+        maxe = trkide[ particle_vec[i_p]->TrackId() ];
+        maxp_me = particle_vec[i_p];
+        maxcharge = trkq[ particle_vec[i_p]->TrackId() ];
       }
     }//end loop over particles per hit
   }
@@ -88,9 +88,9 @@ art::Ptr<simb::MCParticle> getAssocMCParticle(art::FindManyP<simb::MCParticle,an
  };
 
  std::vector<BtPart> initBacktrackingParticleVec(const std::vector<sim::MCShower>& inputMCShower,
-						 const std::vector<sim::MCTrack>& inputMCTrack,
-						 const std::vector<recob::Hit>& inputHits,
-						 const std::unique_ptr<art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData> >& assocMCPart) {
+                                                 const std::vector<sim::MCTrack>& inputMCTrack,
+                                                 const std::vector<recob::Hit>& inputHits,
+                                                 const std::unique_ptr<art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData> >& assocMCPart) {
     //
     // Notes for reference: in this way we have the full history of electrons and photons
     // however, we do not attach delta-rays nor michel electrons to muon (which is probably good),
@@ -99,14 +99,14 @@ art::Ptr<simb::MCParticle> getAssocMCParticle(art::FindManyP<simb::MCParticle,an
     std::vector<BtPart> btparts_v;
     for (auto mcs : inputMCShower) {
       if (mcs.Process()=="primary" || (mcs.MotherPdgCode()==111 && mcs.Process()=="Decay" && mcs.MotherProcess()=="primary")) {
-	btparts_v.push_back(BtPart(mcs.PdgCode(), mcs.Start().Momentum().Px()*0.001, mcs.Start().Momentum().Py()*0.001,
-				   mcs.Start().Momentum().Pz()*0.001, mcs.Start().Momentum().E()*0.001, mcs.DaughterTrackID()));
+        btparts_v.push_back(BtPart(mcs.PdgCode(), mcs.Start().Momentum().Px()*0.001, mcs.Start().Momentum().Py()*0.001,
+                                   mcs.Start().Momentum().Pz()*0.001, mcs.Start().Momentum().E()*0.001, mcs.DaughterTrackID()));
       }
     }
     for (auto mct : inputMCTrack) {
       if (mct.Process()=="primary") {
-	btparts_v.push_back(BtPart(mct.PdgCode(), mct.Start().Momentum().Px()*0.001, mct.Start().Momentum().Py()*0.001,
-				   mct.Start().Momentum().Pz()*0.001, mct.Start().Momentum().E()*0.001, mct.TrackID()));
+        btparts_v.push_back(BtPart(mct.PdgCode(), mct.Start().Momentum().Px()*0.001, mct.Start().Momentum().Py()*0.001,
+                                   mct.Start().Momentum().Pz()*0.001, mct.Start().Momentum().E()*0.001, mct.TrackID()));
       }
     }
     // Now let's fill the nhits member using all input hits
@@ -114,14 +114,14 @@ art::Ptr<simb::MCParticle> getAssocMCParticle(art::FindManyP<simb::MCParticle,an
       auto assmcp = assocMCPart->at(ih);
       auto assmdt = assocMCPart->data(ih);
       for (unsigned int ia=0; ia<assmcp.size(); ++ia) {
-	auto mcp = assmcp[ia];
-	auto amd = assmdt[ia];
-	if (amd->isMaxIDE!=1) continue;
-	for (auto& btp : btparts_v) {
-	  if (std::find(btp.tids.begin(),btp.tids.end(),mcp->TrackId())!=btp.tids.end()) {
-	    btp.nhits++;
-	  }
-	}
+        auto mcp = assmcp[ia];
+        auto amd = assmdt[ia];
+        if (amd->isMaxIDE!=1) continue;
+        for (auto& btp : btparts_v) {
+          if (std::find(btp.tids.begin(),btp.tids.end(),mcp->TrackId())!=btp.tids.end()) {
+            btp.nhits++;
+          }
+        }
       }
     }
     return btparts_v;
@@ -130,9 +130,9 @@ art::Ptr<simb::MCParticle> getAssocMCParticle(art::FindManyP<simb::MCParticle,an
  // BackTrack a single hit collection (i.e. from a PFParticle)
  // backtrack based on #hits, not on energy... could be done but it's a bit more complicated
   int getAssocBtPart(const std::vector<art::Ptr<recob::Hit> >& hits,
-		     const std::unique_ptr<art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData> >& assocMCPart,
-		     const std::vector<BtPart>& btpartsv,
-		     float& purity, float& completeness) {
+                     const std::unique_ptr<art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData> >& assocMCPart,
+                     const std::vector<BtPart>& btpartsv,
+                     float& purity, float& completeness) {
    //
    std::vector<unsigned int> bthitsv(btpartsv.size(),0);
    //

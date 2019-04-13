@@ -93,10 +93,10 @@ namespace analysis
     void fillId(const std::vector<double>& p, const simb::MCParticle& mcp, std::vector<size_t>& id);
     //
     void incrementCounts(const std::vector<art::Ptr<recob::Hit> >& hits,
-			 const std::unique_ptr<art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData> >& assocMCPart,
-			 const std::vector<size_t>& lepid, const std::vector<size_t>& proid, const std::vector<size_t>& pi1id, const std::vector<size_t>& pi0id,
-			 const std::vector<size_t>& neuid, const std::vector<size_t>& gamid, const std::vector<size_t>& othid,
-			 int& nlephits, int& nprohits, int& npi1hits, int& npi0hits, int& nneuhits, int& ngamhits, int& nothhits) const;
+                         const std::unique_ptr<art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData> >& assocMCPart,
+                         const std::vector<size_t>& lepid, const std::vector<size_t>& proid, const std::vector<size_t>& pi1id, const std::vector<size_t>& pi0id,
+                         const std::vector<size_t>& neuid, const std::vector<size_t>& gamid, const std::vector<size_t>& othid,
+                         int& nlephits, int& nprohits, int& npi1hits, int& npi0hits, int& nneuhits, int& ngamhits, int& nothhits) const;
 
     // TTree variables
     // per event
@@ -213,32 +213,31 @@ namespace analysis
     for ( unsigned int im=0; im<inputMCParticle->size(); ++im ) {
       const auto& mcp = inputMCParticle->at(im);
       if (mcp.StatusCode()==1) {
-	//
-	if (mcp.Mother()==0) {
-	  // try to match primaries
-	  if (abs(mcp.PdgCode())==11 || abs(mcp.PdgCode())==13) fillId(plep, mcp, lepid);
-	  else if (std::abs(mcp.PdgCode())==2212)               fillId(ppro, mcp, proid);
-	  else if (std::abs(mcp.PdgCode())==211)                fillId(ppi1, mcp, pi1id);
-	  else if (std::abs(mcp.PdgCode())==111)                fillId(ppi0, mcp, pi0id);
-	  else if (std::abs(mcp.PdgCode())==2112)               fillId(pneu, mcp, neuid);
-	  else if (std::abs(mcp.PdgCode())==22)                 fillId(pgam, mcp, gamid);
-	  else                                                  fillId(poth, mcp, othid);
-	} else {
-	  // now deal with secondaries navigating history
-	  if (std::find(lepid.begin(), lepid.end(), mcp.Mother())!=lepid.end()) lepid.push_back(mcp.TrackId());
-	  else if (std::find(proid.begin(), proid.end(), mcp.Mother())!=proid.end()) proid.push_back(mcp.TrackId());
-	  else if (std::find(pi1id.begin(), pi1id.end(), mcp.Mother())!=pi1id.end()) pi1id.push_back(mcp.TrackId());
-	  else if (std::find(pi0id.begin(), pi0id.end(), mcp.Mother())!=pi0id.end()) pi0id.push_back(mcp.TrackId());
-	  else if (std::find(neuid.begin(), neuid.end(), mcp.Mother())!=neuid.end()) neuid.push_back(mcp.TrackId());
-	  else if (std::find(gamid.begin(), gamid.end(), mcp.Mother())!=gamid.end()) gamid.push_back(mcp.TrackId());
-	  else if (std::find(othid.begin(), othid.end(), mcp.Mother())!=othid.end()) othid.push_back(mcp.TrackId());
-	}
+        //
+        if (mcp.Mother()==0) {
+          // try to match primaries
+          if (abs(mcp.PdgCode())==11 || abs(mcp.PdgCode())==13) fillId(plep, mcp, lepid);
+          else if (std::abs(mcp.PdgCode())==2212)               fillId(ppro, mcp, proid);
+          else if (std::abs(mcp.PdgCode())==211)                fillId(ppi1, mcp, pi1id);
+          else if (std::abs(mcp.PdgCode())==111)                fillId(ppi0, mcp, pi0id);
+          else if (std::abs(mcp.PdgCode())==2112)               fillId(pneu, mcp, neuid);
+          else if (std::abs(mcp.PdgCode())==22)                 fillId(pgam, mcp, gamid);
+          else                                                  fillId(poth, mcp, othid);
+        } else {
+          // now deal with secondaries navigating history
+          if (std::find(lepid.begin(), lepid.end(), mcp.Mother())!=lepid.end()) lepid.push_back(mcp.TrackId());
+          else if (std::find(proid.begin(), proid.end(), mcp.Mother())!=proid.end()) proid.push_back(mcp.TrackId());
+          else if (std::find(pi1id.begin(), pi1id.end(), mcp.Mother())!=pi1id.end()) pi1id.push_back(mcp.TrackId());
+          else if (std::find(pi0id.begin(), pi0id.end(), mcp.Mother())!=pi0id.end()) pi0id.push_back(mcp.TrackId());
+          else if (std::find(neuid.begin(), neuid.end(), mcp.Mother())!=neuid.end()) neuid.push_back(mcp.TrackId());
+          else if (std::find(gamid.begin(), gamid.end(), mcp.Mother())!=gamid.end()) gamid.push_back(mcp.TrackId());
+          else if (std::find(othid.begin(), othid.end(), mcp.Mother())!=othid.end()) othid.push_back(mcp.TrackId());
+        }
       }
     }
 
     art::ValidHandle<std::vector<recob::Hit> > inputHits = e.getValidHandle<std::vector<recob::Hit> >(fHproducer);
     assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData> >(new art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData>(inputHits, e, fHTproducer));
-    /// std::cout << "N hits=" << inputHits->size() << std::endl;
     int nlephits = 0, nprohits = 0, npi1hits = 0, npi0hits = 0, nneuhits = 0, ngamhits = 0, nothhits = 0;
     std::vector<art::Ptr<recob::Hit> > inHitsPtrV;
     for (unsigned int ih=0; ih<inputHits->size(); ih++) inHitsPtrV.push_back({inputHits,ih});
