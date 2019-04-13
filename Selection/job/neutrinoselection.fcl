@@ -2,6 +2,10 @@
 #include "services_microboone.fcl"
 #include "flashmatchsetup.fcl"
 
+ShowerAnalysisTool: {
+    tool_type: "ShowerAnalysis"
+}
+
 DefaultAnalysisTool: {
     tool_type: "DefaultAnalysis"
     CRTVetoproducer: ""
