@@ -1,0 +1,121 @@
+#include "services_microboone.fcl"
+#include "triggeralgo_service.fcl"
+#include "shrreco3d.fcl"
+
+process_name: ShrMerger
+
+services:
+{
+  scheduler:               { defaultExceptions: false }    # Make all uncaught exceptions fatal.
+  # Load the service that manages root files for histograms.
+  TFileService:            { fileName: "showerreco3d_ana.root" }
+  TimeTracker:             {}
+  ExptGeoHelperInterface:         @local::microboone_geometry_helper
+  Geometry:                       @local::microboone_geo
+  DetectorPropertiesService:             @local::microboone_detproperties
+  LArProperties:                  @local::microboone_properties
+  DetectorClocksService:          @local::microboone_detectorclocks
+  #MemoryTracker:           { ignoreTotal: 1 } # default is one
+  RandomNumberGenerator:   {} #ART native random number generator
+  message:                 @local::microboone_message_services_prod_debug
+  FileCatalogMetadata:     @local::art_file_catalog_mc
+                              @table::microboone_services_reco
+}
+
+services.DetectorPropertiesService.NumberTimeSamples: 6400
+services.DetectorPropertiesService.ReadOutWindowSize: 6400
+services.DetectorClocksService.InheritClockConfig:       false
+services.DetectorClocksService.TriggerOffsetTPC:         -0.400e3
+
+services.SpaceCharge.EnableCorrSCE: true
+services.SpaceCharge.EnableSimEFieldSCE: true
+services.SpaceCharge.EnableSimSpatialSCE: true
+
+#source is now a root file
+source:
+{
+  module_type: RootInput
+  maxEvents:   -1        # Number of events to create
+  #inputCommands: ["keep *_*_*_*","drop *_*_*_DetSim", "drop *_*_*_G4"]#, "keep sim::MCTrack_*_*_*", "keep recob::Track_*_pandoraCosmic_*" ]
+
+}
+
+#source.inputCommands: ["keep *_*_*_*", "drop anab::T0_*_*_*" ]
+
+# Define and configure some modules to do work on each event.
+# First modules are defined; they are scheduled later.
+# Modules are grouped by type.
+physics:
+{
+    
+    producers:
+        {
+        
+        ### random number saver
+        rns:                 { module_type: RandomNumberSaver }
+        
+        ### shower reco module
+        
+        shrmerger: {
+            module_type: "ShowerMerger"
+            PFPproducer: "pandora"
+            SHRproducer: "pandora"
+            HITproducer: "pandora"
+            CLSproducer: "pandora"
+            SLCproducer: "pandora"
+            VTXproducer: "pandora"
+            TRKproducer: "pandora"
+            ShrVtxTrkDistMax: 1.0
+            ShrTrkDotMin: 0.9
+            }
+
+        shrrecomerger : @local::ShrReco3DPandora
+        
+        }
+    analyzers:
+        { 
+        }
+    
+    #reco: [ rns, ophit, opflash, simpleFlash, opflashfilter ]
+    reco: [ rns, shrmerger, shrrecomerger ]
+    # ana: [ nueana ]
+    
+    #define the output stream, there could be more than one if using filters 
+    stream1:  [ out1 ]
+    
+    #trigger_paths is a keyword and contains the paths that modify the art::event, 
+    #ie filters and producers
+    #trigger_paths: [reco] 
+    
+    #end_paths is a keyword and contains the paths that do not modify the art::Event, 
+    #ie analyzers and output streams.  these all run simultaneously
+    #end_paths:     [stream1,ana]
+    end_paths:     [stream1]
+    }
+
+#entry in the output stream you want those to go to, where XXX is the label of the filter module(s)
+outputs:
+{
+    out1:
+        {
+        module_type: RootOutput
+        fileName:    "shrmerger.root"
+        dataTier:    "reco"
+        compressionLevel: 1
+        }
+    }
+
+
+physics.producers.shrrecomerger.BacktrackTag: ""
+physics.producers.shrrecomerger.ADCtoE: [240,240,240] # e-/ADC
+physics.producers.shrrecomerger.NeutrinoEvent: false
+physics.producers.shrrecomerger.PFPproducer:  "shrmerger"
+physics.producers.shrrecomerger.Clusproducer: "shrmerger"
+physics.producers.shrrecomerger.Vtxproducer:  "shrmerger"
+
+physics.producers.shrrecomerger.ProtoShowerTool.PFPproducer:  "shrmerger"
+physics.producers.shrrecomerger.ProtoShowerTool.Clusproducer: "shrmerger"
+physics.producers.shrrecomerger.ProtoShowerTool.Vtxproducer:  "shrmerger"
+
+
+### Here we include the file giving us run/data dependent overrides

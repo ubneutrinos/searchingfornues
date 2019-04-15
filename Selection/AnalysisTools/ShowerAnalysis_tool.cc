@@ -143,9 +143,9 @@ void ShowerAnalysis::analyzeEvent(art::Event const &e, bool fData)
 void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
 {
 
-  searchingfornues::ProxyTkCaloColl_t const* tkcalo_proxy = NULL;
+  searchingfornues::ProxyCaloColl_t const* tkcalo_proxy = NULL;
   if (fTRKproducer!="") {
-    tkcalo_proxy = new searchingfornues::ProxyTkCaloColl_t( proxy::getCollection<std::vector<recob::Track> >(e,fTRKproducer,proxy::withAssociated<anab::Calorimetry>(fCALproducer)) );
+    tkcalo_proxy = new searchingfornues::ProxyCaloColl_t( proxy::getCollection<std::vector<recob::Track> >(e,fTRKproducer,proxy::withAssociated<anab::Calorimetry>(fCALproducer)) );
   }
 
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
@@ -181,7 +181,7 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 
       if (tkcalo_proxy==NULL) continue;
 
-      for (const searchingfornues::ProxyTkCaloElem_t& tk : *tkcalo_proxy) {
+      for (const searchingfornues::ProxyCaloElem_t& tk : *tkcalo_proxy) {
 
         // find track with ID matching the pfp index (this convention apparently works only for shower fits...)
         if (tk->ID()!=int(slice_pfp_v[i_pfp].index())) continue;
