@@ -17,12 +17,18 @@
 #include "fhiclcpp/ParameterSet.h"
 #include "messagefacility/MessageLogger/MessageLogger.h"
 
+#include "nusimdata/SimulationBase/MCTruth.h"
+
 #include "art/Persistency/Common/PtrMaker.h"
 
 #include "ubana/ubana/searchingfornues/Selection/CommonDefs/Typedefs.h"
 #include "ubana/ubana/searchingfornues/Selection/CommonDefs/TrackShowerScoreFuncs.h"
+#include "ubana/ubana/searchingfornues/Selection/CommonDefs/BacktrackingFuncs.h"
 
 #include <memory>
+
+#include "art/Framework/Services/Optional/TFileService.h"
+#include "TTree.h"
 
 class ShowerMerger;
 
@@ -50,6 +56,7 @@ private:
 
   // Declare member data here.
 
+  art::InputTag fMCTproducer;
   art::InputTag fPFPproducer;
   art::InputTag fCLSproducer; // cluster associated to PFP
   art::InputTag fSLCproducer; // slice associated to PFP
@@ -61,10 +68,26 @@ private:
   // trunk-merger 
   float fShrVtxTrkDistMax; // maximum distance between shower start and track start/end
   float fShrTrkDotMin;     // minimum alignment between track and shower direction
+  // branch-merger
+  float fMinBranchConeDot; // minimum dot product between shr vtx -> branch vtx vector and shr dir vector
+  float fMinBranchVtxDist; // minimum distance of branch vertex to shower start point
+
+  // TTree
+  TTree* _tree;
+  float _nu_e, _elec_e;
+  int   _nelec, _nreco;
+  float _vtx_x, _vtx_y, _vtx_z, _vtx_t;
+  float _Ashr_x, _Ashr_y, _Ashr_z, _Ashr_q;
+  float _Pshr_x, _Pshr_y, _Pshr_z, _Pshr_q;
+  float _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset; // offsets for generation time and SCE
 
   // a map linking the PFP Self() attribute used for hierarchy building to the PFP index in the event record
   std::map<unsigned int, unsigned int> _pfpmap;
-  
+
+  bool FindShowerBranches(const size_t shr_pfp_idx,
+			  const std::vector<searchingfornues::ProxyPfpElem_t>& slice_pfp_v,
+			  std::vector<size_t>& branch_pfp_idx_v);
+    
   bool FindShowerTrunk(const size_t shr_pfp_idx,
 		       const std::vector<searchingfornues::ProxyPfpElem_t>& slice_pfp_v,
 		       TVector3& vtxcandidate,
@@ -89,6 +112,8 @@ private:
 		    const searchingfornues::ProxyPfpColl_t& pfp_pxy_col,
 		    std::vector<searchingfornues::ProxyPfpElem_t>& slice_v);
 
+  void SaveTruth(art::Event const& e);
+
 };
 
 
@@ -97,6 +122,7 @@ ShowerMerger::ShowerMerger(fhicl::ParameterSet const& p)
   // More initializers here.
 {
 
+  fMCTproducer = p.get< art::InputTag > ("MCTproducer");
   fPFPproducer = p.get< art::InputTag > ("PFPproducer");
   fSHRproducer = p.get< art::InputTag > ("SHRproducer");
   fHITproducer = p.get< art::InputTag > ("HITproducer");
@@ -107,6 +133,8 @@ ShowerMerger::ShowerMerger(fhicl::ParameterSet const& p)
 
   fShrVtxTrkDistMax = p.get< float > ("ShrVtxTrkDistMax");
   fShrTrkDotMin     = p.get< float > ("ShrTrkDotMin"    );
+  fMinBranchConeDot = p.get< float > ("MinBranchConeDot");
+  fMinBranchVtxDist = p.get< float > ("MinBranchVtxDist");
 
   produces<std::vector<recob::PFParticle> >();
   produces<std::vector<recob::Vertex>     >();
@@ -118,6 +146,33 @@ ShowerMerger::ShowerMerger(fhicl::ParameterSet const& p)
 
   produces<art::Assns <recob::Cluster, recob::Hit>  >();
 
+  // TTree
+  art::ServiceHandle<art::TFileService> tfs;
+  _tree = tfs->make<TTree>("ShowerMerging", "Shower Merging");
+  // truth
+  _tree->Branch("nu_e"  ,&_nu_e  ,"nu_e/F"  );
+  _tree->Branch("vtx_x" ,&_vtx_x ,"vtx_x/F" );
+  _tree->Branch("vtx_y" ,&_vtx_y ,"vtx_y/F" );
+  _tree->Branch("vtx_z" ,&_vtx_z ,"vtx_z/F" );
+  _tree->Branch("vtx_t" ,&_vtx_t ,"vtx_t/F" );
+  _tree->Branch("nelec",&_nelec,"nelec/I");
+  _tree->Branch("elec_e",&_elec_e,"elec_e/F");
+  // reco
+  _tree->Branch("nreco",&_nreco,"nreco/I");
+  _tree->Branch("Ashr_x",&_Ashr_x,"Ashr_x/F");
+  _tree->Branch("Ashr_y",&_Ashr_y,"Ashr_y/F");
+  _tree->Branch("Ashr_z",&_Ashr_z,"Ashr_z/F");
+  _tree->Branch("Ashr_q",&_Ashr_q,"Ashr_q/F");
+  _tree->Branch("Pshr_x",&_Pshr_x,"Pshr_x/F");
+  _tree->Branch("Pshr_y",&_Pshr_y,"Pshr_y/F");
+  _tree->Branch("Pshr_z",&_Pshr_z,"Pshr_z/F");
+  _tree->Branch("Pshr_q",&_Pshr_q,"Pshr_q/F");
+  // SCE
+  _tree->Branch("xtimeoffset",&_xtimeoffset,"xtimeoffset/F");
+  _tree->Branch("xsceoffset" ,&_xsceoffset ,"xsceoffset/F" );
+  _tree->Branch("ysceoffset" ,&_ysceoffset ,"ysceoffset/F" );
+  _tree->Branch("zsceoffset" ,&_zsceoffset ,"zsceoffset/F" );
+  
   return;
 }
 
@@ -125,6 +180,8 @@ void ShowerMerger::produce(art::Event& e)
 {
   
   std::cout << "DAVIDC PRODUCE" << std::endl;
+
+  SaveTruth(e);
 
   // PFP pointer maker
   art::PtrMaker<recob::PFParticle> PFParticlePtrMaker(e);
@@ -167,6 +224,10 @@ void ShowerMerger::produce(art::Event& e)
   auto const& cls_h = e.getValidHandle<std::vector<recob::Cluster> >(fCLSproducer);
   */
 
+  // keep track of largest charge shower
+  float QMax = 0;
+  bool largestShower = false;
+  _nreco = 0;
   
   // build PFParticle map  for this event
   BuildPFPMap(pfp_proxy);
@@ -218,6 +279,8 @@ void ShowerMerger::produce(art::Event& e)
       size_t   trktrunk_pfp_idx;
       Double_t xyz[3] = {};
 
+      largestShower = false;
+
       // load shower clusters
       auto pfp_clus_v = pfp_pxy.get<recob::Cluster>();
       // create one cluster per plane (will save non-empty ones)
@@ -228,6 +291,22 @@ void ShowerMerger::produce(art::Event& e)
 	auto pl = pfp_clus_v[c]->Plane().Plane;
 	recob::Cluster newclus( *(pfp_clus_v[c]) );
 	out_clus_v[ pl ] = newclus;
+
+	_nreco += 1;
+
+	if (pl == 2) {
+	  //std::cout << "cluster has " << newclus.Integral() << " charge" << std::endl;
+	  if ( newclus.Integral() > QMax ) {
+	    largestShower = true;
+	    QMax = newclus.Integral();
+	    _Ashr_q = QMax;
+	    auto shr = pfp_pxy.get<recob::Shower>()[0];
+	    _Ashr_x = shr->ShowerStart().X();
+	    _Ashr_y = shr->ShowerStart().Y();
+	    _Ashr_z = shr->ShowerStart().Z();
+	  }
+	}
+
 	// clus -> hit associations
 	const auto& clus_pxy = clus_proxy[pfp_clus_v[c].key()];
 	auto clus_hit_v = clus_pxy.get<recob::Hit>();
@@ -271,13 +350,13 @@ void ShowerMerger::produce(art::Event& e)
 	      auto start_charge = newclus->StartCharge();
 	      auto start_angle  = newclus->StartAngle();
 	      auto start_open   = newclus->StartOpeningAngle();
-	      auto end_wire     = out_clus_v[ newPl ].StartWire();
-	      auto end_wireS    = out_clus_v[ newPl ].SigmaStartWire();
-	      auto end_tick     = out_clus_v[ newPl ].StartTick();
-	      auto end_tickS    = out_clus_v[ newPl ].SigmaStartTick();
-	      auto end_charge   = out_clus_v[ newPl ].StartCharge();
-	      auto end_angle    = out_clus_v[ newPl ].StartAngle();
-	      auto end_open     = out_clus_v[ newPl ].StartOpeningAngle();
+	      auto end_wire     = out_clus_v[ newPl ].EndWire();
+	      auto end_wireS    = out_clus_v[ newPl ].SigmaEndWire();
+	      auto end_tick     = out_clus_v[ newPl ].EndTick();
+	      auto end_tickS    = out_clus_v[ newPl ].SigmaEndTick();
+	      auto end_charge   = out_clus_v[ newPl ].EndCharge();
+	      auto end_angle    = out_clus_v[ newPl ].EndAngle();
+	      auto end_open     = out_clus_v[ newPl ].EndOpeningAngle();
 	      auto integral     = newclus->Integral()  + out_clus_v[ newPl ].Integral();
 	      auto summedADC    = newclus->SummedADC() + out_clus_v[ newPl ].SummedADC();
 	      auto nhits        = newclus->NHits() + out_clus_v[ newPl ].NHits();
@@ -290,23 +369,99 @@ void ShowerMerger::produce(art::Event& e)
 
 	    }// if the old cluster exists and it needs to be updated
 	  }// if not out of bounds
-	}// for all clusters
-      }// if we found a trunk to merge!
-      
+
+	}// for all new clusters to be merged
+      }// if we need to merge the shower-trunk
       else {
-
 	vtxcandidate = ass_shr_v[0]->ShowerStart();
-
       } //if this shower is not to be merged
+      
+      // now find shower branches
+      
+      std::vector<size_t> branches_pfp_idx_v;
+      FindShowerBranches(p, slice_pfp_v, branches_pfp_idx_v);
 
+      std::cout << "Shower is being merged with " << branches_pfp_idx_v.size() << " branches " << std::endl;
+      
+      if (branches_pfp_idx_v.size() >= 1) {
+	
+	for (auto const& branch_idx : branches_pfp_idx_v) {
+	  
+	  // load new clusters to be added
+	  auto new_clus_v = slice_pfp_v[branch_idx].get<recob::Cluster>();
+	  std::cout << "Will be adding " << new_clus_v.size() << " clusters!" << std::endl;
+	  // beacuse this is the trunk of the shower, we need to modify the cluster
+	  // start/end points to match these new ones
+	  for (size_t c=0; c < new_clus_v.size(); c++) {
+	    auto newclus = new_clus_v.at(c);
+	    auto newPl = newclus->Plane().Plane;
+	    if ( (newPl < out_clus_v.size()) && (newPl >= 0) ) {
+	      
+	      // store extra hits associated
+	      
+
+	      std::cout << "PRE @ plane " << newPl << " hits are " << out_clus_hit_assn_v[newPl].size() << std::endl;
+	      // clus -> hit associations
+	      const auto& new_clus_pxy = clus_proxy[newclus.key()];
+	      auto new_clus_hit_v = new_clus_pxy.get<recob::Hit>();
+	      for (size_t i=0; i < new_clus_hit_v.size(); i++) {
+		out_clus_hit_assn_v[ newPl ].push_back( new_clus_hit_v[i] );
+	      }// for all hits
+	      std::cout << "POST @ plane " << newPl << " hits are " << out_clus_hit_assn_v[newPl].size() << std::endl;
+	      
+	      // if the old cluster is garbage, simply load the new one
+	      if (out_clus_v[ newPl ].NHits() == 0) {
+		out_clus_v[ newPl ] = (*newclus);
+	      }
+	      else {
+		auto start_wire   = out_clus_v[ newPl ].StartWire();
+		auto start_wireS  = out_clus_v[ newPl ].SigmaStartWire();
+		auto start_tick   = out_clus_v[ newPl ].StartTick();
+		auto start_tickS  = out_clus_v[ newPl ].SigmaStartTick();
+		auto start_charge = out_clus_v[ newPl ].StartCharge();
+		auto start_angle  = out_clus_v[ newPl ].StartAngle();
+		auto start_open   = out_clus_v[ newPl ].StartOpeningAngle();
+		auto end_wire     = newclus->EndWire();
+		auto end_wireS    = newclus->SigmaEndWire();
+		auto end_tick     = newclus->EndTick();
+		auto end_tickS    = newclus->SigmaEndTick();
+		auto end_charge   = newclus->EndCharge();
+		auto end_angle    = newclus->EndAngle();
+		auto end_open     = newclus->EndOpeningAngle();
+		auto integral     = newclus->Integral()  + out_clus_v[ newPl ].Integral();
+		auto summedADC    = newclus->SummedADC() + out_clus_v[ newPl ].SummedADC();
+		auto nhits        = newclus->NHits() + out_clus_v[ newPl ].NHits();
+		out_clus_v[ newPl ] = recob::Cluster(start_wire, start_wireS, start_tick, start_tickS, start_charge, start_angle, start_open,
+						     end_wire  , end_wireS  , end_tick  , end_tickS  , end_charge  , end_angle  , end_open,
+						     integral, 0., summedADC, 0., nhits, 0., 0., 
+						     out_clus_v[ newPl ].ID(), out_clus_v[ newPl ].View(), out_clus_v[ newPl ].Plane() );
+		
+		std::cout << "New cluster has NHits " << nhits << " and " << out_clus_hit_assn_v[ newPl ].size() << " hits associated" << std::endl;
+		
+	      }// if the old cluster exists and it needs to be updated
+	    }// if not out of bounds	      
+	  }// for all clusters
+	  
+	}// for all branches to be merged
+	
+      }// if there are branches to be merged
+      
+      
       PFParticle_v->emplace_back( outshrpfp );
-
+      
       // save vertex to be associated to this shower
       xyz[0] = vtxcandidate.X();
       xyz[1] = vtxcandidate.Y();
       xyz[2] = vtxcandidate.Z();
       recob::Vertex vtx(xyz);
       Vertex_v->emplace_back(vtx);
+
+      if (largestShower == true) {
+	_Pshr_q = out_clus_v[2].Integral();
+	_Pshr_x = xyz[0];
+	_Pshr_y = xyz[1];
+	_Pshr_z = xyz[2];
+      }
       
       art::Ptr<recob::PFParticle> const PFParticlePtr = PFParticlePtrMaker(PFParticle_v->size()-1);
       art::Ptr<recob::Vertex>     const VtxPtr        = VtxPtrMaker(Vertex_v->size()-1);
@@ -331,9 +486,12 @@ void ShowerMerger::produce(art::Event& e)
       }// for all clusters
       
     }// if shower-like PFP
-    
+
   }// for all slice PFPs
-  
+
+  if (slice_pfp_v.size())
+    _tree->Fill();
+
   e.put(std::move(PFParticle_v));
   e.put(std::move(Vertex_v));
   e.put(std::move(Cluster_v));
@@ -438,6 +596,84 @@ bool ShowerMerger::FindShowerTrunk(const size_t shr_pfp_idx,
   return true;
 }// end FindShowerTrunk
 
+
+bool ShowerMerger::FindShowerBranches(const size_t shr_pfp_idx,
+				      const std::vector<searchingfornues::ProxyPfpElem_t>& slice_pfp_v,
+				      std::vector<size_t>& branch_pfp_idx_v) {
+
+  // do any slices lie in the cone of an upstream shower?
+
+  if (slice_pfp_v.size() <= shr_pfp_idx) return false;
+
+  auto ass_shr_v = slice_pfp_v[shr_pfp_idx].get<recob::Shower>();
+
+  if (ass_shr_v.size() != 1) return false;
+
+  std::cout << "\t shower @ idx " << shr_pfp_idx << std::endl;
+  
+  auto shr = ass_shr_v[0];
+  // get shower 3D direction and starting point
+  auto shrVtx = shr->ShowerStart(); // xyz coordinate [TVector3]
+  auto shrDir = shr->Direction(); // unit vector [TVector3]
+
+  for (size_t p=0; p < slice_pfp_v.size(); p++) {
+
+    // skip the pfparticle associated to the shower itself
+    if (p == shr_pfp_idx) continue;
+
+    // find start point and direction of downstream PFParticles
+    // regardless of whether shower/track like
+    TVector3 BranchVtx;
+    TVector3 BranchDir;
+
+    if (slice_pfp_v[p].get<recob::Track>().size() == 1) {
+
+      auto trk = slice_pfp_v[p].get<recob::Track>()[0];
+
+      BranchDir = TVector3(trk->StartDirection().X(), trk->StartDirection().Y(), trk->StartDirection().Z());
+      BranchVtx = TVector3(trk->Start().X(), trk->Start().Y(), trk->Start().Z());
+
+    }// if associated to a track
+    else if (slice_pfp_v[p].get<recob::Shower>().size() == 1) {
+      
+      auto shrB = slice_pfp_v[p].get<recob::Shower>()[0];
+
+      BranchVtx = shrB->ShowerStart();
+      BranchDir = shrB->Direction();
+
+    }// if associated to a shower
+
+    // is the branch candidate vertex compatible with the shower cone?
+    
+    // (1) angle between shower direction and shr start -> branch start
+    TVector3 Branch2ShrDir = (BranchVtx-shrVtx).Unit();
+    double branchDot = Branch2ShrDir.Dot( shrDir );
+
+    std::cout << " Branch finding dot  : " << branchDot << std::endl;
+
+
+    if (branchDot < fMinBranchConeDot) continue;
+
+    // (2) make sure branch starts enough downstream
+    double BranchDist = (BranchVtx-shrVtx).Mag();
+
+    std::cout << " Branch finding dist : " << BranchDist << std::endl;
+
+    if ( BranchDist < fMinBranchVtxDist ) continue;
+
+    // made it this far -> add candidate branch
+    branch_pfp_idx_v.push_back( p );
+      
+  }// for all PFParticles 
+  
+
+  // if bestdot != 0 -> means we found a compatible match
+  if (branch_pfp_idx_v.size() == 0)
+    return false;
+  
+  return true;
+}// end FindShowerTrunk
+
 void ShowerMerger::BuildPFPMap(const searchingfornues::ProxyPfpColl_t& pfp_pxy_col) {
   
   _pfpmap.clear();
@@ -477,5 +713,40 @@ void ShowerMerger:: AddDaughters(const searchingfornues::ProxyPfpElem_t& pfp_pxy
   
   return;
 }// AddDaughters
+
+
+void ShowerMerger::SaveTruth(art::Event const& e) {
+
+  // load MCTruth
+  auto const& mct_h = e.getValidHandle<std::vector<simb::MCTruth> >(fMCTproducer);
+
+  auto mct      = mct_h->at(0);
+  auto neutrino = mct.GetNeutrino();
+  auto nu       = neutrino.Nu();
+
+  _nu_e  = nu.Trajectory().E(0);
+  _vtx_x = nu.EndX();
+  _vtx_y = nu.EndY();
+  _vtx_z = nu.EndZ();
+  _vtx_t = nu.T();
+
+  _nelec   = 0;
+
+  size_t npart = mct.NParticles();
+  for (size_t i=0; i < npart; i++){
+
+    auto const& part = mct.GetParticle(i);
+
+    // if electron
+    if ( (std::abs(part.PdgCode()) == 11) and (part.StatusCode() == 1) ){
+      _nelec += 1;
+      _elec_e = part.Momentum(0).E();
+    }// if electron
+  }// for all MCParticles
+  
+  searchingfornues::ApplyDetectorOffsets(_vtx_t,_vtx_x,_vtx_y,_vtx_z,_xtimeoffset,_xsceoffset,_ysceoffset,_zsceoffset);
+
+  return;
+}
 
 DEFINE_ART_MODULE(ShowerMerger)
