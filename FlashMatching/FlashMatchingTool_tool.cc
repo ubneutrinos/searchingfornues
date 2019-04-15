@@ -4,8 +4,12 @@
 
 #include "larcore/Geometry/Geometry.h"
 #include "larcorealg/Geometry/GeometryCore.h"
+
 #include "larevt/CalibrationDBI/Interface/PmtGainService.h"
 #include "larevt/CalibrationDBI/Interface/PmtGainProvider.h"
+
+#include "ubevt/Utilities/PMTRemapService.h"
+#include "ubevt/Utilities/PMTRemapProvider.h"
 
 namespace flashmatch {
   
@@ -181,7 +185,10 @@ namespace flashmatch {
       {
 	
 	art::ServiceHandle<geo::Geometry> geo;
+	// gain service
 	const ::lariov::PmtGainProvider& gain_provider = art::ServiceHandle<lariov::PmtGainService>()->GetProvider();
+	// pmt remapping service
+	const ::util::PMTRemapProvider& pmtremap_provider = art::ServiceHandle<util::PMTRemapService>()->GetProvider();
 	
 	const auto nOpDets(geo->NOpDets());
 	
@@ -196,8 +203,20 @@ namespace flashmatch {
 	  if (!geo->IsValidOpChannel(OpChannel)) continue;
 	  size_t OpDet     = geo->OpDetFromOpChannel(OpChannel);
 	  auto PE   = flash.PEs()[pmt];
-	  auto gain = gain_provider.Gain(OpChannel);
-	  std::cout << "Applying gain " << gain << " for OpChannel" << OpChannel << " corresponding to flash index " << pmt << std::endl;
+
+	  // SPE calibration performed on incorrect OpDetWaveform
+	  // channel nomenclature
+	  // OpFlash channel number is after it was remapped
+	  // to apply the gain for the appropriate channel
+	  // one needs to find the OpChannel number
+	  // associated to the original waveform 
+	  // hence apply the inverse mapping
+	  auto oldch = pmtremap_provider.OriginalOpChannel( OpChannel );
+	  std::cout << "Remapping channel " << OpChannel << " to channel " << oldch << std::endl;
+	  auto gain = gain_provider.Gain( oldch );
+	  //auto gain = gain_provider.Gain(OpChannel);
+
+	  std::cout << "Applying gain " << gain << " for OpChannel " << OpChannel << " corresponding to flash index " << pmt << std::endl;
 	  if (gain != 0)
 	    m_peSpectrum.at(OpDet)  = PE * 120. / gain;
 	}// or all OpChannels
