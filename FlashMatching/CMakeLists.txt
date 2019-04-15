@@ -3,6 +3,7 @@ add_subdirectory(job)
 art_make( 
 	  LIB_LIBRARIES
 			larevt_CalibrationDBI_IOVData
+			ubevt_Utilities
 			larcorealg_Geometry
                         larcore_Geometry_Geometry_service
                         larsim_Simulation lardataobj_Simulation
@@ -40,6 +41,7 @@ art_make(
                         ubana_SelectionTool_OpT0FinderAlgorithms
 	  TOOL_LIBRARIES
 			larevt_CalibrationDBI_IOVData
+			ubevt_Utilities	
 			larcorealg_Geometry
                         larcore_Geometry_Geometry_service
                         larsim_Simulation lardataobj_Simulation
