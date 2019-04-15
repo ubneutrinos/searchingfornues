@@ -11,6 +11,8 @@
 #include "lardataobj/RecoBase/Track.h"
 #include "lardataobj/RecoBase/Vertex.h"
 
+#include "lardataobj/AnalysisBase/Calorimetry.h"
+
 #include "lardataobj/RecoBase/PFParticleMetadata.h"
 #include "lardata/RecoBaseProxy/ProxyBase.h"
 
@@ -31,6 +33,10 @@ namespace searchingfornues {
 										      proxy::withAssociated<recob::Hit>(std::declval<art::InputTag>()) ) );
   using ProxyClusElem_t = ProxyClusColl_t::element_proxy_t;
 
+  using ProxyTkCaloColl_t = decltype(proxy::getCollection<std::vector<recob::Track> >(
+										      std::declval<art::Event>(),std::declval<art::InputTag>(),
+										      proxy::withAssociated<anab::Calorimetry>(std::declval<art::InputTag>()) ) );
+  using ProxyTkCaloElem_t = ProxyTkCaloColl_t::element_proxy_t;
 }
 
 #endif

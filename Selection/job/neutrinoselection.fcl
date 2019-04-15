@@ -1,9 +1,13 @@
 #include "shrreco3d.fcl"
+#include "trackproducerfrompfparticle.fcl"
+#include "calorimetry_microboone.fcl"
 #include "services_microboone.fcl"
 #include "flashmatchsetup.fcl"
 
 ShowerAnalysisTool: {
     tool_type: "ShowerAnalysis"
+    TRKproducer: "pandoraKalmanShower" #"shrreco3dKalmanShower"         #remove or leave empty of there are no track fits of the shower
+    CALproducer: "pandoraKalmanShowercalo" #"shrreco3dKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
 }
 
 DefaultAnalysisTool: {
@@ -54,13 +58,39 @@ shrreco3dMC.BacktrackTag:  ""
 shrreco3dMC.ADCtoE:   [248.2,248.2,248.2] # e-/ADC
 shrreco3dMC.NeutrinoEvent: false
 
+shrreco3dKalmanShower:                                       @local::trackproducerfrompfparticle
+shrreco3dKalmanShower.inputCollection:                       "pandora"
+shrreco3dKalmanShower.trackFromPF:                           false
+shrreco3dKalmanShower.showerFromPF:                          true
+shrreco3dKalmanShower.showerInputTag:                        "shrreco3d"
+shrreco3dKalmanShower.trackMaker.options.defaultPdgId:       11
+shrreco3dKalmanShower.trackMaker.fitter.skipNegProp:         true
+shrreco3dKalmanShower.trackMaker.fitter.maxChi2:             10
+shrreco3dKalmanShower.trackMaker.fitter.maxDist:             5.0
+shrreco3dKalmanShower.trackMaker.fitter.maxResidue:          3.0
+shrreco3dKalmanShower.trackMaker.fitter.maxResidueFirstHit:  6.0
+shrreco3dKalmanShower.trackMaker.fitter.sortHitsByWire:      true
+shrreco3dKalmanShower.trackMaker.fitter.tryNoSkipWhenFails:  false
+shrreco3dKalmanShower.trackMaker.fitter.negDistTolerance:    -0.01
+shrreco3dKalmanShower.trackMaker.fitter.pickBestHitOnWire:   true
+
+shrreco3dKalmanShowercalodata: @local::microboone_calodata
+shrreco3dKalmanShowercalodata.CaloAlg.CalAreaConstants: [4.31e-3, 4.02e-3, 4.26e-3]
+shrreco3dKalmanShowercalodata.TrackModuleLabel:         "shrreco3dKalmanShower"
+shrreco3dKalmanShowercalodata.SpacePointModuleLabel:    "shrreco3dKalmanShower"
+
+shrreco3dKalmanShowercalomc: @local::microboone_calomc
+shrreco3dKalmanShowercalomc.CaloAlg.CalAreaConstants: [4.08e-3,3.97e-3,4.08e-3]
+shrreco3dKalmanShowercalomc.TrackModuleLabel:         "shrreco3dKalmanShower"
+shrreco3dKalmanShowercalomc.SpacePointModuleLabel:    "shrreco3dKalmanShower"
+
 NuSelectionFilter:{
     module_type: NeutrinoSelectionFilter
     Verbose: true
     IsData: false
     Filter: true
     PFPproducer: "pandora"
-    SHRproducer: "pandora"
+    SHRproducer: "pandora" #if you change this, remember to change also the inputs to ShowerAnalysisTool!
     HITproducer: "pandora"
     CLSproducer: "pandora"
     SLCproducer: "pandora"
@@ -76,6 +106,7 @@ NuSelectionFilter:{
         obviouscosmic: @local::ObviousCosmicFlashMatching
         slicepurcompl: @local::SlicePurComplTool
         containment:   @local::ContainmentAnalysis
+        shower:        @local::ShowerAnalysisTool
         }
     }
 

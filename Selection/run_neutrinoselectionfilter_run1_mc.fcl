@@ -2,3 +2,5 @@
 
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
 physics.filters.nuselection.IsData: false
+
+###physics.producers.shrreco3dKalmanShowercalo: @local::shrreco3dKalmanShowercalomc # I think this needs to be uncommented for pure MC but is ok to leave out for overlays

@@ -62,7 +62,11 @@ outputs:
 
 physics:
 {
- producers:{}
+ producers:
+ {
+        shrreco3dKalmanShower: @local::shrreco3dKalmanShower
+        shrreco3dKalmanShowercalo: @local::shrreco3dKalmanShowercalodata
+ }
  filters:  
  {
         nuselection: @local::NuSelectionFilterEmpty
@@ -72,8 +76,8 @@ physics:
            }
  
  #define the producer and filter modules for this path, order matters, 
- ana:  [  ]
- p1: [nuselection]
+ ana:  []
+ p1: [shrreco3dKalmanShower, shrreco3dKalmanShowercalo, nuselection]
  e1: [rootout]
  #define the output stream, there could be more than one if using filters 
  stream1:  [ out1 ]
