@@ -1,13 +1,14 @@
 #include "shrreco3d.fcl"
 #include "trackproducerfrompfparticle.fcl"
 #include "calorimetry_microboone.fcl"
+#include "calibration_microboone.fcl"
 #include "services_microboone.fcl"
 #include "flashmatchsetup.fcl"
 
 ShowerAnalysisTool: {
     tool_type: "ShowerAnalysis"
     TRKproducer: "pandoraKalmanShower" #"shrreco3dKalmanShower"         #remove or leave empty of there are no track fits of the shower
-    CALproducer: "pandoraKalmanShowercalo" #"shrreco3dKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
+    CALproducer: "pandoraKalmanShowercali" #"shrreco3dKalmanShowercali" #remove or leave empty of there are no track fits of the shower
 }
 
 DefaultAnalysisTool: {
@@ -83,6 +84,14 @@ shrreco3dKalmanShowercalomc: @local::microboone_calomc
 shrreco3dKalmanShowercalomc.CaloAlg.CalAreaConstants: [4.08e-3,3.97e-3,4.08e-3]
 shrreco3dKalmanShowercalomc.TrackModuleLabel:         "shrreco3dKalmanShower"
 shrreco3dKalmanShowercalomc.SpacePointModuleLabel:    "shrreco3dKalmanShower"
+
+shrreco3dKalmanShowercalidata: @local::microboone_calibrationdedx_data
+shrreco3dKalmanShowercalidata.TrackModuleLabel:       "shrreco3dKalmanShower"
+shrreco3dKalmanShowercalidata.CalorimetryModuleLabel: "shrreco3dKalmanShowercalo"
+
+shrreco3dKalmanShowercalimc: @local::microboone_calibrationdedx
+shrreco3dKalmanShowercalimc.TrackModuleLabel:       "shrreco3dKalmanShower"
+shrreco3dKalmanShowercalimc.CalorimetryModuleLabel: "shrreco3dKalmanShowercalo"
 
 NuSelectionFilter:{
     module_type: NeutrinoSelectionFilter
