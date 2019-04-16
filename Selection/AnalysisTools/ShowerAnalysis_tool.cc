@@ -198,7 +198,9 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
           if (tkcalo->ResidualRange().size()==0) continue;
           std::vector<float> dedx4cm;
           for (size_t ic=0; ic<tkcalo->ResidualRange().size(); ++ic) {
-            if ( (tkcalo->ResidualRange().front()-tkcalo->ResidualRange()[ic]) > 4.) dedx4cm.push_back( tkcalo->dEdx()[ic] );
+            if ( (tkcalo->ResidualRange().back()-tkcalo->ResidualRange()[ic]) < 4.) {
+	      dedx4cm.push_back( tkcalo->dEdx()[ic] );
+	    }
           }
           float dedx4cm_med = -1.;
           if (dedx4cm.size()>0) {
