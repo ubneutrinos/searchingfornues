@@ -202,7 +202,7 @@ cioe'     * @brief set branches for TTree
 	auto trkshrscore = GetTrackShowerScore(pfp_pxy);
 
 	auto nshr = pfp_pxy.get<recob::Shower>().size();
-	auto ntrk = pfp_pxy.get<recob::Track>().size();
+	//auto ntrk = pfp_pxy.get<recob::Track>().size();
 
 	// 1 -> track-like
 	if (trkshrscore > _trkshrscore)  continue;
