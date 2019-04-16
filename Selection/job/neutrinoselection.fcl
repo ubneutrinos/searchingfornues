@@ -44,6 +44,10 @@ SlicePurComplTool: {
     HTproducer: "gaushitTruthMatch"
 }
 
+PMTNoiseTool: {
+    tool_type: "PMTNoise"
+}
+
 ContainmentAnalysis: {
     tool_type: "ContainmentAnalysis"
     FV: 10
@@ -116,7 +120,9 @@ NuSelectionFilter:{
         slicepurcompl: @local::SlicePurComplTool
         containment:   @local::ContainmentAnalysis
         shower:        @local::ShowerAnalysisTool
-        }
+	#pmtnoise:      @local::PMTNoiseTool
+ 
+       }
     }
 
 
