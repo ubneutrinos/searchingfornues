@@ -100,7 +100,6 @@ namespace analysis
 
     // TTree variables
     // per event
-    int evnhits;
     int evnunhits;
     int evlepnhits;
     int evpronhits;
@@ -110,29 +109,25 @@ namespace analysis
     int evgamnhits;
     int evothnhits;
     //
-    // per slice
-    std::vector<int> slpdg;
-    std::vector<int> slnhits;
-    std::vector<int> slnunhits;
-    std::vector<int> sllepnhits;
-    std::vector<int> slpronhits;
-    std::vector<int> slpi1nhits;
-    std::vector<int> slpi0nhits;
-    std::vector<int> slneunhits;
-    std::vector<int> slgamnhits;
-    std::vector<int> slothnhits;
+    // per nu slice
+    int slnunhits;
+    int sllepnhits;
+    int slpronhits;
+    int slpi1nhits;
+    int slpi0nhits;
+    int slneunhits;
+    int slgamnhits;
+    int slothnhits;
     //
-    // per pfp in each slice (outer vector is per slice, inner is per pfp)
-    std::vector<std::vector<int> > pfpdg;
-    std::vector<std::vector<int> > pfnhits;
-    std::vector<std::vector<int> > pfnunhits;
-    std::vector<std::vector<int> > pflepnhits;
-    std::vector<std::vector<int> > pfpronhits;
-    std::vector<std::vector<int> > pfpi1nhits;
-    std::vector<std::vector<int> > pfpi0nhits;
-    std::vector<std::vector<int> > pfneunhits;
-    std::vector<std::vector<int> > pfgamnhits;
-    std::vector<std::vector<int> > pfothnhits;
+    // per pfp in nu slice
+    std::vector<int> pfnunhits;
+    std::vector<int> pflepnhits;
+    std::vector<int> pfpronhits;
+    std::vector<int> pfpi1nhits;
+    std::vector<int> pfpi0nhits;
+    std::vector<int> pfneunhits;
+    std::vector<int> pfgamnhits;
+    std::vector<int> pfothnhits;
   };
 
   //----------------------------------------------------------------------------
@@ -244,7 +239,6 @@ namespace analysis
     incrementCounts(inHitsPtrV, assocMCPart,
 		    lepid, proid, pi1id, pi0id, neuid, gamid, othid,
 		    nlephits, nprohits, npi1hits, npi0hits, nneuhits, ngamhits, nothhits);
-    evnhits = inputHits->size();
     evnunhits = nlephits+nprohits+npi1hits+npi0hits+nneuhits+ngamhits+nothhits;
     evlepnhits = nlephits;
     evpronhits = nprohits;
@@ -267,17 +261,6 @@ namespace analysis
     art::ValidHandle<std::vector<recob::Slice> > inputSlice = e.getValidHandle<std::vector<recob::Slice> >(fSLCproducer);
     auto assocSliceHit = std::unique_ptr<art::FindManyP<recob::Hit> >(new art::FindManyP<recob::Hit>(inputSlice, e, fSLCproducer));
 
-    std::vector<int> slpfpdg;
-    std::vector<int> slpfnhits;
-    std::vector<int> slpfnunhits;
-    std::vector<int> slpflepnhits;
-    std::vector<int> slpfpronhits;
-    std::vector<int> slpfpi1nhits;
-    std::vector<int> slpfpi0nhits;
-    std::vector<int> slpfneunhits;
-    std::vector<int> slpfgamnhits;
-    std::vector<int> slpfothnhits;
-
     for (auto pfp :  slice_pfp_v) {
       if (pfp->IsPrimary()) {
 	// check associated slice only once per hierarchy
@@ -292,16 +275,14 @@ namespace analysis
 	incrementCounts(slicehits, assocMCPart,
 			lepid, proid, pi1id, pi0id, neuid, gamid, othid,
 			nsllephits, nslprohits, nslpi1hits, nslpi0hits, nslneuhits, nslgamhits, nslothhits);
-	slpdg.push_back(pfp->PdgCode());
-	slnhits.push_back(slicehits.size());
-	slnunhits.push_back(nsllephits+nslprohits+nslpi1hits+nslpi0hits+nslneuhits+nslgamhits+nslothhits);
-	sllepnhits.push_back(nsllephits);
-	slpronhits.push_back(nslprohits);
-	slpi1nhits.push_back(nslpi1hits);
-	slpi0nhits.push_back(nslpi0hits);
-	slneunhits.push_back(nslneuhits);
-	slgamnhits.push_back(nslgamhits);
-	slothnhits.push_back(nslothhits);
+	slnunhits = nsllephits+nslprohits+nslpi1hits+nslpi0hits+nslneuhits+nslgamhits+nslothhits;
+	sllepnhits = nsllephits;
+	slpronhits = nslprohits;
+	slpi1nhits = nslpi1hits;
+	slpi0nhits = nslpi0hits;
+	slneunhits = nslneuhits;
+	slgamnhits = nslgamhits;
+	slothnhits = nslothhits;
       }
       // get hits associated to this PFParticle through the clusters
       std::vector<art::Ptr<recob::Hit> > hit_v;
@@ -320,35 +301,21 @@ namespace analysis
 		      lepid, proid, pi1id, pi0id, neuid, gamid, othid,
 		      npflephits, npfprohits, npfpi1hits, npfpi0hits, npfneuhits, npfgamhits, npfothhits);
       //
-      slpfpdg.push_back(pfp->PdgCode());
-      slpfnhits.push_back(hit_v.size());
-      slpfnunhits.push_back(npflephits+npfprohits+npfpi1hits+npfpi0hits+npfneuhits+npfgamhits+npfothhits);
-      slpflepnhits.push_back(npflephits);
-      slpfpronhits.push_back(npfprohits);
-      slpfpi1nhits.push_back(npfpi1hits);
-      slpfpi0nhits.push_back(npfpi0hits);
-      slpfneunhits.push_back(npfneuhits);
-      slpfgamnhits.push_back(npfgamhits);
-      slpfothnhits.push_back(npfothhits);
+      pfnunhits.push_back(npflephits+npfprohits+npfpi1hits+npfpi0hits+npfneuhits+npfgamhits+npfothhits);
+      pflepnhits.push_back(npflephits);
+      pfpronhits.push_back(npfprohits);
+      pfpi1nhits.push_back(npfpi1hits);
+      pfpi0nhits.push_back(npfpi0hits);
+      pfneunhits.push_back(npfneuhits);
+      pfgamnhits.push_back(npfgamhits);
+      pfothnhits.push_back(npfothhits);
     }
-    pfpdg.push_back(slpfpdg);
-    pfnhits.push_back(slpfnhits);
-    pfnunhits.push_back(slpfnunhits);
-    pflepnhits.push_back(slpflepnhits);
-    pfpronhits.push_back(slpfpronhits);
-    pfpi1nhits.push_back(slpfpi1nhits);
-    pfpi0nhits.push_back(slpfpi0nhits);
-    pfneunhits.push_back(slpfneunhits);
-    pfgamnhits.push_back(slpfgamnhits);
-    pfothnhits.push_back(slpfothnhits);
 
     return;
   }
 
   void SlicePurCompl::setBranches(TTree* _tree)
   {
-    // _tree->Branch("_nu_vtx_x",&_nu_vtx_x,"nu_vtx_x/F");
-    _tree->Branch("evnhits",&evnhits,"evnhits/I");
     _tree->Branch("evnunhits",&evnunhits,"evnunhits/I");
     _tree->Branch("evlepnhits",&evlepnhits,"evlepnhits/I");
     _tree->Branch("evpronhits",&evpronhits,"evpronhits/I");
@@ -358,19 +325,15 @@ namespace analysis
     _tree->Branch("evgamnhits",&evgamnhits,"evgamnhits/I");
     _tree->Branch("evothnhits",&evothnhits,"evothnhits/I");
     //
-    _tree->Branch("slpdg",&slpdg);
-    _tree->Branch("slnhits",&slnhits);
-    _tree->Branch("slnunhits",&slnunhits);
-    _tree->Branch("sllepnhits",&sllepnhits);
-    _tree->Branch("slpronhits",&slpronhits);
-    _tree->Branch("slpi1nhits",&slpi1nhits);
-    _tree->Branch("slpi0nhits",&slpi0nhits);
-    _tree->Branch("slneunhits",&slneunhits);
-    _tree->Branch("slgamnhits",&slgamnhits);
-    _tree->Branch("slothnhits",&slothnhits);
+    _tree->Branch("slnunhits",&slnunhits,"slnunhits/I");
+    _tree->Branch("sllepnhits",&sllepnhits,"sllepnhits/I");
+    _tree->Branch("slpronhits",&slpronhits,"slpronhits/I");
+    _tree->Branch("slpi1nhits",&slpi1nhits,"slpi1nhits/I");
+    _tree->Branch("slpi0nhits",&slpi0nhits,"slpi0nhits/I");
+    _tree->Branch("slneunhits",&slneunhits,"slneunhits/I");
+    _tree->Branch("slgamnhits",&slgamnhits,"slgamnhits/I");
+    _tree->Branch("slothnhits",&slothnhits,"slothnhits/I");
     //
-    _tree->Branch("pfpdg",&pfpdg);
-    _tree->Branch("pfnhits",&pfnhits);
     _tree->Branch("pfnunhits",&pfnunhits);
     _tree->Branch("pflepnhits",&pflepnhits);
     _tree->Branch("pfpronhits",&pfpronhits);
@@ -383,7 +346,6 @@ namespace analysis
 
   void SlicePurCompl::resetTTree(TTree* _tree)
   {
-    evnhits = std::numeric_limits<int>::min();
     evnunhits = std::numeric_limits<int>::min();
     evlepnhits = std::numeric_limits<int>::min();
     evpronhits = std::numeric_limits<int>::min();
@@ -393,19 +355,15 @@ namespace analysis
     evgamnhits = std::numeric_limits<int>::min();
     evothnhits = std::numeric_limits<int>::min();
     //
-    slpdg.clear();
-    slnhits.clear();
-    slnunhits.clear();
-    sllepnhits.clear();
-    slpronhits.clear();
-    slpi1nhits.clear();
-    slpi0nhits.clear();
-    slneunhits.clear();
-    slgamnhits.clear();
-    slothnhits.clear();
+    slnunhits = std::numeric_limits<int>::min();
+    sllepnhits = std::numeric_limits<int>::min();
+    slpronhits = std::numeric_limits<int>::min();
+    slpi1nhits = std::numeric_limits<int>::min();
+    slpi0nhits = std::numeric_limits<int>::min();
+    slneunhits = std::numeric_limits<int>::min();
+    slgamnhits = std::numeric_limits<int>::min();
+    slothnhits = std::numeric_limits<int>::min();
     //
-    pfpdg.clear();
-    pfnhits.clear();
     pfnunhits.clear();
     pflepnhits.clear();
     pfpronhits.clear();

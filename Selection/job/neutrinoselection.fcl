@@ -19,6 +19,7 @@ DefaultAnalysisTool: {
     Hproducer: "gaushit"
     BacktrackTag: "gaushitTruthMatch"
     MCRproducer: "mcreco"
+    SLCproducer: "pandora"
     ProtonThreshold: 0.04 # GeV
 }
 

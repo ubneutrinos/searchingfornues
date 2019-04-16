@@ -87,6 +87,7 @@ namespace analysis
     art::InputTag fBacktrackTag;
     art::InputTag fHproducer;
     art::InputTag fMCRproducer;
+    art::InputTag fSLCproducer; // slice associated to PFP
 
     // kinematic thresholds to define signal
     float fProtonThreshold;
@@ -138,6 +139,14 @@ namespace analysis
     float _lep_e;                 // lepton energy (if one exists) [GeV]
     int  _pass;                   // does the slice pass the selection
     float _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset; // offsets for generation time and SCE
+
+    int evnhits; // number of hits in event
+    int slpdg;   // PDG code of primary pfp in slice
+    int slnhits; // number of hits in slice
+    std::vector<int> pfpdg;   // PDG code of pfp in slice
+    std::vector<int> pfnhits; // number of hits in pfp
+    std::vector<std::vector<int> > pfnplanehits; // number of hits in pfp
+
   };
 
   //----------------------------------------------------------------------------
@@ -155,6 +164,7 @@ namespace analysis
     fBacktrackTag = p.get< art::InputTag > ("BacktrackTag");
     fHproducer = p.get< art::InputTag > ("Hproducer");
     fMCRproducer = p.get< art::InputTag > ("MCRproducer");
+    fSLCproducer = p.get< art::InputTag > ("SLCproducer");
     // kinematic thresholds for defining signal
     fProtonThreshold = p.get< float > ("ProtonThreshold");
   }
@@ -197,6 +207,9 @@ namespace analysis
         _crthitpe = crtveto_h->at(0).first->peshit;
     }// if the CRT veto label has been defined
 
+    art::ValidHandle<std::vector<recob::Hit> > inputHits = e.getValidHandle<std::vector<recob::Hit> >(fHproducer);
+    evnhits = inputHits->size();
+
     return;
   }
 
@@ -205,6 +218,9 @@ namespace analysis
 
     ProxyClusColl_t const& clus_proxy = proxy::getCollection<std::vector<recob::Cluster> >(e, fCLSproducer,
                                                                                            proxy::withAssociated<recob::Hit>(fCLSproducer));
+    // somehow proxies don't work for the slice-hit association, so go back to old assns
+    art::ValidHandle<std::vector<recob::Slice> > inputSlice = e.getValidHandle<std::vector<recob::Slice> >(fSLCproducer);
+    auto assocSliceHit = std::unique_ptr<art::FindManyP<recob::Hit> >(new art::FindManyP<recob::Hit>(inputSlice, e, fSLCproducer));
 
     // load backtrack information
     std::vector<searchingfornues::BtPart> btparts_v;
@@ -219,6 +235,17 @@ namespace analysis
 
     size_t pfpidx = 0;
     for (auto pfp :  slice_pfp_v) {
+
+      if (pfp->IsPrimary()) {
+	slpdg = pfp->PdgCode();
+	auto slice_pxy_v = pfp.get<recob::Slice>();
+	if (slice_pxy_v.size()!=1) {
+	  std::cout << "WRONG!!! n slices = " << slice_pxy_v.size() << " " << __FILE__ << " " << __LINE__ << std::endl;
+	  return;
+	}
+	auto slicehits = assocSliceHit->at(slice_pxy_v[0].key());
+	slnhits = slicehits.size();
+      }
 
       if ( (pfp->PdgCode() == 12) || (pfp->PdgCode() == 14) ) {
 
@@ -244,21 +271,26 @@ namespace analysis
       }// if neutrino PFParticle
 
       _pfp_slice_idx.push_back(pfpidx++);
+      pfpdg.push_back(pfp->PdgCode());
+      std::vector<int> nplanehits(3, 0);
+      // get hits associated to this PFParticle through the clusters
+      std::vector<art::Ptr<recob::Hit> > hit_v;
+      auto clus_pxy_v = pfp.get<recob::Cluster>();
+      for (auto ass_clus : clus_pxy_v) {
+	// get cluster proxy
+	const auto& clus = clus_proxy[ass_clus.key()];
+	auto clus_hit_v = clus.get<recob::Hit>();
+	nplanehits[clus->Plane().Plane] = clus_hit_v.size();
+	for (const auto& hit : clus_hit_v){
+	  hit_v.push_back(hit);
+	}
+      }// for all clusters associated to PFP
+      pfnhits.push_back(hit_v.size());
+      pfnplanehits.push_back(nplanehits);
 
       // backtrack PFParticles in the slice
       if (!fData) {
-        // get hits associated to this PFParticle through the clusters
-        std::vector<art::Ptr<recob::Hit> > hit_v;
-        auto clus_pxy_v = pfp.get<recob::Cluster>();
         if (clus_pxy_v.size() != 0) {
-          for (auto ass_clus : clus_pxy_v) {
-            // get cluster proxy
-            const auto& clus = clus_proxy[ass_clus.key()];
-            auto clus_hit_v = clus.get<recob::Hit>();
-            for (const auto& hit : clus_hit_v)
-              hit_v.push_back(hit);
-          }// for all clusters associated to PFP
-
 	  float purity = 0., completeness = 0.;
 	  int ibt = searchingfornues::getAssocBtPart(hit_v,assocMCPart,btparts_v, purity, completeness);
 	  if (ibt>=0){
@@ -378,6 +410,13 @@ namespace analysis
     _tree->Branch("xsceoffset" ,&_xsceoffset ,"xsceoffset/F" );
     _tree->Branch("ysceoffset" ,&_ysceoffset ,"ysceoffset/F" );
     _tree->Branch("zsceoffset" ,&_zsceoffset ,"zsceoffset/F" );
+
+    _tree->Branch("evnhits",&evnhits,"evnhits/I");
+    _tree->Branch("slpdg",&slpdg,"slpdg/I");
+    _tree->Branch("slnhits",&slnhits,"slnhits/I");
+    _tree->Branch("pfpdg",&pfpdg);
+    _tree->Branch("pfnhits",&pfnhits);
+    _tree->Branch("pfnplanehits",&pfnplanehits);
   }
 
   void DefaultAnalysis::resetTTree(TTree* _tree)
@@ -438,6 +477,13 @@ namespace analysis
     _backtracked_pdg.clear();
     _backtracked_purity.clear();
     _backtracked_completeness.clear();
+
+    evnhits = std::numeric_limits<int>::min();
+    slpdg = std::numeric_limits<int>::min();
+    slnhits = std::numeric_limits<int>::min();
+    pfpdg.clear();
+    pfnhits.clear();
+    pfnplanehits.clear();
   }
 
 void DefaultAnalysis::SaveTruth(art::Event const& e) {
