@@ -114,7 +114,6 @@ void TrackPIDAnalysis::configure(fhicl::ParameterSet const &p)
 ///
 void TrackPIDAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
-    std::cout << "analyze event" << std::endl;
 }
 
 void TrackPIDAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)

@@ -93,11 +93,15 @@ cioe'     * @brief set branches for TTree
     int _ngamma;
     float _radlen1, _radlen2;
     float _dot1, _dot2;
-    float _energy1, _energy2;
-    float _dedx1, _dedx2;
+    float _energy1_Y, _energy2_Y;
+    float _dedx1_Y, _dedx2_Y;
+    float _energy1_V, _energy2_V;
+    float _dedx1_V, _dedx2_V;
+    float _energy1_U, _energy2_U;
+    float _dedx1_U, _dedx2_U;
     float _shrscore1, _shrscore2;
     float _gammadot;
-    float _mass;
+    float _mass_Y, _mass_V, _mass_U;
     float _rc_vtx_x, _rc_vtx_y, _rc_vtx_z; // reco neutrino vertex
     
 
@@ -200,8 +204,6 @@ cioe'     * @brief set branches for TTree
 	auto nshr = pfp_pxy.get<recob::Shower>().size();
 	auto ntrk = pfp_pxy.get<recob::Track>().size();
 
-	std::cout << "DAVIDC : there are " << nshr << " showers and " << ntrk << " tracks associated to this PFP w/ trackScore " << trkshrscore << std::endl;
-
 	// 1 -> track-like
 	if (trkshrscore > _trkshrscore)  continue;
 
@@ -277,20 +279,30 @@ cioe'     * @brief set branches for TTree
 
     auto vtxcompat1 = VtxCompatibility(nuvtx, shr1->ShowerStart(), shr1->Direction());
 
-    _radlen1  = vtxcompat1.second;
-    _dot1     = vtxcompat1.first;
-    _energy1  = shr1->Energy()[2];
-    _dedx1    = shr1->dEdx()[2];
+    _radlen1    = vtxcompat1.second;
+    _dot1       = vtxcompat1.first;
+    _energy1_Y  = shr1->Energy()[2];
+    _dedx1_Y    = shr1->dEdx()[2];
+    _energy1_V  = shr1->Energy()[1];
+    _dedx1_V    = shr1->dEdx()[1];
+    _energy1_U  = shr1->Energy()[0];
+    _dedx1_U    = shr1->dEdx()[0];
     
     auto vtxcompat2 = VtxCompatibility(nuvtx, shr2->ShowerStart(), shr2->Direction());
 
-    _radlen2 = vtxcompat2.second;
-    _dot2    = vtxcompat2.first;
-    _energy2 = shr2->Energy()[2];
-    _dedx2   = shr2->dEdx()[2];
+    _radlen2   = vtxcompat2.second;
+    _dot2      = vtxcompat2.first;
+    _energy2_Y = shr2->Energy()[2];
+    _dedx2_Y   = shr2->dEdx()[2];
+    _energy2_V = shr2->Energy()[1];
+    _dedx2_V   = shr2->dEdx()[1];
+    _energy2_U = shr2->Energy()[0];
+    _dedx2_U   = shr2->dEdx()[0];
     
     _gammadot = shr1->Direction().Dot(shr2->Direction());
-    _mass = sqrt( 2 * _energy1 * _energy2 * (1 - _gammadot ) );
+    _mass_Y = sqrt( 2 * _energy1_Y * _energy2_Y * (1 - _gammadot ) );
+    _mass_V = sqrt( 2 * _energy1_V * _energy2_V * (1 - _gammadot ) );
+    _mass_U = sqrt( 2 * _energy1_U * _energy2_U * (1 - _gammadot ) );
 
     // backtracking for shower 1
     float dot1 = shr1->Direction().Dot(_mcgamma0_mom);
@@ -344,14 +356,24 @@ cioe'     * @brief set branches for TTree
     _tree->Branch("radlen2",&_radlen2,"radlen2/F");
     _tree->Branch("dot1",&_dot1,"dot1/F");
     _tree->Branch("dot2",&_dot2,"dot2/F");
-    _tree->Branch("energy1",&_energy1,"energy1/F");
-    _tree->Branch("energy2",&_energy2,"energy2/F");
-    _tree->Branch("dedx1",&_dedx1,"dedx1/F");
-    _tree->Branch("dedx2",&_dedx2,"dedx2/F");
+    _tree->Branch("energy1_Y",&_energy1_Y,"energy1_Y/F");
+    _tree->Branch("energy2_Y",&_energy2_Y,"energy2_Y/F");
+    _tree->Branch("dedx1_Y",&_dedx1_Y,"dedx1_Y/F");
+    _tree->Branch("dedx2_Y",&_dedx2_Y,"dedx2_Y/F");
+    _tree->Branch("energy1_V",&_energy1_V,"energy1_V/F");
+    _tree->Branch("energy2_V",&_energy2_V,"energy2_V/F");
+    _tree->Branch("dedx1_V",&_dedx1_V,"dedx1_V/F");
+    _tree->Branch("dedx2_V",&_dedx2_V,"dedx2_V/F");
+    _tree->Branch("energy1_U",&_energy1_U,"energy1_U/F");
+    _tree->Branch("energy2_U",&_energy2_U,"energy2_U/F");
+    _tree->Branch("dedx1_U",&_dedx1_U,"dedx1_U/F");
+    _tree->Branch("dedx2_U",&_dedx2_U,"dedx2_U/F");
     _tree->Branch("shrscore1",&_shrscore1,"shrscore1/F");
     _tree->Branch("shrscore2",&_shrscore2,"shrscore2/F");
     _tree->Branch("gammadot",&_gammadot,"gammadot/F");
-    _tree->Branch("mass",&_mass,"mass/F");
+    _tree->Branch("mass_Y",&_mass_Y,"mass_Y/F");
+    _tree->Branch("mass_V",&_mass_V,"mass_V/F");
+    _tree->Branch("mass_U",&_mass_U,"mass_U/F");
     _tree->Branch("rc_vtx_x",&_rc_vtx_x,"rc_vtx_x/F");
     _tree->Branch("rc_vtx_y",&_rc_vtx_y,"rc_vtx_y/F");
     _tree->Branch("rc_vtx_z",&_rc_vtx_z,"rc_vtx_z/F");
@@ -437,8 +459,6 @@ cioe'     * @brief set branches for TTree
 
       //auto clus = clus_v[ass_clus.key()];
       
-      std::cout << "cluster integral : " << ass_clus->Integral() << std::endl;
-
       if (ass_clus->View() == 0) { energy0 = ass_clus->Integral(); }
       if (ass_clus->View() == 1) { energy1 = ass_clus->Integral(); }
       if (ass_clus->View() == 2) { energy2 = ass_clus->Integral(); }
@@ -469,7 +489,6 @@ cioe'     * @brief set branches for TTree
 	pi0_vtx_y = part.Trajectory().Y(0);
 	pi0_vtx_z = part.Trajectory().Z(0);
 	pi0trkid = part.TrackId();
-	std::cout << "DAVIDC found a pi0! " << std::endl;
 	break;
       }
     }
@@ -495,10 +514,8 @@ cioe'     * @brief set branches for TTree
       
       if ( d < 0.01 ) {
 	
-	std::cout << "DAVIDC ngamma is " << ngamma << std::endl;
 	
 	if (ngamma == 0) {
-	  std::cout << "DAVIDC gamma0 " << std::endl;
 	  _mcgamma0_e = mcp.E(0);
 	  _mcgamma0_mom = mcp.Momentum(0).Vect().Unit();
 	  _mcgamma0_px = _mcgamma0_mom.X();
@@ -507,7 +524,6 @@ cioe'     * @brief set branches for TTree
 	}
 	
 	if (ngamma == 1) {
-	  std::cout << "DAVIDC gamma1 " << std::endl;
 	  _mcgamma1_e = mcp.E(0);
 	  _mcgamma1_mom = mcp.Momentum(0).Vect().Unit();
 	  _mcgamma1_px = _mcgamma1_mom.X();
@@ -517,8 +533,6 @@ cioe'     * @brief set branches for TTree
 	
 	ngamma += 1; // update photon count
 	
-	std::cout << "DAVIDC found " << mcp.PdgCode() << " with pi0 parent " << std::endl;
-	std::cout << "DAVIDC found " << mcp.PdgCode() << " with pi0 parent " << std::endl;
 	
       }// if a pi0 induced gamma
       
@@ -633,17 +647,27 @@ cioe'     * @brief set branches for TTree
     _dot2 = -1;
     _radlen1 = -1;
     _radlen2 = -1;
-    _energy1 = -1;
-    _energy2 = -1;
-    _dedx1 = -1;
-    _dedx2 = -1;
+    _energy1_Y = -1;
+    _energy2_Y = -1;
+    _dedx1_Y = -1;
+    _dedx2_Y = -1;
+    _energy1_V = -1;
+    _energy2_V = -1;
+    _dedx1_V = -1;
+    _dedx2_V = -1;
+    _energy1_U = -1;
+    _energy2_U = -1;
+    _dedx1_U = -1;
+    _dedx2_U = -1;
     _ngamma = 0;
     _ntrack = 0;
     _nshower = 0;
     _shrscore1 = -1;
     _shrscore2 = -1;
     _gammadot = -1;
-    _mass = -1;
+    _mass_Y = -1;
+    _mass_V = -1;
+    _mass_U = -1;
     
     return;
   }// end of reset function

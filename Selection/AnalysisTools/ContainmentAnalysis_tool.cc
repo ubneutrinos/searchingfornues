@@ -254,7 +254,6 @@ void ContainmentAnalysis::DistFiducialBoundaries(float x, float y, float z, std:
 
   } // if spatial offset calibrations are enabled
 
-  std::cout << x << " " << bnd[0] << " " << x - bnd[0] <<std::endl;
   if (x - bnd[0] < dist_boundaries[0][0])
   {
     dist_boundaries[0][0] = x - bnd[0];

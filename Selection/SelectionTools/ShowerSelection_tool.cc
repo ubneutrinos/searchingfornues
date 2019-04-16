@@ -156,14 +156,6 @@ namespace selection
 
 	std::cout << "DAVIDC PFP has trkscore : " << trkshrscore << std::endl;
 
-	// 1 -> track-like
-	if (trkshrscore > fTrkShrscore)  continue;
-
-	_shr_score = trkshrscore;
-	
-	auto nshr = pfp_pxy.get<recob::Shower>().size();
-	_nshower += nshr;
-
 	auto ntrk = pfp_pxy.get<recob::Track>().size();
 	_ntrack += ntrk;
 
@@ -172,7 +164,15 @@ namespace selection
 	  if (pfp_pxy.get<recob::Track>()[0]->Length() > _maxtrklen)
 	    _maxtrklen = pfp_pxy.get<recob::Track>()[0]->Length();
 	}// if there is a track associated
+
+	// 1 -> track-like
+	if (trkshrscore > fTrkShrscore)  continue;
+
+	_shr_score = trkshrscore;
 	
+	auto nshr = pfp_pxy.get<recob::Shower>().size();
+	_nshower += nshr;
+
 	// 1 -> track-like
 	if (trkshrscore > fTrkShrscore)  continue;
 	

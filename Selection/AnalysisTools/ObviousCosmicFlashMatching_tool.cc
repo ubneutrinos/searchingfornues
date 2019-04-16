@@ -161,8 +161,6 @@ namespace analysis
     // grab the hits associated to the PFParticles
     //auto pfp_hit_assn_v = lar::FindManyInChainP<recob::Hit, recob::SpacePoint>::find(pfp_h, e, fPFPproducer);
     
-    std::cout << "There are " << pfp_h->size() << " pfparticles in the event " << std::endl;
-    
     _obvious_flashmatch_score = 1e5;
     _obvious_cosmics = 0;
     _obvious_trklen  = 0;
@@ -208,9 +206,7 @@ namespace analysis
       std::vector<std::vector<art::Ptr<recob::SpacePoint>>> spacepoint_v_v;
       std::vector<std::vector<art::Ptr<recob::Hit>>> hit_v_v;
       
-      std::cout << "creating PFP hierarchy." << std::endl;
       AddDaughters(pfp_ptr, pfp_h, pfp_ptr_v);
-      std::cout << "There are " << pfp_ptr_v.size() << " PFParticles in this hierarchy " << std::endl << std::endl;
       
       // go through these pfparticles and fill info needed for matching
       for (size_t i=0; i < pfp_ptr_v.size(); i++) {
@@ -258,7 +254,6 @@ namespace analysis
       // do not attempt flash-matching with tracks not in time with the beam drift window
       if ( TrackInTime(trk) == false ) continue;
 
-      std::cout << "match score = " << _score << std::endl;
       if (_score <= 0) continue;
       
       if (_score < _obvious_flashmatch_score) { 
@@ -336,8 +331,6 @@ namespace analysis
     auto daughters = pfp_ptr->Daughters();
     
     pfp_v.push_back(pfp_ptr);
-    
-    std::cout << "\t PFP w/ PdgCode " << pfp_ptr->PdgCode() << " has " << daughters.size() << " daughters" << std::endl;
     
     for(auto const& daughterid : daughters) {
       
