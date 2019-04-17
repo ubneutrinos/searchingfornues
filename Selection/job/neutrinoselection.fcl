@@ -27,6 +27,7 @@ DefaultAnalysisTool: {
     Hproducer: "gaushit"
     BacktrackTag: "gaushitTruthMatch"
     MCRproducer: "mcreco"
+    SLCproducer: "pandora"
     ProtonThreshold: 0.04 # GeV
 }
 
@@ -50,6 +51,10 @@ SlicePurComplTool: {
     MCPproducer: "largeant"
     Hproducer: "gaushit"
     HTproducer: "gaushitTruthMatch"
+}
+
+PMTNoiseTool: {
+    tool_type: "PMTNoise"
 }
 
 ContainmentAnalysis: {
@@ -124,7 +129,9 @@ NuSelectionFilter:{
         slicepurcompl: @local::SlicePurComplTool
         containment:   @local::ContainmentAnalysis
         shower:        @local::ShowerAnalysisTool
-        }
+	#pmtnoise:      @local::PMTNoiseTool
+ 
+       }
     }
 
 
