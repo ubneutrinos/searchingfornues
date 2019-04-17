@@ -125,11 +125,12 @@ NuSelectionFilter:{
     AnalysisTools: {
         default: @local::DefaultAnalysisTool
         # you can add more analysis tools here
-        obviouscosmic: @local::ObviousCosmicFlashMatching
+        #obviouscosmic: @local::ObviousCosmicFlashMatching
         slicepurcompl: @local::SlicePurComplTool
         containment:   @local::ContainmentAnalysis
         shower:        @local::ShowerAnalysisTool
-	#pmtnoise:      @local::PMTNoiseTool
+        track:         @local::TrackAnalysisTool
+	pmtnoise:      @local::PMTNoiseTool
  
        }
     }
@@ -144,15 +145,19 @@ Pi0Selection.SelectionTool: {
     onlyshower: false
     dotmin: 0.5
     dmin: 2.
+    TRKproducer: "shrreco3dKalmanShower"     # "pandoraKalmanShower"     #remove or leave empty of there are no track fits of the shower
+    CALproducer: "shrreco3dKalmanShowercali" # "pandoraKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
 }
 
 ShowerSelectionTool: {
     tool_type: "ShowerSelection"
-    TrkShrscore: 0.75
+    TrkShrscore: 0.5
     Shrdedxmax:  3.0
     ShrRadlen:   3.0
     ShrEnergy:   50.
     MaxTrkLen:   20.
+    TRKproducer: "shrreco3dKalmanShower"     # "pandoraKalmanShower"     #remove or leave empty of there are no track fits of the shower
+    CALproducer: "shrreco3dKalmanShowercali" # "pandoraKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
 }
 
 
