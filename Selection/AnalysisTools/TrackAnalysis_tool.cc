@@ -4,8 +4,12 @@
 #include <iostream>
 #include "AnalysisToolBase.h"
 
-// backtracking tools
+#include "TDatabasePDG.h"
+#include "TParticlePDG.h"
+
 #include "ubana/ubana/searchingfornues/Selection/CommonDefs/Typedefs.h"
+
+// backtracking tools
 #include "ubana/ubana/searchingfornues/Selection/CommonDefs/BacktrackingFuncs.h"
 #include "ubana/ubana/searchingfornues/Selection/CommonDefs/TrackShowerScoreFuncs.h"
 #include "ubana/ParticleID/Algorithms/uB_PlaneIDBitsetHelperFunctions.h"
@@ -84,6 +88,9 @@ public:
 
 private:
   trkf::TrackMomentumCalculator _trkmom;
+
+  TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
+  TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
 
   art::InputTag fCALOproducer;
   art::InputTag fPIDproducer;
@@ -222,8 +229,9 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
     _trk_pidchipi.push_back(pidchipi);
     _trk_pidchika.push_back(pidchika);
 
-    double energy_proton = (std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), 2212) * 1000., 2) + std::pow(938.272, 2)) - 938.272) / 1000.;
-    double energy_muon = (std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), 13) * 1000., 2) + std::pow(105.658, 2)) - 105.658) / 1000.;
+    // Kinetic energy using tabulated stopping power (GeV)
+    double energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), 2212), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
+    double energy_muon = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), 13), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
 
     _trk_energy_proton.push_back(energy_proton);
     _trk_energy_muon.push_back(energy_muon);

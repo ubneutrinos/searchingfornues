@@ -29,6 +29,7 @@ art_make( TOOL_LIBRARIES lardataobj_RecoBase
                          ${Boost_SYSTEM_LIBRARY}
                          ${CLHEP}
                          ${ROOT_BASIC_LIB_LIST}
+                         ${ROOT_EG}
                          ${ROOT_MINUIT}
         )
 
