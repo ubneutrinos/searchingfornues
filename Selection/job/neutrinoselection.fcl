@@ -11,8 +11,8 @@ ShowerAnalysisTool: {
     CALproducer: "shrreco3dKalmanShowercali" # "pandoraKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
 }
 
-TrackPIDAnalysisTool: {
-    tool_type: "TrackPIDAnalysis"
+TrackAnalysisTool: {
+    tool_type: "TrackAnalysis"
     TRKproducer: "pandora"
     CALOproducer: "pandoracaliSCE"     # "pandoraKalmanShower"     #remove or leave empty of there are no track fits of the shower
     PIDproducer: "pandoracalipidSCE" # "pandoraKalmanShowercalo" #remove or leave empty of there are no track fits of the shower

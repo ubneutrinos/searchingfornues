@@ -10,7 +10,7 @@ physics.filters.nuselection.AnalysisTools: {
     default: @local::DefaultAnalysisTool
     containment: @local::ContainmentAnalysis
     shower: @local::ShowerAnalysisTool
-    pid: @local::TrackPIDAnalysisTool
+    pid: @local::TrackAnalysisTool
 }
 
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
