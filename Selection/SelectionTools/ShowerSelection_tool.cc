@@ -62,6 +62,10 @@ namespace selection
     void Reset();
     
   private:
+    
+    // obtain track fit dedx in first 4 cm from track calo
+    void TrackFitdEdx(const searchingfornues::ProxyCaloElem_t& trk,
+		      float& dedxU, float& dedxV ,float& dedxY);
 
     /**
      * @brief given a PFP (the neutrino one) grab the associated vertex and store vertex by reference
@@ -80,6 +84,7 @@ namespace selection
     float _shr_score;  // shower classification score (1 = track-like)
     float _shr_energy_Y, _shr_energy_V, _shr_energy_U; // shower energy
     float _shr_dedx_Y, _shr_dedx_V, _shr_dedx_U;       // shower dEdx
+    float _shr_dedx_fit_Y, _shr_dedx_fit_V, _shr_dedx_fit_U; // shower dEdx from track-fitter
     float _shr_dist;   // shower start point distance to vertex
     float _shr_x, _shr_y, _shr_z; // shower start poisition
     float _shr_px, _shr_py, _shr_pz; // shower momentum vector
@@ -90,6 +95,8 @@ namespace selection
     float fShrRadlen;
     float fShrEnergy;
     float fMaxTrklen;
+    art::InputTag fTRKproducer;
+    art::InputTag fCALproducer;
     
   };
 
@@ -119,6 +126,10 @@ namespace selection
     fShrRadlen   = pset.get< float > ("ShrRadlen");
     fShrEnergy   = pset.get< float > ("ShrEnergy");
     fMaxTrklen   = pset.get< float > ("MaxTrkLen");
+
+    fTRKproducer = pset.get< art::InputTag > ("TRKproducer", "");
+    fCALproducer = pset.get< art::InputTag > ("CALproducer", "");
+
   }
   
   //----------------------------------------------------------------------------
@@ -136,14 +147,21 @@ namespace selection
 
     Reset();
 
+    searchingfornues::ProxyCaloColl_t const* tkcalo_proxy = NULL;
+    if (fTRKproducer!="") {
+      tkcalo_proxy = new searchingfornues::ProxyCaloColl_t( proxy::getCollection<std::vector<recob::Track> >(e,fTRKproducer,proxy::withAssociated<anab::Calorimetry>(fCALproducer)) );
+    }
+
     // container to store vertex
     TVector3 nuvtx;
 
     // loop over all PFPs and get metadata, find the neutrino and save its vertex
-    for (const auto& pfp_pxy : pfp_pxy_v) {
+    for (size_t i_pfp=0; i_pfp < pfp_pxy_v.size(); i_pfp++) {
+
+      auto const& pfp_pxy = pfp_pxy_v.at(i_pfp);
       
       auto PDG = fabs(pfp_pxy->PdgCode());
-
+      
       // skip neutrino PFP
       if ( (PDG == 12) || (PDG == 14) ) 
 	StoreVertex(pfp_pxy,nuvtx);
@@ -195,6 +213,21 @@ namespace selection
 	  _shr_py        = shr->Direction().Y();
 	  _shr_pz        = shr->Direction().Z();
 	  _shr_dist   = (shr->ShowerStart() - nuvtx).Mag();
+
+	  if (tkcalo_proxy!=NULL) {
+	    
+	    for (const searchingfornues::ProxyCaloElem_t& tk : *tkcalo_proxy) {
+	      
+	      // find track with ID matching the pfp index (this convention apparently works only for shower fits...)
+	      if (tk->ID()==int(pfp_pxy_v[i_pfp].index())) {
+
+		TrackFitdEdx(tk, _shr_dedx_fit_U, _shr_dedx_fit_V, _shr_dedx_fit_Y);
+		
+	      }// if track matches shower index -> this is the track-fitted to the shower
+	    }// for all track fits to showers
+	  }// if track-fits to showers exist
+
+
 	}// if highest energy shower so far
 
       }// if non-neutrino PFP
@@ -256,6 +289,41 @@ namespace selection
   
     return;
   }// end store vertex
+
+
+  void ShowerSelection::TrackFitdEdx(const searchingfornues::ProxyCaloElem_t& trk,
+				     float& dedxU, float& dedxV ,float& dedxY)  {
+
+    dedxU = -1;
+    dedxV = -1;
+    dedxY = -1;
+
+    auto const trkcalos = trk.get<anab::Calorimetry>();
+    
+    for (const auto& tkcalo : trkcalos) {
+      if (tkcalo->ResidualRange().size()==0) continue;
+      std::vector<float> dedx4cm;
+      for (size_t ic=0; ic<tkcalo->ResidualRange().size(); ++ic) {
+	if ( (tkcalo->ResidualRange().back()-tkcalo->ResidualRange()[ic]) < 4.) {
+	  dedx4cm.push_back( tkcalo->dEdx()[ic] );
+	}
+      }
+      float dedx4cm_med = -1.;
+      if (dedx4cm.size()>0) {
+	std::sort(dedx4cm.begin(), dedx4cm.end());
+	if (dedx4cm.size()%2 == 1) dedx4cm_med = dedx4cm[dedx4cm.size()/2];
+	else dedx4cm_med = 0.5*(dedx4cm[dedx4cm.size()/2] + dedx4cm[dedx4cm.size()/2 - 1]);
+      }
+      
+      auto pl = tkcalo->PlaneID().Plane;
+      if (pl == 0) { dedxU = dedx4cm_med; }
+      if (pl == 1) { dedxV = dedx4cm_med; }
+      if (pl == 2) { dedxY = dedx4cm_med; }
+      
+    }// for all calorimetry objects associated to the track
+    
+    return;
+  }// TrackFitdEdx
   
   void ShowerSelection::setBranches(TTree* _tree) {
     
@@ -265,10 +333,13 @@ namespace selection
     _tree->Branch("_shr_score" ,&_shr_score ,"shr_score/F" );
     _tree->Branch("_shr_energy_Y",&_shr_energy_Y,"shr_energy_Y/F");
     _tree->Branch("_shr_dedx_Y"  ,&_shr_dedx_Y  ,"shr_dedx_Y/F"  );
+    _tree->Branch("_shr_dedx_fit_Y"  ,&_shr_dedx_fit_Y  ,"shr_dedx_fit_Y/F"  );
     _tree->Branch("_shr_energy_V",&_shr_energy_V,"shr_energy_V/F");
     _tree->Branch("_shr_dedx_V"  ,&_shr_dedx_V  ,"shr_dedx_V/F"  );
+    _tree->Branch("_shr_dedx_fit_V"  ,&_shr_dedx_fit_V  ,"shr_dedx_fit_V/F"  );
     _tree->Branch("_shr_energy_U",&_shr_energy_U,"shr_energy_U/F");
     _tree->Branch("_shr_dedx_U"  ,&_shr_dedx_U  ,"shr_dedx_U/F"  );
+    _tree->Branch("_shr_dedx_fit_U"  ,&_shr_dedx_fit_U  ,"shr_dedx_fit_U/F"  );
     _tree->Branch("_shr_dist"  ,&_shr_dist  ,"shr_dist/F"  );
     _tree->Branch("_shr_x"  ,&_shr_x  ,"shr_x/F"  );
     _tree->Branch("_shr_y"  ,&_shr_y  ,"shr_y/F"  );
@@ -285,10 +356,13 @@ namespace selection
     _shr_score  = -1;    
     _shr_energy_Y = 0;
     _shr_dedx_Y   = 0;
+    _shr_dedx_fit_Y   = 0;
     _shr_energy_V = 0;
     _shr_dedx_V   = 0;
+    _shr_dedx_fit_V   = 0;
     _shr_energy_U = 0;
     _shr_dedx_U   = 0;
+    _shr_dedx_fit_U   = 0;
     _shr_dist   = -1;
     _shr_x        = 0;
     _shr_y        = 0;
