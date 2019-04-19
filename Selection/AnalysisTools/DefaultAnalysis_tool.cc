@@ -504,8 +504,8 @@ void DefaultAnalysis::SaveTruth(art::Event const& e) {
   _vtx_t = nu.T();
 
   if (_vtx_x <  256. && _vtx_x >    0. &&
-      _vtx_y < -116. && _vtx_y >  116. &&
-      _vtx_z <    0. && _vtx_z > 1036.   ) {_isVtxInFiducial = true;}
+      _vtx_y <  116. && _vtx_y > -116. &&
+      _vtx_z < 1036. && _vtx_z >    0.   ) {_isVtxInFiducial = true;}
   else _isVtxInFiducial = false;
 
 
