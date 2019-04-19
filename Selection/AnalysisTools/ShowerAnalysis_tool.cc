@@ -180,7 +180,9 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_tkfit_theta.push_back(std::numeric_limits<double>::min());
       _shr_tkfit_dedx.push_back(std::vector<double>(3, std::numeric_limits<double>::min()));
       _shr_tkfit_dedx_nhits.push_back(std::vector<int>(3, -1));
-
+      _shr_px.push_back(shr->Direction().X());
+      _shr_py.push_back(shr->Direction().Y());
+      _shr_pz.push_back(shr->Direction().Z());
       if (tkcalo_proxy == NULL)
         continue;
 
