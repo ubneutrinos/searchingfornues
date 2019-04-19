@@ -1,8 +1,0 @@
-#include "run_neutrinoselectionfilter_run1_data.fcl"
-
-physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
-physics.filters.nuselection.IsData: false
-
-# I think the lines below need to be uncommented for pure MC but is ok to leave out for overlays
-###physics.producers.shrreco3dKalmanShowercalo: @local::shrreco3dKalmanShowercalomc
-###physics.producers.shrreco3dKalmanShowercali: @local::shrreco3dKalmanShowercalimc
