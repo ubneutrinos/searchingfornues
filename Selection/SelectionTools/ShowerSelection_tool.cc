@@ -259,23 +259,23 @@ namespace selection
   
   void ShowerSelection::setBranches(TTree* _tree) {
     
-    _tree->Branch("_nshower",&_nshower,"nshower/I");
-    _tree->Branch("_ntrack" ,&_ntrack ,"ntrack/I" );
-    _tree->Branch("_maxtrklen",&_maxtrklen,"maxtrklen/F");
-    _tree->Branch("_shr_score" ,&_shr_score ,"shr_score/F" );
-    _tree->Branch("_shr_energy_Y",&_shr_energy_Y,"shr_energy_Y/F");
-    _tree->Branch("_shr_dedx_Y"  ,&_shr_dedx_Y  ,"shr_dedx_Y/F"  );
-    _tree->Branch("_shr_energy_V",&_shr_energy_V,"shr_energy_V/F");
-    _tree->Branch("_shr_dedx_V"  ,&_shr_dedx_V  ,"shr_dedx_V/F"  );
-    _tree->Branch("_shr_energy_U",&_shr_energy_U,"shr_energy_U/F");
-    _tree->Branch("_shr_dedx_U"  ,&_shr_dedx_U  ,"shr_dedx_U/F"  );
-    _tree->Branch("_shr_dist"  ,&_shr_dist  ,"shr_dist/F"  );
-    _tree->Branch("_shr_x"  ,&_shr_x  ,"shr_x/F"  );
-    _tree->Branch("_shr_y"  ,&_shr_y  ,"shr_y/F"  );
-    _tree->Branch("_shr_z"  ,&_shr_z  ,"shr_z/F"  );
-    _tree->Branch("_shr_px"  ,&_shr_px  ,"shr_px/F"  );
-    _tree->Branch("_shr_py"  ,&_shr_py  ,"shr_py/F"  );
-    _tree->Branch("_shr_pz"  ,&_shr_pz  ,"shr_pz/F"  );
+    _tree->Branch("nshower",&_nshower,"nshower/I");
+    _tree->Branch("ntrack" ,&_ntrack ,"ntrack/I" );
+    _tree->Branch("maxtrklen",&_maxtrklen,"maxtrklen/F");
+    _tree->Branch("shr_score" ,&_shr_score ,"shr_score/F" );
+    _tree->Branch("shr_energy_Y",&_shr_energy_Y,"shr_energy_Y/F");
+    _tree->Branch("shr_dedx_Y"  ,&_shr_dedx_Y  ,"shr_dedx_Y/F"  );
+    _tree->Branch("shr_energy_V",&_shr_energy_V,"shr_energy_V/F");
+    _tree->Branch("shr_dedx_V"  ,&_shr_dedx_V  ,"shr_dedx_V/F"  );
+    _tree->Branch("shr_energy_U",&_shr_energy_U,"shr_energy_U/F");
+    _tree->Branch("shr_dedx_U"  ,&_shr_dedx_U  ,"shr_dedx_U/F"  );
+    _tree->Branch("shr_dist"  ,&_shr_dist  ,"shr_dist/F"  );
+    _tree->Branch("shr_x"  ,&_shr_x  ,"shr_x/F"  );
+    _tree->Branch("shr_y"  ,&_shr_y  ,"shr_y/F"  );
+    _tree->Branch("shr_z"  ,&_shr_z  ,"shr_z/F"  );
+    _tree->Branch("shr_px"  ,&_shr_px  ,"shr_px/F"  );
+    _tree->Branch("shr_py"  ,&_shr_py  ,"shr_py/F"  );
+    _tree->Branch("shr_pz"  ,&_shr_pz  ,"shr_pz/F"  );
     
     return;
   }
