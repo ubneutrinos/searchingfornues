@@ -162,7 +162,7 @@ NeutrinoSelectionFilter::NeutrinoSelectionFilter(fhicl::ParameterSet const& p)
 
   art::ServiceHandle<art::TFileService> tfs;
   _tree = tfs->make<TTree>("NeutrinoSelectionFilter", "Neutrino Selection TTree");
-  _tree->Branch("_selected",&_selected,"selected/I");
+  _tree->Branch("selected",&_selected,"selected/I");
   
   _subrun_tree = tfs->make<TTree>("SubRun", "SubRun TTree");
   _subrun_tree->Branch("run"   , &_run_sr   , "run/I");

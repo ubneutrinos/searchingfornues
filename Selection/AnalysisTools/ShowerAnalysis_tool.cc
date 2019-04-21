@@ -75,7 +75,6 @@ public:
   void resetTTree(TTree *_tree) override;
 
 private:
-
   art::InputTag fTRKproducer;
   art::InputTag fCALproducer;
 
@@ -89,6 +88,10 @@ private:
   std::vector<double> _shr_start_y;
   std::vector<double> _shr_start_z;
 
+  std::vector<double> _shr_px;
+  std::vector<double> _shr_py;
+  std::vector<double> _shr_pz;
+
   std::vector<double> _shr_theta;
   std::vector<double> _shr_phi;
   std::vector<double> _trkshr_score;
@@ -100,8 +103,7 @@ private:
   std::vector<double> _shr_tkfit_theta;
   std::vector<double> _shr_tkfit_phi;
   std::vector<std::vector<double>> _shr_tkfit_dedx;
-  std::vector<std::vector<int>>    _shr_tkfit_dedx_nhits;
-
+  std::vector<std::vector<int>> _shr_tkfit_dedx_nhits;
 };
 
 //----------------------------------------------------------------------------
@@ -113,8 +115,8 @@ private:
 ///
 ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
 {
-  fTRKproducer = p.get< art::InputTag > ("TRKproducer", "");
-  fCALproducer = p.get< art::InputTag > ("CALproducer", "");
+  fTRKproducer = p.get<art::InputTag>("TRKproducer", "");
+  fCALproducer = p.get<art::InputTag>("CALproducer", "");
 }
 
 //----------------------------------------------------------------------------
@@ -137,15 +139,16 @@ void ShowerAnalysis::configure(fhicl::ParameterSet const &p)
 ///
 void ShowerAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
-    std::cout << "analyze event" << std::endl;
+  std::cout << "analyze event" << std::endl;
 }
 
 void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
 {
 
-  searchingfornues::ProxyCaloColl_t const* tkcalo_proxy = NULL;
-  if (fTRKproducer!="") {
-    tkcalo_proxy = new searchingfornues::ProxyCaloColl_t( proxy::getCollection<std::vector<recob::Track> >(e,fTRKproducer,proxy::withAssociated<anab::Calorimetry>(fCALproducer)) );
+  searchingfornues::ProxyCaloColl_t const *tkcalo_proxy = NULL;
+  if (fTRKproducer != "")
+  {
+    tkcalo_proxy = new searchingfornues::ProxyCaloColl_t(proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer, proxy::withAssociated<anab::Calorimetry>(fCALproducer)));
   }
 
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
@@ -168,7 +171,6 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_start_z.push_back(shr->ShowerStart().Z());
       _trkshr_score.push_back(searchingfornues::GetTrackShowerScore(slice_pfp_v[i_pfp]));
 
-
       //fill dummy track fit values, overwrite them later
       _shr_tkfit_nhits.push_back(std::numeric_limits<double>::min());
       _shr_tkfit_start_x.push_back(std::numeric_limits<double>::min());
@@ -176,15 +178,20 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_tkfit_start_z.push_back(std::numeric_limits<double>::min());
       _shr_tkfit_phi.push_back(std::numeric_limits<double>::min());
       _shr_tkfit_theta.push_back(std::numeric_limits<double>::min());
-      _shr_tkfit_dedx.push_back( std::vector<double>(3, std::numeric_limits<double>::min()) );
+      _shr_tkfit_dedx.push_back(std::vector<double>(3, std::numeric_limits<double>::min()));
       _shr_tkfit_dedx_nhits.push_back(std::vector<int>(3, -1));
+      _shr_px.push_back(shr->Direction().X());
+      _shr_py.push_back(shr->Direction().Y());
+      _shr_pz.push_back(shr->Direction().Z());
+      if (tkcalo_proxy == NULL)
+        continue;
 
-      if (tkcalo_proxy==NULL) continue;
-
-      for (const searchingfornues::ProxyCaloElem_t& tk : *tkcalo_proxy) {
+      for (const searchingfornues::ProxyCaloElem_t &tk : *tkcalo_proxy)
+      {
 
         // find track with ID matching the pfp index (this convention apparently works only for shower fits...)
-        if (tk->ID()!=int(slice_pfp_v[i_pfp].index())) continue;
+        if (tk->ID() != int(slice_pfp_v[i_pfp].index()))
+          continue;
 
         _shr_tkfit_nhits.back() = tk->CountValidPoints();
         _shr_tkfit_start_x.back() = tk->Start().X();
@@ -194,29 +201,33 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
         _shr_tkfit_theta.back() = tk->StartDirection().Theta();
 
         auto const tkcalos = tk.get<anab::Calorimetry>();
-        for (const auto& tkcalo : tkcalos) {
-          if (tkcalo->ResidualRange().size()==0) continue;
+        for (const auto &tkcalo : tkcalos)
+        {
+          if (tkcalo->ResidualRange().size() == 0)
+            continue;
           std::vector<float> dedx4cm;
-          for (size_t ic=0; ic<tkcalo->ResidualRange().size(); ++ic) {
-            if ( (tkcalo->ResidualRange().back()-tkcalo->ResidualRange()[ic]) < 4.) {
-	      dedx4cm.push_back( tkcalo->dEdx()[ic] );
-	    }
+          for (size_t ic = 0; ic < tkcalo->ResidualRange().size(); ++ic)
+          {
+            if ((tkcalo->ResidualRange().back() - tkcalo->ResidualRange()[ic]) < 4.)
+            {
+              dedx4cm.push_back(tkcalo->dEdx()[ic]);
+            }
           }
           float dedx4cm_med = -1.;
-          if (dedx4cm.size()>0) {
+          if (dedx4cm.size() > 0)
+          {
             std::sort(dedx4cm.begin(), dedx4cm.end());
-            if (dedx4cm.size()%2 == 1) dedx4cm_med = dedx4cm[dedx4cm.size()/2];
-            else dedx4cm_med = 0.5*(dedx4cm[dedx4cm.size()/2] + dedx4cm[dedx4cm.size()/2 - 1]);
+            if (dedx4cm.size() % 2 == 1)
+              dedx4cm_med = dedx4cm[dedx4cm.size() / 2];
+            else
+              dedx4cm_med = 0.5 * (dedx4cm[dedx4cm.size() / 2] + dedx4cm[dedx4cm.size() / 2 - 1]);
           }
           _shr_tkfit_dedx.back()[tkcalo->PlaneID().Plane] = dedx4cm_med;
           _shr_tkfit_dedx_nhits.back()[tkcalo->PlaneID().Plane] = dedx4cm.size();
         }
       }
-
     }
-
   }
-
 }
 
 void ShowerAnalysis::setBranches(TTree *_tree)
@@ -228,6 +239,10 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_start_x", "std::vector< double >", &_shr_start_x);
   _tree->Branch("shr_start_y", "std::vector< double >", &_shr_start_y);
   _tree->Branch("shr_start_z", "std::vector< double >", &_shr_start_z);
+
+  _tree->Branch("shr_px", &_shr_px, "shr_px/F");
+  _tree->Branch("shr_py", &_shr_py, "shr_py/F");
+  _tree->Branch("shr_pz", &_shr_pz, "shr_pz/F");
 
   _tree->Branch("shr_theta", "std::vector< double >", &_shr_theta);
   _tree->Branch("shr_phi", "std::vector< double >", &_shr_phi);
@@ -244,7 +259,6 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_tkfit_phi", "std::vector< double >", &_shr_tkfit_phi);
   _tree->Branch("shr_tkfit_dedx", "std::vector< std::vector< double > >", &_shr_tkfit_dedx);
   _tree->Branch("shr_tkfit_dedx_nhits", "std::vector< std::vector< int > >", &_shr_tkfit_dedx_nhits);
-
 }
 
 void ShowerAnalysis::resetTTree(TTree *_tree)
@@ -260,6 +274,10 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
   _shr_theta.clear();
   _shr_phi.clear();
 
+  _shr_px.clear();
+  _shr_py.clear();
+  _shr_pz.clear();
+
   _n_showers = 0;
   _trkshr_score.clear();
 
@@ -271,7 +289,6 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
   _shr_tkfit_phi.clear();
   _shr_tkfit_dedx.clear();
   _shr_tkfit_dedx_nhits.clear();
-
 }
 
 DEFINE_ART_CLASS_TOOL(ShowerAnalysis)
