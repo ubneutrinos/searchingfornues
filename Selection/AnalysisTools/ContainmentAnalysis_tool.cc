@@ -70,6 +70,8 @@ private:
   float DistFiducial(float x, float y, float z);
   void DistFiducialBoundaries(float x, float y, float z, std::vector<std::vector<double>> &dboundaries);
 
+  art::InputTag fMCTproducer;
+
   float _FV; // FV boundary to apply
 
   // TTree variables
@@ -77,6 +79,7 @@ private:
   float _dvtx; // smallest distance between vertex and any boundary
   float _dtrk; // smallest distance between any track start/end point and any boundary
 
+  std::vector<std::vector<double>> _dmc_boundary; // smallest distance between any MCParticle and each boundary
   std::vector<std::vector<double>> _dtrk_boundary; // smallest distance between any track start/end point and each boundary
   std::vector<std::vector<double>> _dvtx_boundary; // smallest distance between the neutrino vertex and each boundary
   std::vector<std::vector<double>> _dshr_boundary; // smallest distance between any shower start point and each boundary
@@ -103,14 +106,26 @@ ContainmentAnalysis::ContainmentAnalysis(const fhicl::ParameterSet &pset)
 ///
 void ContainmentAnalysis::configure(fhicl::ParameterSet const &pset)
 {
-
+  fMCTproducer = pset.get<art::InputTag>("MCTproducer", "generator");
   _FV = pset.get<float>("FV");
+
 }
 
 void ContainmentAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
-
-  return;
+  if (!fData) {
+    auto const &mct_h = e.getValidHandle<std::vector<simb::MCTruth>>(fMCTproducer);
+    auto mct = mct_h->at(0);
+    size_t npart = mct.NParticles();
+    _dmc_boundary.clear();
+    _dmc_boundary.resize(3, std::vector<double>(2, std::numeric_limits<double>::max()));
+    for (size_t i = 0; i < npart; i++)
+    {
+      auto const &part = mct.GetParticle(i);
+      DistFiducialBoundaries(part.Vx(), part.Vy(), part.Vz(), _dmc_boundary);
+      DistFiducialBoundaries(part.EndX(), part.EndY(), part.EndZ(), _dmc_boundary);
+    }
+  }
 }
 
 //----------------------------------------------------------------------------
@@ -215,6 +230,7 @@ void ContainmentAnalysis::setBranches(TTree *_tree)
   _tree->Branch("dtrk_boundary", "std::vector < std::vector < double > >", &_dtrk_boundary);
   _tree->Branch("dvtx_boundary", "std::vector < std::vector < double > >", &_dvtx_boundary);
   _tree->Branch("dshr_boundary", "std::vector < std::vector < double > >", &_dshr_boundary);
+  _tree->Branch("dmc_boundary", "std::vector < std::vector < double > >", &_dmc_boundary);
 
   return;
 }
