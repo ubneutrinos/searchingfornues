@@ -122,6 +122,10 @@ void ContainmentAnalysis::analyzeEvent(art::Event const &e, bool fData)
     for (size_t i = 0; i < npart; i++)
     {
       auto const &part = mct.GetParticle(i);
+      if (part.StatusCode() != 1)
+      {
+        continue;
+      }
       DistFiducialBoundaries(part.Vx(), part.Vy(), part.Vz(), _dmc_boundary);
       DistFiducialBoundaries(part.EndX(), part.EndY(), part.EndZ(), _dmc_boundary);
     }

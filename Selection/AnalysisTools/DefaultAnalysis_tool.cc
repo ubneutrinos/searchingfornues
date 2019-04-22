@@ -599,8 +599,12 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   for (size_t i = 0; i < npart; i++)
   {
 
-    auto const &part = mct.GetParticle(i);
 
+    auto const &part = mct.GetParticle(i);
+    if (part.StatusCode() != 1)
+    {
+      continue;
+    }
     _mc_E.push_back(part.E());
 
     _mc_pdg.push_back(part.PdgCode());
