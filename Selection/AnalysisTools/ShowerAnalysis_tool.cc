@@ -80,8 +80,14 @@ private:
 
   unsigned int _n_showers;
 
-  std::vector<std::vector<double>> _shr_energy;
-  std::vector<std::vector<double>> _shr_dedx;
+  std::vector<double> _shr_energy_u_v;
+  std::vector<double> _shr_energy_v_v;
+  std::vector<double> _shr_energy_y_v;
+
+  std::vector<double> _shr_dedx_u_v;
+  std::vector<double> _shr_dedx_v_v;
+  std::vector<double> _shr_dedx_y_v;
+
   std::vector<size_t> _shr_pfp_id;
 
   std::vector<double> _shr_start_x;
@@ -161,8 +167,14 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
     for (const auto &shr : slice_pfp_v[i_pfp].get<recob::Shower>())
     {
       _n_showers++;
-      _shr_dedx.push_back(shr->dEdx());
-      _shr_energy.push_back(shr->Energy());
+      _shr_dedx_u_v.push_back(shr->dEdx()[0]);
+      _shr_dedx_v_v.push_back(shr->dEdx()[1]);
+      _shr_dedx_y_v.push_back(shr->dEdx()[2]);
+
+      _shr_energy_u_v.push_back(shr->Energy()[0]);
+      _shr_energy_v_v.push_back(shr->Energy()[1]);
+      _shr_energy_y_v.push_back(shr->Energy()[2]);
+
       _shr_pfp_id.push_back(i_pfp);
       _shr_phi.push_back(shr->Direction().Phi());
       _shr_theta.push_back(shr->Direction().Theta());
@@ -232,8 +244,14 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 
 void ShowerAnalysis::setBranches(TTree *_tree)
 {
-  _tree->Branch("shr_dedx", "std::vector< std::vector< double > >", &_shr_dedx);
-  _tree->Branch("shr_energy", "std::vector< std::vector< double > >", &_shr_energy);
+  _tree->Branch("shr_dedx_u_v", "std::vector< double >", &_shr_dedx_u_v);
+  _tree->Branch("shr_dedx_v_v", "std::vector< double >", &_shr_dedx_v_v);
+  _tree->Branch("shr_dedx_y_v", "std::vector< double >", &_shr_dedx_y_v);
+
+  _tree->Branch("shr_energy_u_v", "std::vector< double >", &_shr_energy_u_v);
+  _tree->Branch("shr_energy_v_v", "std::vector< double >", &_shr_energy_v_v);
+  _tree->Branch("shr_energy_y_v", "std::vector< double >", &_shr_energy_y_v);
+
   _tree->Branch("shr_pfp_id", "std::vector< size_t >", &_shr_pfp_id);
 
   _tree->Branch("shr_start_x", "std::vector< double >", &_shr_start_x);
@@ -263,8 +281,14 @@ void ShowerAnalysis::setBranches(TTree *_tree)
 
 void ShowerAnalysis::resetTTree(TTree *_tree)
 {
-  _shr_energy.clear();
-  _shr_dedx.clear();
+  _shr_energy_u_v.clear();
+  _shr_energy_v_v.clear();
+  _shr_energy_y_v.clear();
+
+  _shr_dedx_u_v.clear();
+  _shr_dedx_v_v.clear();
+  _shr_dedx_y_v.clear();
+
   _shr_pfp_id.clear();
 
   _shr_start_x.clear();
