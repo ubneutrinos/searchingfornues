@@ -273,8 +273,8 @@ double TrackAnalysis::PID(art::Ptr<anab::ParticleID> selected_pid,
   {
     anab::sParticleIDAlgScores AlgScore = AlgScoresVec.at(i_algscore);
     int planeid = -1;
-
-    if (AlgScore.fPlaneMask.none() || AlgScore.fPlaneMask.count() > 1 || (AlgScore.fPlaneMask.count()==1 && !(AlgScore.fPlaneMask.test(0) || AlgScore.fPlaneMask.test(1) || AlgScore.fPlaneMask.test(2))))
+    // std::cout << "AlgScore index " << i_algscore << " plane " << AlgScore.fPlaneMask<< std::endl;
+    if (AlgScore.fPlaneMask.none() || AlgScore.fPlaneMask.count() > 1 || (AlgScore.fPlaneMask.count() == 1 && !(AlgScore.fPlaneMask.test(0) || AlgScore.fPlaneMask.test(1) || AlgScore.fPlaneMask.test(2))))
     {
       std::cout << "[uB_PlaneIDBitsetHelper] Cannot return a single MicroBooNE plane for bitset " << AlgScore.fPlaneMask << ". Returning -1 (invalid planeID)." << std::endl;
       continue;
