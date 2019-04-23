@@ -184,13 +184,13 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _trkshr_score.push_back(searchingfornues::GetTrackShowerScore(slice_pfp_v[i_pfp]));
 
       //fill dummy track fit values, overwrite them later
-      _shr_tkfit_nhits.push_back(std::numeric_limits<double>::min());
-      _shr_tkfit_start_x.push_back(std::numeric_limits<double>::min());
-      _shr_tkfit_start_y.push_back(std::numeric_limits<double>::min());
-      _shr_tkfit_start_z.push_back(std::numeric_limits<double>::min());
-      _shr_tkfit_phi.push_back(std::numeric_limits<double>::min());
-      _shr_tkfit_theta.push_back(std::numeric_limits<double>::min());
-      _shr_tkfit_dedx.push_back(std::vector<double>(3, std::numeric_limits<double>::min()));
+      _shr_tkfit_nhits.push_back(std::numeric_limits<int>::lowest());
+      _shr_tkfit_start_x.push_back(std::numeric_limits<double>::lowest());
+      _shr_tkfit_start_y.push_back(std::numeric_limits<double>::lowest());
+      _shr_tkfit_start_z.push_back(std::numeric_limits<double>::lowest());
+      _shr_tkfit_phi.push_back(std::numeric_limits<double>::lowest());
+      _shr_tkfit_theta.push_back(std::numeric_limits<double>::lowest());
+      _shr_tkfit_dedx.push_back(std::vector<double>(3, std::numeric_limits<double>::lowest()));
       _shr_tkfit_dedx_nhits.push_back(std::vector<int>(3, -1));
       _shr_px.push_back(shr->Direction().X());
       _shr_py.push_back(shr->Direction().Y());
