@@ -89,8 +89,20 @@ private:
   art::InputTag fMCRproducer;
   art::InputTag fSLCproducer; // slice associated to PFP
 
+  const int k_nu_e_other = 1;
+  const int k_nu_e_cc0pinp = 11;
+  const int k_nu_mu_other = 2;
+  const int k_nu_mu_pi0 = 21;
+  const int k_nc = 3;
+  const int k_nc_pi0 = 31;
+  const int k_cosmic = 4;
+  const int k_outfv = 5;
+  const int k_other = 6;
+
   // kinematic thresholds to define signal
   float fProtonThreshold;
+
+  int _category; // event category
 
   // neutrino vertx (reco)
   float _nu_vtx_x, _nu_vtx_y, _nu_vtx_z;
@@ -226,7 +238,6 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
   evnhits = inputHits->size();
 
-  return;
 }
 
 void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
@@ -369,8 +380,91 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     }   // if MC
   }
   _nslice += 1;
-  if (selected)
-    _pass = 1;
+
+  if (!fData) {
+
+    // Check if there is a PFParticle associated to an electron
+    std::vector<int>::iterator e_reco_id = std::find(_backtracked_pdg.begin(), _backtracked_pdg.end(), 11);
+    bool there_is_reco_electron = e_reco_id != _backtracked_pdg.end();
+
+    // Check if there is a PFParticle associated to an overlay cosmic
+    std::vector<int>::iterator cosmic_id = std::find(_backtracked_pdg.begin(), _backtracked_pdg.end(), 0);
+    bool there_is_reco_cosmic = cosmic_id != _backtracked_pdg.end();
+
+    std::vector<int>::iterator e_true_id = std::find(_mc_pdg.begin(), _mc_pdg.end(), 11);
+    bool there_is_true_electron = e_true_id != _mc_pdg.end();
+
+    bool there_is_true_proton = false;
+    bool there_is_true_pi = false;
+    bool there_is_true_mu = false;
+
+    for (size_t i_pdg = 0; i_pdg < _mc_pdg.size(); i_pdg++) {
+        if (abs(_mc_pdg[i_pdg]) == 2212)
+        {
+          double ke = _mc_E[i_pdg] - 0.938;
+          if (ke > 0.06) {
+            there_is_true_proton = true;
+          }
+        }
+
+        if (abs(_mc_pdg[i_pdg]) == 221 || _mc_pdg[i_pdg] == 111)
+        {
+          double ke = _mc_E[i_pdg] - 0.135;
+          if (ke > 0.04)
+          {
+            there_is_true_pi = true;
+          }
+        }
+
+        if (abs(_mc_pdg[i_pdg]) == 13)
+        {
+          double ke = _mc_E[i_pdg] - 0.105;
+          if (ke > 0.04)
+          {
+            there_is_true_mu = true;
+          }
+        }
+    }
+
+
+    if (_nu_pdg == 12)
+    {
+      if (!there_is_reco_cosmic)
+      {
+        if (there_is_true_electron) {
+          if (there_is_reco_electron)
+          {
+            if (!there_is_true_pi && there_is_true_proton)
+            {
+              _category = k_nu_e_cc0pinp;
+            } else {
+              _category = k_nu_e_other;
+            }
+          } else {
+            _category = k_other;
+          }
+        } else {
+          _category = k_nc;
+        }
+      } else {
+        _category = k_cosmic;
+      }
+    }
+    else if (_nu_pdg == 14)
+    {
+      if (!there_is_reco_cosmic) {
+          if (there_is_true_mu) {
+            _category = k_nu_mu_other;
+          } else {
+            _category = k_nc;
+          }
+      } else {
+        _category = k_cosmic;
+      }
+    }
+  }
+    if (selected)
+      _pass = 1;
 }
 
 void DefaultAnalysis::setBranches(TTree *_tree)
@@ -431,6 +525,9 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   // PFParticle backtracking
   // _tree->Branch("backtracked_idx"   ,"std::vector<int>"  ,&_backtracked_idx   );
   // _tree->Branch("backtracked_tid"   ,"std::vector<int>"  ,&_backtracked_tid   );
+
+  _tree->Branch("category", &_category, "category/I");
+
   _tree->Branch("backtracked_pdg", "std::vector<int>", &_backtracked_pdg);
   _tree->Branch("backtracked_e", "std::vector<float>", &_backtracked_e);
   _tree->Branch("backtracked_purity", "std::vector<float>", &_backtracked_purity);
@@ -491,6 +588,8 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _vtx_x = std::numeric_limits<float>::min();
   _vtx_y = std::numeric_limits<float>::min();
   _vtx_z = std::numeric_limits<float>::min();
+
+  _category = 0;
 
   _nu_vtx_x = std::numeric_limits<float>::min();
   _nu_vtx_y = std::numeric_limits<float>::min();
