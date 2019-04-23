@@ -98,7 +98,7 @@ private:
   const int k_cosmic = 4;
   const int k_outfv = 5;
   const int k_other = 6;
-
+  const int k_data = 0;
   // kinematic thresholds to define signal
   float fProtonThreshold;
 
@@ -412,6 +412,8 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           double ke = _mc_E[i_pdg] - 0.135;
           if (ke > 0.04)
           {
+            if (_mc_pdg[i_pdg] == 111)
+              there_is_true_pi0 = true;
             there_is_true_pi = true;
           }
         }
@@ -454,7 +456,11 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     {
       if (!there_is_reco_cosmic) {
           if (there_is_true_mu) {
-            _category = k_nu_mu_other;
+            if (there_is_true_pi0) {
+              _category = k_nu_mu_pi0;
+            } else {
+              _category = k_nu_mu_other;
+            }
           } else {
             _category = k_nc;
           }
@@ -462,9 +468,11 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         _category = k_cosmic;
       }
     }
+  } else {
+    category = k_data;
   }
-    if (selected)
-      _pass = 1;
+  if (selected)
+    _pass = 1;
 }
 
 void DefaultAnalysis::setBranches(TTree *_tree)
