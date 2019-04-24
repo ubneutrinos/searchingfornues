@@ -535,7 +535,6 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("vtx_z", &_vtx_z, "vtx_z/F");
   _tree->Branch("isVtxInActive", &_isVtxInActive, "isVtxInActive/O");
   _tree->Branch("isVtxInFiducial", &_isVtxInFiducial, "isVtxInFiducial/O");
-
   // individual particles in the neutrino slice
   // legend:
   // _e -> energy of particle in GeV
