@@ -397,6 +397,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     bool there_is_true_proton = false;
     bool there_is_true_pi = false;
     bool there_is_true_mu = false;
+    bool there_is_true_pi0 = false;
 
     for (size_t i_pdg = 0; i_pdg < _mc_pdg.size(); i_pdg++) {
         if (abs(_mc_pdg[i_pdg]) == 2212)
@@ -469,7 +470,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       }
     }
   } else {
-    category = k_data;
+    _category = k_data;
   }
   if (selected)
     _pass = 1;
