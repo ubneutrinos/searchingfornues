@@ -81,6 +81,15 @@ private:
   void ApplySCECorrection(const float &vtx_x, const float &vtx_y, const float &vtx_z,
                           float &sce_x, float &sce_y, float &sce_z);
 
+  /**
+   * @brief Determine if the specified point is in the fiducial volume
+   *        Not recommended, no array size checking is done.
+   *
+   * @param x array of 3D location
+   * @return True if the point is inside the fiducial volume
+   */
+  bool isFiducial(const double x[3]) const;
+
   art::InputTag fCRTVetoproducer; // producer for CRT veto ass tag [anab::T0 <-> recob::OpFlash]
   art::InputTag fCLSproducer;     // cluster associated to PFP
   art::InputTag fMCTproducer;
@@ -88,6 +97,13 @@ private:
   art::InputTag fHproducer;
   art::InputTag fMCRproducer;
   art::InputTag fSLCproducer; // slice associated to PFP
+
+  float fFidvolXstart;
+  float fFidvolXend;
+  float fFidvolYstart;
+  float fFidvolYend;
+  float fFidvolZstart;
+  float fFidvolZend;
 
   const int k_nu_e_other = 1;
   const int k_nu_e_cc0pinp = 11;
@@ -117,6 +133,8 @@ private:
   float _vtx_x, _vtx_y, _vtx_z; // neutrino interaction vertex coordinates [cm]
   float _vtx_t;                 // neutrino generation time
   bool _isVtxInActive;        // true if neutrino in active volume, 0 < x < 256 -116 < y < 116;  0 < z <  1036
+  bool _isVtxInFiducial;        // true if neutrino in fiducial volume
+
   // final state particle information
   int _nmuon;                            // is there a final-state muon from the neutrino? [1=yes 0=no]
   float _muon_e, _muon_p, _muon_c;       // energy, purity, completeness.
@@ -193,6 +211,15 @@ DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
   fSLCproducer = p.get<art::InputTag>("SLCproducer");
   // kinematic thresholds for defining signal
   fProtonThreshold = p.get<float>("ProtonThreshold");
+
+  fFidvolXstart = p.get<double>("fidvolXstart", 10);
+  fFidvolXend = p.get<double>("fidvolXend", 10);
+
+  fFidvolYstart = p.get<double>("fidvolYstart", 15);
+  fFidvolYend = p.get<double>("fidvolYend", 15);
+
+  fFidvolZstart = p.get<double>("fidvolZstart", 10);
+  fFidvolZend = p.get<double>("fidvolZend", 50);
 }
 
 //----------------------------------------------------------------------------
@@ -238,6 +265,24 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
   evnhits = inputHits->size();
 
+}
+
+bool DefaultAnalysis::isFiducial(const double x[3]) const
+{
+
+  art::ServiceHandle<geo::Geometry> geo;
+  std::vector<double> bnd = {
+      0., 2. * geo->DetHalfWidth(), -geo->DetHalfHeight(), geo->DetHalfHeight(),
+      0., geo->DetLength()};
+
+  bool is_x =
+      x[0] > (bnd[0] + fFidvolXstart) && x[0] < (bnd[1] - fFidvolXend);
+  bool is_y =
+      x[1] > (bnd[2] + fFidvolYstart) && x[1] < (bnd[3] - fFidvolYend);
+  bool is_z =
+      x[2] > (bnd[4] + fFidvolZstart) && x[2] < (bnd[5] - fFidvolZend);
+
+  return is_x && is_y && is_z;
 }
 
 void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
@@ -429,45 +474,40 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         }
     }
 
-
-    if (_nu_pdg == 12)
+    if (!there_is_reco_cosmic && !_isVtxInFiducial) {
+      _category = k_outfv;
+    }
+    else if (_nu_pdg == 12 && !there_is_reco_cosmic)
     {
-      if (!there_is_reco_cosmic)
-      {
-        if (there_is_true_electron) {
-          if (there_is_reco_electron)
+      if (there_is_true_electron) {
+        if (there_is_reco_electron)
+        {
+          if (!there_is_true_pi && there_is_true_proton)
           {
-            if (!there_is_true_pi && there_is_true_proton)
-            {
-              _category = k_nu_e_cc0pinp;
-            } else {
-              _category = k_nu_e_other;
-            }
+            _category = k_nu_e_cc0pinp;
           } else {
-            _category = k_other;
+            _category = k_nu_e_other;
           }
         } else {
-          _category = k_nc;
+          _category = k_other;
         }
       } else {
-        _category = k_cosmic;
+        _category = k_nc;
       }
     }
-    else if (_nu_pdg == 14)
+    else if (_nu_pdg == 14 && !there_is_reco_cosmic)
     {
-      if (!there_is_reco_cosmic) {
-          if (there_is_true_mu) {
-            if (there_is_true_pi0) {
-              _category = k_nu_mu_pi0;
-            } else {
-              _category = k_nu_mu_other;
-            }
-          } else {
-            _category = k_nc;
-          }
+      if (there_is_true_mu) {
+        if (there_is_true_pi0) {
+          _category = k_nu_mu_pi0;
+        } else {
+          _category = k_nu_mu_other;
+        }
       } else {
-        _category = k_cosmic;
+        _category = k_nc;
       }
+    } else {
+      _category = k_cosmic;
     }
   } else {
     _category = k_data;
@@ -494,6 +534,8 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("vtx_y", &_vtx_y, "vtx_y/F");
   _tree->Branch("vtx_z", &_vtx_z, "vtx_z/F");
   _tree->Branch("isVtxInActive", &_isVtxInActive, "isVtxInActive/O");
+  _tree->Branch("isVtxInFiducial", &_isVtxInFiducial, "isVtxInFiducial/O");
+
   // individual particles in the neutrino slice
   // legend:
   // _e -> energy of particle in GeV
@@ -609,6 +651,7 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _nu_sce_z = std::numeric_limits<float>::min();
 
   _isVtxInActive = false;
+  _isVtxInFiducial = false;
 
   _nslice = 0;
   _crtveto = 0;
@@ -696,6 +739,9 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   }
   else
     _isVtxInActive = false;
+
+  double vtx[3] = {_vtx_x, _vtx_y, _vtx_z};
+  _isVtxInFiducial = isFiducial(vtx);
 
   _nelec = 0;
   _nmuon = 0;
