@@ -81,6 +81,18 @@ private:
 
   std::vector<std::vector<double>> _dmc_boundary; // smallest distance between any MCParticle and each boundary
   std::vector<std::vector<double>> _dtrk_boundary; // smallest distance between any track start/end point and each boundary
+  std::vector<double> _dtrk_x_boundary; // smallest distance between any track start/end point and x boundaries
+  std::vector<double> _dtrk_y_boundary; // smallest distance between any track start/end point and y boundaries
+  std::vector<double> _dtrk_z_boundary; // smallest distance between any track start/end point and z boundaries
+
+  std::vector<double> _dshr_x_boundary; // smallest distance between any shower start point and x boundaries
+  std::vector<double> _dshr_y_boundary; // smallest distance between any shower start point and y boundaries
+  std::vector<double> _dshr_z_boundary; // smallest distance between any shower start point and z boundaries
+
+  std::vector<double> _dvtx_x_boundary; // smallest distance between the neutrino vertex and x boundaries
+  std::vector<double> _dvtx_y_boundary; // smallest distance between the neutrino vertex and y boundaries
+  std::vector<double> _dvtx_z_boundary; // smallest distance between the neutrino vertex and z boundaries
+
   std::vector<std::vector<double>> _dvtx_boundary; // smallest distance between the neutrino vertex and each boundary
   std::vector<std::vector<double>> _dshr_boundary; // smallest distance between any shower start point and each boundary
 };
@@ -149,6 +161,34 @@ void ContainmentAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
 
   _dvtx = 1e3;
   _dtrk = 1e3;
+
+  _dtrk_x_boundary.clear();
+  _dtrk_x_boundary.resize(2, std::numeric_limits<double>::lowest());
+
+  _dtrk_y_boundary.clear();
+  _dtrk_y_boundary.resize(2, std::numeric_limits<double>::lowest());
+
+  _dtrk_z_boundary.clear();
+  _dtrk_z_boundary.resize(2, std::numeric_limits<double>::lowest());
+
+  _dshr_x_boundary.clear();
+  _dshr_x_boundary.resize(2, std::numeric_limits<double>::lowest());
+
+  _dshr_y_boundary.clear();
+  _dshr_y_boundary.resize(2, std::numeric_limits<double>::lowest());
+
+  _dshr_z_boundary.clear();
+  _dshr_z_boundary.resize(2, std::numeric_limits<double>::lowest());
+
+  _dvtx_x_boundary.clear();
+  _dvtx_x_boundary.resize(2, std::numeric_limits<double>::lowest());
+
+  _dvtx_y_boundary.clear();
+  _dvtx_y_boundary.resize(2, std::numeric_limits<double>::lowest());
+
+  _dvtx_z_boundary.clear();
+  _dvtx_z_boundary.resize(2, std::numeric_limits<double>::lowest());
+
   _dtrk_boundary.clear();
   _dvtx_boundary.clear();
   _dshr_boundary.clear();
@@ -179,7 +219,9 @@ void ContainmentAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
 
       _dvtx = DistFiducial(nuvtx.X(), nuvtx.Y(), nuvtx.Z());
       DistFiducialBoundaries(xyz[0], xyz[1], xyz[2], _dvtx_boundary);
-
+      _dvtx_x_boundary = _dvtx_boundary[0];
+      _dvtx_y_boundary = _dvtx_boundary[1];
+      _dvtx_z_boundary = _dvtx_boundary[2];
     } // if neutrino PFP
 
     else
@@ -205,7 +247,9 @@ void ContainmentAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
 
         DistFiducialBoundaries(trkend.X(), trkend.Y(), trkend.Z(), _dtrk_boundary);
         DistFiducialBoundaries(trkstart.X(), trkstart.Y(), trkstart.Z(), _dtrk_boundary);
-
+        _dtrk_x_boundary = _dtrk_boundary[0];
+        _dtrk_y_boundary = _dtrk_boundary[1];
+        _dtrk_z_boundary = _dtrk_boundary[2];
       }
 
       auto nshr = pfp_pxy.get<recob::Shower>().size();
@@ -214,6 +258,9 @@ void ContainmentAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
         auto shr = pfp_pxy.get<recob::Shower>().at(0);
         auto shrstart = shr->ShowerStart();
         DistFiducialBoundaries(shrstart.X(), shrstart.Y(), shrstart.Z(), _dshr_boundary);
+        _dshr_x_boundary = _dshr_boundary[0];
+        _dshr_y_boundary = _dshr_boundary[1];
+        _dshr_z_boundary = _dshr_boundary[2];
       }
 
 
@@ -231,6 +278,17 @@ void ContainmentAnalysis::setBranches(TTree *_tree)
   _tree->Branch("rc_vtx_z", &_rc_vtx_z, "rc_vtx_z/F");
   _tree->Branch("dvtx", &_dvtx, "dvtx/F");
   _tree->Branch("dtrk", &_dtrk, "dtrk/F");
+
+  _tree->Branch("dtrk_x_boundary", "std::vector < double >", &_dtrk_x_boundary);
+  _tree->Branch("dtrk_y_boundary", "std::vector < double >", &_dtrk_y_boundary);
+  _tree->Branch("dtrk_z_boundary", "std::vector < double >", &_dtrk_z_boundary);
+  _tree->Branch("dshr_x_boundary", "std::vector < double >", &_dshr_x_boundary);
+  _tree->Branch("dshr_y_boundary", "std::vector < double >", &_dshr_y_boundary);
+  _tree->Branch("dshr_z_boundary", "std::vector < double >", &_dshr_z_boundary);
+  _tree->Branch("dvtx_x_boundary", "std::vector < double >", &_dvtx_x_boundary);
+  _tree->Branch("dvtx_y_boundary", "std::vector < double >", &_dvtx_y_boundary);
+  _tree->Branch("dvtx_z_boundary", "std::vector < double >", &_dvtx_z_boundary);
+
   _tree->Branch("dtrk_boundary", "std::vector < std::vector < double > >", &_dtrk_boundary);
   _tree->Branch("dvtx_boundary", "std::vector < std::vector < double > >", &_dvtx_boundary);
   _tree->Branch("dshr_boundary", "std::vector < std::vector < double > >", &_dshr_boundary);
