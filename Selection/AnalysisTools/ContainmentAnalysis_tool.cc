@@ -163,31 +163,14 @@ void ContainmentAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
   _dtrk = 1e3;
 
   _dtrk_x_boundary.clear();
-  _dtrk_x_boundary.resize(2, std::numeric_limits<double>::lowest());
-
   _dtrk_y_boundary.clear();
-  _dtrk_y_boundary.resize(2, std::numeric_limits<double>::lowest());
-
   _dtrk_z_boundary.clear();
-  _dtrk_z_boundary.resize(2, std::numeric_limits<double>::lowest());
-
   _dshr_x_boundary.clear();
-  _dshr_x_boundary.resize(2, std::numeric_limits<double>::lowest());
-
   _dshr_y_boundary.clear();
-  _dshr_y_boundary.resize(2, std::numeric_limits<double>::lowest());
-
   _dshr_z_boundary.clear();
-  _dshr_z_boundary.resize(2, std::numeric_limits<double>::lowest());
-
   _dvtx_x_boundary.clear();
-  _dvtx_x_boundary.resize(2, std::numeric_limits<double>::lowest());
-
   _dvtx_y_boundary.clear();
-  _dvtx_y_boundary.resize(2, std::numeric_limits<double>::lowest());
-
   _dvtx_z_boundary.clear();
-  _dvtx_z_boundary.resize(2, std::numeric_limits<double>::lowest());
 
   _dtrk_boundary.clear();
   _dvtx_boundary.clear();
