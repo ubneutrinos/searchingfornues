@@ -60,6 +60,10 @@ cioe'     * @brief set branches for TTree
     
   private:
 
+    // obtain track fit dedx in first 4 cm from track calo
+    void TrackFitdEdx(const searchingfornues::ProxyCaloElem_t& trk,
+		      float& dedxU, float& dedxV ,float& dedxY);
+
     std::pair<double,double> VtxCompatibility(const TVector3& nuvtx, const TVector3& shrvtx, const TVector3& shrdir);
 
     // get shower score
@@ -95,10 +99,13 @@ cioe'     * @brief set branches for TTree
     float _dot1, _dot2;
     float _energy1_Y, _energy2_Y;
     float _dedx1_Y, _dedx2_Y;
+    float _dedx1_fit_Y, _dedx2_fit_Y;
     float _energy1_V, _energy2_V;
     float _dedx1_V, _dedx2_V;
+    float _dedx1_fit_V, _dedx2_fit_V;
     float _energy1_U, _energy2_U;
     float _dedx1_U, _dedx2_U;
+    float _dedx1_fit_U, _dedx2_fit_U;
     float _shrscore1, _shrscore2;
     float _gammadot;
     float _mass_Y, _mass_V, _mass_U;
@@ -110,6 +117,9 @@ cioe'     * @brief set branches for TTree
     float _dmin;        // what is the minimum distance of the trk/shr vertex to the neutrino vertex?
     float _dotmin;      // maximum dot product between shower direction and vtx->start vector
     float _trkshrscore; // score on which to cut for track/shower classification
+
+    art::InputTag fTRKproducer;
+    art::InputTag fCALproducer;
     
   };
   
@@ -138,6 +148,10 @@ cioe'     * @brief set branches for TTree
     _dotmin      = pset.get< float > ("dotmin"     );
     _dmin        = pset.get< float > ("dmin"       );
     _trkshrscore = pset.get< float > ("trkshrscore");
+
+    fTRKproducer = pset.get< art::InputTag > ("TRKproducer", "");
+    fCALproducer = pset.get< art::InputTag > ("CALproducer", "");
+
 }
   
   //----------------------------------------------------------------------------
@@ -157,6 +171,11 @@ cioe'     * @brief set branches for TTree
     Double_t xyz[3] = {};
 
     Reset();
+
+    searchingfornues::ProxyCaloColl_t const* tkcalo_proxy = NULL;
+    if (fTRKproducer!="") {
+      tkcalo_proxy = new searchingfornues::ProxyCaloColl_t( proxy::getCollection<std::vector<recob::Track> >(e,fTRKproducer,proxy::withAssociated<anab::Calorimetry>(fCALproducer)) );
+    }
     
     if (!fData)
       ReadTruth(e);
@@ -278,7 +297,16 @@ cioe'     * @brief set branches for TTree
     _shrscore2 = GetTrackShowerScore(pfp_pxy_v.at(i2));
 
     auto vtxcompat1 = VtxCompatibility(nuvtx, shr1->ShowerStart(), shr1->Direction());
-
+    
+    if (tkcalo_proxy!=NULL) {
+      for (const searchingfornues::ProxyCaloElem_t& tk : *tkcalo_proxy) {
+	// find track with ID matching the pfp index (this convention apparently works only for shower fits...)
+	if (tk->ID()==int(pfp_pxy_v[i1].index())) {
+	  TrackFitdEdx(tk, _dedx1_fit_U, _dedx1_fit_V, _dedx1_fit_Y);
+	}// if track matches shower index -> this is the track-fitted to the shower
+      }// for all track fits to showers
+    }// if track-fits to showers exist
+    
     _radlen1    = vtxcompat1.second;
     _dot1       = vtxcompat1.first;
     _energy1_Y  = shr1->Energy()[2];
@@ -289,6 +317,15 @@ cioe'     * @brief set branches for TTree
     _dedx1_U    = shr1->dEdx()[0];
     
     auto vtxcompat2 = VtxCompatibility(nuvtx, shr2->ShowerStart(), shr2->Direction());
+
+    if (tkcalo_proxy!=NULL) {
+      for (const searchingfornues::ProxyCaloElem_t& tk : *tkcalo_proxy) {
+	// find track with ID matching the pfp index (this convention apparently works only for shower fits...)
+	if (tk->ID()==int(pfp_pxy_v[i2].index())) {
+	  TrackFitdEdx(tk, _dedx2_fit_U, _dedx2_fit_V, _dedx2_fit_Y);
+	}// if track matches shower index -> this is the track-fitted to the shower
+      }// for all track fits to showers
+    }// if track-fits to showers exist
 
     _radlen2   = vtxcompat2.second;
     _dot2      = vtxcompat2.first;
@@ -360,14 +397,20 @@ cioe'     * @brief set branches for TTree
     _tree->Branch("energy2_Y",&_energy2_Y,"energy2_Y/F");
     _tree->Branch("dedx1_Y",&_dedx1_Y,"dedx1_Y/F");
     _tree->Branch("dedx2_Y",&_dedx2_Y,"dedx2_Y/F");
+    _tree->Branch("dedx1_fit_Y",&_dedx1_fit_Y,"dedx1_fit_Y/F");
+    _tree->Branch("dedx2_fit_Y",&_dedx2_fit_Y,"dedx2_fit_Y/F");
     _tree->Branch("energy1_V",&_energy1_V,"energy1_V/F");
     _tree->Branch("energy2_V",&_energy2_V,"energy2_V/F");
     _tree->Branch("dedx1_V",&_dedx1_V,"dedx1_V/F");
     _tree->Branch("dedx2_V",&_dedx2_V,"dedx2_V/F");
+    _tree->Branch("dedx1_fit_V",&_dedx1_fit_V,"dedx1_fit_V/F");
+    _tree->Branch("dedx2_fit_V",&_dedx2_fit_V,"dedx2_fit_V/F");
     _tree->Branch("energy1_U",&_energy1_U,"energy1_U/F");
     _tree->Branch("energy2_U",&_energy2_U,"energy2_U/F");
     _tree->Branch("dedx1_U",&_dedx1_U,"dedx1_U/F");
     _tree->Branch("dedx2_U",&_dedx2_U,"dedx2_U/F");
+    _tree->Branch("dedx1_fit_U",&_dedx1_fit_U,"dedx1_fit_U/F");
+    _tree->Branch("dedx2_fit_U",&_dedx2_fit_U,"dedx2_fit_U/F");
     _tree->Branch("shrscore1",&_shrscore1,"shrscore1/F");
     _tree->Branch("shrscore2",&_shrscore2,"shrscore2/F");
     _tree->Branch("gammadot",&_gammadot,"gammadot/F");
@@ -391,22 +434,6 @@ cioe'     * @brief set branches for TTree
 
   std::pair<double,double> Pi0Selection::VtxCompatibility(const TVector3& nuvtx, const TVector3& shrvtx, const TVector3& shrdir) {
 
-    /*
-      auto shr_v = pfp_pxy.get<recob::Shower>();
-      auto trk_v = pfp_pxy.get<recob::Track>(;)
-      
-      if ( (shr_v.size() + trk_v.size()) != 1) {
-      std::cout << "\t there are " << shr_v.size() << " showers associated to this PFP" << std::endl;
-      std::cout << "\t there are " << trk_v.size() << " tracks  associated to this PFP" << std::endl;
-      std::cout << "ERROR. PFP associated with != (shr+trk)." << std::endl;
-      return std::make_pair(-1,-1);
-      }
-      
-      if (shr_v.size() == 1) {
-      
-      auto shr = shr_v.at(0);
-    */
-    
     // grab shower start point and direction
     //auto shrvtx = shr->ShowerStart();
     //auto shrdir = shr->Direction();
@@ -421,31 +448,6 @@ cioe'     * @brief set branches for TTree
     
     return std::make_pair(dot,dist);
     
-    /*
-      }// associated with a shower
-      
-      if (trk_v.size() == 1) {
-      
-      auto trk = trk_v.at(0);
-      
-      auto trkvtx = trk->Vertex();
-      TVector3 trkvtx3(trkvtx.x(), trkvtx.y(), trkvtx.z());
-      auto trkdir = trk->VertexDirection();
-      TVector3 trkdir3(trkdir.x(), trkdir.y(), trkdir.z());
-      gammadir = trkdir3;
-      
-      auto nuvtx2trkvtx = (trkvtx3 - nuvtx).Unit();
-      auto trkdirnormed = trkdir3.Unit();
-      
-      double dot  = nuvtx2trkvtx.Dot(trkdirnormed);
-      double dist = (nuvtx-trkvtx3).Mag();
-      
-      return std::make_pair(dot,dist);
-      
-      }// associated with a track
-      
-      return std::make_pair(-1,-1);
-    */
     
   }// end of vertex compatibility
 
@@ -538,72 +540,44 @@ cioe'     * @brief set branches for TTree
       
     }// for all mcparticles
     
-    /*
-      if ( (foundShowers == true) && fPDG == 111) {
-      
-    size_t idx_1 = 0;
-    size_t idx_2 = 0;
-    size_t n_found = 0;
-    for (size_t i=0; i < mcs_h->size(); i++){
-      auto const& mcs = mcs_h->at(i);
-      // distance from vertex                                                                
-      double x = mcs.Start().X();
-      double y = mcs.Start().Y();
-      double z = mcs.Start().Z();
-      double d = sqrt( ( (_mc_vtx_x - x) * (_mc_vtx_x - x) ) +
-		       ( (_mc_vtx_y - y) * (_mc_vtx_y - y) ) +
-		       ( (_mc_vtx_z - z) * (_mc_vtx_z - z) ) );
-      if ( d < 0.01 ){
-	if (n_found == 0){
-	  idx_1 = i;
-	  n_found += 1;
-	}
-	else if (n_found == 1){
-	  idx_2 = i;
-	  n_found += 1;
-	}
-	else
-	  n_found += 1;
-      }// if mother is a Pi0   
-    }// for all MCShowers                                                               
-    
-    
-    size_t idxLARGE = idx_1;
-    size_t idxSMALL = idx_2;
-    
-    if (mcs_h->at(idx_1).Start().E() < mcs_h->at(idx_2).Start().E() )
-      { idxLARGE = idx_2; idxSMALL = idx_1; }
-    
-    auto const& mcshr1 = mcs_h->at(idxLARGE);
-    auto const& mcshr2 = mcs_h->at(idxSMALL);
-    
-    _pi0_e  = mcshr1.MotherEnd().E();
-    
-    _mc_shr1_e  = mcshr1.Start().E();
-    _mc_shr1_edep  = mcshr1.DetProfile().E();
-    _mc_shr1_x  = mcshr1.DetProfile().X();
-    _mc_shr1_y  = mcshr1.DetProfile().Y();
-    _mc_shr1_z  = mcshr1.DetProfile().Z();
-
-    double mom1 = mcshr1.Start().Momentum().Vect().Mag();    
-    _mc_shr1_px = mcshr1.Start().Px() / mom1;
-    _mc_shr1_py = mcshr1.Start().Py() / mom1;
-    _mc_shr1_pz = mcshr1.Start().Pz() / mom1;
-    
-    _mc_shr2_e  = mcshr2.Start().E();
-    _mc_shr2_edep  = mcshr2.DetProfile().E();
-    _mc_shr2_x  = mcshr2.DetProfile().X();
-    _mc_shr2_y  = mcshr2.DetProfile().Y();
-    _mc_shr2_z  = mcshr2.DetProfile().Z();
-
-    double mom2 = mcshr2.Start().Momentum().Vect().Mag();    
-    _mc_shr2_px = mcshr2.Start().Px() / mom2;
-    _mc_shr2_py = mcshr2.Start().Py() / mom2;
-    _mc_shr2_pz = mcshr2.Start().Pz() / mom2;
-  */
 
   return;
   }
+
+  void Pi0Selection::TrackFitdEdx(const searchingfornues::ProxyCaloElem_t& trk,
+				  float& dedxU, float& dedxV ,float& dedxY)  {
+
+    dedxU = -1;
+    dedxV = -1;
+    dedxY = -1;
+
+    auto const trkcalos = trk.get<anab::Calorimetry>();
+    
+    for (const auto& tkcalo : trkcalos) {
+      if (tkcalo->ResidualRange().size()==0) continue;
+      std::vector<float> dedx4cm;
+      for (size_t ic=0; ic<tkcalo->ResidualRange().size(); ++ic) {
+	if ( (tkcalo->ResidualRange().back()-tkcalo->ResidualRange()[ic]) < 4.) {
+	  dedx4cm.push_back( tkcalo->dEdx()[ic] );
+	}
+      }
+      float dedx4cm_med = -1.;
+      if (dedx4cm.size()>0) {
+	std::sort(dedx4cm.begin(), dedx4cm.end());
+	if (dedx4cm.size()%2 == 1) dedx4cm_med = dedx4cm[dedx4cm.size()/2];
+	else dedx4cm_med = 0.5*(dedx4cm[dedx4cm.size()/2] + dedx4cm[dedx4cm.size()/2 - 1]);
+      }
+      
+      auto pl = tkcalo->PlaneID().Plane;
+      if (pl == 0) { dedxU = dedx4cm_med; }
+      if (pl == 1) { dedxV = dedx4cm_med; }
+      if (pl == 2) { dedxY = dedx4cm_med; }
+      
+    }// for all calorimetry objects associated to the track
+    
+    return;
+  }// TrackFitdEdx
+
 
   float Pi0Selection::GetTrackShowerScore(const ProxyPfpElem_t& pfp_pxy) {
 
