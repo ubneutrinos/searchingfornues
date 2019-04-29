@@ -498,7 +498,11 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           _category = k_other;
         }
       } else {
-        _category = k_nc;
+        if (!there_is_true_pi) {
+          _category = k_nc;
+        } else {
+          _category = k_nc_pi0;
+        }
       }
     }
     else if (_nu_pdg == 14 && !there_is_reco_cosmic)
@@ -510,7 +514,11 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           _category = k_nu_mu_other;
         }
       } else {
-        _category = k_nc;
+        if (!there_is_true_pi) {
+          _category = k_nc;
+        } else {
+          _category = k_nc_pi0;
+        }
       }
     } else {
       _category = k_cosmic;
