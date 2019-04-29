@@ -92,7 +92,8 @@ private:
 
   art::InputTag fCRTVetoproducer; // producer for CRT veto ass tag [anab::T0 <-> recob::OpFlash]
   art::InputTag fCLSproducer;     // cluster associated to PFP
-  art::InputTag fMCTproducer;
+  art::InputTag fMCTproducer;     // MCTruth from neutrino generator
+  art::InputTag fMCPproducer;     // MCParticle from Geant4 stage
   art::InputTag fBacktrackTag;
   art::InputTag fHproducer;
   art::InputTag fMCRproducer;
@@ -150,6 +151,10 @@ private:
   int _pion;                             // is there a final-state charged pion from the neutrino? [1=yes 0=no]
   float _pion_e, _pion_p, _pion_c;       // energy, purity, completeness.
 
+  // end muon process
+  std::string _endmuonprocess;
+  float _endmuonmichel;
+
   // number of slices in the event
   int _nslice;
   int _crtveto;    // is the event vetoed by the CRT Veto?
@@ -205,6 +210,7 @@ DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
   fCRTVetoproducer = p.get<art::InputTag>("CRTVetoproducer", ""); // default is no CRT veto
   fCLSproducer = p.get<art::InputTag>("CLSproducer");
   fMCTproducer = p.get<art::InputTag>("MCTproducer");
+  fMCPproducer = p.get<art::InputTag>("MCPproducer");
   fBacktrackTag = p.get<art::InputTag>("BacktrackTag");
   fHproducer = p.get<art::InputTag>("Hproducer");
   fMCRproducer = p.get<art::InputTag>("MCRproducer");
@@ -624,6 +630,10 @@ void DefaultAnalysis::setBranches(TTree *_tree)
                   &_mc_py);
   _tree->Branch("mc_pz", "std::vector< double >",
                   &_mc_pz);
+
+  _tree->Branch("endmuonprocess",&_endmuonprocess);
+
+  _tree->Branch("endmuonmichel",&_endmuonmichel, "endmuonmichel/F");
 }
 
 void DefaultAnalysis::resetTTree(TTree *_tree)
@@ -681,6 +691,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _proton_p = 0;
   _proton_c = 0;
 
+  _endmuonprocess = "";
+  _endmuonmichel = 0;
+
   // _backtracked_idx.clear();
   // _backtracked_tid.clear();
   _backtracked_e.clear();
@@ -717,6 +730,9 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   // load MCTruth
   auto const &mct_h = e.getValidHandle<std::vector<simb::MCTruth>>(fMCTproducer);
 
+  // load MCTruth [from geant]
+  auto const &mcp_h = e.getValidHandle<std::vector<simb::MCParticle>>(fMCPproducer);
+
   auto mct = mct_h->at(0);
   auto neutrino = mct.GetNeutrino();
   auto nu = neutrino.Nu();
@@ -728,6 +744,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _vtx_y = nu.EndY();
   _vtx_z = nu.EndZ();
   _vtx_t = nu.T();
+
   art::ServiceHandle<geo::Geometry> geo;
 
   if (_vtx_x < 2. * geo->DetHalfWidth() && _vtx_x > 0. &&
@@ -747,6 +764,10 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _npi0 = 0;
   _nproton = 0;
   _npion = 0;
+
+
+  // save muon trackID [ needed to find Michel ]
+  float muonMomentum = 0;
 
   size_t npart = mct.NParticles();
   for (size_t i = 0; i < npart; i++)
@@ -777,6 +798,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     // if muon
     if ((std::abs(part.PdgCode()) == 13) and (part.StatusCode() == 1))
     {
+      muonMomentum = part.Momentum(0).E();
       _nmuon += 1;
       _muon_e = part.Momentum(0).E();
     } // if muon
@@ -811,6 +833,57 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   }   // for all MCParticles
 
   searchingfornues::ApplyDetectorOffsets(_vtx_t, _vtx_x, _vtx_y, _vtx_z, _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset);
+
+  // find if mu -> michel
+  _endmuonprocess = "";
+  _endmuonmichel = 0;
+  bool containedMu = false;
+  float muendpointX = 0;
+
+  if (muonMomentum > 0) {
+
+    int muonTrackId = -1;
+
+    // loop through all MCParticles, find the muon
+    for (size_t p=0; p < mcp_h->size(); p++) {
+      auto mcp = mcp_h->at(p);
+      if ( (mcp.Momentum(0).E() - muonMomentum) < 0.0001) {
+	muonTrackId = mcp.TrackId();
+	// stops in the detector?
+	if ( (mcp.EndPosition().X() > 0)                     && (mcp.EndPosition().X() < 2 * geo->DetHalfWidth()) &&
+	     (mcp.EndPosition().Y() > -geo->DetHalfHeight()) && (mcp.EndPosition().Y() < geo->DetHalfHeight()   ) &&	     
+	     (mcp.EndPosition().Z() > 0)                     && (mcp.EndPosition().Z() < geo->DetLength()       ) ) {
+	  _endmuonprocess = mcp.EndProcess();
+	  containedMu = true;
+	  muendpointX = mcp.EndPosition().X();
+	}// contained muons
+	break;
+      }// if we find the muon
+    }// for all MCParticles
+
+    // loop again through MCParticles searching for the Michel, if the muon is contained
+    if (containedMu) {
+
+      // loop through all MCParticles, find the michel
+      for (size_t p=0; p < mcp_h->size(); p++) {
+	
+	auto mcp = mcp_h->at(p);
+
+	if ( fabs(mcp.PdgCode()) != 11) continue;
+
+	// if parent of this particle is the muon
+	if ( mcp.Mother() == muonTrackId ) {
+
+	  // do they start at the same position?
+	  if ( (mcp.Vx() - muendpointX) < 0.0001 ) {
+	    _endmuonprocess = mcp.Process();
+	    _endmuonmichel  = mcp.Momentum(0).E();
+	    //std::cout << "Found MCParticle coincident with Michel of PDG "
+	  }// if start point coincides with muon end point
+	}// if parent is muon
+      }// for all particles, second loop
+    }// if muon is contained
+  }// if there is a muon, we are searching for a possible Michel decay
 
   return;
 }
