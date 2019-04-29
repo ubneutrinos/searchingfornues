@@ -81,6 +81,7 @@ private:
   // TTree variables
   int _nshower;
   int _ntrack;
+  int _nupdgreco;
   float _maxtrklen; // maximum track length for any track associated in the slice
   float _shr_score;  // shower classification score (1 = track-like)
   float _shr_energy_Y, _shr_energy_V, _shr_energy_U; // shower energy
@@ -94,7 +95,7 @@ private:
   
   // input parameters
   float fTrkShrscore;
-    float fShrdedxmax;
+  float fShrdedxmax;
   float fShrRadlen;
   float fShrEnergy;
   float fMaxTrklen;
@@ -166,8 +167,10 @@ private:
       auto PDG = fabs(pfp_pxy->PdgCode());
       
       // skip neutrino PFP
-      if ( (PDG == 12) || (PDG == 14) ) 
+      if ( (PDG == 12) || (PDG == 14) ) {
 	StoreVertex(pfp_pxy,nuvtx);
+	_nupdgreco = PDG;
+      }
       
       // if non-neutrino PFP
       else {
@@ -238,6 +241,9 @@ private:
     }// for all PFParticles
 
 
+    if (_nupdgreco != 12)
+      return false;
+    /*
     if (_nshower < 1)
       return false;
     if (_shr_dist > fShrRadlen)
@@ -250,6 +256,7 @@ private:
       return false;
     if (_maxtrklen > fMaxTrklen)
       return false;
+    */
     
     return true;
   }
@@ -337,7 +344,8 @@ private:
   
   void ShowerSelection::Reset()
   {
-    
+
+    _nupdgreco = 0;
     _shr_score = -1;
     _shr_energy_Y = 0;
     _shr_dedx_Y = 0;
