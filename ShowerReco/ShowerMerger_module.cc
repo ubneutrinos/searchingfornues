@@ -21,9 +21,9 @@
 
 #include "art/Persistency/Common/PtrMaker.h"
 
-#include "ubana/ubana/searchingfornues/Selection/CommonDefs/Typedefs.h"
-#include "ubana/ubana/searchingfornues/Selection/CommonDefs/TrackShowerScoreFuncs.h"
-#include "ubana/ubana/searchingfornues/Selection/CommonDefs/BacktrackingFuncs.h"
+#include "../Selection/CommonDefs/Typedefs.h"
+#include "../Selection/CommonDefs/TrackShowerScoreFuncs.h"
+#include "../Selection/CommonDefs/BacktrackingFuncs.h"
 
 #include <memory>
 

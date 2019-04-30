@@ -11,7 +11,7 @@
 #include "larcore/Geometry/Geometry.h"
 
 // backtracking tools
-#include "ubana/ubana/searchingfornues/Selection/CommonDefs/BacktrackingFuncs.h"
+#include "../CommonDefs/BacktrackingFuncs.h"
 
 namespace analysis
 {

@@ -22,7 +22,7 @@
 #include "art/Framework/Services/Optional/TFileService.h"
 #include "art/Framework/Principal/Event.h"
 
-#include "ubana/ubana/searchingfornues/Selection/CommonDefs/Typedefs.h"
+#include "../CommonDefs/Typedefs.h"
 
 #include "TTree.h"
 #include <limits>

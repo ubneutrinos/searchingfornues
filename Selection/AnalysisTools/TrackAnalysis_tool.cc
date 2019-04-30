@@ -7,11 +7,11 @@
 #include "TDatabasePDG.h"
 #include "TParticlePDG.h"
 
-#include "ubana/ubana/searchingfornues/Selection/CommonDefs/Typedefs.h"
+#include "../CommonDefs/Typedefs.h"
 
 // backtracking tools
-#include "ubana/ubana/searchingfornues/Selection/CommonDefs/BacktrackingFuncs.h"
-#include "ubana/ubana/searchingfornues/Selection/CommonDefs/TrackShowerScoreFuncs.h"
+#include "../CommonDefs/BacktrackingFuncs.h"
+#include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "ubana/ParticleID/Algorithms/uB_PlaneIDBitsetHelperFunctions.h"
 #include "larreco/RecoAlg/TrackMomentumCalculator.h"
 

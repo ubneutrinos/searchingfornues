@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "SelectionToolBase.h"
-#include "ubana/ubana/searchingfornues/Selection/CommonDefs/TrackShowerScoreFuncs.h"
+#include "../CommonDefs/TrackShowerScoreFuncs.h"
 
 namespace selection
 {
