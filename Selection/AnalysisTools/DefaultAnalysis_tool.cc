@@ -133,7 +133,7 @@ private:
   int _ccnc;                    // CC or NC tag from GENIE
   float _vtx_x, _vtx_y, _vtx_z; // neutrino interaction vertex coordinates [cm]
   float _vtx_t;                 // neutrino generation time
-  bool _isVtxInActive;        // true if neutrino in active volume, 0 < x < 256 -116 < y < 116;  0 < z <  1036
+  bool _isVtxInActive;          // true if neutrino in active volume, 0 < x < 256 -116 < y < 116;  0 < z <  1036
   bool _isVtxInFiducial;        // true if neutrino in fiducial volume
 
   // final state particle information
@@ -270,7 +270,6 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 
   art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
   evnhits = inputHits->size();
-
 }
 
 bool DefaultAnalysis::isFiducial(const double x[3]) const
@@ -432,7 +431,8 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
   }
   _nslice += 1;
 
-  if (!fData) {
+  if (!fData)
+  {
 
     // Check if there is a PFParticle associated to an electron
     std::vector<int>::iterator e_reco_id = std::find(_backtracked_pdg.begin(), _backtracked_pdg.end(), 11);
@@ -450,80 +450,106 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     bool there_is_true_mu = false;
     bool there_is_true_pi0 = false;
 
-    for (size_t i_pdg = 0; i_pdg < _mc_pdg.size(); i_pdg++) {
-        if (abs(_mc_pdg[i_pdg]) == 2212)
+    for (size_t i_pdg = 0; i_pdg < _mc_pdg.size(); i_pdg++)
+    {
+      if (abs(_mc_pdg[i_pdg]) == 2212)
+      {
+        double ke = _mc_E[i_pdg] - 0.938;
+        if (ke > 0.06)
         {
-          double ke = _mc_E[i_pdg] - 0.938;
-          if (ke > 0.06) {
-            there_is_true_proton = true;
-          }
+          there_is_true_proton = true;
         }
+      }
 
-        if (abs(_mc_pdg[i_pdg]) == 221 || _mc_pdg[i_pdg] == 111)
+      if (abs(_mc_pdg[i_pdg]) == 221 || _mc_pdg[i_pdg] == 111)
+      {
+        double ke = _mc_E[i_pdg] - 0.135;
+        if (ke > 0.04)
         {
-          double ke = _mc_E[i_pdg] - 0.135;
-          if (ke > 0.04)
-          {
-            if (_mc_pdg[i_pdg] == 111)
-              there_is_true_pi0 = true;
-            there_is_true_pi = true;
-          }
+          if (_mc_pdg[i_pdg] == 111)
+            there_is_true_pi0 = true;
+          there_is_true_pi = true;
         }
+      }
 
-        if (abs(_mc_pdg[i_pdg]) == 13)
+      if (abs(_mc_pdg[i_pdg]) == 13)
+      {
+        double ke = _mc_E[i_pdg] - 0.105;
+        if (ke > 0.04)
         {
-          double ke = _mc_E[i_pdg] - 0.105;
-          if (ke > 0.04)
-          {
-            there_is_true_mu = true;
-          }
+          there_is_true_mu = true;
         }
+      }
     }
 
-    if (!there_is_reco_cosmic && !_isVtxInFiducial) {
+    if (!there_is_reco_cosmic && !_isVtxInFiducial)
+    {
       _category = k_outfv;
     }
     else if (_nu_pdg == 12 && !there_is_reco_cosmic)
     {
-      if (there_is_true_electron) {
+      if (there_is_true_electron)
+      {
         if (there_is_reco_electron)
         {
           if (!there_is_true_pi && there_is_true_proton)
           {
             _category = k_nu_e_cc0pinp;
-          } else {
+          }
+          else
+          {
             _category = k_nu_e_other;
           }
-        } else {
+        }
+        else
+        {
           _category = k_other;
         }
-      } else {
-        if (!there_is_true_pi) {
+      }
+      else
+      {
+        if (!there_is_true_pi)
+        {
           _category = k_nc;
-        } else {
+        }
+        else
+        {
           _category = k_nc_pi0;
         }
       }
     }
     else if (_nu_pdg == 14 && !there_is_reco_cosmic)
     {
-      if (there_is_true_mu) {
-        if (there_is_true_pi0) {
+      if (there_is_true_mu)
+      {
+        if (there_is_true_pi0)
+        {
           _category = k_nu_mu_pi0;
-        } else {
+        }
+        else
+        {
           _category = k_nu_mu_other;
         }
-      } else {
-        if (!there_is_true_pi) {
+      }
+      else
+      {
+        if (!there_is_true_pi)
+        {
           _category = k_nc;
-        } else {
+        }
+        else
+        {
           _category = k_nc_pi0;
         }
       }
-    } else {
+    }
+    else
+    {
       _category = k_cosmic;
     }
-  } else {
+  }
+  else
+  {
     _category = k_data;
   }
   if (selected)
@@ -619,29 +645,29 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("mc_E", "std::vector< double >", &_mc_E);
 
   _tree->Branch("mc_vx", "std::vector< double >",
-                  &_mc_vx);
+                &_mc_vx);
   _tree->Branch("mc_vy", "std::vector< double >",
-                  &_mc_vy);
+                &_mc_vy);
   _tree->Branch("mc_vz", "std::vector< double >",
-                  &_mc_vz);
+                &_mc_vz);
 
   _tree->Branch("mc_endx", "std::vector< double >",
-                  &_mc_endx);
+                &_mc_endx);
   _tree->Branch("mc_endy", "std::vector< double >",
-                  &_mc_endy);
+                &_mc_endy);
   _tree->Branch("mc_endz", "std::vector< double >",
-                  &_mc_endz);
+                &_mc_endz);
 
   _tree->Branch("mc_px", "std::vector< double >",
-                  &_mc_px);
+                &_mc_px);
   _tree->Branch("mc_py", "std::vector< double >",
-                  &_mc_py);
+                &_mc_py);
   _tree->Branch("mc_pz", "std::vector< double >",
-                  &_mc_pz);
+                &_mc_pz);
 
-  _tree->Branch("endmuonprocess",&_endmuonprocess);
+  _tree->Branch("endmuonprocess", &_endmuonprocess);
 
-  _tree->Branch("endmuonmichel",&_endmuonmichel, "endmuonmichel/F");
+  _tree->Branch("endmuonmichel", &_endmuonmichel, "endmuonmichel/F");
 }
 
 void DefaultAnalysis::resetTTree(TTree *_tree)
@@ -773,7 +799,6 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _nproton = 0;
   _npion = 0;
 
-
   // save muon trackID [ needed to find Michel ]
   float muonMomentum = 0;
 
@@ -781,27 +806,11 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   for (size_t i = 0; i < npart; i++)
   {
 
-
     auto const &part = mct.GetParticle(i);
     if (part.StatusCode() != 1)
     {
       continue;
     }
-    _mc_E.push_back(part.E());
-
-    _mc_pdg.push_back(part.PdgCode());
-
-    _mc_px.push_back(part.Px());
-    _mc_py.push_back(part.Py());
-    _mc_pz.push_back(part.Pz());
-
-    _mc_vx.push_back(part.Vx());
-    _mc_vy.push_back(part.Vy());
-    _mc_vz.push_back(part.Vz());
-
-    _mc_endx.push_back(part.EndX());
-    _mc_endy.push_back(part.EndY());
-    _mc_endz.push_back(part.EndZ());
 
     // if muon
     if ((std::abs(part.PdgCode()) == 13) and (part.StatusCode() == 1))
@@ -840,58 +849,117 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     } // if pion
   }   // for all MCParticles
 
-  searchingfornues::ApplyDetectorOffsets(_vtx_t, _vtx_x, _vtx_y, _vtx_z, _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset);
+  for (size_t p = 0; p < mcp_h->size(); p++)
+  {
+    auto mcp = mcp_h->at(p);
 
-  // find if mu -> michel
-  _endmuonprocess = "";
-  _endmuonmichel = 0;
-  bool containedMu = false;
-  float muendpointX = 0;
+    if (mcp.StatusCode() != 1)
+    {
+      continue;
+    }
+    std::cout << "inside loop " << std::endl;
+    std::cout << "mcp.E() " << mcp.E() << std::endl;
+    _mc_E.push_back(mcp.E());
 
-  if (muonMomentum > 0) {
+    _mc_pdg.push_back(mcp.PdgCode());
 
-    int muonTrackId = -1;
+    _mc_px.push_back(mcp.Px());
+    _mc_py.push_back(mcp.Py());
+    _mc_pz.push_back(mcp.Pz());
 
-    // loop through all MCParticles, find the muon
-    for (size_t p=0; p < mcp_h->size(); p++) {
-      auto mcp = mcp_h->at(p);
-      if ( (mcp.Momentum(0).E() - muonMomentum) < 0.0001) {
-	muonTrackId = mcp.TrackId();
-	// stops in the detector?
-	if ( (mcp.EndPosition().X() > 0)                     && (mcp.EndPosition().X() < 2 * geo->DetHalfWidth()) &&
-	     (mcp.EndPosition().Y() > -geo->DetHalfHeight()) && (mcp.EndPosition().Y() < geo->DetHalfHeight()   ) &&	     
-	     (mcp.EndPosition().Z() > 0)                     && (mcp.EndPosition().Z() < geo->DetLength()       ) ) {
-	  _endmuonprocess = mcp.EndProcess();
-	  containedMu = true;
-	  muendpointX = mcp.EndPosition().X();
-	}// contained muons
-	break;
-      }// if we find the muon
-    }// for all MCParticles
+    _mc_vx.push_back(mcp.Vx());
+    _mc_vy.push_back(mcp.Vy());
+    _mc_vz.push_back(mcp.Vz());
+
+    _mc_endx.push_back(mcp.EndX());
+    _mc_endy.push_back(mcp.EndY());
+    _mc_endz.push_back(mcp.EndZ());
+  }
+
+    searchingfornues::ApplyDetectorOffsets(_vtx_t, _vtx_x, _vtx_y, _vtx_z, _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset);
+
+    // find if mu -> michel
+    _endmuonprocess = "";
+    _endmuonmichel = 0;
+    bool containedMu = false;
+    float muendpointX = 0;
+
+    if (muonMomentum > 0)
+    {
+
+      int muonTrackId = -1;
+
+      // loop through all MCParticles, find the muon
+      for (size_t p = 0; p < mcp_h->size(); p++)
+      {
+        auto mcp = mcp_h->at(p);
+
+        if (mcp.StatusCode() != 1)
+        {
+          continue;
+      }
+      std::cout << "inside loop " << std::endl;
+      std::cout << "mcp.E() " << mcp.E() << std::endl;
+      _mc_E.push_back(mcp.E());
+
+      _mc_pdg.push_back(mcp.PdgCode());
+
+      _mc_px.push_back(mcp.Px());
+      _mc_py.push_back(mcp.Py());
+      _mc_pz.push_back(mcp.Pz());
+
+      _mc_vx.push_back(mcp.Vx());
+      _mc_vy.push_back(mcp.Vy());
+      _mc_vz.push_back(mcp.Vz());
+
+      _mc_endx.push_back(mcp.EndX());
+      _mc_endy.push_back(mcp.EndY());
+      _mc_endz.push_back(mcp.EndZ());
+
+      if ((mcp.Momentum(0).E() - muonMomentum) < 0.0001)
+      {
+        muonTrackId = mcp.TrackId();
+        // stops in the detector?
+        if ((mcp.EndPosition().X() > 0) && (mcp.EndPosition().X() < 2 * geo->DetHalfWidth()) &&
+            (mcp.EndPosition().Y() > -geo->DetHalfHeight()) && (mcp.EndPosition().Y() < geo->DetHalfHeight()) &&
+            (mcp.EndPosition().Z() > 0) && (mcp.EndPosition().Z() < geo->DetLength()))
+        {
+          _endmuonprocess = mcp.EndProcess();
+          containedMu = true;
+          muendpointX = mcp.EndPosition().X();
+        } // contained muons
+        break;
+      } // if we find the muon
+    }   // for all MCParticles
 
     // loop again through MCParticles searching for the Michel, if the muon is contained
-    if (containedMu) {
+    if (containedMu)
+    {
 
       // loop through all MCParticles, find the michel
-      for (size_t p=0; p < mcp_h->size(); p++) {
-	
-	auto mcp = mcp_h->at(p);
+      for (size_t p = 0; p < mcp_h->size(); p++)
+      {
 
-	if ( fabs(mcp.PdgCode()) != 11) continue;
+        auto mcp = mcp_h->at(p);
 
-	// if parent of this particle is the muon
-	if ( mcp.Mother() == muonTrackId ) {
+        if (fabs(mcp.PdgCode()) != 11)
+          continue;
 
-	  // do they start at the same position?
-	  if ( (mcp.Vx() - muendpointX) < 0.0001 ) {
-	    _endmuonprocess = mcp.Process();
-	    _endmuonmichel  = mcp.Momentum(0).E();
-	    //std::cout << "Found MCParticle coincident with Michel of PDG "
-	  }// if start point coincides with muon end point
-	}// if parent is muon
-      }// for all particles, second loop
-    }// if muon is contained
-  }// if there is a muon, we are searching for a possible Michel decay
+        // if parent of this particle is the muon
+        if (mcp.Mother() == muonTrackId)
+        {
+
+          // do they start at the same position?
+          if ((mcp.Vx() - muendpointX) < 0.0001)
+          {
+            _endmuonprocess = mcp.Process();
+            _endmuonmichel = mcp.Momentum(0).E();
+            //std::cout << "Found MCParticle coincident with Michel of PDG "
+          } // if start point coincides with muon end point
+        }   // if parent is muon
+      }     // for all particles, second loop
+    }       // if muon is contained
+  }         // if there is a muon, we are searching for a possible Michel decay
 
   return;
 }
