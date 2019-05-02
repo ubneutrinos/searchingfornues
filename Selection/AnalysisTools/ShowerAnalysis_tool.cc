@@ -9,8 +9,8 @@
 #include "nusimdata/SimulationBase/MCTruth.h"
 
 // backtracking tools
-#include "ubana/ubana/searchingfornues/Selection/CommonDefs/BacktrackingFuncs.h"
-#include "ubana/ubana/searchingfornues/Selection/CommonDefs/TrackShowerScoreFuncs.h"
+#include "../CommonDefs/BacktrackingFuncs.h"
+#include "../CommonDefs/TrackShowerScoreFuncs.h"
 
 namespace analysis
 {

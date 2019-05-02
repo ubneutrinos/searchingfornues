@@ -7,7 +7,7 @@
 #include "larevt/SpaceChargeServices/SpaceChargeService.h"
 
 // backtracking tools
-#include "ubana/ubana/searchingfornues/Selection/CommonDefs/BacktrackingFuncs.h"
+#include "../CommonDefs/BacktrackingFuncs.h"
 #include "larcore/Geometry/Geometry.h"
 
 namespace analysis
