@@ -852,13 +852,11 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   for (size_t p = 0; p < mcp_h->size(); p++)
   {
     auto mcp = mcp_h->at(p);
-
-    if (mcp.StatusCode() != 1)
-    {
+    if (!(mcp.Process() == "primary" &&
+          mcp.StatusCode() == 1)) {
       continue;
     }
-    std::cout << "inside loop " << std::endl;
-    std::cout << "mcp.E() " << mcp.E() << std::endl;
+
     _mc_E.push_back(mcp.E());
 
     _mc_pdg.push_back(mcp.PdgCode());
@@ -876,45 +874,28 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     _mc_endz.push_back(mcp.EndZ());
   }
 
-    searchingfornues::ApplyDetectorOffsets(_vtx_t, _vtx_x, _vtx_y, _vtx_z, _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset);
+  searchingfornues::ApplyDetectorOffsets(_vtx_t, _vtx_x, _vtx_y, _vtx_z, _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset);
 
-    // find if mu -> michel
-    _endmuonprocess = "";
-    _endmuonmichel = 0;
-    bool containedMu = false;
-    float muendpointX = 0;
+  // find if mu -> michel
+  _endmuonprocess = "";
+  _endmuonmichel = 0;
+  bool containedMu = false;
+  float muendpointX = 0;
 
-    if (muonMomentum > 0)
+  if (muonMomentum > 0)
+  {
+
+    int muonTrackId = -1;
+
+    // loop through all MCParticles, find the muon
+    for (size_t p = 0; p < mcp_h->size(); p++)
     {
+      auto mcp = mcp_h->at(p);
 
-      int muonTrackId = -1;
-
-      // loop through all MCParticles, find the muon
-      for (size_t p = 0; p < mcp_h->size(); p++)
+      if (mcp.StatusCode() != 1)
       {
-        auto mcp = mcp_h->at(p);
-
-        if (mcp.StatusCode() != 1)
-        {
-          continue;
+        continue;
       }
-      std::cout << "inside loop " << std::endl;
-      std::cout << "mcp.E() " << mcp.E() << std::endl;
-      _mc_E.push_back(mcp.E());
-
-      _mc_pdg.push_back(mcp.PdgCode());
-
-      _mc_px.push_back(mcp.Px());
-      _mc_py.push_back(mcp.Py());
-      _mc_pz.push_back(mcp.Pz());
-
-      _mc_vx.push_back(mcp.Vx());
-      _mc_vy.push_back(mcp.Vy());
-      _mc_vz.push_back(mcp.Vz());
-
-      _mc_endx.push_back(mcp.EndX());
-      _mc_endy.push_back(mcp.EndY());
-      _mc_endz.push_back(mcp.EndZ());
 
       if ((mcp.Momentum(0).E() - muonMomentum) < 0.0001)
       {
