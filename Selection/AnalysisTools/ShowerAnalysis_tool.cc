@@ -93,6 +93,8 @@ private:
   std::vector<double> _shr_start_y_v;
   std::vector<double> _shr_start_z_v;
 
+  std::vector<double> _shr_dist_v;
+
   std::vector<double> _shr_px_v;
   std::vector<double> _shr_py_v;
   std::vector<double> _shr_pz_v;
@@ -156,6 +158,33 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
     tkcalo_proxy = new searchingfornues::ProxyCaloColl_t(proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer, proxy::withAssociated<anab::Calorimetry>(fCALproducer)));
   }
 
+  TVector3 nuvtx;
+
+  for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
+  {
+    auto PDG = fabs(slice_pfp_v[i_pfp]->PdgCode());
+
+    if (PDG == 12 || PDG == 14)
+    {
+      // grab vertex
+      Double_t xyz[3] = {};
+
+      auto vtx = slice_pfp_v[i_pfp].get<recob::Vertex>();
+      if (vtx.size() != 1)
+      {
+        std::cout << "ERROR. Found neutrino PFP w/ != 1 associated vertices..." << std::endl;
+      }
+      else
+      {
+        // save vertex to array
+        vtx.at(0)->XYZ(xyz);
+        nuvtx.SetXYZ(xyz[0], xyz[1], xyz[2]);
+      }
+
+      break;
+    }
+  }
+
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
   {
     auto PDG = fabs(slice_pfp_v[i_pfp]->PdgCode());
@@ -194,6 +223,9 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_px_v.push_back(shr->Direction().X());
       _shr_py_v.push_back(shr->Direction().Y());
       _shr_pz_v.push_back(shr->Direction().Z());
+
+      _shr_dist_v.push_back((shr->ShowerStart() - nuvtx).Mag());
+
       if (tkcalo_proxy == NULL)
         continue;
 
@@ -257,6 +289,9 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_start_y_v", "std::vector< double >", &_shr_start_y_v);
   _tree->Branch("shr_start_z_v", "std::vector< double >", &_shr_start_z_v);
 
+  _tree->Branch("shr_dist_v", "std::vector< double >", &_shr_dist_v);
+
+
   _tree->Branch("shr_px_v", "std::vector< double >", &_shr_px_v);
   _tree->Branch("shr_py_v", "std::vector< double >", &_shr_py_v);
   _tree->Branch("shr_pz_v", "std::vector< double >", &_shr_pz_v);
@@ -296,6 +331,7 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
 
   _shr_theta_v.clear();
   _shr_phi_v.clear();
+  _shr_dist_v.clear();
 
   _shr_px_v.clear();
   _shr_py_v.clear();
