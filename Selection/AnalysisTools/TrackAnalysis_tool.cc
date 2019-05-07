@@ -104,6 +104,8 @@ private:
   std::vector<double> _trk_start_y;
   std::vector<double> _trk_start_z;
 
+  std::vector<double> _trk_distance;
+
   std::vector<double> _trk_theta;
   std::vector<double> _trk_phi;
 
@@ -173,14 +175,38 @@ void TrackAnalysis::analyzeEvent(art::Event const &e, bool fData)
 
 void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
 {
-
   searchingfornues::ProxyCaloColl_t const& calo_proxy = proxy::getCollection<std::vector<recob::Track> >(e, fTRKproducer,
 													 proxy::withAssociated<anab::Calorimetry>(fCALOproducer));
 
   searchingfornues::ProxyPIDColl_t const& pid_proxy = proxy::getCollection<std::vector<recob::Track> >(e, fTRKproducer,
 													 proxy::withAssociated<anab::ParticleID>(fPIDproducer));
 
+	TVector3 nuvtx;
 
+  for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
+  {
+    auto PDG = fabs(slice_pfp_v[i_pfp]->PdgCode());
+
+    if (PDG == 12 || PDG == 14)
+    {
+      // grab vertex
+      Double_t xyz[3] = {};
+
+      auto vtx = slice_pfp_v[i_pfp].get<recob::Vertex>();
+      if (vtx.size() != 1)
+      {
+        std::cout << "ERROR. Found neutrino PFP w/ != 1 associated vertices..." << std::endl;
+      }
+      else
+      {
+        // save vertex to array
+        vtx.at(0)->XYZ(xyz);
+        nuvtx.SetXYZ(xyz[0], xyz[1], xyz[2]);
+      }
+
+      break;
+    }
+  }
 
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
   {
@@ -189,27 +215,27 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
     if (PDG == 12 || PDG == 14)
       continue;
 
-    auto trk_v = slice_pfp_v[i_pfp].get<recob::Track>(); 
+    auto trk_v = slice_pfp_v[i_pfp].get<recob::Track>();
 
     auto ntrk = trk_v.size();
 
-    if (ntrk != 1) continue;
+    if (ntrk != 1)
+      continue;
 
     auto trk = trk_v.at(0);
     // get track proxy in order to fetch calorimtry
-    auto trkpxy1 = calo_proxy[trk.key()];
-    auto calopxy_v = trkpxy1.get<anab::Calorimetry>();
-    std::cout << "There are "<< calopxy_v.size() << " associated calo objects " << std::endl;
+    // auto trkpxy1 = calo_proxy[trk.key()];
+    // auto calopxy_v = trkpxy1.get<anab::Calorimetry>();
 
     // get trk proxy in order to fetch PID
     auto trkpxy2 = pid_proxy[trk.key()];
     auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
-    std::cout << "There are "<< pidpxy_v.size() << " associated PID objects " << std::endl;
+
     double bragg_p = std::max(PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 2),
                               PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 2));
 
     double bragg_mu = std::max(PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 2),
-                               PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 2));
+                                PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 2));
 
     double bragg_mip = PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
 
@@ -253,11 +279,15 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 
     _trk_length.push_back(trk->Length());
 
+    TVector3 trk_vtx;
+    trk_vtx.SetXYZ(trk->Start().X(), trk->Start().Y(), trk->Start().Z());
+    trk_vtx -= nuvtx;
+    _trk_distance.push_back(trk_vtx.Mag());
+
     _trkscore_v.push_back(searchingfornues::GetTrackShowerScore(slice_pfp_v[i_pfp]));
     _trk_pfp_id.push_back(i_pfp);
 
-  }// for all PFParticles
-
+  } // for all PFParticles
 }
 
 double TrackAnalysis::PID(art::Ptr<anab::ParticleID> selected_pid,
@@ -330,6 +360,7 @@ void TrackAnalysis::setBranches(TTree *_tree)
   _tree->Branch("trk_end_x", "std::vector< double >", &_trk_end_x);
   _tree->Branch("trk_end_y", "std::vector< double >", &_trk_end_y);
   _tree->Branch("trk_end_z", "std::vector< double >", &_trk_end_z);
+  _tree->Branch("trk_distance", "std::vector< double >", &_trk_distance);
 
   _tree->Branch("trk_theta", "std::vector< double >", &_trk_theta);
   _tree->Branch("trk_phi", "std::vector< double >", &_trk_phi);
@@ -364,6 +395,7 @@ void TrackAnalysis::resetTTree(TTree *_tree)
   _trk_dir_x.clear();
   _trk_dir_y.clear();
   _trk_dir_z.clear();
+  _trk_distance.clear();
 
   _trk_theta.clear();
   _trk_phi.clear();
