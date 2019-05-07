@@ -1,9 +1,12 @@
+#include "pandoramodules_microboone.fcl"
 #include "shrreco3d.fcl"
 #include "trackproducerfrompfparticle.fcl"
 #include "calorimetry_microboone.fcl"
+#include "particleid_microboone.fcl"
 #include "calibration_microboone.fcl"
 #include "services_microboone.fcl"
 #include "flashmatchsetup.fcl"
+
 
 ShowerAnalysisTool: {
     tool_type: "ShowerAnalysis"
@@ -109,7 +112,7 @@ shrreco3dKalmanShowercalimc.CalorimetryModuleLabel: "shrreco3dKalmanShowercalo"
 
 NuSelectionFilter:{
     module_type: NeutrinoSelectionFilter
-    Verbose: true
+    Verbose: false
     IsData: false
     Filter: true
     PFPproducer: "pandora"
@@ -118,7 +121,7 @@ NuSelectionFilter:{
     CLSproducer: "pandora"
     SLCproducer: "pandora"
     VTXproducer: "pandora"
-    TRKproducer: "pandora"
+    TRKproducer: "pandora" #"pandora" #pandoraTrack if you want to reconstruct every PFParticle as a track
     MCTproducer: "generator"
     SelectionTool: {
         tool_type: "EmptySelection"
@@ -131,7 +134,7 @@ NuSelectionFilter:{
         containment:   @local::ContainmentAnalysis
         shower:        @local::ShowerAnalysisTool
         track:         @local::TrackAnalysisTool
-	pmtnoise:      @local::PMTNoiseTool
+	    pmtnoise:      @local::PMTNoiseTool
  
        }
     }
