@@ -181,6 +181,10 @@ private:
   std::vector<int> pfpdg;                     // PDG code of pfp in slice
   std::vector<int> pfnhits;                   // number of hits in pfp
   std::vector<std::vector<int>> pfnplanehits; // number of hits in pfp
+  unsigned int _hits_u;
+  unsigned int _hits_v;
+  unsigned int _hits_y;
+
 
   std::vector<int> _mc_pdg;
   std::vector<double> _mc_E;
@@ -366,6 +370,16 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       const auto &clus = clus_proxy[ass_clus.key()];
       auto clus_hit_v = clus.get<recob::Hit>();
       nplanehits[clus->Plane().Plane] = clus_hit_v.size();
+
+
+      if (clus->Plane().Plane == 0) {
+        _hits_u += clus_hit_v.size();
+      } else if (clus->Plane().Plane == 1) {
+        _hits_v += clus_hit_v.size();
+      } else if (clus->Plane().Plane == 2) {
+        _hits_y += clus_hit_v.size();
+      }
+
       for (const auto &hit : clus_hit_v)
       {
         hit_v.push_back(hit);
@@ -640,6 +654,9 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("pfpdg", &pfpdg);
   _tree->Branch("pfnhits", &pfnhits);
   _tree->Branch("pfnplanehits", &pfnplanehits);
+  _tree->Branch("hits_u", &_hits_u, "hits_u/i");
+  _tree->Branch("hits_v", &_hits_v, "hits_v/i");
+  _tree->Branch("hits_y", &_hits_y, "hits_y/i");
 
   _tree->Branch("mc_pdg", "std::vector< int >", &_mc_pdg);
   _tree->Branch("mc_E", "std::vector< double >", &_mc_E);
@@ -741,6 +758,10 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   pfpdg.clear();
   pfnhits.clear();
   pfnplanehits.clear();
+
+  _hits_u = 0;
+  _hits_v = 0;
+  _hits_y = 0;
 
   _mc_E.clear();
   _mc_pdg.clear();
