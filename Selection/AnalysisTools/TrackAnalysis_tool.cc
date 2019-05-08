@@ -12,6 +12,8 @@
 // backtracking tools
 #include "../CommonDefs/BacktrackingFuncs.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
+#include "../CommonDefs/PIDFuncs.h"
+
 #include "ubana/ParticleID/Algorithms/uB_PlaneIDBitsetHelperFunctions.h"
 #include "larreco/RecoAlg/TrackMomentumCalculator.h"
 
@@ -76,15 +78,6 @@ public:
      */
   void resetTTree(TTree *_tree) override;
 
-  /**
-     * @brief return PID information
-     */
-  double PID(art::Ptr<anab::ParticleID> selected_pid,
-             std::string AlgName,
-             anab::kVariableType VariableType,
-             anab::kTrackDir TrackDirection,
-             int pdgCode,
-             int selectedPlane);
 
 private:
   trkf::TrackMomentumCalculator _trkmom;
@@ -231,20 +224,20 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
     auto trkpxy2 = pid_proxy[trk.key()];
     auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
 
-    double bragg_p = std::max(PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 2),
-                              PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 2));
+    double bragg_p = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 2),
+                              searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 2));
 
-    double bragg_mu = std::max(PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 2),
-                                PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 2));
+    double bragg_mu = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 2),
+                                searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 2));
 
-    double bragg_mip = PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
+    double bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
 
-    double pidchipr = PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 0);
-    double pidchimu = PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 13, 0);
-    double pidchipi = PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 211, 0);
-    double pidchika = PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 321, 0);
+    double pidchipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 0);
+    double pidchimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 13, 0);
+    double pidchipi = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 211, 0);
+    double pidchika = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 321, 0);
 
-    double pida_mean = PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 2);
+    double pida_mean = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 2);
 
     _trk_bragg_p.push_back(bragg_p);
     _trk_bragg_mu.push_back(bragg_mu);
@@ -290,64 +283,18 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
   } // for all PFParticles
 }
 
-double TrackAnalysis::PID(art::Ptr<anab::ParticleID> selected_pid,
-                             std::string AlgName,
-                             anab::kVariableType VariableType,
-                             anab::kTrackDir TrackDirection,
-                             int pdgCode,
-                             int selectedPlane)
-{
-
-  std::vector<anab::sParticleIDAlgScores> AlgScoresVec = selected_pid->ParticleIDAlgScores();
-  for (size_t i_algscore = 0; i_algscore < AlgScoresVec.size(); i_algscore++)
-  {
-    anab::sParticleIDAlgScores AlgScore = AlgScoresVec.at(i_algscore);
-    int planeid = -1;
-    // std::cout << "AlgScore index " << i_algscore << " plane " << AlgScore.fPlaneMask<< std::endl;
-    if (AlgScore.fPlaneMask.none() || AlgScore.fPlaneMask.count() > 1 || (AlgScore.fPlaneMask.count() == 1 && !(AlgScore.fPlaneMask.test(0) || AlgScore.fPlaneMask.test(1) || AlgScore.fPlaneMask.test(2))))
-    {
-      std::cout << "[uB_PlaneIDBitsetHelper] Cannot return a single MicroBooNE plane for bitset " << AlgScore.fPlaneMask << ". Returning -1 (invalid planeID)." << std::endl;
-      continue;
-    }
-    else if (AlgScore.fPlaneMask.test(0))
-      planeid = 2;
-    else if (AlgScore.fPlaneMask.test(1))
-      planeid = 1;
-    else if (AlgScore.fPlaneMask.test(2))
-      planeid = 0;
-    else
-      planeid = -1;
-
-    if (selectedPlane != planeid) {
-      continue;
-    }
-
-    if (AlgScore.fAlgName == AlgName)
-    {
-        if (anab::kVariableType(AlgScore.fVariableType) == VariableType && anab::kTrackDir(AlgScore.fTrackDir) == TrackDirection)
-        {
-            if (AlgScore.fAssumedPdg == pdgCode)
-            {
-                double alg_value = AlgScore.fValue;
-                return alg_value;
-            }
-        }
-    }
-  }
-  return std::numeric_limits<double>::lowest();
-}
 
 void TrackAnalysis::setBranches(TTree *_tree)
 {
   _tree->Branch("trkscore_v", "std::vector<float>",  &_trkscore_v);
-  _tree->Branch("trk_bragg_p", "std::vector< double >", &_trk_bragg_p);
-  _tree->Branch("trk_bragg_mu", "std::vector< double >", &_trk_bragg_mu);
-  _tree->Branch("trk_bragg_mip", "std::vector< double >", &_trk_bragg_mip);
-  _tree->Branch("trk_pida", "std::vector< double >", &_trk_pida);
-  _tree->Branch("trk_pid_chipr", "std::vector< double >", &_trk_pidchipr);
-  _tree->Branch("trk_pid_chipi", "std::vector< double >", &_trk_pidchipi);
-  _tree->Branch("trk_pid_chika", "std::vector< double >", &_trk_pidchika);
-  _tree->Branch("trk_pid_chimu", "std::vector< double >", &_trk_pidchimu);
+  _tree->Branch("trk_bragg_p_v", "std::vector< double >", &_trk_bragg_p);
+  _tree->Branch("trk_bragg_mu_v", "std::vector< double >", &_trk_bragg_mu);
+  _tree->Branch("trk_bragg_mip_v", "std::vector< double >", &_trk_bragg_mip);
+  _tree->Branch("trk_pida_v", "std::vector< double >", &_trk_pida);
+  _tree->Branch("trk_pid_chipr_v", "std::vector< double >", &_trk_pidchipr);
+  _tree->Branch("trk_pid_chipi_v", "std::vector< double >", &_trk_pidchipi);
+  _tree->Branch("trk_pid_chika_v", "std::vector< double >", &_trk_pidchika);
+  _tree->Branch("trk_pid_chimu_v", "std::vector< double >", &_trk_pidchimu);
   _tree->Branch("trk_pfp_id", "std::vector< size_t >", &_trk_pfp_id);
   _tree->Branch("trk_dir_x", "std::vector< double >", &_trk_dir_x);
   _tree->Branch("trk_dir_y", "std::vector< double >", &_trk_dir_y);
@@ -360,12 +307,12 @@ void TrackAnalysis::setBranches(TTree *_tree)
   _tree->Branch("trk_end_x", "std::vector< double >", &_trk_end_x);
   _tree->Branch("trk_end_y", "std::vector< double >", &_trk_end_y);
   _tree->Branch("trk_end_z", "std::vector< double >", &_trk_end_z);
-  _tree->Branch("trk_distance", "std::vector< double >", &_trk_distance);
+  _tree->Branch("trk_dist_v", "std::vector< double >", &_trk_distance);
 
-  _tree->Branch("trk_theta", "std::vector< double >", &_trk_theta);
-  _tree->Branch("trk_phi", "std::vector< double >", &_trk_phi);
+  _tree->Branch("trk_theta_v", "std::vector< double >", &_trk_theta);
+  _tree->Branch("trk_phi_v", "std::vector< double >", &_trk_phi);
 
-  _tree->Branch("trk_length", "std::vector< double >", &_trk_length);
+  _tree->Branch("trk_len_v", "std::vector< double >", &_trk_length);
   _tree->Branch("trk_energy_proton", "std::vector< double >", &_trk_energy_proton);
   _tree->Branch("trk_energy_muon", "std::vector< double >", &_trk_energy_muon);
 }
