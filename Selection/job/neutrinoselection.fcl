@@ -35,6 +35,12 @@ DefaultAnalysisTool: {
     ProtonThreshold: 0.04 # GeV
 }
 
+Pi0TruthAnalysisTool: {
+    tool_type: "Pi0TruthAnalysis"
+    MCTproducer: "generator"
+    MCSproducer: "mcreco"
+}
+
 CRTApproachAnalysisTool: {
     tool_type: "CRTApproachAnalysis"
     TrackAssnModuleLabel:"trackmatch"
@@ -134,7 +140,8 @@ NuSelectionFilter:{
         containment:   @local::ContainmentAnalysis
         shower:        @local::ShowerAnalysisTool
         track:         @local::TrackAnalysisTool
-	    pmtnoise:      @local::PMTNoiseTool
+        pmtnoise:      @local::PMTNoiseTool
+        pi0truth:      @local::Pi0TruthAnalysisTool
  
        }
     }
