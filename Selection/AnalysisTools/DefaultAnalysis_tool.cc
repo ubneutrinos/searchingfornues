@@ -475,7 +475,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         }
       }
 
-      if (abs(_mc_pdg[i_pdg]) == 221 || _mc_pdg[i_pdg] == 111)
+      if (abs(_mc_pdg[i_pdg]) == 211 || _mc_pdg[i_pdg] == 111)
       {
         double ke = _mc_E[i_pdg] - 0.135;
         if (ke > 0.04)
