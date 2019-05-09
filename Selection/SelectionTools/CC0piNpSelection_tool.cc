@@ -420,7 +420,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
     _pt = total_p.Perp();
     _p = total_p.Mag();
-    _hits_ratio = _shr_hits_tot/(_trk_hits_tot+_shr_hits_tot);
+    _hits_ratio = (float)_shr_hits_tot/(_trk_hits_tot+_shr_hits_tot);
 
     return true;
 }
