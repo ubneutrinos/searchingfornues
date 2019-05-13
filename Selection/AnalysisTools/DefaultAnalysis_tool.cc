@@ -185,7 +185,6 @@ private:
   unsigned int _hits_v;
   unsigned int _hits_y;
 
-
   std::vector<int> _mc_pdg;
   std::vector<double> _mc_E;
 
@@ -456,20 +455,26 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     std::vector<int>::iterator cosmic_id = std::find(_backtracked_pdg.begin(), _backtracked_pdg.end(), 0);
     bool there_is_reco_cosmic = cosmic_id != _backtracked_pdg.end();
 
-    std::vector<int>::iterator e_true_id = std::find(_mc_pdg.begin(), _mc_pdg.end(), 11);
-    bool there_is_true_electron = e_true_id != _mc_pdg.end();
-
     bool there_is_true_proton = false;
     bool there_is_true_pi = false;
     bool there_is_true_mu = false;
     bool there_is_true_pi0 = false;
+    bool there_is_true_electron = false;
 
     for (size_t i_pdg = 0; i_pdg < _mc_pdg.size(); i_pdg++)
     {
+      if (abs(_mc_pdg[i_pdg]) == 11)
+      {
+        double ke = _mc_E[i_pdg] - 0.00052;
+        if (ke > 0.03)
+        {
+          there_is_true_electron = true;
+        }
+      }
       if (abs(_mc_pdg[i_pdg]) == 2212)
       {
         double ke = _mc_E[i_pdg] - 0.938;
-        if (ke > 0.06)
+        if (ke > 0.04)
         {
           there_is_true_proton = true;
         }
