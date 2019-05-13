@@ -75,7 +75,6 @@ private:
   float _FV; // FV boundary to apply
 
   // TTree variables
-  float _rc_vtx_x, _rc_vtx_y, _rc_vtx_z;
   float _dvtx; // smallest distance between vertex and any boundary
   float _dtrk; // smallest distance between any track start/end point and any boundary
 
@@ -256,9 +255,6 @@ void ContainmentAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
 void ContainmentAnalysis::setBranches(TTree *_tree)
 {
 
-  _tree->Branch("rc_vtx_x", &_rc_vtx_x, "rc_vtx_x/F");
-  _tree->Branch("rc_vtx_y", &_rc_vtx_y, "rc_vtx_y/F");
-  _tree->Branch("rc_vtx_z", &_rc_vtx_z, "rc_vtx_z/F");
   _tree->Branch("dvtx", &_dvtx, "dvtx/F");
   _tree->Branch("dtrk", &_dtrk, "dtrk/F");
 
@@ -282,10 +278,6 @@ void ContainmentAnalysis::setBranches(TTree *_tree)
 
 void ContainmentAnalysis::resetTTree(TTree *_tree)
 {
-
-  _rc_vtx_x = std::numeric_limits<int>::min();
-  _rc_vtx_y = std::numeric_limits<int>::min();
-  _rc_vtx_z = std::numeric_limits<int>::min();
 
   _dvtx = std::numeric_limits<int>::max();
   _dtrk = std::numeric_limits<int>::max();
