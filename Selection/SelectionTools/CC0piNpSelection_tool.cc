@@ -133,9 +133,11 @@ private:
 
     float _shr_bkt_purity;
     float _shr_bkt_completeness;
+    float _shr_bkt_E;
     int _shr_bkt_pdg;
     float _trk_bkt_purity;
     float _trk_bkt_completeness;
+    float _trk_bkt_E;
     int _trk_bkt_pdg;
 
     float _dep_E;
@@ -333,9 +335,11 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                             {
                                 auto &mcp = btparts_v[ibt];
                                 auto PDG = mcp.pdg;
+                                auto E = mcp.e;
                                 _shr_bkt_pdg = PDG;
                                 _shr_bkt_purity = purity;
                                 _shr_bkt_completeness = completeness;
+                                _shr_bkt_E = E;
                             }
                         }
                     }
@@ -400,9 +404,11 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                             {
                                 auto &mcp = btparts_v[ibt];
                                 auto PDG = mcp.pdg;
+                                auto E = mcp.e;
                                 _trk_bkt_pdg = PDG;
                                 _trk_bkt_purity = purity;
                                 _trk_bkt_completeness = completeness;
+                                _trk_bkt_E = E;
                             }
                         }
                     }
@@ -489,6 +495,7 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _trk_bkt_pdg = 0;
     _trk_bkt_purity = std::numeric_limits<float>::min();
     _trk_bkt_completeness = std::numeric_limits<float>::min();
+    _trk_bkt_E = std::numeric_limits<float>::min();
 
     _pt = 0;
     _p = 0;
@@ -499,6 +506,7 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_bkt_pdg = 0;
     _shr_bkt_purity = std::numeric_limits<float>::min();
     _shr_bkt_completeness = std::numeric_limits<float>::min();
+    _shr_bkt_E = std::numeric_limits<float>::min();
 
     _dep_E = 0;
 }
@@ -521,6 +529,7 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_bkt_pdg", &_shr_bkt_pdg, "shr_bkt_pdg/I");
     _tree->Branch("shr_bkt_purity", &_shr_bkt_purity, "shr_bkt_purity/F");
     _tree->Branch("shr_bkt_completeness", &_shr_bkt_completeness, "shr_bkt_completeness/F");
+    _tree->Branch("shr_bkt_E", &_shr_bkt_E, "shr_bkt_E/F");
 
     _tree->Branch("trk_len", &_trk_len, "trk_len/F");
     _tree->Branch("trk_theta", &_trk_theta, "trk_theta/F");
@@ -532,6 +541,8 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("trk_bkt_pdg", &_trk_bkt_pdg, "trk_bkt_pdg/I");
     _tree->Branch("trk_bkt_purity", &_trk_bkt_purity, "trk_bkt_purity/F");
     _tree->Branch("trk_bkt_completeness", &_trk_bkt_completeness, "trk_bkt_completeness/F");
+    _tree->Branch("trk_bkt_E", &_trk_bkt_E, "trk_bkt_E/F");
+
     _tree->Branch("trk_chipr", &_trk_pidchipr, "trk_chipr/F");
     _tree->Branch("trk_chimu", &_trk_pidchimu, "trk_chimu/F");
     _tree->Branch("trk_pida", &_trk_pida, "trk_pida/F");
