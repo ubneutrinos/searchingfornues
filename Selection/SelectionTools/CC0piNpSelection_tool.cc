@@ -91,6 +91,7 @@ private:
     art::InputTag fBacktrackTag;
     art::InputTag fHproducer;
     art::InputTag fMCRproducer;
+    art::InputTag fMCPproducer;
 
     unsigned int _n_showers;
     unsigned int _n_tracks;
@@ -136,6 +137,8 @@ private:
     float _trk_bkt_purity;
     float _trk_bkt_completeness;
     int _trk_bkt_pdg;
+
+    float _dep_E;
 };
 
 //----------------------------------------------------------------------------
@@ -184,6 +187,7 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
     fHproducer = pset.get<art::InputTag>("Hproducer", "gaushit");
     fMCRproducer = pset.get<art::InputTag>("MCRproducer", "mcreco");
     fBacktrackTag = pset.get<art::InputTag>("BacktrackTag", "gaushitTruthMatch");
+    fMCPproducer = pset.get<art::InputTag>("MCPproducer", "largeant");
 
     fFidvolZstart = pset.get<float>("FidvolZstart", 10);
     fFidvolZend = pset.get<float>("FidvolZend", 50);
@@ -218,6 +222,29 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
         assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
         btparts_v = searchingfornues::initBacktrackingParticleVec(inputMCShower, inputMCTrack, *inputHits, assocMCPart);
+
+        auto const &mcp_h = e.getValidHandle<std::vector<simb::MCParticle>>(fMCPproducer);
+        for (size_t p = 0; p < mcp_h->size(); p++)
+        {
+            auto mcp = mcp_h->at(p);
+            if (!(mcp.Process() == "primary" &&
+                  mcp.StatusCode() == 1))
+            {
+                continue;
+            }
+
+            auto PDG = mcp.PdgCode();
+            if (fabs(PDG) == proton->PdgCode()) {
+                double ke = mcp.E() - proton->Mass();
+                if (ke > 0.040)
+                    _dep_E += ke;
+            }
+            if (fabs(PDG) == electron->PdgCode()) {
+                double ke = mcp.E() - electron->Mass();
+                if (ke > 0.030)
+                    _dep_E += ke;
+            }
+        }
     }
 
     double nu_vtx[3] = {};
@@ -472,6 +499,8 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_bkt_pdg = 0;
     _shr_bkt_purity = std::numeric_limits<float>::min();
     _shr_bkt_completeness = std::numeric_limits<float>::min();
+
+    _dep_E = 0;
 }
 
 void CC0piNpSelection::setBranches(TTree *_tree)
@@ -518,6 +547,8 @@ void CC0piNpSelection::setBranches(TTree *_tree)
 
     _tree->Branch("n_tracks", &_n_tracks, "n_tracks/i");
     _tree->Branch("n_showers", &_n_showers, "n_showers/i");
+
+    _tree->Branch("dep_E", &_dep_E, "dep_E/F");
 
     _tree->Branch("hits_ratio", &_hits_ratio, "hits_ratio/F");
     _tree->Branch("pt", &_pt, "pt/F");
