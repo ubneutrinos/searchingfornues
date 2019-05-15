@@ -146,6 +146,7 @@ private:
   float _muon_e, _muon_p, _muon_c;       // energy, purity, completeness.
   int _nelec;                            // is there a final-state electron from the neutrino? [1=yes 0=no]
   float _elec_e, _elec_p, _elec_c;       // energy, purity, completeness.
+  float _elec_vx, _elec_vy, _elec_vz;       // energy, purity, completeness.
   int _npi0;                             // how many pi0s are there?
   int _pi0;                              // is there a final-state pi0 from the neutrino? [1=yes 0=no]
   float _pi0_e, _pi0_p, _pi0_c;          // energy, purity, completeness.
@@ -614,6 +615,9 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("elec_e", &_elec_e, "elec_e/F");
   _tree->Branch("elec_c", &_elec_c, "elec_c/F");
   _tree->Branch("elec_p", &_elec_p, "elec_p/F");
+  _tree->Branch("elec_vx", &_elec_vx, "elec_vx/F");
+  _tree->Branch("elec_vy", &_elec_vy, "elec_vy/F");
+  _tree->Branch("elec_vz", &_elec_vz, "elec_vz/F");
   // pi0
   _tree->Branch("npi0", &_npi0, "npi0/I");
   _tree->Branch("pi0_e", &_pi0_e, "pi0_e/F");
@@ -699,26 +703,26 @@ void DefaultAnalysis::setBranches(TTree *_tree)
 
 void DefaultAnalysis::resetTTree(TTree *_tree)
 {
-  _run = std::numeric_limits<int>::min();
-  _sub = std::numeric_limits<int>::min();
-  _evt = std::numeric_limits<int>::min();
-  _nu_e = std::numeric_limits<float>::min();
-  _nu_pdg = std::numeric_limits<int>::min();
-  _ccnc = std::numeric_limits<int>::min();
+  _run = std::numeric_limits<int>::lowest();
+  _sub = std::numeric_limits<int>::lowest();
+  _evt = std::numeric_limits<int>::lowest();
+  _nu_e = std::numeric_limits<float>::lowest();
+  _nu_pdg = std::numeric_limits<int>::lowest();
+  _ccnc = std::numeric_limits<int>::lowest();
   _pass = 0;
-  _vtx_x = std::numeric_limits<float>::min();
-  _vtx_y = std::numeric_limits<float>::min();
-  _vtx_z = std::numeric_limits<float>::min();
+  _vtx_x = std::numeric_limits<float>::lowest();
+  _vtx_y = std::numeric_limits<float>::lowest();
+  _vtx_z = std::numeric_limits<float>::lowest();
 
   _category = 0;
 
-  _nu_vtx_x = std::numeric_limits<float>::min();
-  _nu_vtx_y = std::numeric_limits<float>::min();
-  _nu_vtx_z = std::numeric_limits<float>::min();
+  _nu_vtx_x = std::numeric_limits<float>::lowest();
+  _nu_vtx_y = std::numeric_limits<float>::lowest();
+  _nu_vtx_z = std::numeric_limits<float>::lowest();
 
-  _nu_sce_x = std::numeric_limits<float>::min();
-  _nu_sce_y = std::numeric_limits<float>::min();
-  _nu_sce_z = std::numeric_limits<float>::min();
+  _nu_sce_x = std::numeric_limits<float>::lowest();
+  _nu_sce_y = std::numeric_limits<float>::lowest();
+  _nu_sce_z = std::numeric_limits<float>::lowest();
 
   _isVtxInActive = false;
   _isVtxInFiducial = false;
@@ -736,7 +740,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _elec_e = 0;
   _elec_p = 0;
   _elec_c = 0;
-
+  _elec_vx = std::numeric_limits<float>::lowest();
+  _elec_vy = std::numeric_limits<float>::lowest();
+  _elec_vz = std::numeric_limits<float>::lowest();
   _npi0 = 0;
   _pi0_e = 0;
   _pi0_p = 0;
@@ -762,9 +768,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _backtracked_purity.clear();
   _backtracked_completeness.clear();
 
-  evnhits = std::numeric_limits<int>::min();
-  slpdg = std::numeric_limits<int>::min();
-  slnhits = std::numeric_limits<int>::min();
+  evnhits = std::numeric_limits<int>::lowest();
+  slpdg = std::numeric_limits<int>::lowest();
+  slnhits = std::numeric_limits<int>::lowest();
   pfpdg.clear();
   pfnhits.clear();
   pfnplanehits.clear();
@@ -886,6 +892,12 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     if (!(mcp.Process() == "primary" &&
           mcp.StatusCode() == 1)) {
       continue;
+    }
+
+    if (mcp.PdgCode() == 11) {
+      _elec_vx = mcp.Vx();
+      _elec_vy = mcp.Vy();
+      _elec_vz = mcp.Vz();
     }
 
     _mc_E.push_back(mcp.E());
