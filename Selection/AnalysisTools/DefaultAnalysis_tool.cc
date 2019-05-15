@@ -6,7 +6,8 @@
 
 #include "ubobj/CRT/CRTHit.hh"
 #include "lardataobj/RecoBase/OpFlash.h"
-
+#include "TDatabasePDG.h"
+#include "TParticlePDG.h"
 #include "nusimdata/SimulationBase/MCTruth.h"
 #include "larcore/Geometry/Geometry.h"
 
@@ -89,6 +90,10 @@ private:
    * @return True if the point is inside the fiducial volume
    */
   bool isFiducial(const double x[3]) const;
+
+  TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
+  TParticlePDG *electron = TDatabasePDG::Instance()->GetParticle(11);
+  TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
 
   art::InputTag fCRTVetoproducer; // producer for CRT veto ass tag [anab::T0 <-> recob::OpFlash]
   art::InputTag fCLSproducer;     // cluster associated to PFP
@@ -405,7 +410,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           _backtracked_purity.push_back(purity);
           _backtracked_completeness.push_back(completeness);
           // if this is an interesting particle, save it to the TTree
-          if (fabs(PDG) == 13)
+          if (fabs(PDG) == muon->PdgCode())
           {
             if (fabs(mcp.e - _muon_e) < 0.01)
             {
@@ -413,7 +418,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
               _muon_c = completeness;
             }
           }
-          if (fabs(PDG) == 11)
+          if (fabs(PDG) == electron->PdgCode())
           {
             if (fabs(mcp.e - _elec_e) < 0.01)
             {
@@ -421,7 +426,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
               _elec_c = completeness;
             }
           }
-          if (fabs(PDG) == 2212)
+          if (fabs(PDG) == proton->PdgCode())
           {
             if (fabs(mcp.e - _proton_e) < 0.01)
             {
