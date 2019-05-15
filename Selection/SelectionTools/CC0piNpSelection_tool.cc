@@ -92,6 +92,7 @@ private:
     art::InputTag fHproducer;
     art::InputTag fMCRproducer;
     art::InputTag fMCPproducer;
+    art::InputTag fCALproducer;
 
     unsigned int _n_showers;
     unsigned int _n_tracks;
@@ -109,6 +110,10 @@ private:
     float _shr_score;
     float _shr_theta;
     float _shr_phi;
+    float _shr_px;
+    float _shr_py;
+    float _shr_pz;
+
     size_t _shr_pfp_id;
 
     float _trk_len;
@@ -141,6 +146,19 @@ private:
     int _trk_bkt_pdg;
 
     float _dep_E;
+
+    float _shr_tkfit_start_x;
+    float _shr_tkfit_start_y;
+    float _shr_tkfit_start_z;
+    float _shr_start_x;
+    float _shr_start_y;
+    float _shr_start_z;
+    float _shr_tkfit_phi;
+    float _shr_tkfit_theta;
+    float _shr_tkfit_dedx_Y;
+    float _shr_tkfit_dedx_U;
+    float _shr_tkfit_dedx_V;
+
 };
 
 //----------------------------------------------------------------------------
@@ -186,6 +204,7 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
     fCLSproducer = pset.get<art::InputTag>("CLSproducer", "pandora");
     fTRKproducer = pset.get<art::InputTag>("TRKproducer", "pandora");
     fPIDproducer = pset.get<art::InputTag>("PIDproducer", "pandoracalipidSCE");
+    fCALproducer = pset.get<art::InputTag>("CALproducer", "pandoracaliSCE");
     fHproducer = pset.get<art::InputTag>("Hproducer", "gaushit");
     fMCRproducer = pset.get<art::InputTag>("MCRproducer", "mcreco");
     fBacktrackTag = pset.get<art::InputTag>("BacktrackTag", "gaushitTruthMatch");
@@ -214,6 +233,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                                                                                           proxy::withAssociated<recob::Hit>(fCLSproducer));
     searchingfornues::ProxyPIDColl_t const &pid_proxy = proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer,
                                                                                                         proxy::withAssociated<anab::ParticleID>(fPIDproducer));
+    searchingfornues::ProxyCaloColl_t const &tkcalo_proxy = proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer, proxy::withAssociated<anab::Calorimetry>(fCALproducer));
     // load backtrack information
     std::vector<searchingfornues::BtPart> btparts_v;
     std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
@@ -350,12 +370,62 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr_dedx_Y = shr->dEdx()[2];
                     _shr_dedx_V = shr->dEdx()[1];
                     _shr_dedx_U = shr->dEdx()[0];
+                    _shr_start_x = shr->ShowerStart().X();
+                    _shr_start_y = shr->ShowerStart().Y();
+                    _shr_start_z = shr->ShowerStart().Z();
                     _shr_energy = shr->Energy()[2] / 1000; // GeV
                     _shr_pfp_id = i_pfp;
                     _max_hits_shower = shr_hits;
                     _shr_score = trkshrscore;
                     _shr_theta = shr->Direction().Theta();
                     _shr_phi = shr->Direction().Phi();
+                    _shr_px = shr->Direction().X();
+                    _shr_py = shr->Direction().Y();
+                    _shr_pz = shr->Direction().Z();
+
+                    for (auto &tk : tkcalo_proxy)
+                    {
+
+                        // find track with ID matching the pfp index (this convention apparently works only for shower fits...)
+                        if (tk->ID() != int(pfp_pxy_v[i_pfp].index()))
+                            continue;
+                        _shr_tkfit_start_x = tk->Start().X();
+                        _shr_tkfit_start_y = tk->Start().Y();
+                        _shr_tkfit_start_z = tk->Start().Z();
+
+                        _shr_tkfit_phi = tk->StartDirection().Phi();
+                        _shr_tkfit_theta = tk->StartDirection().Theta();
+
+                        auto const tkcalos = tk.get<anab::Calorimetry>();
+                        for (const auto &tkcalo : tkcalos)
+                        {
+                            if (tkcalo->ResidualRange().size() == 0)
+                                continue;
+                            std::vector<float> dedx4cm;
+                            for (size_t ic = 0; ic < tkcalo->ResidualRange().size(); ++ic)
+                            {
+                                if ((tkcalo->ResidualRange().back() - tkcalo->ResidualRange()[ic]) < 4.)
+                                {
+                                    dedx4cm.push_back(tkcalo->dEdx()[ic]);
+                                }
+                            }
+                            float dedx4cm_med = -1.;
+                            if (dedx4cm.size() > 0)
+                            {
+                                std::sort(dedx4cm.begin(), dedx4cm.end());
+                                if (dedx4cm.size() % 2 == 1)
+                                    dedx4cm_med = dedx4cm[dedx4cm.size() / 2];
+                                else
+                                    dedx4cm_med = 0.5 * (dedx4cm[dedx4cm.size() / 2] + dedx4cm[dedx4cm.size() / 2 - 1]);
+                            }
+                            if (tkcalo->PlaneID().Plane == 2)
+                                _shr_tkfit_dedx_Y = dedx4cm_med;
+                            else if (tkcalo->PlaneID().Plane == 1)
+                                _shr_tkfit_dedx_V = dedx4cm_med;
+                            else if (tkcalo->PlaneID().Plane == 0)
+                                _shr_tkfit_dedx_U = dedx4cm_med;
+                        }
+                    }
                 }
             }
         }
@@ -388,6 +458,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     }
                 }
 
+                // Kinetic energy from stopping power of proton in LAr
                 float energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), proton->PdgCode()), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
                 _trk_energy_tot += energy_proton;
                 _trk_hits_tot += trk_hits;
@@ -503,10 +574,25 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _trk_phi = std::numeric_limits<float>::min();
     _shr_theta = std::numeric_limits<float>::min();
     _shr_phi = std::numeric_limits<float>::min();
+    _shr_px = 0;
+    _shr_py = 0;
+    _shr_pz = 0;
     _shr_bkt_pdg = 0;
     _shr_bkt_purity = std::numeric_limits<float>::min();
     _shr_bkt_completeness = std::numeric_limits<float>::min();
     _shr_bkt_E = std::numeric_limits<float>::min();
+    _shr_tkfit_start_x = std::numeric_limits<float>::min();
+    _shr_tkfit_start_y = std::numeric_limits<float>::min();
+    _shr_tkfit_start_z = std::numeric_limits<float>::min();
+    _shr_start_x = std::numeric_limits<float>::min();
+    _shr_start_y = std::numeric_limits<float>::min();
+    _shr_start_z = std::numeric_limits<float>::min();
+
+    _shr_tkfit_phi = std::numeric_limits<float>::min();
+    _shr_tkfit_theta = std::numeric_limits<float>::min();
+    _shr_tkfit_dedx_Y = std::numeric_limits<float>::min();
+    _shr_tkfit_dedx_U = std::numeric_limits<float>::min();
+    _shr_tkfit_dedx_V = std::numeric_limits<float>::min();
 
     _dep_E = 0;
 }
@@ -521,9 +607,21 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_energy", &_shr_energy, "shr_energy/F");
     _tree->Branch("shr_theta", &_shr_theta, "shr_theta/F");
     _tree->Branch("shr_phi", &_shr_phi, "shr_phi/F");
+    _tree->Branch("shr_px", &_shr_px, "shr_px/F");
+    _tree->Branch("shr_py", &_shr_py, "shr_py/F");
+    _tree->Branch("shr_pz", &_shr_pz, "shr_pz/F");
+    _tree->Branch("shr_tkfit_start_x", &_shr_tkfit_start_x, "shr_tkfit_start_x/F");
+    _tree->Branch("shr_tkfit_start_y", &_shr_tkfit_start_y, "shr_tkfit_start_y/F");
+    _tree->Branch("shr_tkfit_start_z", &_shr_tkfit_start_z, "shr_tkfit_start_z/F");
+    _tree->Branch("shr_start_x", &_shr_start_x, "shr_start_x/F");
+    _tree->Branch("shr_start_y", &_shr_start_y, "shr_start_y/F");
+    _tree->Branch("shr_start_z", &_shr_start_z, "shr_start_z/F");
     _tree->Branch("shr_dedx_Y", &_shr_dedx_Y, "shr_dedx_Y/F");
     _tree->Branch("shr_dedx_V", &_shr_dedx_V, "shr_dedx_V/F");
     _tree->Branch("shr_dedx_U", &_shr_dedx_U, "shr_dedx_U/F");
+    _tree->Branch("shr_tkfit_dedx_Y", &_shr_tkfit_dedx_Y, "shr_tkfit_dedx_Y/F");
+    _tree->Branch("shr_tkfit_dedx_V", &_shr_tkfit_dedx_V, "shr_tkfit_dedx_V/F");
+    _tree->Branch("shr_tkfit_dedx_U", &_shr_tkfit_dedx_U, "shr_tkfit_dedx_U/F");
     _tree->Branch("shr_distance", &_shr_distance, "shr_distance/F");
     _tree->Branch("shr_score", &_shr_score, "shr_score/F");
     _tree->Branch("shr_bkt_pdg", &_shr_bkt_pdg, "shr_bkt_pdg/I");
@@ -556,8 +654,8 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_hits_tot", &_shr_hits_tot, "shr_hits_tot/i");
     _tree->Branch("trk_hits_tot", &_trk_hits_tot, "trk_hits_tot/i");
 
-    _tree->Branch("n_tracks", &_n_tracks, "n_tracks/i");
-    _tree->Branch("n_showers", &_n_showers, "n_showers/i");
+    _tree->Branch("n_tracks_cc0pinp", &_n_tracks, "n_tracks_cc0pinp/i");
+    _tree->Branch("n_showers_cc0pinp", &_n_showers, "n_showers_cc0pinp/i");
 
     _tree->Branch("dep_E", &_dep_E, "dep_E/F");
 
