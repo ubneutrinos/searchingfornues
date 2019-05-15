@@ -69,9 +69,10 @@ TruthFilter::TruthFilter(fhicl::ParameterSet const& p)
   fEnuhigh = p.get<float>("Enuhigh",1e6); // GeV
   fProtonThreshold = p.get<float>("ProtonThreshold",0.04); // GeV
   fCCNC    = p.get<bool>("CCNC",false);
+  fFiducialVolume = p.get<bool>("FiducialVolume",false);
   fNeutralCurrent = p.get<bool>("NeutralCurrent",false);
   fChargedCurrent = p.get<bool>("ChargedCurrent",false);
-  fNpi0 = p.get<bool>("Npi0",0);
+  fNpi0 = p.get<int>("Npi0",-1);
 }
 
 bool TruthFilter::filter(art::Event& e)
@@ -154,6 +155,7 @@ bool TruthFilter::filter(art::Event& e)
   }// for all MCParticles
   
   if ( (fNpi0 > 0) && (npi0 == 0) ) return false;
+  if ( (fNpi0 == 0) && (npi0 > 0) ) return false;
 
   return true;
 }
