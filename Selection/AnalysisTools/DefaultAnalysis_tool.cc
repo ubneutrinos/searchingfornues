@@ -96,6 +96,8 @@ private:
   TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
   TParticlePDG *pion = TDatabasePDG::Instance()->GetParticle(211);
   TParticlePDG *pi0 = TDatabasePDG::Instance()->GetParticle(111);
+  TParticlePDG *electron_neutrino = TDatabasePDG::Instance()->GetParticle(12);
+  TParticlePDG *muon_neutrino = TDatabasePDG::Instance()->GetParticle(14);
 
   art::InputTag fCRTVetoproducer; // producer for CRT veto ass tag [anab::T0 <-> recob::OpFlash]
   art::InputTag fCLSproducer;     // cluster associated to PFP
@@ -346,7 +348,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       slnhits = slicehits.size();
     }
 
-    if ((pfp->PdgCode() == 12) || (pfp->PdgCode() == 14))
+    if ((pfp->PdgCode() == electron_neutrino->PdgCode()) || (pfp->PdgCode() == muon_neutrino->PdgCode()))
     {
 
       // grab vertex
@@ -480,7 +482,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     {
       _category = k_outfv;
     }
-    else if (_nu_pdg == 12 && !there_is_reco_cosmic)
+    else if (abs(_nu_pdg) == electron_neutrino->PdgCode() && !there_is_reco_cosmic)
     {
       if (there_is_true_electron)
       {
@@ -512,7 +514,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         }
       }
     }
-    else if (_nu_pdg == 14 && !there_is_reco_cosmic)
+    else if (abs(_nu_pdg) == muon_neutrino->PdgCode() && !there_is_reco_cosmic)
     {
       if (there_is_true_mu)
       {
@@ -819,7 +821,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     }
 
     // if muon
-    if ((std::abs(part.PdgCode()) == 13) and (part.StatusCode() == 1))
+    if ((std::abs(part.PdgCode()) == muon->PdgCode()) and (part.StatusCode() == 1))
     {
       muonMomentum = part.Momentum(0).E();
       _nmuon += 1;
@@ -868,7 +870,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
       continue;
     }
 
-    if (mcp.PdgCode() == 11) {
+    if (mcp.PdgCode() == electron->PdgCode()) {
       _elec_vx = mcp.Vx();
       _elec_vy = mcp.Vy();
       _elec_vz = mcp.Vz();
@@ -940,7 +942,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
 
         auto mcp = mcp_h->at(p);
 
-        if (fabs(mcp.PdgCode()) != 11)
+        if (fabs(mcp.PdgCode()) != electron->PdgCode())
           continue;
 
         // if parent of this particle is the muon
