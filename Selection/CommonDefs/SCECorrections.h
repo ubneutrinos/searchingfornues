@@ -45,13 +45,13 @@ namespace searchingfornues
   // takes into account SCE, trigger time offset, and wirecell-pandora offset.
   // to be applied to truth xyz in order to compare to reconstructed variables
   // e.g. used for resolution plots
-  void True2RecoMappingXYZ(float& x, float& y, float& z)
+  void True2RecoMappingXYZ(float& t, float& x, float& y, float& z)
   {
     ApplySCEMappingXYZ(x, y, z);
 
     auto const &detProperties = lar::providerFrom<detinfo::DetectorPropertiesService>();
     auto const &detClocks = lar::providerFrom<detinfo::DetectorClocksService>();
-    double g4Ticks = detClocks->TPCG4Time2Tick(_vtx_t) + detProperties->GetXTicksOffset(0, 0, 0) - detProperties->TriggerOffset();
+    double g4Ticks = detClocks->TPCG4Time2Tick(t) + detProperties->GetXTicksOffset(0, 0, 0) - detProperties->TriggerOffset();
     float _xtimeoffset = detProperties->ConvertTicksToX(g4Ticks, 0, 0, 0);
 
     x += _xtimeoffset;
