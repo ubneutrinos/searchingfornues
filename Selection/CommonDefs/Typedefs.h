@@ -10,6 +10,7 @@
 #include "lardataobj/RecoBase/Shower.h"
 #include "lardataobj/RecoBase/Track.h"
 #include "lardataobj/RecoBase/Vertex.h"
+#include "lardataobj/RecoBase/SpacePoint.h"
 
 #include "lardataobj/AnalysisBase/Calorimetry.h"
 #include "lardataobj/AnalysisBase/ParticleID.h"
@@ -26,7 +27,8 @@ namespace searchingfornues {
                                               proxy::withAssociated<recob::Slice>(std::declval<art::InputTag>()),
                                               proxy::withAssociated<recob::Track>(std::declval<art::InputTag>()),
                                               proxy::withAssociated<recob::Vertex>(std::declval<art::InputTag>()),
-                                              proxy::withAssociated<recob::Shower>(std::declval<art::InputTag>())) );
+                                              proxy::withAssociated<recob::Shower>(std::declval<art::InputTag>())),
+                                              proxy::withAssociated<recob::SpacePoint>(std::declval<art::InputTag>())) );
   using ProxyPfpElem_t = ProxyPfpColl_t::element_proxy_t;
 
   // proxy to connect cluster to hit

@@ -207,7 +207,8 @@ bool NeutrinoSelectionFilter::filter(art::Event &e)
                                                                                                     proxy::withAssociated<recob::Slice>(fSLCproducer),
                                                                                                     proxy::withAssociated<recob::Track>(fTRKproducer),
                                                                                                     proxy::withAssociated<recob::Vertex>(fVTXproducer),
-                                                                                                    proxy::withAssociated<recob::Shower>(fSHRproducer));
+                                                                                                    proxy::withAssociated<recob::Shower>(fSHRproducer),
+                                                                                                    proxy::withAssociated<recob::SpacePoint>(fPFPproducer));
 
   BuildPFPMap(pfp_proxy);
 
