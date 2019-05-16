@@ -113,6 +113,7 @@ private:
     float _shr_dedx_V;
     float _shr_dedx_U;
     float _shr_distance;
+    float _tksh_distance;
     float _shr_score;
     float _shr_theta;
     float _shr_phi;
@@ -362,6 +363,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     }
 
     TVector3 total_p;
+    TVector3 trk_vtx;
+    TVector3 shr_vtx;
 
     for (size_t i_pfp = 0; i_pfp < pfp_pxy_v.size(); i_pfp++)
     {
@@ -438,6 +441,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         }
                     }
                     _shr_distance = (shr->ShowerStart() - nuvtx).Mag();
+                    shr_vtx = shr->ShowerStart();
                     TVector3 shr_p = shr->ShowerStart();
                     shr_p.SetMag(sqrt(pow(shr->Energy()[2] / 1000. + electron->Mass(), 2) - pow(electron->Mass(), 2)));
                     total_p += shr_p;
@@ -585,7 +589,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                             }
                         }
                     }
-                    TVector3 trk_vtx;
+
                     trk_vtx.SetXYZ(trk->Start().X(), trk->Start().Y(), trk->Start().Z());
                     trk_vtx -= nuvtx;
                     _trk_distance = trk_vtx.Mag();
@@ -621,15 +625,14 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         }
     }
 
-
-    if (!(_n_tracks_cc0pinp > 0 && _n_showers_cc0pinp > 0))
-        return false;
-
     _extra_energy_y -= (_trk_energy_hits_tot+_shr_energy_tot);
     _pt = total_p.Perp();
     _p = total_p.Mag();
     _hits_ratio = (float)_shr_hits_tot / (_trk_hits_tot + _shr_hits_tot);
+    _tksh_distance = (trk_vtx-shr_vtx).Mag();
 
+    if (!(_n_tracks_cc0pinp > 0 && _n_showers_cc0pinp > 0))
+        return false;
     return true;
 }
 
@@ -648,12 +651,14 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_score = std::numeric_limits<float>::lowest();
     _shr_energy = 0;
     _shr_energy_tot = 0;
-    _shr_distance = 0;
+    _shr_distance = std::numeric_limits<float>::lowest();
+    _tksh_distance = std::numeric_limits<float>::lowest();
+
     _n_showers_cc0pinp = 0;
     _n_tracks_cc0pinp = 0;
 
-    _trk_distance = 0;
-    _trk_len = 0;
+    _trk_distance = std::numeric_limits<float>::lowest();
+    _trk_len = std::numeric_limits<float>::lowest();
     _trk_energy = 0;
     _trk_energy_tot = 0;
     _hits_ratio = 0;
@@ -727,6 +732,8 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_tkfit_start_x", &_shr_tkfit_start_x, "shr_tkfit_start_x/F");
     _tree->Branch("shr_tkfit_start_y", &_shr_tkfit_start_y, "shr_tkfit_start_y/F");
     _tree->Branch("shr_tkfit_start_z", &_shr_tkfit_start_z, "shr_tkfit_start_z/F");
+    _tree->Branch("shr_tkfit_theta", &_shr_tkfit_theta, "shr_tkfit_theta/F");
+    _tree->Branch("shr_tkfit_phi", &_shr_tkfit_phi, "shr_tkfit_phi/F");
     _tree->Branch("shr_start_x", &_shr_start_x, "shr_start_x/F");
     _tree->Branch("shr_start_y", &_shr_start_y, "shr_start_y/F");
     _tree->Branch("shr_start_z", &_shr_start_z, "shr_start_z/F");
@@ -736,6 +743,7 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_tkfit_dedx_Y", &_shr_tkfit_dedx_Y, "shr_tkfit_dedx_Y/F");
     _tree->Branch("shr_tkfit_dedx_V", &_shr_tkfit_dedx_V, "shr_tkfit_dedx_V/F");
     _tree->Branch("shr_tkfit_dedx_U", &_shr_tkfit_dedx_U, "shr_tkfit_dedx_U/F");
+    _tree->Branch("tksh_distance", &_tksh_distance, "tksh_distance/F");
     _tree->Branch("shr_distance", &_shr_distance, "shr_distance/F");
     _tree->Branch("shr_score", &_shr_score, "shr_score/F");
     _tree->Branch("shr_bkt_pdg", &_shr_bkt_pdg, "shr_bkt_pdg/I");
