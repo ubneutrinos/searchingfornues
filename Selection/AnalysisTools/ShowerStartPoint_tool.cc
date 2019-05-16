@@ -12,6 +12,7 @@
 #include "../CommonDefs/BacktrackingFuncs.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "../CommonDefs/Geometry.h"
+#include "../CommonDefs/SCECorrections.h"
 
 namespace analysis
 {
@@ -164,8 +165,6 @@ void ShowerStartPoint::analyzeSlice(art::Event const &e, std::vector<ProxyPfpEle
     }
   }
 
-  auto const &mcs_h = e.getValidHandle<std::vector<sim::MCShower>>(fMCSproducer);
-
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
   {
     auto PDG = fabs(slice_pfp_v[i_pfp]->PdgCode());
@@ -179,9 +178,9 @@ void ShowerStartPoint::analyzeSlice(art::Event const &e, std::vector<ProxyPfpEle
     if (nshr == 1)
     {
       float true_start_x, true_start_y, true_start_z;
-      float true_start_U = YZtoUcoordinate(true_start_y, true_start_z);
-      float true_start_V = YZtoVcoordinate(true_start_y, true_start_z);
-      float true_start_Y = YZtoYcoordinate(true_start_y, true_start_z);
+      float true_start_U = searchingfornues::YZtoUcoordinate(true_start_y, true_start_z);
+      float true_start_V = searchingfornues::YZtoVcoordinate(true_start_y, true_start_z);
+      float true_start_Y = searchingfornues::YZtoYcoordinate(true_start_y, true_start_z);
 
       _shr_true_start_x_v.push_back(true_start_x);
       _shr_true_start_y_v.push_back(true_start_y);
@@ -190,10 +189,10 @@ void ShowerStartPoint::analyzeSlice(art::Event const &e, std::vector<ProxyPfpEle
       _shr_true_start_V_v.push_back(true_start_V);
       _shr_true_start_Y_v.push_back(true_start_Y);
 
-      True2RecoMappingXYZ(true_start_x, true_start_y, true_start_z);
-      true_start_U = YZtoUcoordinate(true_start_y, true_start_z);
-      true_start_V = YZtoVcoordinate(true_start_y, true_start_z);
-      true_start_Y = YZtoYcoordinate(true_start_y, true_start_z);
+      searchingfornues::True2RecoMappingXYZ(true_start_x, true_start_y, true_start_z);
+      true_start_U = searchingfornues::YZtoUcoordinate(true_start_y, true_start_z);
+      true_start_V = searchingfornues::YZtoVcoordinate(true_start_y, true_start_z);
+      true_start_Y = searchingfornues::YZtoYcoordinate(true_start_y, true_start_z);
 
       _shr_true_sce_start_x_v.push_back(true_start_x);
       _shr_true_sce_start_y_v.push_back(true_start_y);
@@ -216,7 +215,7 @@ void ShowerStartPoint::analyzeSlice(art::Event const &e, std::vector<ProxyPfpEle
       float sp_y = spacepoint->XYZ()[1];
       float sp_z = spacepoint->XYZ()[2];
 
-      float distance_wrt_vertex = distance3d(sp_x, sp_y, sp_z,
+      float distance_wrt_vertex = searchingfornues::distance3d(sp_x, sp_y, sp_z,
                                              reco_vtx[0], reco_vtx[1], reco_vtx[2]);
 
       if (distance_wrt_vertex < smallest_sp_distance)

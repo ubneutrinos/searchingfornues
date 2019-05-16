@@ -36,7 +36,6 @@ namespace searchingfornues
   {
     return z;
   }
-}
 
 } // namespace searchingfornues
 
