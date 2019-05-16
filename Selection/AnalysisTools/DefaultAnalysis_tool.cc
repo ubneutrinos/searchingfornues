@@ -94,6 +94,8 @@ private:
   TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
   TParticlePDG *electron = TDatabasePDG::Instance()->GetParticle(11);
   TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
+  TParticlePDG *pion = TDatabasePDG::Instance()->GetParticle(211);
+  TParticlePDG *pi0 = TDatabasePDG::Instance()->GetParticle(111);
 
   art::InputTag fCRTVetoproducer; // producer for CRT veto ass tag [anab::T0 <-> recob::OpFlash]
   art::InputTag fCLSproducer;     // cluster associated to PFP
@@ -123,6 +125,10 @@ private:
   const int k_data = 0;
   // kinematic thresholds to define signal
   float fProtonThreshold;
+  float fPionThreshold;
+  float fPi0Threshold;
+  float fElectronThreshold;
+  float fMuonThreshold;
 
   int _category; // event category
 
@@ -225,7 +231,10 @@ DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
   fMCRproducer = p.get<art::InputTag>("MCRproducer");
   fSLCproducer = p.get<art::InputTag>("SLCproducer");
   // kinematic thresholds for defining signal
-  fProtonThreshold = p.get<float>("ProtonThreshold");
+  fProtonThreshold = p.get<float>("ProtonThreshold", 0.04);
+  fMuonThreshold = p.get<float>("MuonThreshold", 0.04);
+  fPionThreshold = p.get<float>("PionThreshold", 0.04);
+  fElectronThreshold = p.get<float>("ElectronThreshold", 0.03);
 
   fFidvolXstart = p.get<double>("fidvolXstart", 10);
   fFidvolXend = p.get<double>("fidvolXend", 10);
@@ -461,51 +470,11 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     std::vector<int>::iterator cosmic_id = std::find(_backtracked_pdg.begin(), _backtracked_pdg.end(), 0);
     bool there_is_reco_cosmic = cosmic_id != _backtracked_pdg.end();
 
-    bool there_is_true_proton = false;
-    bool there_is_true_pi = false;
-    bool there_is_true_mu = false;
-    bool there_is_true_pi0 = false;
-    bool there_is_true_electron = false;
-
-    for (size_t i_pdg = 0; i_pdg < _mc_pdg.size(); i_pdg++)
-    {
-      if (abs(_mc_pdg[i_pdg]) == 11)
-      {
-        double ke = _mc_E[i_pdg] - 0.00052;
-        if (ke > 0.03)
-        {
-          there_is_true_electron = true;
-        }
-      }
-      if (abs(_mc_pdg[i_pdg]) == 2212)
-      {
-        double ke = _mc_E[i_pdg] - 0.938;
-        if (ke > 0.04)
-        {
-          there_is_true_proton = true;
-        }
-      }
-
-      if (abs(_mc_pdg[i_pdg]) == 211 || _mc_pdg[i_pdg] == 111)
-      {
-        double ke = _mc_E[i_pdg] - 0.135;
-        if (ke > 0.04)
-        {
-          if (_mc_pdg[i_pdg] == 111)
-            there_is_true_pi0 = true;
-          there_is_true_pi = true;
-        }
-      }
-
-      if (abs(_mc_pdg[i_pdg]) == 13)
-      {
-        double ke = _mc_E[i_pdg] - 0.105;
-        if (ke > 0.04)
-        {
-          there_is_true_mu = true;
-        }
-      }
-    }
+    bool there_is_true_proton = _nproton > 0;
+    bool there_is_true_pi = _npion > 0;
+    bool there_is_true_mu = _nmuon > 0;
+    bool there_is_true_pi0 = _npi0 > 0;
+    bool there_is_true_electron = _nelec > 0;
 
     if (!there_is_reco_cosmic && !_isVtxInFiducial)
     {
@@ -857,32 +826,37 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
       _muon_e = part.Momentum(0).E();
     } // if muon
     // if electron
-    if ((std::abs(part.PdgCode()) == 11) and (part.StatusCode() == 1))
+    if ((std::abs(part.PdgCode()) == electron->PdgCode()) and (part.StatusCode() == 1))
     {
-      _nelec += 1;
-      _elec_e = part.Momentum(0).E();
+      if (part.Momentum(0).E() - electron->Mass() > fElectronThreshold)
+        _nelec += 1;
+      if (part.Momentum(0).E() > _elec_e)
+        _elec_e = part.Momentum(0).E();
     } // if electron
     // if pi0
-    if ((part.PdgCode() == 111) and (part.StatusCode() == 1))
+    if ((part.PdgCode() == pi0->PdgCode()) and (part.StatusCode() == 1))
     {
-      _npi0 += 1;
-      _pi0_e = part.Momentum(0).E();
+      if (part.Momentum(0).E() - pi0->Mass() > fPionThreshold)
+        _npi0 += 1;
+      if (part.Momentum(0).E() > _pi0_e)
+        _pi0_e = part.Momentum(0).E();
     } // if pi0
     // if proton
-    if ((part.PdgCode() == 2212) and (part.StatusCode() == 1))
+    if ((part.PdgCode() == proton->PdgCode()) and (part.StatusCode() == 1))
     {
-      // if highest energy, update energy
+      if (part.Momentum(0).E() - proton->Mass() > fProtonThreshold)
+        _nproton += 1;
       if (part.Momentum(0).E() > _proton_e)
         _proton_e = part.Momentum(0).E();
-      if (part.Momentum(0).E() > fProtonThreshold)
-        _nproton += 1;
+
     } // if proton
     // if pion
-    if ((std::abs(part.PdgCode()) == 211) and (part.StatusCode() == 1))
+    if ((std::abs(part.PdgCode()) == pion->PdgCode()) and (part.StatusCode() == 1))
     {
+      if (part.Momentum(0).E() - pion->Mass() > fPionThreshold)
+        _npion += 1;
       if (part.Momentum(0).E() > _pion_e)
         _pion_e = part.Momentum(0).E();
-      _npion += 1;
     } // if pion
   }   // for all MCParticles
 
