@@ -18,21 +18,21 @@ namespace searchingfornues
                   float& x2, float& y2, float& z2)
   {
     return sqrt((x1-x2)*(x1-x2) +
-                (y1-y2)*(y1-y2)
+                (y1-y2)*(y1-y2) +
                 (z1-z2)*(z1-z2));
   }
 
-  void YZtoUcoordinate(float& y, float& z)
+  float YZtoUcoordinate(float& y, float& z)
   {
     return -sqrt(3.)/2. * y + 1./2. * z;
   }
 
-  void YZtoVcoordinate(float& y, float& z)
+  float YZtoVcoordinate(float& y, float& z)
   {
     return +sqrt(3.)/2. * y + 1./2. * z;
   }
 
-  void YZtoYcoordinate(float& y, float& z)
+  float YZtoYcoordinate(float& y, float& z)
   {
     return z;
   }
