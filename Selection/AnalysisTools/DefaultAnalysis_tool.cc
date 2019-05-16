@@ -107,6 +107,7 @@ private:
   float fFidvolZend;
 
   const int k_nu_e_other = 1;
+  const int k_nu_e_cc0pi0p =10;
   const int k_nu_e_cc0pinp = 11;
   const int k_nu_mu_other = 2;
   const int k_nu_mu_pi0 = 21;
@@ -515,6 +516,9 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           {
             _category = k_nu_e_cc0pinp;
           }
+	  else if (!there_is_true_pi && !there_is_true_proton){
+	    _category = k_nu_e_cc0pi0p;
+	  }
           else
           {
             _category = k_nu_e_other;
