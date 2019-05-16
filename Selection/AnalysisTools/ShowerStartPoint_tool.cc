@@ -175,32 +175,33 @@ void ShowerStartPoint::analyzeSlice(art::Event const &e, std::vector<ProxyPfpEle
     //fill by default
     fillDefault();
     auto nshr = slice_pfp_v[i_pfp].get<recob::Shower>().size();
-    if (nshr == 1)
-    {
-      float true_start_x, true_start_y, true_start_z;
-      float true_start_U = searchingfornues::YZtoUcoordinate(true_start_y, true_start_z);
-      float true_start_V = searchingfornues::YZtoVcoordinate(true_start_y, true_start_z);
-      float true_start_Y = searchingfornues::YZtoYcoordinate(true_start_y, true_start_z);
-
-      _shr_true_start_x_v.push_back(true_start_x);
-      _shr_true_start_y_v.push_back(true_start_y);
-      _shr_true_start_z_v.push_back(true_start_z);
-      _shr_true_start_U_v.push_back(true_start_U);
-      _shr_true_start_V_v.push_back(true_start_V);
-      _shr_true_start_Y_v.push_back(true_start_Y);
-
-      searchingfornues::True2RecoMappingXYZ(true_start_x, true_start_y, true_start_z);
-      true_start_U = searchingfornues::YZtoUcoordinate(true_start_y, true_start_z);
-      true_start_V = searchingfornues::YZtoVcoordinate(true_start_y, true_start_z);
-      true_start_Y = searchingfornues::YZtoYcoordinate(true_start_y, true_start_z);
-
-      _shr_true_sce_start_x_v.push_back(true_start_x);
-      _shr_true_sce_start_y_v.push_back(true_start_y);
-      _shr_true_sce_start_z_v.push_back(true_start_z);
-      _shr_true_sce_start_U_v.push_back(true_start_U);
-      _shr_true_sce_start_V_v.push_back(true_start_V);
-      _shr_true_sce_start_Y_v.push_back(true_start_Y);
-    }
+    // if (nshr == 1)
+    // {
+    //   //need association with true shower
+    //   float true_start_x, true_start_y, true_start_z;
+    //   float true_start_U = searchingfornues::YZtoUcoordinate(true_start_y, true_start_z);
+    //   float true_start_V = searchingfornues::YZtoVcoordinate(true_start_y, true_start_z);
+    //   float true_start_Y = searchingfornues::YZtoYcoordinate(true_start_y, true_start_z);
+    //
+    //   _shr_true_start_x_v.push_back(true_start_x);
+    //   _shr_true_start_y_v.push_back(true_start_y);
+    //   _shr_true_start_z_v.push_back(true_start_z);
+    //   _shr_true_start_U_v.push_back(true_start_U);
+    //   _shr_true_start_V_v.push_back(true_start_V);
+    //   _shr_true_start_Y_v.push_back(true_start_Y);
+    //
+    //   searchingfornues::True2RecoMappingXYZ(true_start_x, true_start_y, true_start_z);
+    //   true_start_U = searchingfornues::YZtoUcoordinate(true_start_y, true_start_z);
+    //   true_start_V = searchingfornues::YZtoVcoordinate(true_start_y, true_start_z);
+    //   true_start_Y = searchingfornues::YZtoYcoordinate(true_start_y, true_start_z);
+    //
+    //   _shr_true_sce_start_x_v.push_back(true_start_x);
+    //   _shr_true_sce_start_y_v.push_back(true_start_y);
+    //   _shr_true_sce_start_z_v.push_back(true_start_z);
+    //   _shr_true_sce_start_U_v.push_back(true_start_U);
+    //   _shr_true_sce_start_V_v.push_back(true_start_V);
+    //   _shr_true_sce_start_Y_v.push_back(true_start_Y);
+    // }
 
     auto spacepoints = slice_pfp_v[i_pfp].get<recob::SpacePoint>();
 
