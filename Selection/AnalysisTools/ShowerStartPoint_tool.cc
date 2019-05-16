@@ -1,5 +1,5 @@
-#ifndef ANALYSIS_SHOWERANALYSIS_CXX
-#define ANALYSIS_SHOWERANALYSIS_CXX
+#ifndef ANALYSIS_SHOWERSTARTPOINT_CXX
+#define ANALYSIS_SHOWERSTARTPOINT_CXX
 
 #include <iostream>
 #include "AnalysisToolBase.h"
