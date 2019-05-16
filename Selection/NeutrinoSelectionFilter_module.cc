@@ -202,13 +202,13 @@ bool NeutrinoSelectionFilter::filter(art::Event &e)
 
   // grab PFParticles in event
   selection::ProxyPfpColl_t const &pfp_proxy = proxy::getCollection<std::vector<recob::PFParticle>>(e, fPFPproducer,
-                                                                                                    proxy::withAssociated<larpandoraobj::PFParticleMetadata>(fPFPproducer),
-                                                                                                    proxy::withAssociated<recob::Cluster>(fCLSproducer),
-                                                                                                    proxy::withAssociated<recob::Slice>(fSLCproducer),
-                                                                                                    proxy::withAssociated<recob::Track>(fTRKproducer),
-                                                                                                    proxy::withAssociated<recob::Vertex>(fVTXproducer),
-                                                                                                    proxy::withAssociated<recob::Shower>(fSHRproducer),
-                                                                                                    proxy::withAssociated<recob::SpacePoint>(fPFPproducer));
+                                                        proxy::withAssociated<larpandoraobj::PFParticleMetadata>(fPFPproducer),
+                                                        proxy::withAssociated<recob::Cluster>(fCLSproducer),
+                                                        proxy::withAssociated<recob::Slice>(fSLCproducer),
+                                                        proxy::withAssociated<recob::Track>(fTRKproducer),
+                                                        proxy::withAssociated<recob::Vertex>(fVTXproducer),
+                                                        proxy::withAssociated<recob::Shower>(fSHRproducer),
+                                                        proxy::withAssociated<recob::SpacePoint>(fPFPproducer));
 
   BuildPFPMap(pfp_proxy);
 

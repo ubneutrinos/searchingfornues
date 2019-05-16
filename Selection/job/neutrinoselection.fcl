@@ -7,6 +7,9 @@
 #include "services_microboone.fcl"
 #include "flashmatchsetup.fcl"
 
+ShowerStartPointTool: {
+    tool_type: "ShowerStartPoint"
+}
 
 ShowerAnalysisTool: {
     tool_type: "ShowerAnalysis"
@@ -139,10 +142,11 @@ NuSelectionFilter:{
         slicepurcompl: @local::SlicePurComplTool
         containment:   @local::ContainmentAnalysis
         shower:        @local::ShowerAnalysisTool
+        showerstart:        @local::ShowerStartPointTool
         track:         @local::TrackAnalysisTool
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
- 
+
        }
     }
 
@@ -187,4 +191,3 @@ NuSelectionFilterRun3.AnalysisTools: {
         crtApproach:@local::CRTApproachAnalysisTool
         }
 NuSelectionFilterRun3.AnalysisTools.default.CRTVetoproducer: "crtveto"
-

@@ -22,13 +22,13 @@ namespace searchingfornues {
 
   using ProxyPfpColl_t = decltype(proxy::getCollection<std::vector<recob::PFParticle> >(
 					      std::declval<art::Event>(),std::declval<art::InputTag>(),
-                                              proxy::withAssociated<larpandoraobj::PFParticleMetadata>(std::declval<art::InputTag>()),
-                                              proxy::withAssociated<recob::Cluster>(std::declval<art::InputTag>()),
-                                              proxy::withAssociated<recob::Slice>(std::declval<art::InputTag>()),
-                                              proxy::withAssociated<recob::Track>(std::declval<art::InputTag>()),
-                                              proxy::withAssociated<recob::Vertex>(std::declval<art::InputTag>()),
-                                              proxy::withAssociated<recob::Shower>(std::declval<art::InputTag>())),
-                                              proxy::withAssociated<recob::SpacePoint>(std::declval<art::InputTag>())) );
+                proxy::withAssociated<larpandoraobj::PFParticleMetadata>(std::declval<art::InputTag>()),
+                proxy::withAssociated<recob::Cluster>(std::declval<art::InputTag>()),
+                proxy::withAssociated<recob::Slice>(std::declval<art::InputTag>()),
+                proxy::withAssociated<recob::Track>(std::declval<art::InputTag>()),
+                proxy::withAssociated<recob::Vertex>(std::declval<art::InputTag>()),
+                proxy::withAssociated<recob::Shower>(std::declval<art::InputTag>()),
+                proxy::withAssociated<recob::SpacePoint>(std::declval<art::InputTag>())) );
   using ProxyPfpElem_t = ProxyPfpColl_t::element_proxy_t;
 
   // proxy to connect cluster to hit

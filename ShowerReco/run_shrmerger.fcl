@@ -47,19 +47,20 @@ source:
 # Modules are grouped by type.
 physics:
 {
-    
+
     producers:
         {
-        
+
         ### random number saver
         rns:                 { module_type: RandomNumberSaver }
-        
+
         ### shower reco module
-        
+
         shrmerger: {
             module_type: "ShowerMerger"
             PFPproducer: "pandora"
             SHRproducer: "pandora"
+            SPPproducer: "pandora"
             HITproducer: "pandora"
             CLSproducer: "pandora"
             SLCproducer: "pandora"
@@ -70,24 +71,24 @@ physics:
             }
 
         shrrecomerger : @local::ShrReco3DPandora
-        
+
         }
     analyzers:
-        { 
+        {
         }
-    
+
     #reco: [ rns, ophit, opflash, simpleFlash, opflashfilter ]
     reco: [ rns, shrmerger, shrrecomerger ]
     # ana: [ nueana ]
-    
-    #define the output stream, there could be more than one if using filters 
+
+    #define the output stream, there could be more than one if using filters
     stream1:  [ out1 ]
-    
-    #trigger_paths is a keyword and contains the paths that modify the art::event, 
+
+    #trigger_paths is a keyword and contains the paths that modify the art::event,
     #ie filters and producers
-    #trigger_paths: [reco] 
-    
-    #end_paths is a keyword and contains the paths that do not modify the art::Event, 
+    #trigger_paths: [reco]
+
+    #end_paths is a keyword and contains the paths that do not modify the art::Event,
     #ie analyzers and output streams.  these all run simultaneously
     #end_paths:     [stream1,ana]
     end_paths:     [stream1]

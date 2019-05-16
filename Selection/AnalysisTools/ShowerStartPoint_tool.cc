@@ -17,8 +17,8 @@ namespace analysis
 {
 ////////////////////////////////////////////////////////////////////////
 //
-// Class:       ShowerAnalysis
-// File:        ShowerAnalysis.cc
+// Class:       ShowerStartPoint
+// File:        ShowerStartPoint.cc
 //
 //              A basic analysis example
 //
@@ -30,7 +30,7 @@ namespace analysis
 //
 ////////////////////////////////////////////////////////////////////////
 
-class ShowerAnalysis : public AnalysisToolBase
+class ShowerStartPoint : public AnalysisToolBase
 {
 
 public:
@@ -39,12 +39,12 @@ public:
      *
      *  @param  pset
      */
-  ShowerAnalysis(const fhicl::ParameterSet &pset);
+  ShowerStartPoint(const fhicl::ParameterSet &pset);
 
   /**
      *  @brief  Destructor
      */
-  ~ShowerAnalysis(){};
+  ~ShowerStartPoint(){};
 
   // provide for initialization
   void configure(fhicl::ParameterSet const &pset);
@@ -110,7 +110,7 @@ private:
 ///
 /// pset - Fcl parameters.
 ///
-ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
+ShowerStartPoint::ShowerStartPoint(const fhicl::ParameterSet &p)
 {
   fTRKproducer = p.get<art::InputTag>("TRKproducer", "");
   fCALproducer = p.get<art::InputTag>("CALproducer", "");
@@ -123,7 +123,7 @@ ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
 ///
 /// pset - Fcl parameter set.
 ///
-void ShowerAnalysis::configure(fhicl::ParameterSet const &p)
+void ShowerStartPoint::configure(fhicl::ParameterSet const &p)
 {
 }
 
@@ -134,21 +134,14 @@ void ShowerAnalysis::configure(fhicl::ParameterSet const &p)
 ///
 /// pset - Fcl parameter set.
 ///
-void ShowerAnalysis::analyzeEvent(art::Event const &e, bool fData)
+void ShowerStartPoint::analyzeEvent(art::Event const &e, bool fData)
 {
   std::cout << "analyze event" << std::endl;
 }
 
-void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
+void ShowerStartPoint::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
 {
-
-  searchingfornues::ProxyCaloColl_t const *tkcalo_proxy = NULL;
-  if (fTRKproducer != "")
-  {
-    tkcalo_proxy = new searchingfornues::ProxyCaloColl_t(proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer, proxy::withAssociated<anab::Calorimetry>(fCALproducer)));
-  }
-
-  Double_t xyz[3] = {};
+  Double_t reco_vtx[3] = {};
 
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
   {
@@ -165,7 +158,7 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       else
       {
         // save vertex to array
-        vtx.at(0)->XYZ(xyz);
+        vtx.at(0)->XYZ(reco_vtx);
       }
       break;
     }
@@ -224,7 +217,7 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       float sp_z = spacepoint->XYZ()[2];
 
       float distance_wrt_vertex = distance3d(sp_x, sp_y, sp_z,
-                                             xyz[0], xyz[1], xyz[2]);
+                                             reco_vtx[0], reco_vtx[1], reco_vtx[2]);
 
       if (distance_wrt_vertex < smallest_sp_distance)
       {
@@ -239,7 +232,7 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
   }
 }
 
-void ShowerAnalysis::fillDefault()
+void ShowerStartPoint::fillDefault()
 {
   _shr_true_start_x_v.push_back(std::numeric_limits<float>::lowest());
   _shr_true_start_y_v.push_back(std::numeric_limits<float>::lowest());
@@ -261,7 +254,7 @@ void ShowerAnalysis::fillDefault()
   _shr_hits_start_Y_v.push_back(std::numeric_limits<float>::lowest());
 }
 
-void ShowerAnalysis::setBranches(TTree *_tree)
+void ShowerStartPoint::setBranches(TTree *_tree)
 {
   _tree->Branch("_shr_true_start_x_v", "std::vector<float>", &_shr_true_start_x_v);
   _tree->Branch("_shr_true_start_y_v", "std::vector<float>", &_shr_true_start_y_v);
@@ -288,7 +281,7 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("_shr_hits_start_Y_v", "std::vector<float>", &_shr_hits_start_Y_v);
 }
 
-void ShowerAnalysis::resetTTree(TTree *_tree)
+void ShowerStartPoint::resetTTree(TTree *_tree)
 {
   _shr_true_start_x_v.clear();
   _shr_true_start_y_v.clear();
@@ -310,7 +303,7 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
   _shr_hits_start_Y_v.clear();
 }
 
-DEFINE_ART_CLASS_TOOL(ShowerAnalysis)
+DEFINE_ART_CLASS_TOOL(ShowerStartPoint)
 } // namespace analysis
 
 #endif
