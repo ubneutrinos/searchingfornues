@@ -6,7 +6,8 @@
 
 #include "ubobj/CRT/CRTHit.hh"
 #include "lardataobj/RecoBase/OpFlash.h"
-
+#include "TDatabasePDG.h"
+#include "TParticlePDG.h"
 #include "nusimdata/SimulationBase/MCTruth.h"
 #include "larcore/Geometry/Geometry.h"
 
@@ -90,6 +91,14 @@ private:
    */
   bool isFiducial(const double x[3]) const;
 
+  TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
+  TParticlePDG *electron = TDatabasePDG::Instance()->GetParticle(11);
+  TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
+  TParticlePDG *pion = TDatabasePDG::Instance()->GetParticle(211);
+  TParticlePDG *pi0 = TDatabasePDG::Instance()->GetParticle(111);
+  TParticlePDG *electron_neutrino = TDatabasePDG::Instance()->GetParticle(12);
+  TParticlePDG *muon_neutrino = TDatabasePDG::Instance()->GetParticle(14);
+
   art::InputTag fCRTVetoproducer; // producer for CRT veto ass tag [anab::T0 <-> recob::OpFlash]
   art::InputTag fCLSproducer;     // cluster associated to PFP
   art::InputTag fMCTproducer;     // MCTruth from neutrino generator
@@ -119,6 +128,10 @@ private:
   const int k_data = 0;
   // kinematic thresholds to define signal
   float fProtonThreshold;
+  float fPionThreshold;
+  float fPi0Threshold;
+  float fElectronThreshold;
+  float fMuonThreshold;
 
   int _category; // event category
 
@@ -142,6 +155,7 @@ private:
   float _muon_e, _muon_p, _muon_c;       // energy, purity, completeness.
   int _nelec;                            // is there a final-state electron from the neutrino? [1=yes 0=no]
   float _elec_e, _elec_p, _elec_c;       // energy, purity, completeness.
+  float _elec_vx, _elec_vy, _elec_vz;       // energy, purity, completeness.
   int _npi0;                             // how many pi0s are there?
   int _pi0;                              // is there a final-state pi0 from the neutrino? [1=yes 0=no]
   float _pi0_e, _pi0_p, _pi0_c;          // energy, purity, completeness.
@@ -220,7 +234,10 @@ DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
   fMCRproducer = p.get<art::InputTag>("MCRproducer");
   fSLCproducer = p.get<art::InputTag>("SLCproducer");
   // kinematic thresholds for defining signal
-  fProtonThreshold = p.get<float>("ProtonThreshold");
+  fProtonThreshold = p.get<float>("ProtonThreshold", 0.04);
+  fMuonThreshold = p.get<float>("MuonThreshold", 0.04);
+  fPionThreshold = p.get<float>("PionThreshold", 0.04);
+  fElectronThreshold = p.get<float>("ElectronThreshold", 0.03);
 
   fFidvolXstart = p.get<double>("fidvolXstart", 10);
   fFidvolXend = p.get<double>("fidvolXend", 10);
@@ -332,7 +349,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       slnhits = slicehits.size();
     }
 
-    if ((pfp->PdgCode() == 12) || (pfp->PdgCode() == 14))
+    if ((pfp->PdgCode() == electron_neutrino->PdgCode()) || (pfp->PdgCode() == muon_neutrino->PdgCode()))
     {
 
       // grab vertex
@@ -406,7 +423,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           _backtracked_purity.push_back(purity);
           _backtracked_completeness.push_back(completeness);
           // if this is an interesting particle, save it to the TTree
-          if (fabs(PDG) == 13)
+          if (fabs(PDG) == muon->PdgCode())
           {
             if (fabs(mcp.e - _muon_e) < 0.01)
             {
@@ -414,7 +431,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
               _muon_c = completeness;
             }
           }
-          if (fabs(PDG) == 11)
+          if (fabs(PDG) == electron->PdgCode())
           {
             if (fabs(mcp.e - _elec_e) < 0.01)
             {
@@ -422,7 +439,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
               _elec_c = completeness;
             }
           }
-          if (fabs(PDG) == 2212)
+          if (fabs(PDG) == proton->PdgCode())
           {
             if (fabs(mcp.e - _proton_e) < 0.01)
             {
@@ -456,57 +473,17 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     std::vector<int>::iterator cosmic_id = std::find(_backtracked_pdg.begin(), _backtracked_pdg.end(), 0);
     bool there_is_reco_cosmic = cosmic_id != _backtracked_pdg.end();
 
-    bool there_is_true_proton = false;
-    bool there_is_true_pi = false;
-    bool there_is_true_mu = false;
-    bool there_is_true_pi0 = false;
-    bool there_is_true_electron = false;
-
-    for (size_t i_pdg = 0; i_pdg < _mc_pdg.size(); i_pdg++)
-    {
-      if (abs(_mc_pdg[i_pdg]) == 11)
-      {
-        double ke = _mc_E[i_pdg] - 0.00052;
-        if (ke > 0.03)
-        {
-          there_is_true_electron = true;
-        }
-      }
-      if (abs(_mc_pdg[i_pdg]) == 2212)
-      {
-        double ke = _mc_E[i_pdg] - 0.938;
-        if (ke > 0.04)
-        {
-          there_is_true_proton = true;
-        }
-      }
-
-      if (abs(_mc_pdg[i_pdg]) == 211 || _mc_pdg[i_pdg] == 111)
-      {
-        double ke = _mc_E[i_pdg] - 0.135;
-        if (ke > 0.04)
-        {
-          if (_mc_pdg[i_pdg] == 111)
-            there_is_true_pi0 = true;
-          there_is_true_pi = true;
-        }
-      }
-
-      if (abs(_mc_pdg[i_pdg]) == 13)
-      {
-        double ke = _mc_E[i_pdg] - 0.105;
-        if (ke > 0.04)
-        {
-          there_is_true_mu = true;
-        }
-      }
-    }
+    bool there_is_true_proton = _nproton > 0;
+    bool there_is_true_pi = _npion > 0;
+    bool there_is_true_mu = _nmuon > 0;
+    bool there_is_true_pi0 = _npi0 > 0;
+    bool there_is_true_electron = _nelec > 0;
 
     if (!there_is_reco_cosmic && !_isVtxInFiducial)
     {
       _category = k_outfv;
     }
-    else if (_nu_pdg == 12 && !there_is_reco_cosmic)
+    else if (abs(_nu_pdg) == electron_neutrino->PdgCode() && !there_is_reco_cosmic)
     {
       if (there_is_true_electron)
       {
@@ -541,7 +518,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         }
       }
     }
-    else if (_nu_pdg == 14 && !there_is_reco_cosmic)
+    else if (abs(_nu_pdg) == muon_neutrino->PdgCode() && !there_is_reco_cosmic)
     {
       if (there_is_true_mu)
       {
@@ -613,6 +590,9 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("elec_e", &_elec_e, "elec_e/F");
   _tree->Branch("elec_c", &_elec_c, "elec_c/F");
   _tree->Branch("elec_p", &_elec_p, "elec_p/F");
+  _tree->Branch("elec_vx", &_elec_vx, "elec_vx/F");
+  _tree->Branch("elec_vy", &_elec_vy, "elec_vy/F");
+  _tree->Branch("elec_vz", &_elec_vz, "elec_vz/F");
   // pi0
   _tree->Branch("npi0", &_npi0, "npi0/I");
   _tree->Branch("pi0_e", &_pi0_e, "pi0_e/F");
@@ -698,26 +678,26 @@ void DefaultAnalysis::setBranches(TTree *_tree)
 
 void DefaultAnalysis::resetTTree(TTree *_tree)
 {
-  _run = std::numeric_limits<int>::min();
-  _sub = std::numeric_limits<int>::min();
-  _evt = std::numeric_limits<int>::min();
-  _nu_e = std::numeric_limits<float>::min();
-  _nu_pdg = std::numeric_limits<int>::min();
-  _ccnc = std::numeric_limits<int>::min();
+  _run = std::numeric_limits<int>::lowest();
+  _sub = std::numeric_limits<int>::lowest();
+  _evt = std::numeric_limits<int>::lowest();
+  _nu_e = std::numeric_limits<float>::lowest();
+  _nu_pdg = std::numeric_limits<int>::lowest();
+  _ccnc = std::numeric_limits<int>::lowest();
   _pass = 0;
-  _vtx_x = std::numeric_limits<float>::min();
-  _vtx_y = std::numeric_limits<float>::min();
-  _vtx_z = std::numeric_limits<float>::min();
+  _vtx_x = std::numeric_limits<float>::lowest();
+  _vtx_y = std::numeric_limits<float>::lowest();
+  _vtx_z = std::numeric_limits<float>::lowest();
 
   _category = 0;
 
-  _nu_vtx_x = std::numeric_limits<float>::min();
-  _nu_vtx_y = std::numeric_limits<float>::min();
-  _nu_vtx_z = std::numeric_limits<float>::min();
+  _nu_vtx_x = std::numeric_limits<float>::lowest();
+  _nu_vtx_y = std::numeric_limits<float>::lowest();
+  _nu_vtx_z = std::numeric_limits<float>::lowest();
 
-  _nu_sce_x = std::numeric_limits<float>::min();
-  _nu_sce_y = std::numeric_limits<float>::min();
-  _nu_sce_z = std::numeric_limits<float>::min();
+  _nu_sce_x = std::numeric_limits<float>::lowest();
+  _nu_sce_y = std::numeric_limits<float>::lowest();
+  _nu_sce_z = std::numeric_limits<float>::lowest();
 
   _isVtxInActive = false;
   _isVtxInFiducial = false;
@@ -735,7 +715,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _elec_e = 0;
   _elec_p = 0;
   _elec_c = 0;
-
+  _elec_vx = std::numeric_limits<float>::lowest();
+  _elec_vy = std::numeric_limits<float>::lowest();
+  _elec_vz = std::numeric_limits<float>::lowest();
   _npi0 = 0;
   _pi0_e = 0;
   _pi0_p = 0;
@@ -761,9 +743,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _backtracked_purity.clear();
   _backtracked_completeness.clear();
 
-  evnhits = std::numeric_limits<int>::min();
-  slpdg = std::numeric_limits<int>::min();
-  slnhits = std::numeric_limits<int>::min();
+  evnhits = std::numeric_limits<int>::lowest();
+  slpdg = std::numeric_limits<int>::lowest();
+  slnhits = std::numeric_limits<int>::lowest();
   pfpdg.clear();
   pfnhits.clear();
   pfnplanehits.clear();
@@ -843,39 +825,44 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     }
 
     // if muon
-    if ((std::abs(part.PdgCode()) == 13) and (part.StatusCode() == 1))
+    if ((std::abs(part.PdgCode()) == muon->PdgCode()) and (part.StatusCode() == 1))
     {
       muonMomentum = part.Momentum(0).E();
       _nmuon += 1;
       _muon_e = part.Momentum(0).E();
     } // if muon
     // if electron
-    if ((std::abs(part.PdgCode()) == 11) and (part.StatusCode() == 1))
+    if ((std::abs(part.PdgCode()) == electron->PdgCode()) and (part.StatusCode() == 1))
     {
-      _nelec += 1;
-      _elec_e = part.Momentum(0).E();
+      if (part.Momentum(0).E() - electron->Mass() > fElectronThreshold)
+        _nelec += 1;
+      if (part.Momentum(0).E() > _elec_e)
+        _elec_e = part.Momentum(0).E();
     } // if electron
     // if pi0
-    if ((part.PdgCode() == 111) and (part.StatusCode() == 1))
+    if ((part.PdgCode() == pi0->PdgCode()) and (part.StatusCode() == 1))
     {
-      _npi0 += 1;
-      _pi0_e = part.Momentum(0).E();
+      if (part.Momentum(0).E() - pi0->Mass() > fPionThreshold)
+        _npi0 += 1;
+      if (part.Momentum(0).E() > _pi0_e)
+        _pi0_e = part.Momentum(0).E();
     } // if pi0
     // if proton
-    if ((part.PdgCode() == 2212) and (part.StatusCode() == 1))
+    if ((part.PdgCode() == proton->PdgCode()) and (part.StatusCode() == 1))
     {
-      // if highest energy, update energy
+      if (part.Momentum(0).E() - proton->Mass() > fProtonThreshold)
+        _nproton += 1;
       if (part.Momentum(0).E() > _proton_e)
         _proton_e = part.Momentum(0).E();
-      if (part.Momentum(0).E() > fProtonThreshold)
-        _nproton += 1;
+
     } // if proton
     // if pion
-    if ((std::abs(part.PdgCode()) == 211) and (part.StatusCode() == 1))
+    if ((std::abs(part.PdgCode()) == pion->PdgCode()) and (part.StatusCode() == 1))
     {
+      if (part.Momentum(0).E() - pion->Mass() > fPionThreshold)
+        _npion += 1;
       if (part.Momentum(0).E() > _pion_e)
         _pion_e = part.Momentum(0).E();
-      _npion += 1;
     } // if pion
   }   // for all MCParticles
 
@@ -885,6 +872,12 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     if (!(mcp.Process() == "primary" &&
           mcp.StatusCode() == 1)) {
       continue;
+    }
+
+    if (mcp.PdgCode() == electron->PdgCode()) {
+      _elec_vx = mcp.Vx();
+      _elec_vy = mcp.Vy();
+      _elec_vz = mcp.Vz();
     }
 
     _mc_E.push_back(mcp.E());
@@ -953,7 +946,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
 
         auto mcp = mcp_h->at(p);
 
-        if (fabs(mcp.PdgCode()) != 11)
+        if (fabs(mcp.PdgCode()) != electron->PdgCode())
           continue;
 
         // if parent of this particle is the muon

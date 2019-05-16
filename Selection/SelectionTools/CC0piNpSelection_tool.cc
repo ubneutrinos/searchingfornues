@@ -12,6 +12,8 @@
 #include "larcore/Geometry/Geometry.h"
 // backtracking tools
 #include "../CommonDefs/BacktrackingFuncs.h"
+#include "canvas/Persistency/Common/FindManyP.h"
+
 
 namespace selection
 {
@@ -71,7 +73,6 @@ public:
     bool isFiducial(const double x[3]) const;
 
 private:
-
     trkf::TrackMomentumCalculator _trkmom;
     TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
     TParticlePDG *electron = TDatabasePDG::Instance()->GetParticle(11);
@@ -94,13 +95,18 @@ private:
     art::InputTag fMCPproducer;
     art::InputTag fCALproducer;
 
-    unsigned int _n_showers;
-    unsigned int _n_tracks;
+    unsigned int _n_showers_cc0pinp;
+    unsigned int _n_tracks_cc0pinp;
     unsigned int _max_hits_shower;
     unsigned int _max_hits_track;
     unsigned int _shr_hits_tot;
     unsigned int _trk_hits_tot;
-
+    unsigned int _trk_hits_y_tot;
+    unsigned int _trk_hits_v_tot;
+    unsigned int _trk_hits_u_tot;
+    unsigned int _shr_hits_y_tot;
+    unsigned int _shr_hits_v_tot;
+    unsigned int _shr_hits_u_tot;
     float _shr_energy;
     float _shr_energy_tot;
     float _shr_dedx_Y;
@@ -158,7 +164,10 @@ private:
     float _shr_tkfit_dedx_Y;
     float _shr_tkfit_dedx_U;
     float _shr_tkfit_dedx_V;
+    float _trk_energy_hits_tot;
 
+    unsigned int _total_hits_y;
+    float _extra_energy_y;
 };
 
 //----------------------------------------------------------------------------
@@ -202,9 +211,9 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
 {
     fTrkShrscore = pset.get<float>("TrkShrscore", 0.5);
     fCLSproducer = pset.get<art::InputTag>("CLSproducer", "pandora");
-    fTRKproducer = pset.get<art::InputTag>("TRKproducer", "pandora");
+    fTRKproducer = pset.get<art::InputTag>("TRKproducer", "shrreco3dKalmanShower");
     fPIDproducer = pset.get<art::InputTag>("PIDproducer", "pandoracalipidSCE");
-    fCALproducer = pset.get<art::InputTag>("CALproducer", "pandoracaliSCE");
+    fCALproducer = pset.get<art::InputTag>("CALproducer", "shrreco3dKalmanShowercali");
     fHproducer = pset.get<art::InputTag>("Hproducer", "gaushit");
     fMCRproducer = pset.get<art::InputTag>("MCRproducer", "mcreco");
     fBacktrackTag = pset.get<art::InputTag>("BacktrackTag", "gaushitTruthMatch");
@@ -216,7 +225,6 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
     fFidvolYend = pset.get<float>("FidvolYend", 15);
     fFidvolXstart = pset.get<float>("FidvolXstart", 10);
     fFidvolXend = pset.get<float>("FidvolXend", 10);
-
 }
 
 //----------------------------------------------------------------------------
@@ -233,7 +241,17 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                                                                                           proxy::withAssociated<recob::Hit>(fCLSproducer));
     searchingfornues::ProxyPIDColl_t const &pid_proxy = proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer,
                                                                                                         proxy::withAssociated<anab::ParticleID>(fPIDproducer));
-    searchingfornues::ProxyCaloColl_t const &tkcalo_proxy = proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer, proxy::withAssociated<anab::Calorimetry>(fCALproducer));
+
+    art::ValidHandle<std::vector<recob::PFParticle>> inputPfParticle = e.getValidHandle<std::vector<recob::PFParticle>>(fCLSproducer);
+    art::ValidHandle<std::vector<recob::Slice>> inputSlice = e.getValidHandle<std::vector<recob::Slice>>(fCLSproducer);
+    auto assocSliceHit = std::unique_ptr<art::FindManyP<recob::Hit>>(new art::FindManyP<recob::Hit>(inputSlice, e, fCLSproducer));
+    auto assocSlice = std::unique_ptr<art::FindManyP<recob::Slice>>(new art::FindManyP<recob::Slice>(inputPfParticle, e, fCLSproducer));
+    art::FindManyP< larpandoraobj::PFParticleMetadata > pfPartToMetadataAssoc(inputPfParticle, e, fCLSproducer);
+    searchingfornues::ProxyCaloColl_t const *tkcalo_proxy = NULL;
+    if (fTRKproducer != "")
+    {
+        tkcalo_proxy = new searchingfornues::ProxyCaloColl_t(proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer, proxy::withAssociated<anab::Calorimetry>(fCALproducer)));
+    }
     // load backtrack information
     std::vector<searchingfornues::BtPart> btparts_v;
     std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
@@ -256,12 +274,14 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
             }
 
             auto PDG = mcp.PdgCode();
-            if (fabs(PDG) == proton->PdgCode()) {
+            if (fabs(PDG) == proton->PdgCode())
+            {
                 double ke = mcp.E() - proton->Mass();
                 if (ke > 0.040)
                     _dep_E += ke;
             }
-            if (fabs(PDG) == electron->PdgCode()) {
+            if (fabs(PDG) == electron->PdgCode())
+            {
                 double ke = mcp.E() - electron->Mass();
                 if (ke > 0.030)
                     _dep_E += ke;
@@ -269,12 +289,52 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         }
     }
 
+    for (unsigned int inpf = 0; inpf < inputPfParticle->size(); ++inpf)
+    {
+        art::Ptr<recob::PFParticle> npfp(inputPfParticle, inpf);
+        bool isTheNeutrino = false;
+
+        const std::vector<art::Ptr<larpandoraobj::PFParticleMetadata>> &pfParticleMetadataList(pfPartToMetadataAssoc.at(inpf));
+        if (!pfParticleMetadataList.empty())
+        {
+            for (unsigned int j = 0; j < pfParticleMetadataList.size(); ++j)
+            {
+                const art::Ptr<larpandoraobj::PFParticleMetadata> &pfParticleMetadata(pfParticleMetadataList.at(j));
+
+                const larpandoraobj::PFParticleMetadata::PropertiesMap &pfParticlePropertiesMap(pfParticleMetadata->GetPropertiesMap());
+                for (larpandoraobj::PFParticleMetadata::PropertiesMap::const_iterator it = pfParticlePropertiesMap.begin(); it != pfParticlePropertiesMap.end(); ++it)
+                {
+                    if (it->first == "IsNeutrino" && it->second == 1)
+                        isTheNeutrino = true;
+                }
+            }
+        }
+        if (npfp->IsPrimary() == false)
+            continue;
+        //  recob::Slices are unique for the neutrino slice and for clear cosmics. Ambiguous cosmics may have >1 primary PFParticle per slice
+        //(i.e. the slice is not unique in terms of primary PFParticles)
+        auto slices = assocSlice->at(npfp.key());
+        if (slices.size() != 1)
+        {
+            std::cout << "WRONG!!! n slices = " << slices.size() << std::endl;
+        }
+        if (isTheNeutrino == true)
+        {
+            auto slicehit = assocSliceHit->at(slices[0].key());
+            for (unsigned int isl = 0; isl < slicehit.size(); isl++)
+            {
+                const auto& slhit = slicehit.at(isl);
+                int slhit_pl = slhit->WireID().Plane;
+                if (slhit_pl == 2) {
+                    _total_hits_y++;
+                    _extra_energy_y += 1.01 * slhit->Integral() * 238 * 23.6e-6 / 0.6 / 1000;
+                }
+            }
+        }
+    }
+
     double nu_vtx[3] = {};
     TVector3 nuvtx;
-
-    _max_hits_track = 0;
-    _max_hits_shower = 0;
-
     for (size_t i_pfp = 0; i_pfp < pfp_pxy_v.size(); i_pfp++)
     {
         auto PDG = fabs(pfp_pxy_v[i_pfp]->PdgCode());
@@ -290,7 +350,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
             else
             {
                 vtx.at(0)->XYZ(nu_vtx);
-                if (!isFiducial(nu_vtx)) {
+                if (!isFiducial(nu_vtx))
+                {
                     return false;
                 }
                 nuvtx.SetXYZ(nu_vtx[0], nu_vtx[1], nu_vtx[2]);
@@ -319,10 +380,11 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
             if (trkshrscore < fTrkShrscore)
             {
                 double shr_vertex[3] = {shr->ShowerStart().X(), shr->ShowerStart().Y(), shr->ShowerStart().Z()};
-                if (!isFiducial(shr_vertex)) {
+                if (!isFiducial(shr_vertex))
+                {
                     return false;
                 }
-                _n_showers++;
+                _n_showers_cc0pinp++;
 
                 unsigned int shr_hits = 0;
 
@@ -338,6 +400,18 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     for (const auto &hit : clus_hit_v)
                     {
                         hit_v.push_back(hit);
+                    }
+                    if (clus->Plane().Plane == 0)
+                    {
+                        _shr_hits_u_tot += clus_hit_v.size();
+                    }
+                    else if (clus->Plane().Plane == 1)
+                    {
+                        _shr_hits_v_tot += clus_hit_v.size();
+                    }
+                    else if (clus->Plane().Plane == 2)
+                    {
+                        _shr_hits_y_tot += clus_hit_v.size();
                     }
                 }
 
@@ -383,9 +457,23 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr_py = shr->Direction().Y();
                     _shr_pz = shr->Direction().Z();
 
-                    for (auto &tk : tkcalo_proxy)
+                    if (tkcalo_proxy == NULL)
                     {
+                        _shr_tkfit_start_x = std::numeric_limits<float>::lowest();
+                        _shr_tkfit_start_y = std::numeric_limits<float>::lowest();
+                        _shr_tkfit_start_z = std::numeric_limits<float>::lowest();
 
+                        _shr_tkfit_phi = std::numeric_limits<float>::lowest();
+                        _shr_tkfit_theta = std::numeric_limits<float>::lowest();
+                        _shr_tkfit_dedx_Y = std::numeric_limits<float>::lowest();
+                        _shr_tkfit_dedx_V = std::numeric_limits<float>::lowest();
+                        _shr_tkfit_dedx_U = std::numeric_limits<float>::lowest();
+
+                        continue;
+                    }
+
+                    for (const searchingfornues::ProxyCaloElem_t &tk : *tkcalo_proxy)
+                    {
                         // find track with ID matching the pfp index (this convention apparently works only for shower fits...)
                         if (tk->ID() != int(pfp_pxy_v[i_pfp].index()))
                             continue;
@@ -440,7 +528,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 {
                     return false;
                 }
-                _n_tracks++;
+                _n_tracks_cc0pinp++;
                 unsigned int trk_hits = 0;
 
                 auto clus_pxy_v = pfp_pxy.get<recob::Cluster>();
@@ -455,6 +543,20 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     for (const auto &hit : clus_hit_v)
                     {
                         hit_v.push_back(hit);
+                        if (clus->Plane().Plane == 2)
+                            _trk_energy_hits_tot += 1.01 * hit->Integral() * 238 * 23.6e-6 / 0.6 / 1000;
+                    }
+                    if (clus->Plane().Plane == 0)
+                    {
+                        _trk_hits_u_tot += clus_hit_v.size();
+                    }
+                    else if (clus->Plane().Plane == 1)
+                    {
+                        _trk_hits_v_tot += clus_hit_v.size();
+                    }
+                    else if (clus->Plane().Plane == 2)
+                    {
+                        _trk_hits_y_tot += clus_hit_v.size();
                     }
                 }
 
@@ -519,12 +621,14 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         }
     }
 
-    if (!(_n_tracks > 0 && _n_showers > 0))
+
+    if (!(_n_tracks_cc0pinp > 0 && _n_showers_cc0pinp > 0))
         return false;
 
+    _extra_energy_y -= (_trk_energy_hits_tot+_shr_energy_tot);
     _pt = total_p.Perp();
     _p = total_p.Mag();
-    _hits_ratio = (float)_shr_hits_tot/(_trk_hits_tot+_shr_hits_tot);
+    _hits_ratio = (float)_shr_hits_tot / (_trk_hits_tot + _shr_hits_tot);
 
     return true;
 }
@@ -538,15 +642,15 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _max_hits_track = 0;
     _max_hits_shower = 0;
 
-    _shr_dedx_Y = std::numeric_limits<float>::min();
-    _shr_dedx_V = std::numeric_limits<float>::min();
-    _shr_dedx_U = std::numeric_limits<float>::min();
-    _shr_score = std::numeric_limits<float>::min();
+    _shr_dedx_Y = std::numeric_limits<float>::lowest();
+    _shr_dedx_V = std::numeric_limits<float>::lowest();
+    _shr_dedx_U = std::numeric_limits<float>::lowest();
+    _shr_score = std::numeric_limits<float>::lowest();
     _shr_energy = 0;
     _shr_energy_tot = 0;
     _shr_distance = 0;
-    _n_showers = 0;
-    _n_tracks = 0;
+    _n_showers_cc0pinp = 0;
+    _n_tracks_cc0pinp = 0;
 
     _trk_distance = 0;
     _trk_len = 0;
@@ -554,47 +658,57 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _trk_energy_tot = 0;
     _hits_ratio = 0;
     _trk_hits_tot = 0;
-    _shr_hits_tot = 0;
+    _trk_hits_y_tot = 0;
+    _trk_hits_u_tot = 0;
+    _trk_hits_v_tot = 0;
 
-    _trk_bragg_p = std::numeric_limits<float>::min();
-    _trk_bragg_mu = std::numeric_limits<float>::min();
-    _trk_bragg_mip = std::numeric_limits<float>::min();
-    _trk_pidchipr = std::numeric_limits<float>::min();
-    _trk_pidchimu = std::numeric_limits<float>::min();
-    _trk_pida = std::numeric_limits<float>::min();
-    _trk_score = std::numeric_limits<float>::min();
+    _shr_hits_tot = 0;
+    _shr_hits_y_tot = 0;
+    _shr_hits_v_tot = 0;
+    _shr_hits_u_tot = 0;
+
+    _trk_bragg_p = std::numeric_limits<float>::lowest();
+    _trk_bragg_mu = std::numeric_limits<float>::lowest();
+    _trk_bragg_mip = std::numeric_limits<float>::lowest();
+    _trk_pidchipr = std::numeric_limits<float>::lowest();
+    _trk_pidchimu = std::numeric_limits<float>::lowest();
+    _trk_pida = std::numeric_limits<float>::lowest();
+    _trk_score = std::numeric_limits<float>::lowest();
     _trk_bkt_pdg = 0;
-    _trk_bkt_purity = std::numeric_limits<float>::min();
-    _trk_bkt_completeness = std::numeric_limits<float>::min();
-    _trk_bkt_E = std::numeric_limits<float>::min();
+    _trk_bkt_purity = std::numeric_limits<float>::lowest();
+    _trk_bkt_completeness = std::numeric_limits<float>::lowest();
+    _trk_bkt_E = std::numeric_limits<float>::lowest();
 
     _pt = 0;
     _p = 0;
-    _trk_theta = std::numeric_limits<float>::min();
-    _trk_phi = std::numeric_limits<float>::min();
-    _shr_theta = std::numeric_limits<float>::min();
-    _shr_phi = std::numeric_limits<float>::min();
+    _trk_theta = std::numeric_limits<float>::lowest();
+    _trk_phi = std::numeric_limits<float>::lowest();
+    _shr_theta = std::numeric_limits<float>::lowest();
+    _shr_phi = std::numeric_limits<float>::lowest();
     _shr_px = 0;
     _shr_py = 0;
     _shr_pz = 0;
     _shr_bkt_pdg = 0;
-    _shr_bkt_purity = std::numeric_limits<float>::min();
-    _shr_bkt_completeness = std::numeric_limits<float>::min();
-    _shr_bkt_E = std::numeric_limits<float>::min();
-    _shr_tkfit_start_x = std::numeric_limits<float>::min();
-    _shr_tkfit_start_y = std::numeric_limits<float>::min();
-    _shr_tkfit_start_z = std::numeric_limits<float>::min();
-    _shr_start_x = std::numeric_limits<float>::min();
-    _shr_start_y = std::numeric_limits<float>::min();
-    _shr_start_z = std::numeric_limits<float>::min();
+    _shr_bkt_purity = std::numeric_limits<float>::lowest();
+    _shr_bkt_completeness = std::numeric_limits<float>::lowest();
+    _shr_bkt_E = std::numeric_limits<float>::lowest();
+    _shr_tkfit_start_x = std::numeric_limits<float>::lowest();
+    _shr_tkfit_start_y = std::numeric_limits<float>::lowest();
+    _shr_tkfit_start_z = std::numeric_limits<float>::lowest();
+    _shr_start_x = std::numeric_limits<float>::lowest();
+    _shr_start_y = std::numeric_limits<float>::lowest();
+    _shr_start_z = std::numeric_limits<float>::lowest();
 
-    _shr_tkfit_phi = std::numeric_limits<float>::min();
-    _shr_tkfit_theta = std::numeric_limits<float>::min();
-    _shr_tkfit_dedx_Y = std::numeric_limits<float>::min();
-    _shr_tkfit_dedx_U = std::numeric_limits<float>::min();
-    _shr_tkfit_dedx_V = std::numeric_limits<float>::min();
+    _shr_tkfit_phi = std::numeric_limits<float>::lowest();
+    _shr_tkfit_theta = std::numeric_limits<float>::lowest();
+    _shr_tkfit_dedx_Y = std::numeric_limits<float>::lowest();
+    _shr_tkfit_dedx_U = std::numeric_limits<float>::lowest();
+    _shr_tkfit_dedx_V = std::numeric_limits<float>::lowest();
 
     _dep_E = 0;
+    _total_hits_y = 0;
+    _extra_energy_y = 0;
+    _trk_energy_hits_tot = 0;
 }
 
 void CC0piNpSelection::setBranches(TTree *_tree)
@@ -651,18 +765,29 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("trk_hits_max", &_max_hits_track, "trk_hits_max/i");
     _tree->Branch("shr_hits_max", &_max_hits_shower, "shr_hits_max/i");
 
-    _tree->Branch("shr_hits_tot", &_shr_hits_tot, "shr_hits_tot/i");
-    _tree->Branch("trk_hits_tot", &_trk_hits_tot, "trk_hits_tot/i");
+    _tree->Branch("total_hits_y", &_total_hits_y, "total_hits_y/i");
+    _tree->Branch("extra_energy_y", &_extra_energy_y, "extra_energy_y/F");
+    _tree->Branch("trk_energy_hits_tot", &_trk_energy_hits_tot, "trk_energy_hits_tot/F");
 
-    _tree->Branch("n_tracks_cc0pinp", &_n_tracks, "n_tracks_cc0pinp/i");
-    _tree->Branch("n_showers_cc0pinp", &_n_showers, "n_showers_cc0pinp/i");
+
+    _tree->Branch("shr_hits_tot", &_shr_hits_tot, "shr_hits_tot/i");
+    _tree->Branch("shr_hits_y_tot", &_shr_hits_y_tot, "shr_hits_y_tot/i");
+    _tree->Branch("shr_hits_u_tot", &_shr_hits_u_tot, "shr_hits_u_tot/i");
+    _tree->Branch("shr_hits_v_tot", &_shr_hits_v_tot, "shr_hits_v_tot/i");
+
+    _tree->Branch("trk_hits_tot", &_trk_hits_tot, "trk_hits_tot/i");
+    _tree->Branch("trk_hits_y_tot", &_trk_hits_y_tot, "trk_hits_y_tot/i");
+    _tree->Branch("trk_hits_u_tot", &_trk_hits_u_tot, "trk_hits_u_tot/i");
+    _tree->Branch("trk_hits_v_tot", &_trk_hits_v_tot, "trk_hits_v_tot/i");
+
+    _tree->Branch("n_tracks_cc0pinp", &_n_tracks_cc0pinp, "n_tracks_cc0pinp/i");
+    _tree->Branch("n_showers_cc0pinp", &_n_showers_cc0pinp, "n_showers_cc0pinp/i");
 
     _tree->Branch("dep_E", &_dep_E, "dep_E/F");
 
     _tree->Branch("hits_ratio", &_hits_ratio, "hits_ratio/F");
     _tree->Branch("pt", &_pt, "pt/F");
     _tree->Branch("p", &_p, "p/F");
-
 }
 
 DEFINE_ART_CLASS_TOOL(CC0piNpSelection)
