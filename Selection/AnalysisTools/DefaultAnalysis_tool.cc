@@ -199,6 +199,8 @@ private:
   unsigned int _hits_u;
   unsigned int _hits_v;
   unsigned int _hits_y;
+  unsigned int _overlay_hits;
+  unsigned int _mc_hits;
 
   std::vector<int> _mc_pdg;
   std::vector<double> _mc_E;
@@ -414,6 +416,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         int ibt = searchingfornues::getAssocBtPart(hit_v, assocMCPart, btparts_v, purity, completeness);
         if (ibt >= 0)
         {
+          _mc_hits += hit_v.size();
           auto &mcp = btparts_v[ibt];
           auto PDG = mcp.pdg;
           //_backtracked_idx.push_back(pfp->Self());
@@ -456,6 +459,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           _backtracked_pdg.push_back(0);
           _backtracked_purity.push_back(0.);
           _backtracked_completeness.push_back(0.);
+          _overlay_hits += hit_v.size();
         }
       } // if there are associated clusters
     }   // if MC
@@ -470,8 +474,10 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     bool there_is_reco_electron = e_reco_id != _backtracked_pdg.end();
 
     // Check if there is a PFParticle associated to an overlay cosmic
-    std::vector<int>::iterator cosmic_id = std::find(_backtracked_pdg.begin(), _backtracked_pdg.end(), 0);
-    bool there_is_reco_cosmic = cosmic_id != _backtracked_pdg.end();
+    // std::vector<int>::iterator cosmic_id = std::find(_backtracked_pdg.begin(), _backtracked_pdg.end(), 0);
+    // bool there_is_reco_cosmic = cosmic_id != _backtracked_pdg.end();
+
+    bool there_is_reco_cosmic = (float)_overlay_hits/(_overlay_hits+_mc_hits) > 0.5;
 
     bool there_is_true_proton = _nproton > 0;
     bool there_is_true_pi = _npion > 0;
@@ -493,9 +499,9 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           {
             _category = k_nu_e_cc0pinp;
           }
-	  else if (!there_is_true_pi && !there_is_true_proton){
-	    _category = k_nu_e_cc0pi0p;
-	  }
+          else if (!there_is_true_pi && !there_is_true_proton){
+            _category = k_nu_e_cc0pi0p;
+          }
           else
           {
             _category = k_nu_e_other;
@@ -698,7 +704,8 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _nu_sce_x = std::numeric_limits<float>::lowest();
   _nu_sce_y = std::numeric_limits<float>::lowest();
   _nu_sce_z = std::numeric_limits<float>::lowest();
-
+  _overlay_hits = 0;
+  _mc_hits = 0;
   _isVtxInActive = false;
   _isVtxInFiducial = false;
 
