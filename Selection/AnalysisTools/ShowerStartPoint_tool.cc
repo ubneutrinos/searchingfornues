@@ -12,7 +12,6 @@
 #include "../CommonDefs/BacktrackingFuncs.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "../CommonDefs/Geometry.h"
-#include "../CommonDefs/SCECorrections.h"
 
 namespace analysis
 {
@@ -76,25 +75,6 @@ public:
   void resetTTree(TTree *_tree) override;
 
 private:
-  art::InputTag fTRKproducer;
-  art::InputTag fCALproducer;
-
-  std::vector<float> _shr_true_start_x_v;
-  std::vector<float> _shr_true_start_y_v;
-  std::vector<float> _shr_true_start_z_v;
-
-  std::vector<float> _shr_true_start_U_v;
-  std::vector<float> _shr_true_start_V_v;
-  std::vector<float> _shr_true_start_Y_v;
-
-  std::vector<float> _shr_true_sce_start_x_v;
-  std::vector<float> _shr_true_sce_start_y_v;
-  std::vector<float> _shr_true_sce_start_z_v;
-
-  std::vector<float> _shr_true_sce_start_U_v;
-  std::vector<float> _shr_true_sce_start_V_v;
-  std::vector<float> _shr_true_sce_start_Y_v;
-
   std::vector<float> _shr_spacepoint_start_x_v;
   std::vector<float> _shr_spacepoint_start_y_v;
   std::vector<float> _shr_spacepoint_start_z_v;
@@ -113,8 +93,6 @@ private:
 ///
 ShowerStartPoint::ShowerStartPoint(const fhicl::ParameterSet &p)
 {
-  fTRKproducer = p.get<art::InputTag>("TRKproducer", "");
-  fCALproducer = p.get<art::InputTag>("CALproducer", "");
 }
 
 //----------------------------------------------------------------------------
@@ -172,80 +150,74 @@ void ShowerStartPoint::analyzeSlice(art::Event const &e, std::vector<ProxyPfpEle
     if (PDG == 12 || PDG == 14)
       continue;
 
-    //fill by default
-    fillDefault();
-    // auto nshr = slice_pfp_v[i_pfp].get<recob::Shower>().size();
-    // if (nshr == 1)
-    // {
-    //   //need association with true shower
-    //   float true_start_x, true_start_y, true_start_z;
-    //   float true_start_U = searchingfornues::YZtoUcoordinate(true_start_y, true_start_z);
-    //   float true_start_V = searchingfornues::YZtoVcoordinate(true_start_y, true_start_z);
-    //   float true_start_Y = searchingfornues::YZtoYcoordinate(true_start_y, true_start_z);
-    //
-    //   _shr_true_start_x_v.push_back(true_start_x);
-    //   _shr_true_start_y_v.push_back(true_start_y);
-    //   _shr_true_start_z_v.push_back(true_start_z);
-    //   _shr_true_start_U_v.push_back(true_start_U);
-    //   _shr_true_start_V_v.push_back(true_start_V);
-    //   _shr_true_start_Y_v.push_back(true_start_Y);
-    //
-    //   searchingfornues::True2RecoMappingXYZ(true_start_x, true_start_y, true_start_z);
-    //   true_start_U = searchingfornues::YZtoUcoordinate(true_start_y, true_start_z);
-    //   true_start_V = searchingfornues::YZtoVcoordinate(true_start_y, true_start_z);
-    //   true_start_Y = searchingfornues::YZtoYcoordinate(true_start_y, true_start_z);
-    //
-    //   _shr_true_sce_start_x_v.push_back(true_start_x);
-    //   _shr_true_sce_start_y_v.push_back(true_start_y);
-    //   _shr_true_sce_start_z_v.push_back(true_start_z);
-    //   _shr_true_sce_start_U_v.push_back(true_start_U);
-    //   _shr_true_sce_start_V_v.push_back(true_start_V);
-    //   _shr_true_sce_start_Y_v.push_back(true_start_Y);
-    // }
-
+    // spacepoints start point
     auto spacepoints = slice_pfp_v[i_pfp].get<recob::SpacePoint>();
-
-    //loop on spacepoints
-    float smallest_sp_distance = std::numeric_limits<float>::max();
-    size_t index_smallest_distance;
-    for (size_t i = 0; i < spacepoints.size(); i++)
+    if (spacepoints.size() == 0)
     {
-      const auto &spacepoint = spacepoints[i];
-
-      float sp_x = spacepoint->XYZ()[0];
-      float sp_y = spacepoint->XYZ()[1];
-      float sp_z = spacepoint->XYZ()[2];
-
-      float distance_wrt_vertex = searchingfornues::distance3d(sp_x, sp_y, sp_z,
-                                             reco_vtx[0], reco_vtx[1], reco_vtx[2]);
-
-      if (distance_wrt_vertex < smallest_sp_distance)
+      fillDefault();
+    }
+    else
+    {
+      //loop on spacepoints
+      float smallest_sp_distance = std::numeric_limits<float>::max();
+      size_t index_smallest_distance;
+      for (size_t i = 0; i < spacepoints.size(); i++)
       {
-        smallest_sp_distance = distance_wrt_vertex;
-        index_smallest_distance = i;
+        const auto &spacepoint = spacepoints[i];
+
+        float sp_x = spacepoint->XYZ()[0];
+        float sp_y = spacepoint->XYZ()[1];
+        float sp_z = spacepoint->XYZ()[2];
+
+        float distance_wrt_vertex = searchingfornues::distance3d(sp_x, sp_y, sp_z,
+                                               reco_vtx[0], reco_vtx[1], reco_vtx[2]);
+
+        if (distance_wrt_vertex < smallest_sp_distance)
+        {
+          smallest_sp_distance = distance_wrt_vertex;
+          index_smallest_distance = i;
+        }
       }
+
+      _shr_spacepoint_start_x_v.push_back(spacepoints[index_smallest_distance]->XYZ()[0]);
+      _shr_spacepoint_start_y_v.push_back(spacepoints[index_smallest_distance]->XYZ()[1]);
+      _shr_spacepoint_start_z_v.push_back(spacepoints[index_smallest_distance]->XYZ()[2]);
     }
 
-    _shr_spacepoint_start_x_v.push_back(spacepoints[index_smallest_distance]->XYZ()[0]);
-    _shr_spacepoint_start_y_v.push_back(spacepoints[index_smallest_distance]->XYZ()[1]);
-    _shr_spacepoint_start_z_v.push_back(spacepoints[index_smallest_distance]->XYZ()[2]);
+    // // cluster per pfparticle
+    // auto clusters = slice_pfp_v[i_pfp].get<recob::Cluster>();
+    // for (const auto cluster : clusters)
+    // {
+    //   int i_plane = clus->Plane().Plane;
+    //   float wire_reco_vtx = YZtoPlanecoordinate(reco_vtx[1], reco_vtx[2], i_plane);
+    //
+    //   //loop on the hits
+    //   float smallest_hit_distance = std::numeric_limits<float>::max();
+    //   size_t index_smallest_distance;
+    //   auto hits = cluster.get<recob::Hit>();
+    //   for (size_t i = 0; i < hits.size(); i++)
+    //   {
+    //     const auto &hit = hits[i];
+    //
+    //     float sp_x = hit->XYZ()[0];
+    //     float sp_y = hit->XYZ()[1];
+    //     float sp_z = hit->XYZ()[2];
+    //
+    //     float distance_wrt_vertex = searchingfornues::distance3d(sp_x, sp_y, sp_z,
+    //                                            reco_vtx[0], reco_vtx[1], reco_vtx[2]);
+    //
+    //     if (distance_wrt_vertex < smallest_sp_distance)
+    //     {
+    //       smallest_sp_distance = distance_wrt_vertex;
+    //       index_smallest_distance = i;
+    //     }
+    //   }
+    // }
   }
 }
 
 void ShowerStartPoint::fillDefault()
 {
-  _shr_true_start_x_v.push_back(std::numeric_limits<float>::lowest());
-  _shr_true_start_y_v.push_back(std::numeric_limits<float>::lowest());
-  _shr_true_start_z_v.push_back(std::numeric_limits<float>::lowest());
-  _shr_true_start_U_v.push_back(std::numeric_limits<float>::lowest());
-  _shr_true_start_V_v.push_back(std::numeric_limits<float>::lowest());
-  _shr_true_start_Y_v.push_back(std::numeric_limits<float>::lowest());
-  _shr_true_sce_start_x_v.push_back(std::numeric_limits<float>::lowest());
-  _shr_true_sce_start_y_v.push_back(std::numeric_limits<float>::lowest());
-  _shr_true_sce_start_z_v.push_back(std::numeric_limits<float>::lowest());
-  _shr_true_sce_start_U_v.push_back(std::numeric_limits<float>::lowest());
-  _shr_true_sce_start_V_v.push_back(std::numeric_limits<float>::lowest());
-  _shr_true_sce_start_Y_v.push_back(std::numeric_limits<float>::lowest());
   _shr_spacepoint_start_x_v.push_back(std::numeric_limits<float>::lowest());
   _shr_spacepoint_start_y_v.push_back(std::numeric_limits<float>::lowest());
   _shr_spacepoint_start_z_v.push_back(std::numeric_limits<float>::lowest());
@@ -256,22 +228,6 @@ void ShowerStartPoint::fillDefault()
 
 void ShowerStartPoint::setBranches(TTree *_tree)
 {
-  _tree->Branch("_shr_true_start_x_v", "std::vector<float>", &_shr_true_start_x_v);
-  _tree->Branch("_shr_true_start_y_v", "std::vector<float>", &_shr_true_start_y_v);
-  _tree->Branch("_shr_true_start_z_v", "std::vector<float>", &_shr_true_start_z_v);
-
-  _tree->Branch("_shr_true_start_U_v", "std::vector<float>", &_shr_true_start_U_v);
-  _tree->Branch("_shr_true_start_V_v", "std::vector<float>", &_shr_true_start_V_v);
-  _tree->Branch("_shr_true_start_Y_v", "std::vector<float>", &_shr_true_start_Y_v);
-
-  _tree->Branch("_shr_true_sce_start_x_v", "std::vector<float>", &_shr_true_sce_start_x_v);
-  _tree->Branch("_shr_true_sce_start_y_v", "std::vector<float>", &_shr_true_sce_start_y_v);
-  _tree->Branch("_shr_true_sce_start_z_v", "std::vector<float>", &_shr_true_sce_start_z_v);
-
-  _tree->Branch("_shr_true_sce_start_U_v", "std::vector<float>", &_shr_true_sce_start_U_v);
-  _tree->Branch("_shr_true_sce_start_V_v", "std::vector<float>", &_shr_true_sce_start_V_v);
-  _tree->Branch("_shr_true_sce_start_Y_v", "std::vector<float>", &_shr_true_sce_start_Y_v);
-
   _tree->Branch("_shr_spacepoint_start_x_v", "std::vector<float>", &_shr_spacepoint_start_x_v);
   _tree->Branch("_shr_spacepoint_start_y_v", "std::vector<float>", &_shr_spacepoint_start_y_v);
   _tree->Branch("_shr_spacepoint_start_z_v", "std::vector<float>", &_shr_spacepoint_start_z_v);
@@ -283,18 +239,6 @@ void ShowerStartPoint::setBranches(TTree *_tree)
 
 void ShowerStartPoint::resetTTree(TTree *_tree)
 {
-  _shr_true_start_x_v.clear();
-  _shr_true_start_y_v.clear();
-  _shr_true_start_z_v.clear();
-  _shr_true_start_U_v.clear();
-  _shr_true_start_V_v.clear();
-  _shr_true_start_Y_v.clear();
-  _shr_true_sce_start_x_v.clear();
-  _shr_true_sce_start_y_v.clear();
-  _shr_true_sce_start_z_v.clear();
-  _shr_true_sce_start_U_v.clear();
-  _shr_true_sce_start_V_v.clear();
-  _shr_true_sce_start_Y_v.clear();
   _shr_spacepoint_start_x_v.clear();
   _shr_spacepoint_start_y_v.clear();
   _shr_spacepoint_start_z_v.clear();

@@ -13,6 +13,8 @@
 
 // backtracking tools
 #include "../CommonDefs/BacktrackingFuncs.h"
+#include "../CommonDefs/Geometry.h"
+#include "../CommonDefs/SCECorrections.h"
 
 namespace analysis
 {
@@ -176,6 +178,20 @@ private:
   std::vector<float> _backtracked_e;            // energy of backtracked particle
   std::vector<float> _backtracked_purity;       // purity of backtracking
   std::vector<float> _backtracked_completeness; // completeness of backtracking
+
+  std::vector<float> _backtracked_start_x;
+  std::vector<float> _backtracked_start_y;
+  std::vector<float> _backtracked_start_z;
+  std::vector<float> _backtracked_start_t;
+  std::vector<float> _backtracked_start_U;
+  std::vector<float> _backtracked_start_V;
+  std::vector<float> _backtracked_start_Y;
+  std::vector<float> _backtracked_sce_start_x;
+  std::vector<float> _backtracked_sce_start_y;
+  std::vector<float> _backtracked_sce_start_z;
+  std::vector<float> _backtracked_sce_start_U;
+  std::vector<float> _backtracked_sce_start_V;
+  std::vector<float> _backtracked_sce_start_Y;
 
   float _lep_e;                                              // lepton energy (if one exists) [GeV]
   int _pass;                                                 // does the slice pass the selection
@@ -410,6 +426,32 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           _backtracked_pdg.push_back(PDG);
           _backtracked_purity.push_back(purity);
           _backtracked_completeness.push_back(completeness);
+
+          _backtracked_px.push_back(mcp.px);
+          _backtracked_py.push_back(mcp.py);
+          _backtracked_pz.push_back(mcp.pz);
+          _backtracked_start_x.push_back(mcp.start_x);
+          _backtracked_start_y.push_back(mcp.start_y);
+          _backtracked_start_z.push_back(mcp.start_z);
+          _backtracked_start_t.push_back(mcp.start_t);
+
+          _backtracked_start_U.push_back(searchingfornues::YZtoUcoordinate(mcp.start_y, mcp.start_z));
+          _backtracked_start_V.push_back(searchingfornues::YZtoVcoordinate(mcp.start_y, mcp.start_z));
+          _backtracked_start_Y.push_back(searchingfornues::YZtoYcoordinate(mcp.start_y, mcp.start_z));
+
+          float reco_st_x = mcp.start_x;
+          float reco_st_y = mcp.start_y;
+          float reco_st_z = mcp.start_z;
+          searchingfornues::True2RecoMappingXYZ(mcp.start_t, reco_st_x, reco_st_y, reco_st_z);
+
+          _backtracked_sce_start_x.push_back(reco_st_x);
+          _backtracked_sce_start_y.push_back(reco_st_y);
+          _backtracked_sce_start_z.push_back(reco_st_z);
+
+          _backtracked_sce_start_U.push_back(searchingfornues::YZtoUcoordinate(reco_st_y, reco_st_z));
+          _backtracked_sce_start_V.push_back(searchingfornues::YZtoVcoordinate(reco_st_y, reco_st_z));
+          _backtracked_sce_start_Y.push_back(searchingfornues::YZtoYcoordinate(reco_st_y, reco_st_z));
+
           // if this is an interesting particle, save it to the TTree
           if (fabs(PDG) == muon->PdgCode())
           {
@@ -651,6 +693,21 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("backtracked_purity", "std::vector<float>", &_backtracked_purity);
   _tree->Branch("backtracked_completeness", "std::vector<float>", &_backtracked_completeness);
 
+  _tree->Branch("backtracked_start_x", "std::vector<float>", &_backtracked_start_x);
+  _tree->Branch("backtracked_start_y", "std::vector<float>", &_backtracked_start_y);
+  _tree->Branch("backtracked_start_z", "std::vector<float>", &_backtracked_start_z);
+  _tree->Branch("backtracked_start_t", "std::vector<float>", &_backtracked_start_t);
+  _tree->Branch("backtracked_start_U", "std::vector<float>", &_backtracked_start_U);
+  _tree->Branch("backtracked_start_V", "std::vector<float>", &_backtracked_start_V);
+  _tree->Branch("backtracked_start_Y", "std::vector<float>", &_backtracked_start_Y);
+  _tree->Branch("backtracked_sce_start_x", "std::vector<float>", &_backtracked_sce_start_x);
+  _tree->Branch("backtracked_sce_start_y", "std::vector<float>", &_backtracked_sce_start_y);
+  _tree->Branch("backtracked_sce_start_z", "std::vector<float>", &_backtracked_sce_start_z);
+  _tree->Branch("backtracked_sce_start_U", "std::vector<float>", &_backtracked_sce_start_U);
+  _tree->Branch("backtracked_sce_start_V", "std::vector<float>", &_backtracked_sce_start_V);
+  _tree->Branch("backtracked_sce_start_Y", "std::vector<float>", &_backtracked_sce_start_Y);
+
+
   _tree->Branch("lep_e", &_lep_e, "lep_e/F");
   _tree->Branch("pass", &_pass, "pass/I");
   _tree->Branch("run", &_run, "run/I");
@@ -767,6 +824,20 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _backtracked_pdg.clear();
   _backtracked_purity.clear();
   _backtracked_completeness.clear();
+
+  _backtracked_start_x.clear();
+  _backtracked_start_y.clear();
+  _backtracked_start_z.clear();
+  _backtracked_start_t.clear();
+  _backtracked_start_U.clear();
+  _backtracked_start_V.clear();
+  _backtracked_start_Y.clear();
+  _backtracked_sce_start_x.clear();
+  _backtracked_sce_start_y.clear();
+  _backtracked_sce_start_z.clear();
+  _backtracked_sce_start_U.clear();
+  _backtracked_sce_start_V.clear();
+  _backtracked_sce_start_Y.clear();
 
   evnhits = std::numeric_limits<int>::lowest();
   slpdg = std::numeric_limits<int>::lowest();

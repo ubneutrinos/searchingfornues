@@ -64,6 +64,11 @@ public:
   void SaveTruth(art::Event const &e);
 
   /**
+     * @brief Fill Default info for event associated to neutrino
+     */
+  void fillDefault();
+
+  /**
      * @brief set branches for TTree
      */
   void setBranches(TTree *_tree) override;
@@ -192,7 +197,12 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
     if (PDG == 12 || PDG == 14)
       continue;
 
-    for (const auto &shr : slice_pfp_v[i_pfp].get<recob::Shower>())
+    size_t n_shw = slice_pfp_v[i_pfp].get<recob::Shower>().size();
+    if (n_shw == 0)
+    {
+      fillDefault();
+    }
+    if (n_shw == 1)
     {
       _n_showers++;
       _shr_dedx_u_v.push_back(shr->dEdx()[0]);
@@ -312,6 +322,43 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_tkfit_dedx_v", "std::vector< std::vector< double > >", &_shr_tkfit_dedx_v);
   _tree->Branch("shr_tkfit_dedx_nhits_v", "std::vector< std::vector< int > >", &_shr_tkfit_dedx_nhits_v);
 }
+
+void ShowerAnalysis::fillDefault()
+{
+  _shr_energy_u_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_energy_v_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_energy_y_v.push_back(std::numeric_limits<int>::lowest());
+
+  _shr_dedx_u_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_dedx_v_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_dedx_y_v.push_back(std::numeric_limits<int>::lowest());
+
+  _shr_pfp_id_v.push_back(std::numeric_limits<int>::lowest());
+
+  _shr_start_x_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_start_y_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_start_z_v.push_back(std::numeric_limits<int>::lowest());
+
+  _shr_theta_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_phi_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_dist_v.push_back(std::numeric_limits<int>::lowest());
+
+  _shr_px_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_py_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_pz_v.push_back(std::numeric_limits<int>::lowest());
+
+  _trkshr_score_v.push_back(std::numeric_limits<int>::lowest());
+
+  _shr_tkfit_nhits_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_tkfit_start_x_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_tkfit_start_y_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_tkfit_start_z_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_tkfit_theta_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_tkfit_phi_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_tkfit_dedx_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_tkfit_dedx_nhits_v.push_back(std::numeric_limits<int>::lowest());
+}
+
 
 void ShowerAnalysis::resetTTree(TTree *_tree)
 {

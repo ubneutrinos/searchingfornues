@@ -37,6 +37,13 @@ namespace searchingfornues
     return z;
   }
 
+  float YZtoPlanecoordinate(const float& y, const float& z, int plane)
+  {
+    if (plane == 0) return YZtoUcoordinate(y, z);
+    if (plane == 1) return YZtoVcoordinate(y, z);
+    if (plane == 2) return YZtoYcoordinate(y, z);
+  }
+
 } // namespace searchingfornues
 
 #endif
