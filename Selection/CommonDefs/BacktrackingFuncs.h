@@ -88,7 +88,6 @@ public:
       : pdg(pdg_), px(px_), py(py_), pz(pz_), e(e_), tids(tids_) {}
   BtPart(const int pdg_, const float px_, const float py_, const float pz_, const float e_, const unsigned int tid_)
       : pdg(pdg_), px(px_), py(py_), pz(pz_), e(e_) { tids.push_back(tid_); }
-
   BtPart(const int pdg_,
          const float px_,
          const float py_,
@@ -98,8 +97,7 @@ public:
          const float start_x_,
          const float start_y_,
          const float start_z_,
-         const float start_t_)
-      :
+         const float start_t_) :
       pdg(pdg_),
       px(px_),
       py(py_),
@@ -121,8 +119,7 @@ public:
          const float start_x_,
          const float start_y_,
          const float start_z_,
-         const float start_t_)
-      :
+         const float start_t_) :
       pdg(pdg_),
       px(px_),
       py(py_),
@@ -136,9 +133,9 @@ public:
 
   int pdg;
   float px, py, pz, e;
-  float start_x, start_y, start_z, start_t;
   std::vector<unsigned int> tids;
   int nhits = 0;
+  float start_x, start_y, start_z, start_t;
 };
 
 std::vector<BtPart> initBacktrackingParticleVec(const std::vector<sim::MCShower> &inputMCShower,

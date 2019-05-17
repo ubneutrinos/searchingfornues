@@ -179,6 +179,10 @@ private:
   std::vector<float> _backtracked_purity;       // purity of backtracking
   std::vector<float> _backtracked_completeness; // completeness of backtracking
 
+  std::vector<float> _backtracked_px;
+  std::vector<float> _backtracked_py;
+  std::vector<float> _backtracked_pz;
+
   std::vector<float> _backtracked_start_x;
   std::vector<float> _backtracked_start_y;
   std::vector<float> _backtracked_start_z;
@@ -693,6 +697,10 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("backtracked_purity", "std::vector<float>", &_backtracked_purity);
   _tree->Branch("backtracked_completeness", "std::vector<float>", &_backtracked_completeness);
 
+  _tree->Branch("backtracked_px", "std::vector<float>", &_backtracked_px);
+  _tree->Branch("backtracked_py", "std::vector<float>", &_backtracked_py);
+  _tree->Branch("backtracked_pz", "std::vector<float>", &_backtracked_pz);
+
   _tree->Branch("backtracked_start_x", "std::vector<float>", &_backtracked_start_x);
   _tree->Branch("backtracked_start_y", "std::vector<float>", &_backtracked_start_y);
   _tree->Branch("backtracked_start_z", "std::vector<float>", &_backtracked_start_z);
@@ -824,6 +832,10 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _backtracked_pdg.clear();
   _backtracked_purity.clear();
   _backtracked_completeness.clear();
+
+  _backtracked_px.clear();
+  _backtracked_py.clear();
+  _backtracked_pz.clear();
 
   _backtracked_start_x.clear();
   _backtracked_start_y.clear();

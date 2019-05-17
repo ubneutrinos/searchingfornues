@@ -202,8 +202,9 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
     {
       fillDefault();
     }
-    if (n_shw == 1)
+    else if (n_shw == 1)
     {
+      auto shr = slice_pfp_v[i_pfp].get<recob::Shower>()[0];
       _n_showers++;
       _shr_dedx_u_v.push_back(shr->dEdx()[0]);
       _shr_dedx_v_v.push_back(shr->dEdx()[1]);
@@ -325,38 +326,40 @@ void ShowerAnalysis::setBranches(TTree *_tree)
 
 void ShowerAnalysis::fillDefault()
 {
-  _shr_energy_u_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_energy_v_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_energy_y_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_energy_u_v.push_back(std::numeric_limits<double>::lowest());
+  _shr_energy_v_v.push_back(std::numeric_limits<double>::lowest());
+  _shr_energy_y_v.push_back(std::numeric_limits<double>::lowest());
 
-  _shr_dedx_u_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_dedx_v_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_dedx_y_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_dedx_u_v.push_back(std::numeric_limits<double>::lowest());
+  _shr_dedx_v_v.push_back(std::numeric_limits<double>::lowest());
+  _shr_dedx_y_v.push_back(std::numeric_limits<double>::lowest());
 
   _shr_pfp_id_v.push_back(std::numeric_limits<int>::lowest());
 
-  _shr_start_x_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_start_y_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_start_z_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_start_x_v.push_back(std::numeric_limits<double>::lowest());
+  _shr_start_y_v.push_back(std::numeric_limits<double>::lowest());
+  _shr_start_z_v.push_back(std::numeric_limits<double>::lowest());
 
-  _shr_theta_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_phi_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_dist_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_theta_v.push_back(std::numeric_limits<double>::lowest());
+  _shr_phi_v.push_back(std::numeric_limits<double>::lowest());
+  _shr_dist_v.push_back(std::numeric_limits<double>::lowest());
 
-  _shr_px_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_py_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_pz_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_px_v.push_back(std::numeric_limits<double>::lowest());
+  _shr_py_v.push_back(std::numeric_limits<double>::lowest());
+  _shr_pz_v.push_back(std::numeric_limits<double>::lowest());
 
-  _trkshr_score_v.push_back(std::numeric_limits<int>::lowest());
+  _trkshr_score_v.push_back(std::numeric_limits<double>::lowest());
 
   _shr_tkfit_nhits_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_tkfit_start_x_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_tkfit_start_y_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_tkfit_start_z_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_tkfit_theta_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_tkfit_phi_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_tkfit_dedx_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_tkfit_dedx_nhits_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_tkfit_start_x_v.push_back(std::numeric_limits<double>::lowest());
+  _shr_tkfit_start_y_v.push_back(std::numeric_limits<double>::lowest());
+  _shr_tkfit_start_z_v.push_back(std::numeric_limits<double>::lowest());
+  _shr_tkfit_theta_v.push_back(std::numeric_limits<double>::lowest());
+  _shr_tkfit_phi_v.push_back(std::numeric_limits<double>::lowest());
+  std::vector<double> aux_double;
+  std::vector<int> aux_int;
+  _shr_tkfit_dedx_v.push_back(aux_double);
+  _shr_tkfit_dedx_nhits_v.push_back(aux_int);
 }
 
 
