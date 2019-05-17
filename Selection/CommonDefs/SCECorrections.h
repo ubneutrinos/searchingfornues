@@ -15,9 +15,9 @@ namespace searchingfornues
   {
     auto const *SCE = lar::providerFrom<spacecharge::SpaceChargeService>();
 
-    if (SCE->EnableSpatialSCE() == true)
+    if (SCE->EnableSimSpatialSCE() == true)
     {
-      auto offset = SCE->GetPosOffsets(geo::Point_t(vtx_x,vtx_y,vtx_z));
+      auto offset = SCE->GetPosOffsets(geo::Point_t(x, y, z));
       x -= offset.X();
       y += offset.Y();
       z += offset.Z();
@@ -34,7 +34,7 @@ namespace searchingfornues
     if (SCE->EnableCalSpatialSCE() == true)
     {
 
-      auto offset = SCE->GetCalPosOffsets(geo::Point_t(x,y,z));
+      auto offset = SCE->GetCalPosOffsets(geo::Point_t(x, y, z));
       x -= offset.X();
       y += offset.Y();
       z += offset.Z();
@@ -57,8 +57,6 @@ namespace searchingfornues
     x += _xtimeoffset;
     x += 0.6;
   }
-}
-
 } // namespace searchingfornues
 
 #endif

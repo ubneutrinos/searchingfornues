@@ -994,7 +994,7 @@ void DefaultAnalysis::ApplySCECorrection(const float &vtx_x, const float &vtx_y,
 
   auto const *SCE = lar::providerFrom<spacecharge::SpaceChargeService>();
 
-  if (SCE->EnableCalSpatialSCE() == true)
+  if (SCE->EnableSimSpatialSCE() == true)
   {
 
     auto offset = SCE->GetPosOffsets(geo::Point_t(vtx_x, vtx_y, vtx_z));

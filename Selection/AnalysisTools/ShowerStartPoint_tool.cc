@@ -63,7 +63,7 @@ public:
   /**
      * @brief fill default for TTree
      */
-  void fillDefault() override;
+  void fillDefault();
 
   /**
      * @brief set branches for TTree
@@ -174,7 +174,7 @@ void ShowerStartPoint::analyzeSlice(art::Event const &e, std::vector<ProxyPfpEle
 
     //fill by default
     fillDefault();
-    auto nshr = slice_pfp_v[i_pfp].get<recob::Shower>().size();
+    // auto nshr = slice_pfp_v[i_pfp].get<recob::Shower>().size();
     // if (nshr == 1)
     // {
     //   //need association with true shower
