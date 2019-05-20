@@ -495,11 +495,11 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       {
         if (there_is_reco_electron)
         {
-          if (!there_is_true_pi && there_is_true_proton)
+          if (!there_is_true_pi && there_is_true_proton && !there_is_true_pi0)
           {
             _category = k_nu_e_cc0pinp;
           }
-          else if (!there_is_true_pi && !there_is_true_proton){
+          else if (!there_is_true_pi && !there_is_true_proton && !there_is_true_pi0){
             _category = k_nu_e_cc0pi0p;
           }
           else
@@ -514,7 +514,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       }
       else
       {
-        if (!there_is_true_pi)
+        if (!there_is_true_pi0)
         {
           _category = k_nc;
         }
@@ -539,7 +539,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       }
       else
       {
-        if (!there_is_true_pi)
+        if (!there_is_true_pi0)
         {
           _category = k_nc;
         }
@@ -849,8 +849,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     // if pi0
     if ((part.PdgCode() == pi0->PdgCode()) and (part.StatusCode() == 1))
     {
-      if (part.Momentum(0).E() - pi0->Mass() > fPionThreshold)
-        _npi0 += 1;
+      _npi0 += 1;
       if (part.Momentum(0).E() > _pi0_e)
         _pi0_e = part.Momentum(0).E();
     } // if pi0
