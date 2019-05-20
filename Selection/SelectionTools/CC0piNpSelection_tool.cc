@@ -461,9 +461,9 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr_score = trkshrscore;
                     _shr_theta = shr->Direction().Theta();
                     _shr_phi = shr->Direction().Phi();
-                    _shr_px = shr->Direction().X();
-                    _shr_py = shr->Direction().Y();
-                    _shr_pz = shr->Direction().Z();
+                    _shr_px = shr_p.X();
+                    _shr_py = shr_p.Y();
+                    _shr_pz = shr_p.Z();
                     _shr_openangle = shr->OpenAngle();
 
                     if (tkcalo_proxy == NULL)
@@ -596,8 +596,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     }
 
                     trk_vtx.SetXYZ(trk->Start().X(), trk->Start().Y(), trk->Start().Z());
-                    trk_vtx -= nuvtx;
-                    _trk_distance = trk_vtx.Mag();
+                    _trk_distance = (trk_vtx-nu_vtx).Mag();
                     _trk_len = trk->Length();
                     _trk_energy = energy_proton;
                     _trk_pfp_id = i_pfp;
