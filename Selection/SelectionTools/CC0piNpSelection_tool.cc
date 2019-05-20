@@ -114,12 +114,14 @@ private:
     float _shr_dedx_U;
     float _shr_distance;
     float _tksh_distance;
+    float _tksh_angle;
     float _shr_score;
     float _shr_theta;
     float _shr_phi;
     float _shr_px;
     float _shr_py;
     float _shr_pz;
+    float _shr_openangle;
 
     size_t _shr_pfp_id;
 
@@ -365,6 +367,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     TVector3 total_p;
     TVector3 trk_vtx;
     TVector3 shr_vtx;
+    TVector3 trk_p;
+    TVector3 shr_p;
 
     for (size_t i_pfp = 0; i_pfp < pfp_pxy_v.size(); i_pfp++)
     {
@@ -442,7 +446,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     }
                     _shr_distance = (shr->ShowerStart() - nuvtx).Mag();
                     shr_vtx = shr->ShowerStart();
-                    TVector3 shr_p = shr->ShowerStart();
+                    shr_p.SetXYZ(shr->Direction().X(), shr->Direction().Y(), shr->Direction().Z());
                     shr_p.SetMag(sqrt(pow(shr->Energy()[2] / 1000. + electron->Mass(), 2) - pow(electron->Mass(), 2)));
                     total_p += shr_p;
                     _shr_dedx_Y = shr->dEdx()[2];
@@ -460,6 +464,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr_px = shr->Direction().X();
                     _shr_py = shr->Direction().Y();
                     _shr_pz = shr->Direction().Z();
+                    _shr_openangle = shr->OpenAngle();
 
                     if (tkcalo_proxy == NULL)
                     {
@@ -599,7 +604,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _max_hits_track = trk_hits;
                     _trk_theta = trk->Theta();
                     _trk_phi = trk->Phi();
-                    TVector3 trk_p = trk_vtx;
+                    trk_p.SetXYZ(trk->StartDirection().X(), trk->StartDirection().Y(), trk->StartDirection().Z());
                     trk_p.SetMag(sqrt(pow(energy_proton + proton->Mass(), 2) - pow(proton->Mass(), 2)));
                     total_p += trk_p;
 
@@ -630,6 +635,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     _p = total_p.Mag();
     _hits_ratio = (float)_shr_hits_tot / (_trk_hits_tot + _shr_hits_tot);
     _tksh_distance = (trk_vtx-shr_vtx).Mag();
+    _tksh_angle = trk_p.Dot(shr_p)/(trk_p.Mag()*shr_p.Mag());
 
     if (!(_n_tracks_cc0pinp > 0 && _n_showers_cc0pinp > 0))
         return false;
@@ -653,6 +659,7 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_energy_tot = 0;
     _shr_distance = std::numeric_limits<float>::lowest();
     _tksh_distance = std::numeric_limits<float>::lowest();
+    _tksh_angle = std::numeric_limits<float>::lowest();
 
     _n_showers_cc0pinp = 0;
     _n_tracks_cc0pinp = 0;
@@ -693,6 +700,7 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_px = 0;
     _shr_py = 0;
     _shr_pz = 0;
+    _shr_openangle = std::numeric_limits<float>::lowest();
     _shr_bkt_pdg = 0;
     _shr_bkt_purity = std::numeric_limits<float>::lowest();
     _shr_bkt_completeness = std::numeric_limits<float>::lowest();
@@ -729,6 +737,7 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_px", &_shr_px, "shr_px/F");
     _tree->Branch("shr_py", &_shr_py, "shr_py/F");
     _tree->Branch("shr_pz", &_shr_pz, "shr_pz/F");
+    _tree->Branch("shr_openangle", &_shr_openangle, "shr_openangle/F");
     _tree->Branch("shr_tkfit_start_x", &_shr_tkfit_start_x, "shr_tkfit_start_x/F");
     _tree->Branch("shr_tkfit_start_y", &_shr_tkfit_start_y, "shr_tkfit_start_y/F");
     _tree->Branch("shr_tkfit_start_z", &_shr_tkfit_start_z, "shr_tkfit_start_z/F");
@@ -744,6 +753,7 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_tkfit_dedx_V", &_shr_tkfit_dedx_V, "shr_tkfit_dedx_V/F");
     _tree->Branch("shr_tkfit_dedx_U", &_shr_tkfit_dedx_U, "shr_tkfit_dedx_U/F");
     _tree->Branch("tksh_distance", &_tksh_distance, "tksh_distance/F");
+    _tree->Branch("tksh_angle", &_tksh_angle, "tksh_angle/F");
     _tree->Branch("shr_distance", &_shr_distance, "shr_distance/F");
     _tree->Branch("shr_score", &_shr_score, "shr_score/F");
     _tree->Branch("shr_bkt_pdg", &_shr_bkt_pdg, "shr_bkt_pdg/I");
