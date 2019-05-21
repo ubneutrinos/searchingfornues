@@ -167,6 +167,10 @@ private:
     float _shr_tkfit_dedx_Y;
     float _shr_tkfit_dedx_U;
     float _shr_tkfit_dedx_V;
+    unsigned int _shr_tkfit_nhits_Y;
+    unsigned int _shr_tkfit_nhits_V;
+    unsigned int _shr_tkfit_nhits_U;
+
     float _trk_energy_hits_tot;
 
     unsigned int _total_hits_y;
@@ -515,12 +519,16 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                                 else
                                     dedx4cm_med = 0.5 * (dedx4cm[dedx4cm.size() / 2] + dedx4cm[dedx4cm.size() / 2 - 1]);
                             }
-                            if (tkcalo->PlaneID().Plane == 2)
+                            if (tkcalo->PlaneID().Plane == 2) {
                                 _shr_tkfit_dedx_Y = dedx4cm_med;
-                            else if (tkcalo->PlaneID().Plane == 1)
+                                _shr_tkfit_nhits_Y = dedx4cm.size();
+                            } else if (tkcalo->PlaneID().Plane == 1) {
                                 _shr_tkfit_dedx_V = dedx4cm_med;
-                            else if (tkcalo->PlaneID().Plane == 0)
+                                _shr_tkfit_nhits_V = dedx4cm.size();
+                            } else if (tkcalo->PlaneID().Plane == 0) {
                                 _shr_tkfit_dedx_U = dedx4cm_med;
+                                _shr_tkfit_nhits_U = dedx4cm.size();
+                            }
                         }
                     }
                 }
@@ -716,7 +724,9 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_tkfit_dedx_Y = std::numeric_limits<float>::lowest();
     _shr_tkfit_dedx_U = std::numeric_limits<float>::lowest();
     _shr_tkfit_dedx_V = std::numeric_limits<float>::lowest();
-
+    _shr_tkfit_nhits_Y = 0;
+    _shr_tkfit_nhits_U = 0;
+    _shr_tkfit_nhits_V = 0;
     _dep_E = 0;
     _total_hits_y = 0;
     _extra_energy_y = 0;
@@ -751,6 +761,9 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_tkfit_dedx_Y", &_shr_tkfit_dedx_Y, "shr_tkfit_dedx_Y/F");
     _tree->Branch("shr_tkfit_dedx_V", &_shr_tkfit_dedx_V, "shr_tkfit_dedx_V/F");
     _tree->Branch("shr_tkfit_dedx_U", &_shr_tkfit_dedx_U, "shr_tkfit_dedx_U/F");
+    _tree->Branch("shr_tkfit_nhits_Y", &_shr_tkfit_nhits_Y, "shr_tkfit_nhits_Y/i");
+    _tree->Branch("shr_tkfit_nhits_V", &_shr_tkfit_nhits_V, "shr_tkfit_nhits_V/i");
+    _tree->Branch("shr_tkfit_nhits_U", &_shr_tkfit_nhits_U, "shr_tkfit_nhits_U/i");
     _tree->Branch("tksh_distance", &_tksh_distance, "tksh_distance/F");
     _tree->Branch("tksh_angle", &_tksh_angle, "tksh_angle/F");
     _tree->Branch("shr_distance", &_shr_distance, "shr_distance/F");
