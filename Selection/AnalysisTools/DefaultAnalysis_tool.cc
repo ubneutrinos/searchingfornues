@@ -10,7 +10,7 @@
 #include "TParticlePDG.h"
 #include "nusimdata/SimulationBase/MCTruth.h"
 #include "larcore/Geometry/Geometry.h"
-
+#include "larsim/EventWeight/Base/MCEventWeight.h"
 // backtracking tools
 #include "../CommonDefs/BacktrackingFuncs.h"
 
@@ -92,6 +92,7 @@ private:
   bool isFiducial(const double x[3]) const;
 
   TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
+  TParticlePDG *neutron = TDatabasePDG::Instance()->GetParticle(2112);
   TParticlePDG *electron = TDatabasePDG::Instance()->GetParticle(11);
   TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
   TParticlePDG *pion = TDatabasePDG::Instance()->GetParticle(211);
@@ -160,6 +161,7 @@ private:
   int _npi0;                             // how many pi0s are there?
   int _pi0;                              // is there a final-state pi0 from the neutrino? [1=yes 0=no]
   float _pi0_e, _pi0_p, _pi0_c;          // energy, purity, completeness.
+  int _nneutron;                         // how many neutrons are there?
   int _nproton;                          // how many protons are there?
   int _proton;                           // is there a final-state proton from the neutrino? [1=yes 0=no]
   float _proton_e, _proton_p, _proton_c; // energy, purity, completeness.
@@ -217,6 +219,13 @@ private:
   std::vector<double> _mc_endx;
   std::vector<double> _mc_endy;
   std::vector<double> _mc_endz;
+
+  float _true_pt;
+  float _true_pt_visible;
+  float _true_p;
+  float _true_p_visible;
+
+  float _leeweight;
 };
 
 //----------------------------------------------------------------------------
@@ -278,8 +287,26 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 
   if (!fData)
   {
+    art::InputTag eventweight_tag("eventweightLEE");
+    art::Handle<std::vector<evwgh::MCEventWeight>> eventweights_handle;
+    e.getByLabel(eventweight_tag, eventweights_handle);
+    if (eventweights_handle.isValid())
+    {
+      std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
+      art::fill_ptr_vector(eventweights, eventweights_handle);
+      std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
+      for (std::map<std::string, std::vector<double>>::iterator it = evtwgt_map.begin(); it != evtwgt_map.end(); ++it)
+      {
+        if (it->second.size() == 1) {
+          _leeweight = it->second[0];
+        }
+      }
+    } else {
+      std::cout << "LEE MCEventWeight not present" << std::endl;
+    }
     // SaveTruth
     SaveTruth(e);
+
   }
 
   // Grab CRT veto information if available - CRT should probably have its own tool?
@@ -565,6 +592,8 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
 
 void DefaultAnalysis::setBranches(TTree *_tree)
 {
+  _tree->Branch("leeweight", &_leeweight, "leeweight/F");
+
   // reconstructed neutrino vertex
   _tree->Branch("nu_vtx_x", &_nu_vtx_x, "nu_vtx_x/F");
   _tree->Branch("nu_vtx_y", &_nu_vtx_y, "nu_vtx_y/F");
@@ -572,6 +601,11 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("nu_sce_x", &_nu_sce_x, "nu_sce_x/F");
   _tree->Branch("nu_sce_y", &_nu_sce_y, "nu_sce_y/F");
   _tree->Branch("nu_sce_z", &_nu_sce_z, "nu_sce_z/F");
+
+  _tree->Branch("true_pt", &_true_pt, "true_pt/F");
+  _tree->Branch("true_pt_visible", &_true_pt_visible, "true_pt_visible/F");
+  _tree->Branch("true_p", &_true_p, "true_p/F");
+  _tree->Branch("true_p_visible", &_true_p_visible, "true_p_visible/F");
 
   // neutrino information
   _tree->Branch("nu_pdg", &_nu_pdg, "nu_pdg/I");
@@ -606,6 +640,9 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("pi0_e", &_pi0_e, "pi0_e/F");
   _tree->Branch("pi0_c", &_pi0_c, "pi0_c/F");
   _tree->Branch("pi0_p", &_pi0_p, "pi0_p/F");
+
+  _tree->Branch("nneutron", &_nneutron, "nneutron/I");
+
   // first [highest momentum] proton
   _tree->Branch("nproton", &_nproton, "nproton/I");
   _tree->Branch("proton_e", &_proton_e, "proton_e/F");
@@ -686,6 +723,7 @@ void DefaultAnalysis::setBranches(TTree *_tree)
 
 void DefaultAnalysis::resetTTree(TTree *_tree)
 {
+  _leeweight = 0;
   _run = std::numeric_limits<int>::lowest();
   _sub = std::numeric_limits<int>::lowest();
   _evt = std::numeric_limits<int>::lowest();
@@ -738,6 +776,8 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _pion_p = 0;
   _pion_c = 0;
 
+  _nneutron = 0;
+
   _nproton = 0;
   _proton_e = 0;
   _proton_p = 0;
@@ -778,6 +818,11 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _mc_endx.clear();
   _mc_endy.clear();
   _mc_endz.clear();
+
+  _true_pt = 0;
+  _true_pt_visible = 0;
+  _true_p = 0;
+  _true_p_visible = 0;
 }
 
 void DefaultAnalysis::SaveTruth(art::Event const &e)
@@ -821,9 +866,12 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _npi0 = 0;
   _nproton = 0;
   _npion = 0;
-
+  _nneutron = 0;
   // save muon trackID [ needed to find Michel ]
   float muonMomentum = 0;
+
+  TLorentzVector total_p;
+  TLorentzVector total_p_visible;
 
   size_t npart = mct.NParticles();
   for (size_t i = 0; i < npart; i++)
@@ -835,6 +883,8 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
       continue;
     }
 
+    total_p += part.Momentum(0);
+
     // if muon
     if ((std::abs(part.PdgCode()) == muon->PdgCode()) and (part.StatusCode() == 1))
     {
@@ -842,39 +892,62 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
       _nmuon += 1;
       _muon_e = part.Momentum(0).E();
     } // if muon
+
     // if electron
     if ((std::abs(part.PdgCode()) == electron->PdgCode()) and (part.StatusCode() == 1))
     {
-      if (part.Momentum(0).E() - electron->Mass() > fElectronThreshold)
+      if (part.Momentum(0).E() - electron->Mass() > fElectronThreshold) {
         _nelec += 1;
+        total_p_visible += part.Momentum(0);
+      }
       if (part.Momentum(0).E() > _elec_e)
         _elec_e = part.Momentum(0).E();
     } // if electron
+
     // if pi0
     if ((part.PdgCode() == pi0->PdgCode()) and (part.StatusCode() == 1))
     {
       _npi0 += 1;
+      total_p_visible += part.Momentum(0);
       if (part.Momentum(0).E() > _pi0_e)
         _pi0_e = part.Momentum(0).E();
     } // if pi0
+
     // if proton
     if ((part.PdgCode() == proton->PdgCode()) and (part.StatusCode() == 1))
     {
-      if (part.Momentum(0).E() - proton->Mass() > fProtonThreshold)
+      if (part.Momentum(0).E() - proton->Mass() > fProtonThreshold) {
+        total_p_visible += part.Momentum(0);
         _nproton += 1;
+      }
       if (part.Momentum(0).E() > _proton_e)
         _proton_e = part.Momentum(0).E();
 
     } // if proton
+
+    // if neutron
+    if ((part.PdgCode() == neutron->PdgCode()) and (part.StatusCode() == 1))
+    {
+      _nneutron += 1;
+    }
+
     // if pion
     if ((std::abs(part.PdgCode()) == pion->PdgCode()) and (part.StatusCode() == 1))
     {
-      if (part.Momentum(0).E() - pion->Mass() > fPionThreshold)
+      if (part.Momentum(0).E() - pion->Mass() > fPionThreshold) {
         _npion += 1;
+        total_p_visible += part.Momentum(0);
+      }
       if (part.Momentum(0).E() > _pion_e)
         _pion_e = part.Momentum(0).E();
     } // if pion
+
   }   // for all MCParticles
+
+  _true_pt = total_p.Perp();
+  _true_pt_visible = total_p_visible.Perp();
+  _true_p = total_p.Mag();
+  _true_p_visible = total_p_visible.Mag();
 
   for (size_t p = 0; p < mcp_h->size(); p++)
   {
