@@ -145,6 +145,7 @@ private:
   float _nu_e;                  // neutrino energy [GeV]
   int _nu_pdg;                  // neutrino PDG code
   int _ccnc;                    // CC or NC tag from GENIE
+  int _interaction;             // Interaction code from GENIE
   float _vtx_x, _vtx_y, _vtx_z; // neutrino interaction vertex coordinates [cm]
   float _vtx_t;                 // neutrino generation time
   bool _isVtxInActive;          // true if neutrino in active volume, 0 < x < 256 -116 < y < 116;  0 < z <  1036
@@ -575,6 +576,7 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   // neutrino information
   _tree->Branch("nu_pdg", &_nu_pdg, "nu_pdg/I");
   _tree->Branch("ccnc", &_ccnc, "ccnc/I");
+  _tree->Branch("interaction", &_interaction, "interaction/I");
   _tree->Branch("nu_e", &_nu_e, "nu_e/F");
   _tree->Branch("vtx_x", &_vtx_x, "vtx_x/F");
   _tree->Branch("vtx_y", &_vtx_y, "vtx_y/F");
@@ -690,6 +692,7 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _nu_e = std::numeric_limits<float>::lowest();
   _nu_pdg = std::numeric_limits<int>::lowest();
   _ccnc = std::numeric_limits<int>::lowest();
+  _interaction = std::numeric_limits<int>::lowest();
   _pass = 0;
   _vtx_x = std::numeric_limits<float>::lowest();
   _vtx_y = std::numeric_limits<float>::lowest();
@@ -791,6 +794,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   auto nu = neutrino.Nu();
 
   _ccnc = neutrino.CCNC();
+  _interaction = neutrino.Mode();
   _nu_pdg = nu.PdgCode();
   _nu_e = nu.Trajectory().E(0);
   _vtx_x = nu.EndX();
