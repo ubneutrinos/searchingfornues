@@ -14,7 +14,6 @@
 #include "../CommonDefs/BacktrackingFuncs.h"
 #include "canvas/Persistency/Common/FindManyP.h"
 
-
 namespace selection
 {
 ////////////////////////////////////////////////////////////////////////
@@ -138,6 +137,9 @@ private:
     float _trk_bragg_mu;
     float _trk_bragg_mip;
     float _trk_pidchipr;
+    float _trk_pidchipr_best;
+    float _trk_pidchipr_worst;
+
     float _trk_pidchimu;
     float _trk_pida;
     float _trk_score;
@@ -170,6 +172,7 @@ private:
     unsigned int _shr_tkfit_nhits_Y;
     unsigned int _shr_tkfit_nhits_V;
     unsigned int _shr_tkfit_nhits_U;
+    unsigned int _hits_outfv;
 
     float _trk_energy_hits_tot;
 
@@ -253,7 +256,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     art::ValidHandle<std::vector<recob::Slice>> inputSlice = e.getValidHandle<std::vector<recob::Slice>>(fCLSproducer);
     auto assocSliceHit = std::unique_ptr<art::FindManyP<recob::Hit>>(new art::FindManyP<recob::Hit>(inputSlice, e, fCLSproducer));
     auto assocSlice = std::unique_ptr<art::FindManyP<recob::Slice>>(new art::FindManyP<recob::Slice>(inputPfParticle, e, fCLSproducer));
-    art::FindManyP< larpandoraobj::PFParticleMetadata > pfPartToMetadataAssoc(inputPfParticle, e, fCLSproducer);
+    art::FindManyP<larpandoraobj::PFParticleMetadata> pfPartToMetadataAssoc(inputPfParticle, e, fCLSproducer);
     searchingfornues::ProxyCaloColl_t const *tkcalo_proxy = NULL;
     if (fTRKproducer != "")
     {
@@ -330,9 +333,10 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
             auto slicehit = assocSliceHit->at(slices[0].key());
             for (unsigned int isl = 0; isl < slicehit.size(); isl++)
             {
-                const auto& slhit = slicehit.at(isl);
+                const auto &slhit = slicehit.at(isl);
                 int slhit_pl = slhit->WireID().Plane;
-                if (slhit_pl == 2) {
+                if (slhit_pl == 2)
+                {
                     _total_hits_y++;
                     _extra_energy_y += 1.01 * slhit->Integral() * 238 * 23.6e-6 / 0.6 / 1000;
                 }
@@ -391,16 +395,23 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
             if (trkshrscore < fTrkShrscore)
             {
                 double shr_vertex[3] = {shr->ShowerStart().X(), shr->ShowerStart().Y(), shr->ShowerStart().Z()};
+                auto clus_pxy_v = pfp_pxy.get<recob::Cluster>();
+                std::vector<art::Ptr<recob::Hit>> hit_v;
+
                 if (!isFiducial(shr_vertex))
                 {
-                    return false;
+                    for (auto ass_clus : clus_pxy_v)
+                    {
+                        const auto &clus = clus_proxy[ass_clus.key()];
+                        auto clus_hit_v = clus.get<recob::Hit>();
+                        _hits_outfv += clus_hit_v.size();
+                    }
+                    continue;
                 }
+
                 _n_showers_cc0pinp++;
 
                 unsigned int shr_hits = 0;
-
-                auto clus_pxy_v = pfp_pxy.get<recob::Cluster>();
-                std::vector<art::Ptr<recob::Hit>> hit_v;
 
                 for (auto ass_clus : clus_pxy_v)
                 {
@@ -519,13 +530,18 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                                 else
                                     dedx4cm_med = 0.5 * (dedx4cm[dedx4cm.size() / 2] + dedx4cm[dedx4cm.size() / 2 - 1]);
                             }
-                            if (tkcalo->PlaneID().Plane == 2) {
+                            if (tkcalo->PlaneID().Plane == 2)
+                            {
                                 _shr_tkfit_dedx_Y = dedx4cm_med;
                                 _shr_tkfit_nhits_Y = dedx4cm.size();
-                            } else if (tkcalo->PlaneID().Plane == 1) {
+                            }
+                            else if (tkcalo->PlaneID().Plane == 1)
+                            {
                                 _shr_tkfit_dedx_V = dedx4cm_med;
                                 _shr_tkfit_nhits_V = dedx4cm.size();
-                            } else if (tkcalo->PlaneID().Plane == 0) {
+                            }
+                            else if (tkcalo->PlaneID().Plane == 0)
+                            {
                                 _shr_tkfit_dedx_U = dedx4cm_med;
                                 _shr_tkfit_nhits_U = dedx4cm.size();
                             }
@@ -541,14 +557,22 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
             {
                 double trk_start[3] = {trk->Start().X(), trk->Start().Y(), trk->Start().Z()};
                 double trk_end[3] = {trk->End().X(), trk->End().Y(), trk->End().Z()};
+
+                auto clus_pxy_v = pfp_pxy.get<recob::Cluster>();
+
                 if (!isFiducial(trk_start) || !isFiducial(trk_end))
                 {
-                    return false;
+                    for (auto ass_clus : clus_pxy_v)
+                    {
+                        const auto &clus = clus_proxy[ass_clus.key()];
+                        auto clus_hit_v = clus.get<recob::Hit>();
+                        _hits_outfv += clus_hit_v.size();
+                    }
+                    continue;
                 }
                 _n_tracks_cc0pinp++;
                 unsigned int trk_hits = 0;
 
-                auto clus_pxy_v = pfp_pxy.get<recob::Cluster>();
                 std::vector<art::Ptr<recob::Hit>> hit_v;
 
                 for (auto ass_clus : clus_pxy_v)
@@ -582,6 +606,18 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 _trk_energy_tot += energy_proton;
                 _trk_hits_tot += trk_hits;
 
+                auto trkpxy2 = pid_proxy[trk.key()];
+                auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
+                float chipr = std::numeric_limits<float>::lowest();;
+                if (pidpxy_v.size() != 0)
+                {
+                    chipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, proton->PdgCode(), 2);
+                    if (chipr > 0 && chipr < _trk_pidchipr_best)
+                        _trk_pidchipr_best = chipr;
+                    if (chipr > 0 && chipr > _trk_pidchipr_worst)
+                        _trk_pidchipr_worst = chipr;
+                }
+
                 if (trk_hits > _max_hits_track)
                 {
                     if (!fData)
@@ -604,7 +640,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     }
 
                     trk_vtx.SetXYZ(trk->Start().X(), trk->Start().Y(), trk->Start().Z());
-                    _trk_distance = (trk_vtx-nu_vtx).Mag();
+                    _trk_distance = (trk_vtx - nu_vtx).Mag();
                     _trk_len = trk->Length();
                     _trk_energy = energy_proton;
                     _trk_pfp_id = i_pfp;
@@ -617,19 +653,12 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
                     _trk_score = trkshrscore;
 
-                    auto trkpxy2 = pid_proxy[trk.key()];
-                    auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
-                    if (pidpxy_v.size() == 0)
-                    {
-                        continue;
-                    }
-
                     _trk_bragg_p = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, proton->PdgCode(), 2),
                                             searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, proton->PdgCode(), 2));
                     _trk_bragg_mu = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, muon->PdgCode(), 2),
                                              searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, muon->PdgCode(), 2));
                     _trk_bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
-                    _trk_pidchipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, proton->PdgCode(), 2);
+                    _trk_pidchipr = chipr;
                     _trk_pidchimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, muon->PdgCode(), 2);
                     _trk_pida = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 2);
                 }
@@ -637,12 +666,15 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         }
     }
 
-    _extra_energy_y -= (_trk_energy_hits_tot+_shr_energy_tot);
+    _extra_energy_y -= (_trk_energy_hits_tot + _shr_energy_tot);
     _pt = total_p.Perp();
     _p = total_p.Mag();
     _hits_ratio = (float)_shr_hits_tot / (_trk_hits_tot + _shr_hits_tot);
-    _tksh_distance = (trk_vtx-shr_vtx).Mag();
-    _tksh_angle = trk_p.Dot(shr_p)/(trk_p.Mag()*shr_p.Mag());
+    _tksh_distance = (trk_vtx - shr_vtx).Mag();
+    _tksh_angle = trk_p.Dot(shr_p) / (trk_p.Mag() * shr_p.Mag());
+
+    if ((float)(_hits_outfv + _trk_hits_tot + _shr_hits_tot) / (_trk_hits_tot + _shr_hits_tot) < 0.9)
+        return false;
 
     if (!(_n_tracks_cc0pinp > 0 && _n_showers_cc0pinp > 0))
         return false;
@@ -690,6 +722,9 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _trk_bragg_mu = std::numeric_limits<float>::lowest();
     _trk_bragg_mip = std::numeric_limits<float>::lowest();
     _trk_pidchipr = std::numeric_limits<float>::lowest();
+    _trk_pidchipr_best = std::numeric_limits<float>::max();
+    _trk_pidchipr_worst = std::numeric_limits<float>::lowest();
+
     _trk_pidchimu = std::numeric_limits<float>::lowest();
     _trk_pida = std::numeric_limits<float>::lowest();
     _trk_score = std::numeric_limits<float>::lowest();
@@ -731,6 +766,7 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _total_hits_y = 0;
     _extra_energy_y = 0;
     _trk_energy_hits_tot = 0;
+    _hits_outfv = 0;
 }
 
 void CC0piNpSelection::setBranches(TTree *_tree)
@@ -784,6 +820,8 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("trk_bkt_purity", &_trk_bkt_purity, "trk_bkt_purity/F");
     _tree->Branch("trk_bkt_completeness", &_trk_bkt_completeness, "trk_bkt_completeness/F");
     _tree->Branch("trk_bkt_E", &_trk_bkt_E, "trk_bkt_E/F");
+    _tree->Branch("trk_chipr_best", &_trk_pidchipr_best, "trk_chipr_best/F");
+    _tree->Branch("trk_chipr_worst", &_trk_pidchipr_worst, "trk_chipr_worst/F");
 
     _tree->Branch("trk_chipr", &_trk_pidchipr, "trk_chipr/F");
     _tree->Branch("trk_chimu", &_trk_pidchimu, "trk_chimu/F");
@@ -798,7 +836,6 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("total_hits_y", &_total_hits_y, "total_hits_y/i");
     _tree->Branch("extra_energy_y", &_extra_energy_y, "extra_energy_y/F");
     _tree->Branch("trk_energy_hits_tot", &_trk_energy_hits_tot, "trk_energy_hits_tot/F");
-
 
     _tree->Branch("shr_hits_tot", &_shr_hits_tot, "shr_hits_tot/i");
     _tree->Branch("shr_hits_y_tot", &_shr_hits_y_tot, "shr_hits_y_tot/i");
@@ -816,6 +853,7 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("dep_E", &_dep_E, "dep_E/F");
 
     _tree->Branch("hits_ratio", &_hits_ratio, "hits_ratio/F");
+    _tree->Branch("hits_outfv", &_hits_outfv, "hits_outfv/i");
     _tree->Branch("pt", &_pt, "pt/F");
     _tree->Branch("p", &_p, "p/F");
 }
