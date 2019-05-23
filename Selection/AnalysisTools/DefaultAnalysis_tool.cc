@@ -224,7 +224,7 @@ private:
   float _true_pt_visible;
   float _true_p;
   float _true_p_visible;
-
+  float _true_e_visible;
   float _leeweight;
 };
 
@@ -607,6 +607,8 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("true_p", &_true_p, "true_p/F");
   _tree->Branch("true_p_visible", &_true_p_visible, "true_p_visible/F");
 
+  _tree->Branch("true_e_visible", &_true_e_visible, "true_e_visible/F");
+
   // neutrino information
   _tree->Branch("nu_pdg", &_nu_pdg, "nu_pdg/I");
   _tree->Branch("ccnc", &_ccnc, "ccnc/I");
@@ -823,6 +825,8 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _true_pt_visible = 0;
   _true_p = 0;
   _true_p_visible = 0;
+
+  _true_e_visible = 0;
 }
 
 void DefaultAnalysis::SaveTruth(art::Event const &e)
@@ -889,6 +893,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     if ((std::abs(part.PdgCode()) == muon->PdgCode()) and (part.StatusCode() == 1))
     {
       muonMomentum = part.Momentum(0).E();
+
       _nmuon += 1;
       _muon_e = part.Momentum(0).E();
     } // if muon
@@ -899,6 +904,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
       if (part.Momentum(0).E() - electron->Mass() > fElectronThreshold) {
         _nelec += 1;
         total_p_visible += part.Momentum(0);
+        _true_e_visible += part.Momentum(0).E();
       }
       if (part.Momentum(0).E() > _elec_e)
         _elec_e = part.Momentum(0).E();
@@ -909,6 +915,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     {
       _npi0 += 1;
       total_p_visible += part.Momentum(0);
+      _true_e_visible += part.Momentum(0).E();
       if (part.Momentum(0).E() > _pi0_e)
         _pi0_e = part.Momentum(0).E();
     } // if pi0
@@ -918,6 +925,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     {
       if (part.Momentum(0).E() - proton->Mass() > fProtonThreshold) {
         total_p_visible += part.Momentum(0);
+        _true_e_visible += part.Momentum(0).E();
         _nproton += 1;
       }
       if (part.Momentum(0).E() > _proton_e)
@@ -937,6 +945,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
       if (part.Momentum(0).E() - pion->Mass() > fPionThreshold) {
         _npion += 1;
         total_p_visible += part.Momentum(0);
+        _true_e_visible += part.Momentum(0).E();
       }
       if (part.Momentum(0).E() > _pion_e)
         _pion_e = part.Momentum(0).E();
