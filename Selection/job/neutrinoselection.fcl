@@ -22,6 +22,13 @@ TrackAnalysisTool: {
 }
 
 
+CosmicIPTool: {
+    tool_type: "CosmicIP"
+    SpacePointproducer: "pandora"
+    PFPproducer: "pandora"
+    TrkShrScore: 0.5
+}
+
 DefaultAnalysisTool: {
     tool_type: "DefaultAnalysis"
     CRTVetoproducer: ""
@@ -142,7 +149,7 @@ NuSelectionFilter:{
         track:         @local::TrackAnalysisTool
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
- 
+        cosmicip:      @local::CosmicIPTool
        }
     }
 
