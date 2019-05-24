@@ -1,10 +1,10 @@
-Warning: Tag `SYMBOL_CACHE_SIZE' at line 288 of file /home/travis/build/ubneutrinos/searchingfornues/conf.doxy has become obsolete.
+Warning: Tag `SYMBOL_CACHE_SIZE' at line 291 of file /home/travis/build/ubneutrinos/searchingfornues/conf.doxy has become obsolete.
 To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
-Warning: Tag `SHOW_DIRECTORIES' at line 476 of file /home/travis/build/ubneutrinos/searchingfornues/conf.doxy has become obsolete.
+Warning: Tag `SHOW_DIRECTORIES' at line 479 of file /home/travis/build/ubneutrinos/searchingfornues/conf.doxy has become obsolete.
 To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
-Warning: Tag `HTML_ALIGN_MEMBERS' at line 807 of file /home/travis/build/ubneutrinos/searchingfornues/conf.doxy has become obsolete.
+Warning: Tag `HTML_ALIGN_MEMBERS' at line 810 of file /home/travis/build/ubneutrinos/searchingfornues/conf.doxy has become obsolete.
 To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
-Warning: Tag `USE_INLINE_TREES' at line 960 of file /home/travis/build/ubneutrinos/searchingfornues/conf.doxy has become obsolete.
+Warning: Tag `USE_INLINE_TREES' at line 963 of file /home/travis/build/ubneutrinos/searchingfornues/conf.doxy has become obsolete.
 To avoid this warning please remove this line from your configuration file or upgrade it using "doxygen -u"
 Warning: doxygen no longer ships with the FreeSans font.
 You may want to clear or change DOT_FONTNAME.
