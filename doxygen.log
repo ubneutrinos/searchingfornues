@@ -9,8 +9,8 @@ To avoid this warning please remove this line from your configuration file or up
 Warning: doxygen no longer ships with the FreeSans font.
 You may want to clear or change DOT_FONTNAME.
 Otherwise you run the risk that the wrong font is being used for dot generated graphs.
-Warning: tag INPUT: input source `/home/travis/build/ubneutrinos/searchingfornues/electronNeutrinoSelection' does not exist
-warning: source /home/travis/build/ubneutrinos/searchingfornues/electronNeutrinoSelection is not a readable file or directory... skipping.
+Warning: tag INPUT: input source `/home/travis/build/ubneutrinos/searchingfornues/searchingfornues' does not exist
+warning: source /home/travis/build/ubneutrinos/searchingfornues/searchingfornues is not a readable file or directory... skipping.
 Searching for include files...
 Searching for example files...
 Searching for images...
