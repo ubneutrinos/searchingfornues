@@ -247,7 +247,7 @@ DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
   fSLCproducer = p.get<art::InputTag>("SLCproducer");
   // kinematic thresholds for defining signal
   fProtonThreshold = p.get<float>("ProtonThreshold", 0.04);
-  fMuonThreshold = p.get<float>("MuonThreshold", 0.04);
+  fMuonThreshold = p.get<float>("MuonThreshold", 0.02);
   fPionThreshold = p.get<float>("PionThreshold", 0.04);
   fElectronThreshold = p.get<float>("ElectronThreshold", 0.03);
 
@@ -894,8 +894,14 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     {
       muonMomentum = part.Momentum(0).E();
 
-      _nmuon += 1;
-      _muon_e = part.Momentum(0).E();
+      if (part.Momentum(0).E() - muon->Mass() > fMuonThreshold) {
+        _true_e_visible += part.Momentum(0).E() - muon->Mass();
+        total_p_visible += part.Momentum(0);
+        _nmuon += 1;
+      }
+
+      if (part.Momentum(0).E() > _muon_e)
+        _muon_e = part.Momentum(0).E();
     } // if muon
 
     // if electron
@@ -904,7 +910,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
       if (part.Momentum(0).E() - electron->Mass() > fElectronThreshold) {
         _nelec += 1;
         total_p_visible += part.Momentum(0);
-        _true_e_visible += part.Momentum(0).E();
+        _true_e_visible += part.Momentum(0).E() - electron->Mass();
       }
       if (part.Momentum(0).E() > _elec_e)
         _elec_e = part.Momentum(0).E();
@@ -925,7 +931,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     {
       if (part.Momentum(0).E() - proton->Mass() > fProtonThreshold) {
         total_p_visible += part.Momentum(0);
-        _true_e_visible += part.Momentum(0).E();
+        _true_e_visible += part.Momentum(0).E() - proton->Mass();
         _nproton += 1;
       }
       if (part.Momentum(0).E() > _proton_e)
@@ -945,7 +951,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
       if (part.Momentum(0).E() - pion->Mass() > fPionThreshold) {
         _npion += 1;
         total_p_visible += part.Momentum(0);
-        _true_e_visible += part.Momentum(0).E();
+        _true_e_visible += part.Momentum(0).E() - pion->Mass();
       }
       if (part.Momentum(0).E() > _pion_e)
         _pion_e = part.Momentum(0).E();
