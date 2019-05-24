@@ -1,0 +1,111 @@
+\hypertarget{classanalysis_1_1PMTNoise}{\section{analysis\-:\-:P\-M\-T\-Noise Class Reference}
+\label{classanalysis_1_1PMTNoise}\index{analysis\-::\-P\-M\-T\-Noise@{analysis\-::\-P\-M\-T\-Noise}}
+}
+Inheritance diagram for analysis\-:\-:P\-M\-T\-Noise\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classanalysis_1_1PMTNoise}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classanalysis_1_1PMTNoise_a68d40e2ae135ebc8d8dbe3f756ee1850}{P\-M\-T\-Noise} (const fhicl\-::\-Parameter\-Set \&pset)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1PMTNoise_a10c11f2bd8fd9a55ff8cb816ae23bf33}{\hyperlink{classanalysis_1_1PMTNoise_a10c11f2bd8fd9a55ff8cb816ae23bf33}{$\sim$\-P\-M\-T\-Noise} ()}\label{classanalysis_1_1PMTNoise_a10c11f2bd8fd9a55ff8cb816ae23bf33}
+
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1PMTNoise_ac68d1b71ec42d1a6baf987d867775fd1}{configure} (fhicl\-::\-Parameter\-Set const \&pset)
+\item 
+void \hyperlink{classanalysis_1_1PMTNoise_a939447b8cffa89d11d7f7bc3c99378a6}{analyze\-Event} (art\-::\-Event const \&e, bool f\-Data) override
+\begin{DoxyCompactList}\small\item\em Analysis function. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1PMTNoise_a4c427fe82fe00639048c4a04e29155c8}{void \hyperlink{classanalysis_1_1PMTNoise_a4c427fe82fe00639048c4a04e29155c8}{analyze\-Slice} (art\-::\-Event const \&e, std\-::vector$<$ Proxy\-Pfp\-Elem\-\_\-t $>$ \&slice\-\_\-pfp\-\_\-v, bool f\-Data, bool selected) override}\label{classanalysis_1_1PMTNoise_a4c427fe82fe00639048c4a04e29155c8}
+
+\begin{DoxyCompactList}\small\item\em Analyze slice. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1PMTNoise_acece0a0e60bb9484a1da303cdeb25356}{void \hyperlink{classanalysis_1_1PMTNoise_acece0a0e60bb9484a1da303cdeb25356}{set\-Branches} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1PMTNoise_acece0a0e60bb9484a1da303cdeb25356}
+
+\begin{DoxyCompactList}\small\item\em set branches for T\-Tree \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1PMTNoise_a62da6c7527b9e7364d381b860937f3af}{void \hyperlink{classanalysis_1_1PMTNoise_a62da6c7527b9e7364d381b860937f3af}{reset\-T\-Tree} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1PMTNoise_a62da6c7527b9e7364d381b860937f3af}
+
+\begin{DoxyCompactList}\small\item\em reset ttree branches \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classanalysis_1_1PMTNoise_abfcea00205eb7f7920ff05aad6e4a38e}{float {\bfseries frac\-\_\-slnoise\-\_\-pl1}}\label{classanalysis_1_1PMTNoise_abfcea00205eb7f7920ff05aad6e4a38e}
+
+\item 
+\hypertarget{classanalysis_1_1PMTNoise_a9bdfa7a3c4ce11254d360cd986b15d9d}{int {\bfseries nflag\-\_\-pl1}}\label{classanalysis_1_1PMTNoise_a9bdfa7a3c4ce11254d360cd986b15d9d}
+
+\item 
+\hypertarget{classanalysis_1_1PMTNoise_afb7060750a3706698327c674dc74dc25}{int {\bfseries nnoise\-\_\-pl1}}\label{classanalysis_1_1PMTNoise_afb7060750a3706698327c674dc74dc25}
+
+\item 
+\hypertarget{classanalysis_1_1PMTNoise_ad0f9abc978569f8c1b5cb1df6b55f5f7}{int {\bfseries nslhits\-\_\-pl1}}\label{classanalysis_1_1PMTNoise_ad0f9abc978569f8c1b5cb1df6b55f5f7}
+
+\item 
+\hypertarget{classanalysis_1_1PMTNoise_a7392a852a973022c0cd04e3acf49ead7}{int {\bfseries nslnoise\-\_\-pl1}}\label{classanalysis_1_1PMTNoise_a7392a852a973022c0cd04e3acf49ead7}
+
+\item 
+\hypertarget{classanalysis_1_1PMTNoise_a55a48b14096d97c8232f698902c92a3f}{int {\bfseries nhits\-\_\-pl1}}\label{classanalysis_1_1PMTNoise_a55a48b14096d97c8232f698902c92a3f}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classanalysis_1_1PMTNoise_a68d40e2ae135ebc8d8dbe3f756ee1850}{\index{analysis\-::\-P\-M\-T\-Noise@{analysis\-::\-P\-M\-T\-Noise}!P\-M\-T\-Noise@{P\-M\-T\-Noise}}
+\index{P\-M\-T\-Noise@{P\-M\-T\-Noise}!analysis::PMTNoise@{analysis\-::\-P\-M\-T\-Noise}}
+\subsubsection[{P\-M\-T\-Noise}]{\setlength{\rightskip}{0pt plus 5cm}analysis\-::\-P\-M\-T\-Noise\-::\-P\-M\-T\-Noise (
+\begin{DoxyParamCaption}
+\item[{const fhicl\-::\-Parameter\-Set \&}]{p}
+\end{DoxyParamCaption}
+)}}\label{classanalysis_1_1PMTNoise_a68d40e2ae135ebc8d8dbe3f756ee1850}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pset} & Constructor.\\
+\hline
+\end{DoxyParams}
+Arguments\-:
+
+pset -\/ Fcl parameters. \hyperlink{classanalysis_1_1PMTNoise_a68d40e2ae135ebc8d8dbe3f756ee1850}{P\-M\-T\-Noise(const fhicl\-::\-Parameter\-Set\& pset)}; 
+
+\subsection{Member Function Documentation}
+\hypertarget{classanalysis_1_1PMTNoise_a939447b8cffa89d11d7f7bc3c99378a6}{\index{analysis\-::\-P\-M\-T\-Noise@{analysis\-::\-P\-M\-T\-Noise}!analyze\-Event@{analyze\-Event}}
+\index{analyze\-Event@{analyze\-Event}!analysis::PMTNoise@{analysis\-::\-P\-M\-T\-Noise}}
+\subsubsection[{analyze\-Event}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\-::\-P\-M\-T\-Noise\-::analyze\-Event (
+\begin{DoxyParamCaption}
+\item[{art\-::\-Event const \&}]{e, }
+\item[{bool}]{f\-Data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}}\label{classanalysis_1_1PMTNoise_a939447b8cffa89d11d7f7bc3c99378a6}
+
+
+Analysis function. 
+
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. 
+
+Implements \hyperlink{classanalysis_1_1AnalysisToolBase_ad5079f85c78e6c40f70ebf4ee31f5600}{analysis\-::\-Analysis\-Tool\-Base}.
+
+\hypertarget{classanalysis_1_1PMTNoise_ac68d1b71ec42d1a6baf987d867775fd1}{\index{analysis\-::\-P\-M\-T\-Noise@{analysis\-::\-P\-M\-T\-Noise}!configure@{configure}}
+\index{configure@{configure}!analysis::PMTNoise@{analysis\-::\-P\-M\-T\-Noise}}
+\subsubsection[{configure}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\-::\-P\-M\-T\-Noise\-::configure (
+\begin{DoxyParamCaption}
+\item[{fhicl\-::\-Parameter\-Set const \&}]{p}
+\end{DoxyParamCaption}
+)}}\label{classanalysis_1_1PMTNoise_ac68d1b71ec42d1a6baf987d867775fd1}
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. 
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Selection/\-Analysis\-Tools/P\-M\-T\-Noise\-\_\-tool.\-cc\end{DoxyCompactItemize}

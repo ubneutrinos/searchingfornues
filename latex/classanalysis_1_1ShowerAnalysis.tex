@@ -1,0 +1,186 @@
+\hypertarget{classanalysis_1_1ShowerAnalysis}{\section{analysis\-:\-:Shower\-Analysis Class Reference}
+\label{classanalysis_1_1ShowerAnalysis}\index{analysis\-::\-Shower\-Analysis@{analysis\-::\-Shower\-Analysis}}
+}
+Inheritance diagram for analysis\-:\-:Shower\-Analysis\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classanalysis_1_1ShowerAnalysis}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classanalysis_1_1ShowerAnalysis_a6ea40aa403312ba7acc5434c1c66df63}{Shower\-Analysis} (const fhicl\-::\-Parameter\-Set \&pset)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_af16c1759f0122ba30f7839c4003c0df7}{\hyperlink{classanalysis_1_1ShowerAnalysis_af16c1759f0122ba30f7839c4003c0df7}{$\sim$\-Shower\-Analysis} ()}\label{classanalysis_1_1ShowerAnalysis_af16c1759f0122ba30f7839c4003c0df7}
+
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1ShowerAnalysis_a973cb90e6fa423b88ca3a9667d467b1e}{configure} (fhicl\-::\-Parameter\-Set const \&pset)
+\item 
+void \hyperlink{classanalysis_1_1ShowerAnalysis_a5ae15109590ea737320bf13cefa5cc3f}{analyze\-Event} (art\-::\-Event const \&e, bool f\-Data) override
+\begin{DoxyCompactList}\small\item\em Analysis function. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a957be06c08e5777cd684c84ca53bc45e}{void \hyperlink{classanalysis_1_1ShowerAnalysis_a957be06c08e5777cd684c84ca53bc45e}{analyze\-Slice} (art\-::\-Event const \&e, std\-::vector$<$ Proxy\-Pfp\-Elem\-\_\-t $>$ \&slice\-\_\-pfp\-\_\-v, bool f\-Data, bool selected) override}\label{classanalysis_1_1ShowerAnalysis_a957be06c08e5777cd684c84ca53bc45e}
+
+\begin{DoxyCompactList}\small\item\em Analyze slice. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a0753806916baaf34f1ab0efa0dc4f4cc}{void \hyperlink{classanalysis_1_1ShowerAnalysis_a0753806916baaf34f1ab0efa0dc4f4cc}{Save\-Truth} (art\-::\-Event const \&e)}\label{classanalysis_1_1ShowerAnalysis_a0753806916baaf34f1ab0efa0dc4f4cc}
+
+\begin{DoxyCompactList}\small\item\em Save truth info for event associated to neutrino. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a007102f8d6c1f72551124b35b846662d}{void \hyperlink{classanalysis_1_1ShowerAnalysis_a007102f8d6c1f72551124b35b846662d}{set\-Branches} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1ShowerAnalysis_a007102f8d6c1f72551124b35b846662d}
+
+\begin{DoxyCompactList}\small\item\em set branches for T\-Tree \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_ada860a9b6f8b905dbac09634138aa340}{void \hyperlink{classanalysis_1_1ShowerAnalysis_ada860a9b6f8b905dbac09634138aa340}{reset\-T\-Tree} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1ShowerAnalysis_ada860a9b6f8b905dbac09634138aa340}
+
+\begin{DoxyCompactList}\small\item\em reset ttree branches \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_aaf85b896fee0cd1a3f089e14c48d6849}{art\-::\-Input\-Tag {\bfseries f\-T\-R\-Kproducer}}\label{classanalysis_1_1ShowerAnalysis_aaf85b896fee0cd1a3f089e14c48d6849}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_afc78776f278428b5919f03dc97d71789}{art\-::\-Input\-Tag {\bfseries f\-C\-A\-Lproducer}}\label{classanalysis_1_1ShowerAnalysis_afc78776f278428b5919f03dc97d71789}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a421f0c13019ec5da2784f611b43cfe2d}{unsigned int {\bfseries \-\_\-n\-\_\-showers}}\label{classanalysis_1_1ShowerAnalysis_a421f0c13019ec5da2784f611b43cfe2d}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_ade84262e802b7aa45c8745cc7be69fd1}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-energy\-\_\-u\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_ade84262e802b7aa45c8745cc7be69fd1}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a38a0debe51fc30481458de0cbf00272d}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-energy\-\_\-v\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_a38a0debe51fc30481458de0cbf00272d}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_ada81e99cc9d01b13ee0a93c593468d6f}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-energy\-\_\-y\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_ada81e99cc9d01b13ee0a93c593468d6f}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_ab64b3e69b214ab3630995a5d6bf3a379}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-dedx\-\_\-u\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_ab64b3e69b214ab3630995a5d6bf3a379}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_ad212e61eceac2d645e406eda4954533c}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-dedx\-\_\-v\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_ad212e61eceac2d645e406eda4954533c}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a472be5b2ccfc277e421dd131b9539e20}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-dedx\-\_\-y\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_a472be5b2ccfc277e421dd131b9539e20}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_ab22a34f8bab22e43b51eea071e5f7690}{std\-::vector$<$ size\-\_\-t $>$ {\bfseries \-\_\-shr\-\_\-pfp\-\_\-id\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_ab22a34f8bab22e43b51eea071e5f7690}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a8c66f95d8f933191c90b047e2d37dc05}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-start\-\_\-x\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_a8c66f95d8f933191c90b047e2d37dc05}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_afe7cc482f8d5cacea738933f7701e7f5}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-start\-\_\-y\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_afe7cc482f8d5cacea738933f7701e7f5}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_acbae2e5b1cb450cb097c5343677f553d}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-start\-\_\-z\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_acbae2e5b1cb450cb097c5343677f553d}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a4647c4883ffacc23e09c380e5b632c90}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-dist\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_a4647c4883ffacc23e09c380e5b632c90}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_aef9355ebfad96d4f829a6e67dc57952d}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-px\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_aef9355ebfad96d4f829a6e67dc57952d}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a5eda3358c32938ba109e5ff30c425ffd}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-py\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_a5eda3358c32938ba109e5ff30c425ffd}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a9c582312959b5478badf00ad0efe2374}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-pz\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_a9c582312959b5478badf00ad0efe2374}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a8c55ff0a5385c6181c29bbeded1538ef}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-theta\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_a8c55ff0a5385c6181c29bbeded1538ef}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a39044e6ef419da60320207d7638ae2ac}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-phi\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_a39044e6ef419da60320207d7638ae2ac}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a145684a8c750facbe5364860783c01bf}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trkshr\-\_\-score\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_a145684a8c750facbe5364860783c01bf}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a52a27e989e71087809e66fa1643bce23}{std\-::vector$<$ int $>$ {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-nhits\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_a52a27e989e71087809e66fa1643bce23}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a420be655b780895d2d75edbfeda7159f}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-start\-\_\-x\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_a420be655b780895d2d75edbfeda7159f}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_ac5e848248766be37a312aa1e66475add}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-start\-\_\-y\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_ac5e848248766be37a312aa1e66475add}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a1cb2bd01232e2d63b5eeb78878a6f032}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-start\-\_\-z\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_a1cb2bd01232e2d63b5eeb78878a6f032}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_aefa55f3e1a2366c86da33182dead8749}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-theta\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_aefa55f3e1a2366c86da33182dead8749}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_ab1ea08cf75bc399f3ad0e2fd8e34bfc9}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-phi\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_ab1ea08cf75bc399f3ad0e2fd8e34bfc9}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_af22f741f7e9ae1d4536ad51c26ea9bf8}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-dedx\-\_\-y\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_af22f741f7e9ae1d4536ad51c26ea9bf8}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a9073fa5867c23f05bda19815b2ee3ee7}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-dedx\-\_\-v\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_a9073fa5867c23f05bda19815b2ee3ee7}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_a7d60dd878c14e18cfcde8365e82dd00f}{std\-::vector$<$ double $>$ {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-dedx\-\_\-u\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_a7d60dd878c14e18cfcde8365e82dd00f}
+
+\item 
+\hypertarget{classanalysis_1_1ShowerAnalysis_acdea78dbe43648b901430cb6448c099d}{std\-::vector$<$ std\-::vector$<$ int $>$ $>$ {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-dedx\-\_\-nhits\-\_\-v}}\label{classanalysis_1_1ShowerAnalysis_acdea78dbe43648b901430cb6448c099d}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classanalysis_1_1ShowerAnalysis_a6ea40aa403312ba7acc5434c1c66df63}{\index{analysis\-::\-Shower\-Analysis@{analysis\-::\-Shower\-Analysis}!Shower\-Analysis@{Shower\-Analysis}}
+\index{Shower\-Analysis@{Shower\-Analysis}!analysis::ShowerAnalysis@{analysis\-::\-Shower\-Analysis}}
+\subsubsection[{Shower\-Analysis}]{\setlength{\rightskip}{0pt plus 5cm}analysis\-::\-Shower\-Analysis\-::\-Shower\-Analysis (
+\begin{DoxyParamCaption}
+\item[{const fhicl\-::\-Parameter\-Set \&}]{p}
+\end{DoxyParamCaption}
+)}}\label{classanalysis_1_1ShowerAnalysis_a6ea40aa403312ba7acc5434c1c66df63}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pset} & Constructor.\\
+\hline
+\end{DoxyParams}
+Arguments\-:
+
+pset -\/ Fcl parameters. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classanalysis_1_1ShowerAnalysis_a5ae15109590ea737320bf13cefa5cc3f}{\index{analysis\-::\-Shower\-Analysis@{analysis\-::\-Shower\-Analysis}!analyze\-Event@{analyze\-Event}}
+\index{analyze\-Event@{analyze\-Event}!analysis::ShowerAnalysis@{analysis\-::\-Shower\-Analysis}}
+\subsubsection[{analyze\-Event}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\-::\-Shower\-Analysis\-::analyze\-Event (
+\begin{DoxyParamCaption}
+\item[{art\-::\-Event const \&}]{e, }
+\item[{bool}]{f\-Data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}}\label{classanalysis_1_1ShowerAnalysis_a5ae15109590ea737320bf13cefa5cc3f}
+
+
+Analysis function. 
+
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. 
+
+Implements \hyperlink{classanalysis_1_1AnalysisToolBase_ad5079f85c78e6c40f70ebf4ee31f5600}{analysis\-::\-Analysis\-Tool\-Base}.
+
+\hypertarget{classanalysis_1_1ShowerAnalysis_a973cb90e6fa423b88ca3a9667d467b1e}{\index{analysis\-::\-Shower\-Analysis@{analysis\-::\-Shower\-Analysis}!configure@{configure}}
+\index{configure@{configure}!analysis::ShowerAnalysis@{analysis\-::\-Shower\-Analysis}}
+\subsubsection[{configure}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\-::\-Shower\-Analysis\-::configure (
+\begin{DoxyParamCaption}
+\item[{fhicl\-::\-Parameter\-Set const \&}]{p}
+\end{DoxyParamCaption}
+)}}\label{classanalysis_1_1ShowerAnalysis_a973cb90e6fa423b88ca3a9667d467b1e}
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. 
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Selection/\-Analysis\-Tools/Shower\-Analysis\-\_\-tool.\-cc\end{DoxyCompactItemize}

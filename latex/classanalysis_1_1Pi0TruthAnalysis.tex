@@ -1,0 +1,138 @@
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis}{\section{analysis\-:\-:Pi0\-Truth\-Analysis Class Reference}
+\label{classanalysis_1_1Pi0TruthAnalysis}\index{analysis\-::\-Pi0\-Truth\-Analysis@{analysis\-::\-Pi0\-Truth\-Analysis}}
+}
+Inheritance diagram for analysis\-:\-:Pi0\-Truth\-Analysis\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classanalysis_1_1Pi0TruthAnalysis}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classanalysis_1_1Pi0TruthAnalysis_ad58bc9cafaa153ef9c775b505d00f5ef}{Pi0\-Truth\-Analysis} (const fhicl\-::\-Parameter\-Set \&pset)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_aacb1da6bc05c5af7d13e6699c1b9112d}{\hyperlink{classanalysis_1_1Pi0TruthAnalysis_aacb1da6bc05c5af7d13e6699c1b9112d}{$\sim$\-Pi0\-Truth\-Analysis} ()}\label{classanalysis_1_1Pi0TruthAnalysis_aacb1da6bc05c5af7d13e6699c1b9112d}
+
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1Pi0TruthAnalysis_abbbb2436e35ba1e3bc64c4fd4e07668c}{configure} (fhicl\-::\-Parameter\-Set const \&pset)
+\item 
+void \hyperlink{classanalysis_1_1Pi0TruthAnalysis_a07cf437c5f9d2b19b7a0ca3de447d12f}{analyze\-Event} (art\-::\-Event const \&e, bool f\-Data) override
+\begin{DoxyCompactList}\small\item\em Analysis function. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_a02b3f2e32b0e8097c0432bd013c0dbe1}{void \hyperlink{classanalysis_1_1Pi0TruthAnalysis_a02b3f2e32b0e8097c0432bd013c0dbe1}{analyze\-Slice} (art\-::\-Event const \&e, std\-::vector$<$ Proxy\-Pfp\-Elem\-\_\-t $>$ \&slice\-\_\-pfp\-\_\-v, bool f\-Data, bool selected) override}\label{classanalysis_1_1Pi0TruthAnalysis_a02b3f2e32b0e8097c0432bd013c0dbe1}
+
+\begin{DoxyCompactList}\small\item\em Analyze slice. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_adf40bf270a043c1eb7837460bf0e2fc5}{void \hyperlink{classanalysis_1_1Pi0TruthAnalysis_adf40bf270a043c1eb7837460bf0e2fc5}{Save\-Truth} (art\-::\-Event const \&e)}\label{classanalysis_1_1Pi0TruthAnalysis_adf40bf270a043c1eb7837460bf0e2fc5}
+
+\begin{DoxyCompactList}\small\item\em Save truth info for event associated to neutrino. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_ac802cbe61417635725355f94babe6508}{void \hyperlink{classanalysis_1_1Pi0TruthAnalysis_ac802cbe61417635725355f94babe6508}{set\-Branches} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1Pi0TruthAnalysis_ac802cbe61417635725355f94babe6508}
+
+\begin{DoxyCompactList}\small\item\em set branches for T\-Tree \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_ac2434d9167bd32874669a8ef5eccb8a7}{void \hyperlink{classanalysis_1_1Pi0TruthAnalysis_ac2434d9167bd32874669a8ef5eccb8a7}{reset\-T\-Tree} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1Pi0TruthAnalysis_ac2434d9167bd32874669a8ef5eccb8a7}
+
+\begin{DoxyCompactList}\small\item\em reset ttree branches \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_ac0b014039b6cbb0508010c4c7fa8bc7d}{art\-::\-Input\-Tag {\bfseries f\-M\-C\-Tproducer}}\label{classanalysis_1_1Pi0TruthAnalysis_ac0b014039b6cbb0508010c4c7fa8bc7d}
+
+\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_af5416caf86030ce12316cf4a9e14ff08}{art\-::\-Input\-Tag {\bfseries f\-M\-C\-Sproducer}}\label{classanalysis_1_1Pi0TruthAnalysis_af5416caf86030ce12316cf4a9e14ff08}
+
+\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_af0e581e456ae211a233a448ae4a7061c}{float {\bfseries \-\_\-gamma1\-\_\-edep}}\label{classanalysis_1_1Pi0TruthAnalysis_af0e581e456ae211a233a448ae4a7061c}
+
+\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_a47677e4dde1ed73f4c8758f0ef01037a}{float {\bfseries \-\_\-gamma1\-\_\-etot}}\label{classanalysis_1_1Pi0TruthAnalysis_a47677e4dde1ed73f4c8758f0ef01037a}
+
+\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_af9287b9b8d319220408c0257d0d2f39b}{float {\bfseries \-\_\-gamma2\-\_\-edep}}\label{classanalysis_1_1Pi0TruthAnalysis_af9287b9b8d319220408c0257d0d2f39b}
+
+\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_a43ea1af4666ab360d5acb4385fa9e1a9}{float {\bfseries \-\_\-gamma2\-\_\-etot}}\label{classanalysis_1_1Pi0TruthAnalysis_a43ea1af4666ab360d5acb4385fa9e1a9}
+
+\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_a756b03fb781b7787ece0178a31b1f758}{int {\bfseries \-\_\-gamma\-\_\-parent}}\label{classanalysis_1_1Pi0TruthAnalysis_a756b03fb781b7787ece0178a31b1f758}
+
+\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_a9ebf162b688fb8978eb6ff9ef137ad14}{float {\bfseries \-\_\-gamma\-\_\-edep}}\label{classanalysis_1_1Pi0TruthAnalysis_a9ebf162b688fb8978eb6ff9ef137ad14}
+
+\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_acb69e34f745eee785cac4fc6c2f59c14}{float {\bfseries \-\_\-gamma\-\_\-etot}}\label{classanalysis_1_1Pi0TruthAnalysis_acb69e34f745eee785cac4fc6c2f59c14}
+
+\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_a7c1335874fbaea78e02be11928d711eb}{float {\bfseries \-\_\-gamma\-\_\-dist}}\label{classanalysis_1_1Pi0TruthAnalysis_a7c1335874fbaea78e02be11928d711eb}
+
+\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_a786a534ee00376b06114bba0c8a5392c}{int {\bfseries \-\_\-elec\-\_\-parent}}\label{classanalysis_1_1Pi0TruthAnalysis_a786a534ee00376b06114bba0c8a5392c}
+
+\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_aed2a2cdd7fc5b1c7b17f50c7cd043e24}{float {\bfseries \-\_\-elec\-\_\-edep}}\label{classanalysis_1_1Pi0TruthAnalysis_aed2a2cdd7fc5b1c7b17f50c7cd043e24}
+
+\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_a5a3b46137357fb441669ca95da1d7d69}{float {\bfseries \-\_\-elec\-\_\-etot}}\label{classanalysis_1_1Pi0TruthAnalysis_a5a3b46137357fb441669ca95da1d7d69}
+
+\item 
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_aad52612f0a988b6ff2ab0e8366eb99bc}{float {\bfseries \-\_\-elec\-\_\-dist}}\label{classanalysis_1_1Pi0TruthAnalysis_aad52612f0a988b6ff2ab0e8366eb99bc}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_ad58bc9cafaa153ef9c775b505d00f5ef}{\index{analysis\-::\-Pi0\-Truth\-Analysis@{analysis\-::\-Pi0\-Truth\-Analysis}!Pi0\-Truth\-Analysis@{Pi0\-Truth\-Analysis}}
+\index{Pi0\-Truth\-Analysis@{Pi0\-Truth\-Analysis}!analysis::Pi0TruthAnalysis@{analysis\-::\-Pi0\-Truth\-Analysis}}
+\subsubsection[{Pi0\-Truth\-Analysis}]{\setlength{\rightskip}{0pt plus 5cm}analysis\-::\-Pi0\-Truth\-Analysis\-::\-Pi0\-Truth\-Analysis (
+\begin{DoxyParamCaption}
+\item[{const fhicl\-::\-Parameter\-Set \&}]{p}
+\end{DoxyParamCaption}
+)}}\label{classanalysis_1_1Pi0TruthAnalysis_ad58bc9cafaa153ef9c775b505d00f5ef}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pset} & Constructor.\\
+\hline
+\end{DoxyParams}
+Arguments\-:
+
+pset -\/ Fcl parameters. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_a07cf437c5f9d2b19b7a0ca3de447d12f}{\index{analysis\-::\-Pi0\-Truth\-Analysis@{analysis\-::\-Pi0\-Truth\-Analysis}!analyze\-Event@{analyze\-Event}}
+\index{analyze\-Event@{analyze\-Event}!analysis::Pi0TruthAnalysis@{analysis\-::\-Pi0\-Truth\-Analysis}}
+\subsubsection[{analyze\-Event}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\-::\-Pi0\-Truth\-Analysis\-::analyze\-Event (
+\begin{DoxyParamCaption}
+\item[{art\-::\-Event const \&}]{e, }
+\item[{bool}]{f\-Data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}}\label{classanalysis_1_1Pi0TruthAnalysis_a07cf437c5f9d2b19b7a0ca3de447d12f}
+
+
+Analysis function. 
+
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. 
+
+Implements \hyperlink{classanalysis_1_1AnalysisToolBase_ad5079f85c78e6c40f70ebf4ee31f5600}{analysis\-::\-Analysis\-Tool\-Base}.
+
+\hypertarget{classanalysis_1_1Pi0TruthAnalysis_abbbb2436e35ba1e3bc64c4fd4e07668c}{\index{analysis\-::\-Pi0\-Truth\-Analysis@{analysis\-::\-Pi0\-Truth\-Analysis}!configure@{configure}}
+\index{configure@{configure}!analysis::Pi0TruthAnalysis@{analysis\-::\-Pi0\-Truth\-Analysis}}
+\subsubsection[{configure}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\-::\-Pi0\-Truth\-Analysis\-::configure (
+\begin{DoxyParamCaption}
+\item[{fhicl\-::\-Parameter\-Set const \&}]{p}
+\end{DoxyParamCaption}
+)}}\label{classanalysis_1_1Pi0TruthAnalysis_abbbb2436e35ba1e3bc64c4fd4e07668c}
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. 
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Selection/\-Analysis\-Tools/Pi0\-Truth\-Analysis\-\_\-tool.\-cc\end{DoxyCompactItemize}

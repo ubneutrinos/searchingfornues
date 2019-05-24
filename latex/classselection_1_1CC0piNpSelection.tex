@@ -1,0 +1,376 @@
+\hypertarget{classselection_1_1CC0piNpSelection}{\section{selection\-:\-:C\-C0pi\-Np\-Selection Class Reference}
+\label{classselection_1_1CC0piNpSelection}\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}}
+}
+Inheritance diagram for selection\-:\-:C\-C0pi\-Np\-Selection\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classselection_1_1CC0piNpSelection}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classselection_1_1CC0piNpSelection_a5770519e6639db45cb9f3a4b1bf3efc2}{C\-C0pi\-Np\-Selection} (const fhicl\-::\-Parameter\-Set \&pset)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a7f809f358e84885ae2f08f54b4b8183b}{\hyperlink{classselection_1_1CC0piNpSelection_a7f809f358e84885ae2f08f54b4b8183b}{$\sim$\-C\-C0pi\-Np\-Selection} ()}\label{classselection_1_1CC0piNpSelection_a7f809f358e84885ae2f08f54b4b8183b}
+
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+void \hyperlink{classselection_1_1CC0piNpSelection_ace78372ffb6d92911f79ded647aacf4c}{configure} (fhicl\-::\-Parameter\-Set const \&pset)
+\item 
+bool \hyperlink{classselection_1_1CC0piNpSelection_aee88d296a2ebad59acadfd919139d96f}{select\-Event} (art\-::\-Event const \&e, const std\-::vector$<$ Proxy\-Pfp\-Elem\-\_\-t $>$ \&pfp\-\_\-pxy\-\_\-v)
+\begin{DoxyCompactList}\small\item\em Selection function. \end{DoxyCompactList}\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a6a14e4d0ff713ed2c75055019d278422}{void \hyperlink{classselection_1_1CC0piNpSelection_a6a14e4d0ff713ed2c75055019d278422}{set\-Branches} (T\-Tree $\ast$\-\_\-tree)}\label{classselection_1_1CC0piNpSelection_a6a14e4d0ff713ed2c75055019d278422}
+
+\begin{DoxyCompactList}\small\item\em set branches for T\-Tree \end{DoxyCompactList}\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a3d7a6aa0fbd41f4a77390a160ee64e35}{void \hyperlink{classselection_1_1CC0piNpSelection_a3d7a6aa0fbd41f4a77390a160ee64e35}{reset\-T\-Tree} (T\-Tree $\ast$\-\_\-tree)}\label{classselection_1_1CC0piNpSelection_a3d7a6aa0fbd41f4a77390a160ee64e35}
+
+\begin{DoxyCompactList}\small\item\em reset ttree branches \end{DoxyCompactList}\item 
+\hypertarget{classselection_1_1CC0piNpSelection_ac3f55283ce26e2af8d5ba86a9faf0d23}{bool \hyperlink{classselection_1_1CC0piNpSelection_ac3f55283ce26e2af8d5ba86a9faf0d23}{is\-Fiducial} (const double x\mbox{[}3\mbox{]}) const }\label{classselection_1_1CC0piNpSelection_ac3f55283ce26e2af8d5ba86a9faf0d23}
+
+\begin{DoxyCompactList}\small\item\em check if inside fiducial volume \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a82c14d3fa8ea4b3edff07521b2f7c1b9}{trkf\-::\-Track\-Momentum\-Calculator {\bfseries \-\_\-trkmom}}\label{classselection_1_1CC0piNpSelection_a82c14d3fa8ea4b3edff07521b2f7c1b9}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a721706e2b68efe51225fa6388bc184d1}{T\-Particle\-P\-D\-G $\ast$ {\bfseries proton} = T\-Database\-P\-D\-G\-::\-Instance()-\/$>$Get\-Particle(2212)}\label{classselection_1_1CC0piNpSelection_a721706e2b68efe51225fa6388bc184d1}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_ad04f8899cec1c9c54e720126e61a872f}{T\-Particle\-P\-D\-G $\ast$ {\bfseries electron} = T\-Database\-P\-D\-G\-::\-Instance()-\/$>$Get\-Particle(11)}\label{classselection_1_1CC0piNpSelection_ad04f8899cec1c9c54e720126e61a872f}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_ae1161170f7b46e368ad608924cc412fd}{T\-Particle\-P\-D\-G $\ast$ {\bfseries muon} = T\-Database\-P\-D\-G\-::\-Instance()-\/$>$Get\-Particle(13)}\label{classselection_1_1CC0piNpSelection_ae1161170f7b46e368ad608924cc412fd}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_ab72eccf7dab3acafa294a0d8f3e225a0}{float {\bfseries f\-Trk\-Shrscore}}\label{classselection_1_1CC0piNpSelection_ab72eccf7dab3acafa294a0d8f3e225a0}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_afe5a2b82ecad103b98362839094c47e0}{float {\bfseries f\-Fidvol\-Zstart}}\label{classselection_1_1CC0piNpSelection_afe5a2b82ecad103b98362839094c47e0}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a9ac28bcb4ef95573d416dec35202b18e}{float {\bfseries f\-Fidvol\-Zend}}\label{classselection_1_1CC0piNpSelection_a9ac28bcb4ef95573d416dec35202b18e}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_ac59a66f695af8314018029e4480db16a}{float {\bfseries f\-Fidvol\-Ystart}}\label{classselection_1_1CC0piNpSelection_ac59a66f695af8314018029e4480db16a}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a4732dc1091cb1881c741d57f999b5035}{float {\bfseries f\-Fidvol\-Yend}}\label{classselection_1_1CC0piNpSelection_a4732dc1091cb1881c741d57f999b5035}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a783e7f9dcd42c083658870f7d23931da}{float {\bfseries f\-Fidvol\-Xstart}}\label{classselection_1_1CC0piNpSelection_a783e7f9dcd42c083658870f7d23931da}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a754589459e1f2d90a8ad853c68f864db}{float {\bfseries f\-Fidvol\-Xend}}\label{classselection_1_1CC0piNpSelection_a754589459e1f2d90a8ad853c68f864db}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a3d64505ea3757aa3d729aca8e871cd95}{art\-::\-Input\-Tag {\bfseries f\-C\-L\-Sproducer}}\label{classselection_1_1CC0piNpSelection_a3d64505ea3757aa3d729aca8e871cd95}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a84fa0549ef1d05cdcbc93b8ab7f6613e}{art\-::\-Input\-Tag {\bfseries f\-P\-I\-Dproducer}}\label{classselection_1_1CC0piNpSelection_a84fa0549ef1d05cdcbc93b8ab7f6613e}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_ac196a716edaba0c3fcc8f20c4ac1af61}{art\-::\-Input\-Tag {\bfseries f\-T\-R\-Kproducer}}\label{classselection_1_1CC0piNpSelection_ac196a716edaba0c3fcc8f20c4ac1af61}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a43105132eeb5927fb745f1c831915a1b}{art\-::\-Input\-Tag {\bfseries f\-Backtrack\-Tag}}\label{classselection_1_1CC0piNpSelection_a43105132eeb5927fb745f1c831915a1b}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a7142f01060887fdaf91e2a44edae8c6f}{art\-::\-Input\-Tag {\bfseries f\-Hproducer}}\label{classselection_1_1CC0piNpSelection_a7142f01060887fdaf91e2a44edae8c6f}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a2512859a8ce467998cfae65268d01003}{art\-::\-Input\-Tag {\bfseries f\-M\-C\-Rproducer}}\label{classselection_1_1CC0piNpSelection_a2512859a8ce467998cfae65268d01003}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a97505974a12ecb05ae7888f4647bde1f}{art\-::\-Input\-Tag {\bfseries f\-M\-C\-Pproducer}}\label{classselection_1_1CC0piNpSelection_a97505974a12ecb05ae7888f4647bde1f}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a5f6c345d0e3a50660957b2787a520a22}{art\-::\-Input\-Tag {\bfseries f\-C\-A\-Lproducer}}\label{classselection_1_1CC0piNpSelection_a5f6c345d0e3a50660957b2787a520a22}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_acb4c7b9016e0b3e7c9a7eb7a9e14de9f}{unsigned int {\bfseries \-\_\-n\-\_\-showers\-\_\-cc0pinp}}\label{classselection_1_1CC0piNpSelection_acb4c7b9016e0b3e7c9a7eb7a9e14de9f}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a257dce1a2ee2ef2ab43fa2660a58e80d}{unsigned int {\bfseries \-\_\-n\-\_\-tracks\-\_\-cc0pinp}}\label{classselection_1_1CC0piNpSelection_a257dce1a2ee2ef2ab43fa2660a58e80d}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_ac98076f3126f460b7dcc30516afb64ee}{unsigned int {\bfseries \-\_\-max\-\_\-hits\-\_\-shower}}\label{classselection_1_1CC0piNpSelection_ac98076f3126f460b7dcc30516afb64ee}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_afcef040e83b928576b98641ae5bf6c1b}{unsigned int {\bfseries \-\_\-max\-\_\-hits\-\_\-track}}\label{classselection_1_1CC0piNpSelection_afcef040e83b928576b98641ae5bf6c1b}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_aa6e7162371e3e343df001f0afc8a20b8}{unsigned int {\bfseries \-\_\-shr\-\_\-hits\-\_\-tot}}\label{classselection_1_1CC0piNpSelection_aa6e7162371e3e343df001f0afc8a20b8}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a420b9962478d7998282e03f1ccf89c2e}{unsigned int {\bfseries \-\_\-trk\-\_\-hits\-\_\-tot}}\label{classselection_1_1CC0piNpSelection_a420b9962478d7998282e03f1ccf89c2e}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a76eb07fcb9190709464880c0ea7c4eba}{unsigned int {\bfseries \-\_\-trk\-\_\-hits\-\_\-y\-\_\-tot}}\label{classselection_1_1CC0piNpSelection_a76eb07fcb9190709464880c0ea7c4eba}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a30fe5ccb6a299f7955125aa6c9d5923d}{unsigned int {\bfseries \-\_\-trk\-\_\-hits\-\_\-v\-\_\-tot}}\label{classselection_1_1CC0piNpSelection_a30fe5ccb6a299f7955125aa6c9d5923d}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_af7d0e867df8901ff3e531b4c1b96408a}{unsigned int {\bfseries \-\_\-trk\-\_\-hits\-\_\-u\-\_\-tot}}\label{classselection_1_1CC0piNpSelection_af7d0e867df8901ff3e531b4c1b96408a}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a6a43c3523af47860ad1682ebe14bb8e3}{unsigned int {\bfseries \-\_\-shr\-\_\-hits\-\_\-y\-\_\-tot}}\label{classselection_1_1CC0piNpSelection_a6a43c3523af47860ad1682ebe14bb8e3}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_ab6aaf4282fa9d2e5971e162c66901227}{unsigned int {\bfseries \-\_\-shr\-\_\-hits\-\_\-v\-\_\-tot}}\label{classselection_1_1CC0piNpSelection_ab6aaf4282fa9d2e5971e162c66901227}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_afba4a31f84c2f125323b90f007bda1c6}{unsigned int {\bfseries \-\_\-shr\-\_\-hits\-\_\-u\-\_\-tot}}\label{classselection_1_1CC0piNpSelection_afba4a31f84c2f125323b90f007bda1c6}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_abf854f061d0476dc08ae8b3d71e7a86d}{float {\bfseries \-\_\-shr\-\_\-energy}}\label{classselection_1_1CC0piNpSelection_abf854f061d0476dc08ae8b3d71e7a86d}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a6e42f011e79f646f36df7148907d1b59}{float {\bfseries \-\_\-shr\-\_\-energy\-\_\-tot}}\label{classselection_1_1CC0piNpSelection_a6e42f011e79f646f36df7148907d1b59}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a1af96c31bd3afe4b111f429927bbff1c}{float {\bfseries \-\_\-shr\-\_\-dedx\-\_\-\-Y}}\label{classselection_1_1CC0piNpSelection_a1af96c31bd3afe4b111f429927bbff1c}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a392211f6d023d92bf113c20098c5e7fe}{float {\bfseries \-\_\-shr\-\_\-dedx\-\_\-\-V}}\label{classselection_1_1CC0piNpSelection_a392211f6d023d92bf113c20098c5e7fe}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_ada2f72c2f814e7d06c24a50ff5ad4fcc}{float {\bfseries \-\_\-shr\-\_\-dedx\-\_\-\-U}}\label{classselection_1_1CC0piNpSelection_ada2f72c2f814e7d06c24a50ff5ad4fcc}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a20705dc212e16009a0ce4ace27d54af7}{float {\bfseries \-\_\-shr\-\_\-distance}}\label{classselection_1_1CC0piNpSelection_a20705dc212e16009a0ce4ace27d54af7}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a73d772bb569336b56a3f14cee752e2f3}{float {\bfseries \-\_\-tksh\-\_\-distance}}\label{classselection_1_1CC0piNpSelection_a73d772bb569336b56a3f14cee752e2f3}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a959adc6093ff4d2730dac8f75dd1245c}{float {\bfseries \-\_\-tksh\-\_\-angle}}\label{classselection_1_1CC0piNpSelection_a959adc6093ff4d2730dac8f75dd1245c}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a9033ad097ef1b7a4e10b2b872b82f068}{float {\bfseries \-\_\-shr\-\_\-score}}\label{classselection_1_1CC0piNpSelection_a9033ad097ef1b7a4e10b2b872b82f068}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a624a38f7c8d33320df92e610fd0e16ee}{float {\bfseries \-\_\-shr\-\_\-theta}}\label{classselection_1_1CC0piNpSelection_a624a38f7c8d33320df92e610fd0e16ee}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a8706a83b3dc2e2c3857ada556392f16f}{float {\bfseries \-\_\-shr\-\_\-phi}}\label{classselection_1_1CC0piNpSelection_a8706a83b3dc2e2c3857ada556392f16f}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a52e2043c82f5de7f93ac9bad63563f18}{float {\bfseries \-\_\-shr\-\_\-px}}\label{classselection_1_1CC0piNpSelection_a52e2043c82f5de7f93ac9bad63563f18}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a436dd7081c84003dabb595289d745111}{float {\bfseries \-\_\-shr\-\_\-py}}\label{classselection_1_1CC0piNpSelection_a436dd7081c84003dabb595289d745111}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a769319ad32b6ce49c7a5283b246303fa}{float {\bfseries \-\_\-shr\-\_\-pz}}\label{classselection_1_1CC0piNpSelection_a769319ad32b6ce49c7a5283b246303fa}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a33b26acb3cdb05cb1b81800d8af48a03}{float {\bfseries \-\_\-shr\-\_\-openangle}}\label{classselection_1_1CC0piNpSelection_a33b26acb3cdb05cb1b81800d8af48a03}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a21f98860ef8bd0ad8d8e029a47ef6f1e}{size\-\_\-t {\bfseries \-\_\-shr\-\_\-pfp\-\_\-id}}\label{classselection_1_1CC0piNpSelection_a21f98860ef8bd0ad8d8e029a47ef6f1e}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_aab7945993678b44d7100abac6cc71655}{float {\bfseries \-\_\-trk\-\_\-len}}\label{classselection_1_1CC0piNpSelection_aab7945993678b44d7100abac6cc71655}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a98e03f33f34b5df397a1d1144b1de4a1}{float {\bfseries \-\_\-trk\-\_\-energy}}\label{classselection_1_1CC0piNpSelection_a98e03f33f34b5df397a1d1144b1de4a1}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a8a0da0081e2f182880249debba6551e3}{float {\bfseries \-\_\-trk\-\_\-energy\-\_\-tot}}\label{classselection_1_1CC0piNpSelection_a8a0da0081e2f182880249debba6551e3}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a0f16777192fbed04bcc67edfdfa67e6b}{float {\bfseries \-\_\-trk\-\_\-distance}}\label{classselection_1_1CC0piNpSelection_a0f16777192fbed04bcc67edfdfa67e6b}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a08cd38de74e9611829a3580a310c19f2}{float {\bfseries \-\_\-trk\-\_\-theta}}\label{classselection_1_1CC0piNpSelection_a08cd38de74e9611829a3580a310c19f2}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a85a6029e249e3ff20ea6d8eaabf22142}{float {\bfseries \-\_\-trk\-\_\-phi}}\label{classselection_1_1CC0piNpSelection_a85a6029e249e3ff20ea6d8eaabf22142}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a641e7e656a28a5b31a5c8ab21dad9d3b}{size\-\_\-t {\bfseries \-\_\-trk\-\_\-pfp\-\_\-id}}\label{classselection_1_1CC0piNpSelection_a641e7e656a28a5b31a5c8ab21dad9d3b}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a32b43003c9168115bc94544049e439a2}{float {\bfseries \-\_\-hits\-\_\-ratio}}\label{classselection_1_1CC0piNpSelection_a32b43003c9168115bc94544049e439a2}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a52d578481ee7dd4fed45f8e3c8ed44da}{float {\bfseries \-\_\-trk\-\_\-bragg\-\_\-p}}\label{classselection_1_1CC0piNpSelection_a52d578481ee7dd4fed45f8e3c8ed44da}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a9e7b081beb0ef9129f15a7fb965276f1}{float {\bfseries \-\_\-trk\-\_\-bragg\-\_\-mu}}\label{classselection_1_1CC0piNpSelection_a9e7b081beb0ef9129f15a7fb965276f1}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_aec1e4d27216773ec40bc66ab5c217abc}{float {\bfseries \-\_\-trk\-\_\-bragg\-\_\-mip}}\label{classselection_1_1CC0piNpSelection_aec1e4d27216773ec40bc66ab5c217abc}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a712eaf6dc6086f1be5705a3bbe5226fc}{float {\bfseries \-\_\-trk\-\_\-pidchipr}}\label{classselection_1_1CC0piNpSelection_a712eaf6dc6086f1be5705a3bbe5226fc}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_aaf0a2841494bc52da55d267bc3c8db3d}{float {\bfseries \-\_\-trk\-\_\-pidchipr\-\_\-best}}\label{classselection_1_1CC0piNpSelection_aaf0a2841494bc52da55d267bc3c8db3d}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a6c06ff43f89cbee19cf466b830a6fe38}{float {\bfseries \-\_\-trk\-\_\-pidchipr\-\_\-worst}}\label{classselection_1_1CC0piNpSelection_a6c06ff43f89cbee19cf466b830a6fe38}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a74ddf5622f3ee32110e9342361020a89}{float {\bfseries \-\_\-trk\-\_\-pidchimu}}\label{classselection_1_1CC0piNpSelection_a74ddf5622f3ee32110e9342361020a89}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_af0fe49227e33b3f46015a821de58ba1f}{float {\bfseries \-\_\-trk\-\_\-pida}}\label{classselection_1_1CC0piNpSelection_af0fe49227e33b3f46015a821de58ba1f}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a72517a224dc19f95faef3efde9a999d1}{float {\bfseries \-\_\-trk\-\_\-score}}\label{classselection_1_1CC0piNpSelection_a72517a224dc19f95faef3efde9a999d1}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a98281b58b33ff8c03fa9b00f3f3baa06}{float {\bfseries \-\_\-pt}}\label{classselection_1_1CC0piNpSelection_a98281b58b33ff8c03fa9b00f3f3baa06}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_afae64b232d6b3526032b289c91b092cb}{float {\bfseries \-\_\-p}}\label{classselection_1_1CC0piNpSelection_afae64b232d6b3526032b289c91b092cb}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a1da68886d5b7a5b4eb1785649c48e8ef}{float {\bfseries \-\_\-shr\-\_\-bkt\-\_\-purity}}\label{classselection_1_1CC0piNpSelection_a1da68886d5b7a5b4eb1785649c48e8ef}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_ac3c3c9895ca501c3b73f14addfddf495}{float {\bfseries \-\_\-shr\-\_\-bkt\-\_\-completeness}}\label{classselection_1_1CC0piNpSelection_ac3c3c9895ca501c3b73f14addfddf495}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_aa1a21f48d99a4de5f1d444aa3d64dedf}{float {\bfseries \-\_\-shr\-\_\-bkt\-\_\-\-E}}\label{classselection_1_1CC0piNpSelection_aa1a21f48d99a4de5f1d444aa3d64dedf}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_aab09f93d7cd57031de714956414f3230}{int {\bfseries \-\_\-shr\-\_\-bkt\-\_\-pdg}}\label{classselection_1_1CC0piNpSelection_aab09f93d7cd57031de714956414f3230}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a39a84b873306f200a2350b4804429791}{float {\bfseries \-\_\-trk\-\_\-bkt\-\_\-purity}}\label{classselection_1_1CC0piNpSelection_a39a84b873306f200a2350b4804429791}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_aab22ce289e2d4a109440369e30fddf52}{float {\bfseries \-\_\-trk\-\_\-bkt\-\_\-completeness}}\label{classselection_1_1CC0piNpSelection_aab22ce289e2d4a109440369e30fddf52}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_aa7a6076f1169185e0b2b02fbb03aba22}{float {\bfseries \-\_\-trk\-\_\-bkt\-\_\-\-E}}\label{classselection_1_1CC0piNpSelection_aa7a6076f1169185e0b2b02fbb03aba22}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a7044de37ee4f3615ffe4bb15e9f00f8e}{int {\bfseries \-\_\-trk\-\_\-bkt\-\_\-pdg}}\label{classselection_1_1CC0piNpSelection_a7044de37ee4f3615ffe4bb15e9f00f8e}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a042253f3c88713f4d7ab76e84e7f251b}{float {\bfseries \-\_\-dep\-\_\-\-E}}\label{classselection_1_1CC0piNpSelection_a042253f3c88713f4d7ab76e84e7f251b}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a44002e3cc4d16dce6e6f61ee3a2bae6a}{float {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-start\-\_\-x}}\label{classselection_1_1CC0piNpSelection_a44002e3cc4d16dce6e6f61ee3a2bae6a}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_acd1826c44855b71bce92253f7ac1a758}{float {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-start\-\_\-y}}\label{classselection_1_1CC0piNpSelection_acd1826c44855b71bce92253f7ac1a758}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a4d3591a8bb7abd9e320f35ca3bf311c2}{float {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-start\-\_\-z}}\label{classselection_1_1CC0piNpSelection_a4d3591a8bb7abd9e320f35ca3bf311c2}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_ac0fb4dbd656f2f3fb2c12ffc02a0df7c}{float {\bfseries \-\_\-shr\-\_\-start\-\_\-x}}\label{classselection_1_1CC0piNpSelection_ac0fb4dbd656f2f3fb2c12ffc02a0df7c}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_ade6717f479b053a2c2c9082e597d599f}{float {\bfseries \-\_\-shr\-\_\-start\-\_\-y}}\label{classselection_1_1CC0piNpSelection_ade6717f479b053a2c2c9082e597d599f}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a6e8b4637c8de2991e4d48291d3e90ddf}{float {\bfseries \-\_\-shr\-\_\-start\-\_\-z}}\label{classselection_1_1CC0piNpSelection_a6e8b4637c8de2991e4d48291d3e90ddf}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_aefb0bc61c417330a448ababb5363ad8f}{float {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-phi}}\label{classselection_1_1CC0piNpSelection_aefb0bc61c417330a448ababb5363ad8f}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a11df391e482434665c389423bbb9ec5d}{float {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-theta}}\label{classselection_1_1CC0piNpSelection_a11df391e482434665c389423bbb9ec5d}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_ababbbc32babdef645c2edc613713ceb7}{float {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-dedx\-\_\-\-Y}}\label{classselection_1_1CC0piNpSelection_ababbbc32babdef645c2edc613713ceb7}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_aaaef69409457695e2300bf847a13804c}{float {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-dedx\-\_\-\-U}}\label{classselection_1_1CC0piNpSelection_aaaef69409457695e2300bf847a13804c}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a428fc549513bea0e1ca92cf90c1148cd}{float {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-dedx\-\_\-\-V}}\label{classselection_1_1CC0piNpSelection_a428fc549513bea0e1ca92cf90c1148cd}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_ae3a53326b19594013c9df08b66ccaa73}{unsigned int {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-nhits\-\_\-\-Y}}\label{classselection_1_1CC0piNpSelection_ae3a53326b19594013c9df08b66ccaa73}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_adab23c54dd799cdf83c31a10e4ae9061}{unsigned int {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-nhits\-\_\-\-V}}\label{classselection_1_1CC0piNpSelection_adab23c54dd799cdf83c31a10e4ae9061}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a6c75f5783174133ce97849f128f3dee3}{unsigned int {\bfseries \-\_\-shr\-\_\-tkfit\-\_\-nhits\-\_\-\-U}}\label{classselection_1_1CC0piNpSelection_a6c75f5783174133ce97849f128f3dee3}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_ac39ec79d190fb925f8d20b03cbeb0605}{unsigned int {\bfseries \-\_\-hits\-\_\-outfv}}\label{classselection_1_1CC0piNpSelection_ac39ec79d190fb925f8d20b03cbeb0605}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a8e7933222bce1424aee24bae8dcf4864}{float {\bfseries \-\_\-contained\-\_\-fraction}}\label{classselection_1_1CC0piNpSelection_a8e7933222bce1424aee24bae8dcf4864}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a82a48c6128c34252642d237b98f1b66a}{float {\bfseries \-\_\-trk\-\_\-energy\-\_\-hits\-\_\-tot}}\label{classselection_1_1CC0piNpSelection_a82a48c6128c34252642d237b98f1b66a}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a819d1d973e74bcd2ad82aa01ea24ac37}{unsigned int {\bfseries \-\_\-total\-\_\-hits\-\_\-y}}\label{classselection_1_1CC0piNpSelection_a819d1d973e74bcd2ad82aa01ea24ac37}
+
+\item 
+\hypertarget{classselection_1_1CC0piNpSelection_a2e386c361ecc27d22ff2642e80a629e4}{float {\bfseries \-\_\-extra\-\_\-energy\-\_\-y}}\label{classselection_1_1CC0piNpSelection_a2e386c361ecc27d22ff2642e80a629e4}
+
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classselection_1_1CC0piNpSelection_a5770519e6639db45cb9f3a4b1bf3efc2}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!C\-C0pi\-Np\-Selection@{C\-C0pi\-Np\-Selection}}
+\index{C\-C0pi\-Np\-Selection@{C\-C0pi\-Np\-Selection}!selection::CC0piNpSelection@{selection\-::\-C\-C0pi\-Np\-Selection}}
+\subsubsection[{C\-C0pi\-Np\-Selection}]{\setlength{\rightskip}{0pt plus 5cm}selection\-::\-C\-C0pi\-Np\-Selection\-::\-C\-C0pi\-Np\-Selection (
+\begin{DoxyParamCaption}
+\item[{const fhicl\-::\-Parameter\-Set \&}]{pset}
+\end{DoxyParamCaption}
+)}}\label{classselection_1_1CC0piNpSelection_a5770519e6639db45cb9f3a4b1bf3efc2}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pset} & Constructor.\\
+\hline
+\end{DoxyParams}
+Arguments\-:
+
+pset -\/ Fcl parameters. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classselection_1_1CC0piNpSelection_ace78372ffb6d92911f79ded647aacf4c}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!configure@{configure}}
+\index{configure@{configure}!selection::CC0piNpSelection@{selection\-::\-C\-C0pi\-Np\-Selection}}
+\subsubsection[{configure}]{\setlength{\rightskip}{0pt plus 5cm}void selection\-::\-C\-C0pi\-Np\-Selection\-::configure (
+\begin{DoxyParamCaption}
+\item[{fhicl\-::\-Parameter\-Set const \&}]{pset}
+\end{DoxyParamCaption}
+)}}\label{classselection_1_1CC0piNpSelection_ace78372ffb6d92911f79ded647aacf4c}
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. \hypertarget{classselection_1_1CC0piNpSelection_aee88d296a2ebad59acadfd919139d96f}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!select\-Event@{select\-Event}}
+\index{select\-Event@{select\-Event}!selection::CC0piNpSelection@{selection\-::\-C\-C0pi\-Np\-Selection}}
+\subsubsection[{select\-Event}]{\setlength{\rightskip}{0pt plus 5cm}bool selection\-::\-C\-C0pi\-Np\-Selection\-::select\-Event (
+\begin{DoxyParamCaption}
+\item[{art\-::\-Event const \&}]{e, }
+\item[{const std\-::vector$<$ Proxy\-Pfp\-Elem\-\_\-t $>$ \&}]{pfp\-\_\-pxy\-\_\-v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classselection_1_1CC0piNpSelection_aee88d296a2ebad59acadfd919139d96f}
+
+
+Selection function. 
+
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. 
+
+Implements \hyperlink{classselection_1_1SelectionToolBase_ab63818dac49b43418fe9eb3b8cd98c9c}{selection\-::\-Selection\-Tool\-Base}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Selection/\-Selection\-Tools/C\-C0pi\-Np\-Selection\-\_\-tool.\-cc\end{DoxyCompactItemize}

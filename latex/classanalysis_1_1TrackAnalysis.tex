@@ -1,0 +1,192 @@
+\hypertarget{classanalysis_1_1TrackAnalysis}{\section{analysis\-:\-:Track\-Analysis Class Reference}
+\label{classanalysis_1_1TrackAnalysis}\index{analysis\-::\-Track\-Analysis@{analysis\-::\-Track\-Analysis}}
+}
+Inheritance diagram for analysis\-:\-:Track\-Analysis\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classanalysis_1_1TrackAnalysis}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classanalysis_1_1TrackAnalysis_aed13157ba9297149fe4e15676e6db7fc}{Track\-Analysis} (const fhicl\-::\-Parameter\-Set \&pset)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a6f96bc87ab6d9dffb6417d7d2f1a89e2}{\hyperlink{classanalysis_1_1TrackAnalysis_a6f96bc87ab6d9dffb6417d7d2f1a89e2}{$\sim$\-Track\-Analysis} ()}\label{classanalysis_1_1TrackAnalysis_a6f96bc87ab6d9dffb6417d7d2f1a89e2}
+
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1TrackAnalysis_a427d588370a8044b77560c92d3a35ea6}{configure} (fhicl\-::\-Parameter\-Set const \&pset)
+\item 
+void \hyperlink{classanalysis_1_1TrackAnalysis_aa5a295fc3fe8aa050905361f469ff108}{analyze\-Event} (art\-::\-Event const \&e, bool f\-Data) override
+\begin{DoxyCompactList}\small\item\em Analysis function. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a00e51059eed5a6486c9eb2f2f16017de}{void \hyperlink{classanalysis_1_1TrackAnalysis_a00e51059eed5a6486c9eb2f2f16017de}{analyze\-Slice} (art\-::\-Event const \&e, std\-::vector$<$ Proxy\-Pfp\-Elem\-\_\-t $>$ \&slice\-\_\-pfp\-\_\-v, bool f\-Data, bool selected) override}\label{classanalysis_1_1TrackAnalysis_a00e51059eed5a6486c9eb2f2f16017de}
+
+\begin{DoxyCompactList}\small\item\em Analyze slice. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_adde7746b5a45ec99cd67c0ab1fa19eb1}{void \hyperlink{classanalysis_1_1TrackAnalysis_adde7746b5a45ec99cd67c0ab1fa19eb1}{Save\-Truth} (art\-::\-Event const \&e)}\label{classanalysis_1_1TrackAnalysis_adde7746b5a45ec99cd67c0ab1fa19eb1}
+
+\begin{DoxyCompactList}\small\item\em Save truth info for event associated to neutrino. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_ae89023f1c4b11cae7bb4acb672006bb7}{void \hyperlink{classanalysis_1_1TrackAnalysis_ae89023f1c4b11cae7bb4acb672006bb7}{set\-Branches} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1TrackAnalysis_ae89023f1c4b11cae7bb4acb672006bb7}
+
+\begin{DoxyCompactList}\small\item\em set branches for T\-Tree \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a088a56418549d45b22df10270068caca}{void \hyperlink{classanalysis_1_1TrackAnalysis_a088a56418549d45b22df10270068caca}{reset\-T\-Tree} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1TrackAnalysis_a088a56418549d45b22df10270068caca}
+
+\begin{DoxyCompactList}\small\item\em reset ttree branches \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_aa69136b70c77e0f034fe009b86ba591b}{trkf\-::\-Track\-Momentum\-Calculator {\bfseries \-\_\-trkmom}}\label{classanalysis_1_1TrackAnalysis_aa69136b70c77e0f034fe009b86ba591b}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a4adc7f89c334ab93747a8d4c4abbcc6d}{T\-Particle\-P\-D\-G $\ast$ {\bfseries proton} = T\-Database\-P\-D\-G\-::\-Instance()-\/$>$Get\-Particle(2212)}\label{classanalysis_1_1TrackAnalysis_a4adc7f89c334ab93747a8d4c4abbcc6d}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a0fe3b9e7864aaaa36b5f52826b4e3eb9}{T\-Particle\-P\-D\-G $\ast$ {\bfseries muon} = T\-Database\-P\-D\-G\-::\-Instance()-\/$>$Get\-Particle(13)}\label{classanalysis_1_1TrackAnalysis_a0fe3b9e7864aaaa36b5f52826b4e3eb9}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a0ceaf940b041eda0237cc73cd330d18d}{art\-::\-Input\-Tag {\bfseries f\-C\-A\-L\-Oproducer}}\label{classanalysis_1_1TrackAnalysis_a0ceaf940b041eda0237cc73cd330d18d}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a349dc117e508190c619cd9f47ea7647e}{art\-::\-Input\-Tag {\bfseries f\-P\-I\-Dproducer}}\label{classanalysis_1_1TrackAnalysis_a349dc117e508190c619cd9f47ea7647e}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a45abdcf3140e68a2ce90501e33a00eb3}{art\-::\-Input\-Tag {\bfseries f\-T\-R\-Kproducer}}\label{classanalysis_1_1TrackAnalysis_a45abdcf3140e68a2ce90501e33a00eb3}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a6ff6b242cbf5345bc77a2a574218ccd9}{std\-::vector$<$ size\-\_\-t $>$ {\bfseries \-\_\-trk\-\_\-pfp\-\_\-id}}\label{classanalysis_1_1TrackAnalysis_a6ff6b242cbf5345bc77a2a574218ccd9}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a048c5266c939a318c717a8002f7ea1da}{std\-::vector$<$ float $>$ {\bfseries \-\_\-trkscore\-\_\-v}}\label{classanalysis_1_1TrackAnalysis_a048c5266c939a318c717a8002f7ea1da}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_ad49f45d20ec26dde9ea57374879c3206}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-start\-\_\-x}}\label{classanalysis_1_1TrackAnalysis_ad49f45d20ec26dde9ea57374879c3206}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_abaf68aa9375b8b8fc84c619f236f73cb}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-start\-\_\-y}}\label{classanalysis_1_1TrackAnalysis_abaf68aa9375b8b8fc84c619f236f73cb}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a7d0a946499d3f330e3eeda4dd831510d}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-start\-\_\-z}}\label{classanalysis_1_1TrackAnalysis_a7d0a946499d3f330e3eeda4dd831510d}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_abb7f57451eeb094b5b5d5161ed829e97}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-distance}}\label{classanalysis_1_1TrackAnalysis_abb7f57451eeb094b5b5d5161ed829e97}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_ab5ab053ef7d7aa30d598d599ff789914}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-theta}}\label{classanalysis_1_1TrackAnalysis_ab5ab053ef7d7aa30d598d599ff789914}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_ad6c0e92511d22e25134cba88e268245b}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-phi}}\label{classanalysis_1_1TrackAnalysis_ad6c0e92511d22e25134cba88e268245b}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a23834d0496ab26ed9db30e4dbc70d900}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-dir\-\_\-x}}\label{classanalysis_1_1TrackAnalysis_a23834d0496ab26ed9db30e4dbc70d900}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a6041e3ed51cae9811f60be2d6ff6e2f5}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-dir\-\_\-y}}\label{classanalysis_1_1TrackAnalysis_a6041e3ed51cae9811f60be2d6ff6e2f5}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a391eb4b7ea5d96d0e82ea5e79ae58e6a}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-dir\-\_\-z}}\label{classanalysis_1_1TrackAnalysis_a391eb4b7ea5d96d0e82ea5e79ae58e6a}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a49a6eb28c7cb10f1ae8070cb42dc9b18}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-end\-\_\-x}}\label{classanalysis_1_1TrackAnalysis_a49a6eb28c7cb10f1ae8070cb42dc9b18}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a3c7fee52b3d981bd39283ce156397a74}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-end\-\_\-y}}\label{classanalysis_1_1TrackAnalysis_a3c7fee52b3d981bd39283ce156397a74}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a9fb411b0819f652885225a1d350f5abc}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-end\-\_\-z}}\label{classanalysis_1_1TrackAnalysis_a9fb411b0819f652885225a1d350f5abc}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a62277a4789ad11184c5b52b80340bfab}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-length}}\label{classanalysis_1_1TrackAnalysis_a62277a4789ad11184c5b52b80340bfab}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a4d80978ff1d329dd87f0be84dc39a844}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-bragg\-\_\-p}}\label{classanalysis_1_1TrackAnalysis_a4d80978ff1d329dd87f0be84dc39a844}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_ab3a23c3cd1b9efaeb90fb3837157c302}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-bragg\-\_\-mu}}\label{classanalysis_1_1TrackAnalysis_ab3a23c3cd1b9efaeb90fb3837157c302}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a5b6b35517864828bf6f16f2297542f91}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-bragg\-\_\-mip}}\label{classanalysis_1_1TrackAnalysis_a5b6b35517864828bf6f16f2297542f91}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a0d1d1bcc5a103d25a9fb43d0d3d058e9}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-pidchi}}\label{classanalysis_1_1TrackAnalysis_a0d1d1bcc5a103d25a9fb43d0d3d058e9}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a0020d81b4457b5bfec7ca950631ea75c}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-pidchipr}}\label{classanalysis_1_1TrackAnalysis_a0020d81b4457b5bfec7ca950631ea75c}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a6caa78fafa796d4c34dd86b6c4af7762}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-pidchika}}\label{classanalysis_1_1TrackAnalysis_a6caa78fafa796d4c34dd86b6c4af7762}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_af6153beab708b07e2e9111bdfa7ef7bf}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-pidchipi}}\label{classanalysis_1_1TrackAnalysis_af6153beab708b07e2e9111bdfa7ef7bf}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_aed79c5679af1c6329feea7a34bda7e74}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-pidchimu}}\label{classanalysis_1_1TrackAnalysis_aed79c5679af1c6329feea7a34bda7e74}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a3fb26136cae5103046d3c8c95413acaf}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-pida}}\label{classanalysis_1_1TrackAnalysis_a3fb26136cae5103046d3c8c95413acaf}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a0b140906dcfbc7971ea82bbc26ed4492}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-energy\-\_\-proton}}\label{classanalysis_1_1TrackAnalysis_a0b140906dcfbc7971ea82bbc26ed4492}
+
+\item 
+\hypertarget{classanalysis_1_1TrackAnalysis_a3e410b8e3786b70fbce29c798f20d1ca}{std\-::vector$<$ double $>$ {\bfseries \-\_\-trk\-\_\-energy\-\_\-muon}}\label{classanalysis_1_1TrackAnalysis_a3e410b8e3786b70fbce29c798f20d1ca}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classanalysis_1_1TrackAnalysis_aed13157ba9297149fe4e15676e6db7fc}{\index{analysis\-::\-Track\-Analysis@{analysis\-::\-Track\-Analysis}!Track\-Analysis@{Track\-Analysis}}
+\index{Track\-Analysis@{Track\-Analysis}!analysis::TrackAnalysis@{analysis\-::\-Track\-Analysis}}
+\subsubsection[{Track\-Analysis}]{\setlength{\rightskip}{0pt plus 5cm}analysis\-::\-Track\-Analysis\-::\-Track\-Analysis (
+\begin{DoxyParamCaption}
+\item[{const fhicl\-::\-Parameter\-Set \&}]{p}
+\end{DoxyParamCaption}
+)}}\label{classanalysis_1_1TrackAnalysis_aed13157ba9297149fe4e15676e6db7fc}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pset} & Constructor.\\
+\hline
+\end{DoxyParams}
+Arguments\-:
+
+pset -\/ Fcl parameters. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classanalysis_1_1TrackAnalysis_aa5a295fc3fe8aa050905361f469ff108}{\index{analysis\-::\-Track\-Analysis@{analysis\-::\-Track\-Analysis}!analyze\-Event@{analyze\-Event}}
+\index{analyze\-Event@{analyze\-Event}!analysis::TrackAnalysis@{analysis\-::\-Track\-Analysis}}
+\subsubsection[{analyze\-Event}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\-::\-Track\-Analysis\-::analyze\-Event (
+\begin{DoxyParamCaption}
+\item[{art\-::\-Event const \&}]{e, }
+\item[{bool}]{f\-Data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}}\label{classanalysis_1_1TrackAnalysis_aa5a295fc3fe8aa050905361f469ff108}
+
+
+Analysis function. 
+
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. 
+
+Implements \hyperlink{classanalysis_1_1AnalysisToolBase_ad5079f85c78e6c40f70ebf4ee31f5600}{analysis\-::\-Analysis\-Tool\-Base}.
+
+\hypertarget{classanalysis_1_1TrackAnalysis_a427d588370a8044b77560c92d3a35ea6}{\index{analysis\-::\-Track\-Analysis@{analysis\-::\-Track\-Analysis}!configure@{configure}}
+\index{configure@{configure}!analysis::TrackAnalysis@{analysis\-::\-Track\-Analysis}}
+\subsubsection[{configure}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\-::\-Track\-Analysis\-::configure (
+\begin{DoxyParamCaption}
+\item[{fhicl\-::\-Parameter\-Set const \&}]{p}
+\end{DoxyParamCaption}
+)}}\label{classanalysis_1_1TrackAnalysis_a427d588370a8044b77560c92d3a35ea6}
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. 
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Selection/\-Analysis\-Tools/Track\-Analysis\-\_\-tool.\-cc\end{DoxyCompactItemize}

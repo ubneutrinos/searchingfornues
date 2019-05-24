@@ -1,0 +1,147 @@
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate}{\section{flashmatch\-:\-:Flash\-Matching\-Tool\-:\-:Flash\-Candidate Class Reference}
+\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate}\index{flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate@{flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate}}
+}
+
+
+A candidate for the beam flash.  
+
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a2d514815c7f1cd16cec72f45781b9532}{\hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a2d514815c7f1cd16cec72f45781b9532}{Flash\-Candidate} ()}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a2d514815c7f1cd16cec72f45781b9532}
+
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+\hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a95fa2be25e8635d56d6768b2886fa821}{Flash\-Candidate} (const art\-::\-Event \&event, const recob\-::\-Op\-Flash \&flash)
+\begin{DoxyCompactList}\small\item\em Parametrized constructor. \end{DoxyCompactList}\item 
+bool \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_abe37a111abddadacef277af4f8adda44}{Is\-In\-Beam\-Window} (const float beam\-Window\-Start, const float beam\-Window\-End)
+\begin{DoxyCompactList}\small\item\em Check if the time of the flash is in the beam window, and save the information for later. \end{DoxyCompactList}\item 
+bool \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a43b731e560f75645df5aa5d74f017ba0}{Passes\-P\-E\-Threshold} (const float min\-Beam\-Flash\-P\-E) const 
+\begin{DoxyCompactList}\small\item\em Check if the flash passes the minimum P\-E threshold. \end{DoxyCompactList}\item 
+flashana\-::\-Flash\-\_\-t \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_ab8156ee16d27febb44352c4ffd6adf56}{Convert\-Flash\-Format} () const 
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_ae9d4df4f83da1b8115f7efe9af9438f8}{int \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_ae9d4df4f83da1b8115f7efe9af9438f8}{m\-\_\-run}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_ae9d4df4f83da1b8115f7efe9af9438f8}
+
+\begin{DoxyCompactList}\small\item\em The run number. \end{DoxyCompactList}\item 
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a033d91e33897a3ca874b47df76c15b5b}{int \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a033d91e33897a3ca874b47df76c15b5b}{m\-\_\-sub\-Run}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a033d91e33897a3ca874b47df76c15b5b}
+
+\begin{DoxyCompactList}\small\item\em The sub\-Run number. \end{DoxyCompactList}\item 
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a37e853b88c41a9f253226a42e10cb6f7}{int \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a37e853b88c41a9f253226a42e10cb6f7}{m\-\_\-event}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a37e853b88c41a9f253226a42e10cb6f7}
+
+\begin{DoxyCompactList}\small\item\em The event number. \end{DoxyCompactList}\item 
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a8fd909c9684798b9e6e6b71a3f1af7f4}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a8fd909c9684798b9e6e6b71a3f1af7f4}{m\-\_\-time}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a8fd909c9684798b9e6e6b71a3f1af7f4}
+
+\begin{DoxyCompactList}\small\item\em Time of the flash. \end{DoxyCompactList}\item 
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_ace7b40b6d8ae1ebe7ea88314ea855a74}{std\-::vector$<$ float $>$ \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_ace7b40b6d8ae1ebe7ea88314ea855a74}{m\-\_\-pe\-Spectrum}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_ace7b40b6d8ae1ebe7ea88314ea855a74}
+
+\begin{DoxyCompactList}\small\item\em The number of P\-Es on each P\-M\-T. \end{DoxyCompactList}\item 
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a3ecf14f425f49452494ece572ef97927}{std\-::vector$<$ float $>$ \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a3ecf14f425f49452494ece572ef97927}{m\-\_\-pe\-Hyp\-Spectrum}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a3ecf14f425f49452494ece572ef97927}
+
+\begin{DoxyCompactList}\small\item\em The number of P\-Es on each P\-M\-T. \end{DoxyCompactList}\item 
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a5193b7f6862ca08d3dd91a16f2ade309}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a5193b7f6862ca08d3dd91a16f2ade309}{m\-\_\-total\-P\-E}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a5193b7f6862ca08d3dd91a16f2ade309}
+
+\begin{DoxyCompactList}\small\item\em The total number of photoelectrons over all P\-M\-Ts in the flash. \end{DoxyCompactList}\item 
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_ac75a41fb6afaab35cee4510d76bf6405}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_ac75a41fb6afaab35cee4510d76bf6405}{m\-\_\-center\-Y}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_ac75a41fb6afaab35cee4510d76bf6405}
+
+\begin{DoxyCompactList}\small\item\em The P\-E weighted center Y position of the flash. \end{DoxyCompactList}\item 
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_afdc868f23ccd16c5528548163d7ec2a7}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_afdc868f23ccd16c5528548163d7ec2a7}{m\-\_\-center\-Z}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_afdc868f23ccd16c5528548163d7ec2a7}
+
+\begin{DoxyCompactList}\small\item\em The P\-E weighted center Z position of the flash. \end{DoxyCompactList}\item 
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a80fccdaaa6a851437fe16e9c4e855ea3}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a80fccdaaa6a851437fe16e9c4e855ea3}{m\-\_\-width\-Y}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a80fccdaaa6a851437fe16e9c4e855ea3}
+
+\begin{DoxyCompactList}\small\item\em The P\-E weighted width of the flash in Y. \end{DoxyCompactList}\item 
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a766f8587c3ab476751755089f4089b64}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a766f8587c3ab476751755089f4089b64}{m\-\_\-width\-Z}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a766f8587c3ab476751755089f4089b64}
+
+\begin{DoxyCompactList}\small\item\em The P\-E weighted width of the flash in Z. \end{DoxyCompactList}\item 
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_aa5d463fd9635e66a8e968ca979b0c451}{bool \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_aa5d463fd9635e66a8e968ca979b0c451}{m\-\_\-in\-Beam\-Window}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_aa5d463fd9635e66a8e968ca979b0c451}
+
+\begin{DoxyCompactList}\small\item\em If the flash is in time with the beam window. \end{DoxyCompactList}\item 
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_aa169ff8ec85fb81e3c74e82e2ef1cb52}{bool \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_aa169ff8ec85fb81e3c74e82e2ef1cb52}{m\-\_\-is\-Brightest\-In\-Window}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_aa169ff8ec85fb81e3c74e82e2ef1cb52}
+
+\begin{DoxyCompactList}\small\item\em If the flash is the brightest in the event. \end{DoxyCompactList}\item 
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a893039a92d032f20f57156f5c2c2299a}{bool \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a893039a92d032f20f57156f5c2c2299a}{m\-\_\-is\-Beam\-Flash}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a893039a92d032f20f57156f5c2c2299a}
+
+\begin{DoxyCompactList}\small\item\em If the flash has been selected as the beam flash. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A candidate for the beam flash. 
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a95fa2be25e8635d56d6768b2886fa821}{\index{flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate@{flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate}!Flash\-Candidate@{Flash\-Candidate}}
+\index{Flash\-Candidate@{Flash\-Candidate}!flashmatch::FlashMatchingTool::FlashCandidate@{flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate}}
+\subsubsection[{Flash\-Candidate}]{\setlength{\rightskip}{0pt plus 5cm}flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate\-::\-Flash\-Candidate (
+\begin{DoxyParamCaption}
+\item[{const art\-::\-Event \&}]{event, }
+\item[{const recob\-::\-Op\-Flash \&}]{flash}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a95fa2be25e8635d56d6768b2886fa821}
+
+
+Parametrized constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em event} & the art event \\
+\hline
+{\em flash} & the flash \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_ab8156ee16d27febb44352c4ffd6adf56}{\index{flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate@{flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate}!Convert\-Flash\-Format@{Convert\-Flash\-Format}}
+\index{Convert\-Flash\-Format@{Convert\-Flash\-Format}!flashmatch::FlashMatchingTool::FlashCandidate@{flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate}}
+\subsubsection[{Convert\-Flash\-Format}]{\setlength{\rightskip}{0pt plus 5cm}flashana\-::\-Flash\-\_\-t flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate\-::\-Convert\-Flash\-Format (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_ab8156ee16d27febb44352c4ffd6adf56}
+Convert to a flashana\-::\-Flash\-\_\-t
+
+\begin{DoxyReturn}{Returns}
+the flashana\-::\-Flash\-\_\-t 
+\end{DoxyReturn}
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_abe37a111abddadacef277af4f8adda44}{\index{flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate@{flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate}!Is\-In\-Beam\-Window@{Is\-In\-Beam\-Window}}
+\index{Is\-In\-Beam\-Window@{Is\-In\-Beam\-Window}!flashmatch::FlashMatchingTool::FlashCandidate@{flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate}}
+\subsubsection[{Is\-In\-Beam\-Window}]{\setlength{\rightskip}{0pt plus 5cm}bool flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate\-::\-Is\-In\-Beam\-Window (
+\begin{DoxyParamCaption}
+\item[{const float}]{beam\-Window\-Start, }
+\item[{const float}]{beam\-Window\-End}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_abe37a111abddadacef277af4f8adda44}
+
+
+Check if the time of the flash is in the beam window, and save the information for later. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em beam\-Window\-Start} & the starting time of the beam window \\
+\hline
+{\em beam\-Window\-Wend} & the end time of the beam window \\
+\hline
+\end{DoxyParams}
+\hypertarget{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a43b731e560f75645df5aa5d74f017ba0}{\index{flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate@{flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate}!Passes\-P\-E\-Threshold@{Passes\-P\-E\-Threshold}}
+\index{Passes\-P\-E\-Threshold@{Passes\-P\-E\-Threshold}!flashmatch::FlashMatchingTool::FlashCandidate@{flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate}}
+\subsubsection[{Passes\-P\-E\-Threshold}]{\setlength{\rightskip}{0pt plus 5cm}bool flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Candidate\-::\-Passes\-P\-E\-Threshold (
+\begin{DoxyParamCaption}
+\item[{const float}]{min\-Beam\-Flash\-P\-E}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [inline]}}}\label{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate_a43b731e560f75645df5aa5d74f017ba0}
+
+
+Check if the flash passes the minimum P\-E threshold. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em min\-Beam\-Flash\-P\-E} & the minimum number of photo electrons to pass \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Flash\-Matching/Flash\-Matching\-Tool\-\_\-tool.\-cc\end{DoxyCompactItemize}

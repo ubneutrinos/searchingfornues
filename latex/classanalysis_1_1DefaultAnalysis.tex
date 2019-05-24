@@ -1,0 +1,510 @@
+\hypertarget{classanalysis_1_1DefaultAnalysis}{\section{analysis\-:\-:Default\-Analysis Class Reference}
+\label{classanalysis_1_1DefaultAnalysis}\index{analysis\-::\-Default\-Analysis@{analysis\-::\-Default\-Analysis}}
+}
+Inheritance diagram for analysis\-:\-:Default\-Analysis\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classanalysis_1_1DefaultAnalysis}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classanalysis_1_1DefaultAnalysis_a857349701c91ee06075ea01c5edc15b6}{Default\-Analysis} (const fhicl\-::\-Parameter\-Set \&pset)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ad4be6c0a18f97e1d02a5c1e905ac5786}{\hyperlink{classanalysis_1_1DefaultAnalysis_ad4be6c0a18f97e1d02a5c1e905ac5786}{$\sim$\-Default\-Analysis} ()}\label{classanalysis_1_1DefaultAnalysis_ad4be6c0a18f97e1d02a5c1e905ac5786}
+
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1DefaultAnalysis_a475f62ff6b6dae44bb4f3c917f0970de}{configure} (fhicl\-::\-Parameter\-Set const \&pset)
+\item 
+void \hyperlink{classanalysis_1_1DefaultAnalysis_a0cf6d593602ba67c23fae67ca7989c10}{analyze\-Event} (art\-::\-Event const \&e, bool f\-Data) override
+\begin{DoxyCompactList}\small\item\em Analysis function. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ad676faeeb49900efb0c9a615a60d179c}{void \hyperlink{classanalysis_1_1DefaultAnalysis_ad676faeeb49900efb0c9a615a60d179c}{analyze\-Slice} (art\-::\-Event const \&e, std\-::vector$<$ Proxy\-Pfp\-Elem\-\_\-t $>$ \&slice\-\_\-pfp\-\_\-v, bool f\-Data, bool selected) override}\label{classanalysis_1_1DefaultAnalysis_ad676faeeb49900efb0c9a615a60d179c}
+
+\begin{DoxyCompactList}\small\item\em Analyze slice. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a5d973c6b88477330f6b744f3c9c60dd6}{void \hyperlink{classanalysis_1_1DefaultAnalysis_a5d973c6b88477330f6b744f3c9c60dd6}{Save\-Truth} (art\-::\-Event const \&e)}\label{classanalysis_1_1DefaultAnalysis_a5d973c6b88477330f6b744f3c9c60dd6}
+
+\begin{DoxyCompactList}\small\item\em Save truth info for event associated to neutrino. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a95b4abd17b0d77b436f5f6ae43e641c7}{void \hyperlink{classanalysis_1_1DefaultAnalysis_a95b4abd17b0d77b436f5f6ae43e641c7}{set\-Branches} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1DefaultAnalysis_a95b4abd17b0d77b436f5f6ae43e641c7}
+
+\begin{DoxyCompactList}\small\item\em set branches for T\-Tree \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a732ca63923ff91a3928dc437c2e04adf}{void \hyperlink{classanalysis_1_1DefaultAnalysis_a732ca63923ff91a3928dc437c2e04adf}{reset\-T\-Tree} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1DefaultAnalysis_a732ca63923ff91a3928dc437c2e04adf}
+
+\begin{DoxyCompactList}\small\item\em reset ttree branches \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a248e4a44368e7c8a632242fa7e171ade}{void \hyperlink{classanalysis_1_1DefaultAnalysis_a248e4a44368e7c8a632242fa7e171ade}{Apply\-S\-C\-E\-Correction} (const float \&vtx\-\_\-x, const float \&vtx\-\_\-y, const float \&vtx\-\_\-z, float \&sce\-\_\-x, float \&sce\-\_\-y, float \&sce\-\_\-z)}\label{classanalysis_1_1DefaultAnalysis_a248e4a44368e7c8a632242fa7e171ade}
+
+\begin{DoxyCompactList}\small\item\em apply S\-C\-E corections from reconstruction maps \end{DoxyCompactList}\item 
+bool \hyperlink{classanalysis_1_1DefaultAnalysis_a51efe899f0117f479c9f833663c7111f}{is\-Fiducial} (const double x\mbox{[}3\mbox{]}) const 
+\begin{DoxyCompactList}\small\item\em Determine if the specified point is in the fiducial volume Not recommended, no array size checking is done. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a93050a6176a0497f73a16db74a686c53}{T\-Particle\-P\-D\-G $\ast$ {\bfseries proton} = T\-Database\-P\-D\-G\-::\-Instance()-\/$>$Get\-Particle(2212)}\label{classanalysis_1_1DefaultAnalysis_a93050a6176a0497f73a16db74a686c53}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a82cdc332e30f34fd12ec5493808cc28c}{T\-Particle\-P\-D\-G $\ast$ {\bfseries neutron} = T\-Database\-P\-D\-G\-::\-Instance()-\/$>$Get\-Particle(2112)}\label{classanalysis_1_1DefaultAnalysis_a82cdc332e30f34fd12ec5493808cc28c}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a1089802dee9a5e84c00e7e007dde2746}{T\-Particle\-P\-D\-G $\ast$ {\bfseries electron} = T\-Database\-P\-D\-G\-::\-Instance()-\/$>$Get\-Particle(11)}\label{classanalysis_1_1DefaultAnalysis_a1089802dee9a5e84c00e7e007dde2746}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a497f1c0211f19df2985b622a4c536933}{T\-Particle\-P\-D\-G $\ast$ {\bfseries muon} = T\-Database\-P\-D\-G\-::\-Instance()-\/$>$Get\-Particle(13)}\label{classanalysis_1_1DefaultAnalysis_a497f1c0211f19df2985b622a4c536933}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a8eefb85a44d77ee187587fb687edda77}{T\-Particle\-P\-D\-G $\ast$ {\bfseries pion} = T\-Database\-P\-D\-G\-::\-Instance()-\/$>$Get\-Particle(211)}\label{classanalysis_1_1DefaultAnalysis_a8eefb85a44d77ee187587fb687edda77}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a01ede37c4c112f9fd8e4bd4e0b33d123}{T\-Particle\-P\-D\-G $\ast$ {\bfseries pi0} = T\-Database\-P\-D\-G\-::\-Instance()-\/$>$Get\-Particle(111)}\label{classanalysis_1_1DefaultAnalysis_a01ede37c4c112f9fd8e4bd4e0b33d123}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_adba116e53c02e5f2de721bc7a7eb909e}{T\-Particle\-P\-D\-G $\ast$ {\bfseries electron\-\_\-neutrino} = T\-Database\-P\-D\-G\-::\-Instance()-\/$>$Get\-Particle(12)}\label{classanalysis_1_1DefaultAnalysis_adba116e53c02e5f2de721bc7a7eb909e}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a0e76c2baabff12b0a3f19aa54c54a59d}{T\-Particle\-P\-D\-G $\ast$ {\bfseries muon\-\_\-neutrino} = T\-Database\-P\-D\-G\-::\-Instance()-\/$>$Get\-Particle(14)}\label{classanalysis_1_1DefaultAnalysis_a0e76c2baabff12b0a3f19aa54c54a59d}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_aba3c76b59d2a5b2e24f50b2868c4c045}{art\-::\-Input\-Tag {\bfseries f\-C\-R\-T\-Vetoproducer}}\label{classanalysis_1_1DefaultAnalysis_aba3c76b59d2a5b2e24f50b2868c4c045}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ae4cd0c3f1d34676303c2bf78512b1033}{art\-::\-Input\-Tag {\bfseries f\-C\-L\-Sproducer}}\label{classanalysis_1_1DefaultAnalysis_ae4cd0c3f1d34676303c2bf78512b1033}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a5a9b0c6d9996f8c7198158b3f36acd67}{art\-::\-Input\-Tag {\bfseries f\-M\-C\-Tproducer}}\label{classanalysis_1_1DefaultAnalysis_a5a9b0c6d9996f8c7198158b3f36acd67}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ad10d6b02fc6fcd46a25c30877f1fb634}{art\-::\-Input\-Tag {\bfseries f\-M\-C\-Pproducer}}\label{classanalysis_1_1DefaultAnalysis_ad10d6b02fc6fcd46a25c30877f1fb634}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a8dab9b6e3afeeb11bf7baf043daa5ecd}{art\-::\-Input\-Tag {\bfseries f\-Backtrack\-Tag}}\label{classanalysis_1_1DefaultAnalysis_a8dab9b6e3afeeb11bf7baf043daa5ecd}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a4fbfc54f63dec8d38301ad853ed9f719}{art\-::\-Input\-Tag {\bfseries f\-Hproducer}}\label{classanalysis_1_1DefaultAnalysis_a4fbfc54f63dec8d38301ad853ed9f719}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_abf7821b91f9c87b40cbefa49824bebe7}{art\-::\-Input\-Tag {\bfseries f\-M\-C\-Rproducer}}\label{classanalysis_1_1DefaultAnalysis_abf7821b91f9c87b40cbefa49824bebe7}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ac3aef1da86526ce278fc67a56a73d759}{art\-::\-Input\-Tag {\bfseries f\-S\-L\-Cproducer}}\label{classanalysis_1_1DefaultAnalysis_ac3aef1da86526ce278fc67a56a73d759}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a71ab40d790e7449fd11a07daa6881dfb}{float {\bfseries f\-Fidvol\-Xstart}}\label{classanalysis_1_1DefaultAnalysis_a71ab40d790e7449fd11a07daa6881dfb}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a652ed60c4510fdb1bf2e4f8fe472fcd0}{float {\bfseries f\-Fidvol\-Xend}}\label{classanalysis_1_1DefaultAnalysis_a652ed60c4510fdb1bf2e4f8fe472fcd0}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_acc3b004be143ee4128dd940e099a5b21}{float {\bfseries f\-Fidvol\-Ystart}}\label{classanalysis_1_1DefaultAnalysis_acc3b004be143ee4128dd940e099a5b21}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a7aac9ffed4983dfeb62c3d31c6029144}{float {\bfseries f\-Fidvol\-Yend}}\label{classanalysis_1_1DefaultAnalysis_a7aac9ffed4983dfeb62c3d31c6029144}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ae5eccb9eededfcbbbc508d2e5aa97799}{float {\bfseries f\-Fidvol\-Zstart}}\label{classanalysis_1_1DefaultAnalysis_ae5eccb9eededfcbbbc508d2e5aa97799}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ab1b95314c090f6891a698de004fd800a}{float {\bfseries f\-Fidvol\-Zend}}\label{classanalysis_1_1DefaultAnalysis_ab1b95314c090f6891a698de004fd800a}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a60df74ed4d08dee6e14779e36618f39f}{const int {\bfseries k\-\_\-nu\-\_\-e\-\_\-other} = 1}\label{classanalysis_1_1DefaultAnalysis_a60df74ed4d08dee6e14779e36618f39f}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a55005c4e1539179b318db9b8a2c4f5fe}{const int {\bfseries k\-\_\-nu\-\_\-e\-\_\-cc0pi0p} =10}\label{classanalysis_1_1DefaultAnalysis_a55005c4e1539179b318db9b8a2c4f5fe}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a8779a2bbc714bc263e28ed4d7cbacfc4}{const int {\bfseries k\-\_\-nu\-\_\-e\-\_\-cc0pinp} = 11}\label{classanalysis_1_1DefaultAnalysis_a8779a2bbc714bc263e28ed4d7cbacfc4}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a11416c43cdc46c0cd7f112a459f82e5e}{const int {\bfseries k\-\_\-nu\-\_\-mu\-\_\-other} = 2}\label{classanalysis_1_1DefaultAnalysis_a11416c43cdc46c0cd7f112a459f82e5e}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_aa493279c647932c0c73a8b393450533a}{const int {\bfseries k\-\_\-nu\-\_\-mu\-\_\-pi0} = 21}\label{classanalysis_1_1DefaultAnalysis_aa493279c647932c0c73a8b393450533a}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a5919c7e3eb507b4b1a96ac560961352a}{const int {\bfseries k\-\_\-nc} = 3}\label{classanalysis_1_1DefaultAnalysis_a5919c7e3eb507b4b1a96ac560961352a}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_aca2b8b9faf52c405c67d08b67cb8f9c6}{const int {\bfseries k\-\_\-nc\-\_\-pi0} = 31}\label{classanalysis_1_1DefaultAnalysis_aca2b8b9faf52c405c67d08b67cb8f9c6}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ab7eb29cdf5e3f90c0402276ea97f11d8}{const int {\bfseries k\-\_\-cosmic} = 4}\label{classanalysis_1_1DefaultAnalysis_ab7eb29cdf5e3f90c0402276ea97f11d8}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a1c78b3c26d574995ed70e76c16cfbd3c}{const int {\bfseries k\-\_\-outfv} = 5}\label{classanalysis_1_1DefaultAnalysis_a1c78b3c26d574995ed70e76c16cfbd3c}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_af085b9d960ab70ebdf5d1dbc862c994c}{const int {\bfseries k\-\_\-other} = 6}\label{classanalysis_1_1DefaultAnalysis_af085b9d960ab70ebdf5d1dbc862c994c}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ad90304e9066f094415ce5ea119ce7139}{const int {\bfseries k\-\_\-data} = 0}\label{classanalysis_1_1DefaultAnalysis_ad90304e9066f094415ce5ea119ce7139}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a31cfe4d3b99c54eb1dcf637c26234df4}{float {\bfseries f\-Proton\-Threshold}}\label{classanalysis_1_1DefaultAnalysis_a31cfe4d3b99c54eb1dcf637c26234df4}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a611a441c3b57941607df65ec720123c2}{float {\bfseries f\-Pion\-Threshold}}\label{classanalysis_1_1DefaultAnalysis_a611a441c3b57941607df65ec720123c2}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a033846ebe00f83a17785111e5b7f55a1}{float {\bfseries f\-Pi0\-Threshold}}\label{classanalysis_1_1DefaultAnalysis_a033846ebe00f83a17785111e5b7f55a1}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a55296431f6111d81ac812be8aabcb6df}{float {\bfseries f\-Electron\-Threshold}}\label{classanalysis_1_1DefaultAnalysis_a55296431f6111d81ac812be8aabcb6df}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_adbaf1e9b8ebd103ac8bbad82fb0127a4}{float {\bfseries f\-Muon\-Threshold}}\label{classanalysis_1_1DefaultAnalysis_adbaf1e9b8ebd103ac8bbad82fb0127a4}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a439203d5925baa2ccdd8108618801267}{int {\bfseries \-\_\-category}}\label{classanalysis_1_1DefaultAnalysis_a439203d5925baa2ccdd8108618801267}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ae74ddbcfe3d655a7a2ef2e7f51110c8b}{float {\bfseries \-\_\-nu\-\_\-vtx\-\_\-x}}\label{classanalysis_1_1DefaultAnalysis_ae74ddbcfe3d655a7a2ef2e7f51110c8b}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a60598c35745e81417d2fe44a7198a3cf}{float {\bfseries \-\_\-nu\-\_\-vtx\-\_\-y}}\label{classanalysis_1_1DefaultAnalysis_a60598c35745e81417d2fe44a7198a3cf}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a61e5383c17b136ad3c0d62c1d91d972e}{float {\bfseries \-\_\-nu\-\_\-vtx\-\_\-z}}\label{classanalysis_1_1DefaultAnalysis_a61e5383c17b136ad3c0d62c1d91d972e}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ae15f1f173710c3763e52e8341d6d6e9b}{float {\bfseries \-\_\-nu\-\_\-sce\-\_\-x}}\label{classanalysis_1_1DefaultAnalysis_ae15f1f173710c3763e52e8341d6d6e9b}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a4800e3781e9eae7c18ad22fa97753a11}{float {\bfseries \-\_\-nu\-\_\-sce\-\_\-y}}\label{classanalysis_1_1DefaultAnalysis_a4800e3781e9eae7c18ad22fa97753a11}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a49371c019270026c36906ad302b8c32b}{float {\bfseries \-\_\-nu\-\_\-sce\-\_\-z}}\label{classanalysis_1_1DefaultAnalysis_a49371c019270026c36906ad302b8c32b}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a3890c6c1b60e082bc0ae83f120ad827b}{int {\bfseries \-\_\-run}}\label{classanalysis_1_1DefaultAnalysis_a3890c6c1b60e082bc0ae83f120ad827b}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ac3cee2ff75382fcc0aa2059e1477ab2d}{int {\bfseries \-\_\-sub}}\label{classanalysis_1_1DefaultAnalysis_ac3cee2ff75382fcc0aa2059e1477ab2d}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a6142968727654413d9d4b8ea1567f807}{int {\bfseries \-\_\-evt}}\label{classanalysis_1_1DefaultAnalysis_a6142968727654413d9d4b8ea1567f807}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a41a1c23e4cb1a09e08024c7fa33572ce}{float {\bfseries \-\_\-nu\-\_\-e}}\label{classanalysis_1_1DefaultAnalysis_a41a1c23e4cb1a09e08024c7fa33572ce}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a625c353bb8912893b77a14f44d4f00b0}{int {\bfseries \-\_\-nu\-\_\-pdg}}\label{classanalysis_1_1DefaultAnalysis_a625c353bb8912893b77a14f44d4f00b0}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ac2df5c78c8d06e090d0b6cd195fa83d8}{int {\bfseries \-\_\-ccnc}}\label{classanalysis_1_1DefaultAnalysis_ac2df5c78c8d06e090d0b6cd195fa83d8}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a35c01b4be6d678e89cada927ab2ba45c}{int {\bfseries \-\_\-interaction}}\label{classanalysis_1_1DefaultAnalysis_a35c01b4be6d678e89cada927ab2ba45c}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_afc341ebf6bc8c102684fd12e41bc3dc0}{float {\bfseries \-\_\-vtx\-\_\-x}}\label{classanalysis_1_1DefaultAnalysis_afc341ebf6bc8c102684fd12e41bc3dc0}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a5300563e3eb78c892bf497b573d7b23a}{float {\bfseries \-\_\-vtx\-\_\-y}}\label{classanalysis_1_1DefaultAnalysis_a5300563e3eb78c892bf497b573d7b23a}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_afd279ca3ddc976b3d509e6c09c0c1514}{float {\bfseries \-\_\-vtx\-\_\-z}}\label{classanalysis_1_1DefaultAnalysis_afd279ca3ddc976b3d509e6c09c0c1514}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a39b0367db015ffa41fc4663cb5aeb242}{float {\bfseries \-\_\-vtx\-\_\-t}}\label{classanalysis_1_1DefaultAnalysis_a39b0367db015ffa41fc4663cb5aeb242}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a9c03fca7c9d596e0cb490aef4bcd3aed}{bool {\bfseries \-\_\-is\-Vtx\-In\-Active}}\label{classanalysis_1_1DefaultAnalysis_a9c03fca7c9d596e0cb490aef4bcd3aed}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a3235e005677abb89da08d1668257bca3}{bool {\bfseries \-\_\-is\-Vtx\-In\-Fiducial}}\label{classanalysis_1_1DefaultAnalysis_a3235e005677abb89da08d1668257bca3}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a6adae9dc9394640a78756a1da65b2162}{int {\bfseries \-\_\-nmuon}}\label{classanalysis_1_1DefaultAnalysis_a6adae9dc9394640a78756a1da65b2162}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_abe2aa852539b8f1d04e553e2184b3ed9}{float {\bfseries \-\_\-muon\-\_\-e}}\label{classanalysis_1_1DefaultAnalysis_abe2aa852539b8f1d04e553e2184b3ed9}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a821be3693c60fc31a60d3e7f2e77a304}{float {\bfseries \-\_\-muon\-\_\-p}}\label{classanalysis_1_1DefaultAnalysis_a821be3693c60fc31a60d3e7f2e77a304}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ac6226239ce3915d1363f8038583e8960}{float {\bfseries \-\_\-muon\-\_\-c}}\label{classanalysis_1_1DefaultAnalysis_ac6226239ce3915d1363f8038583e8960}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a6aa372d8781339f60a044c92d974ae53}{int {\bfseries \-\_\-nelec}}\label{classanalysis_1_1DefaultAnalysis_a6aa372d8781339f60a044c92d974ae53}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a9ab7c962fd435cee1fdf526bb7c58f4d}{float {\bfseries \-\_\-elec\-\_\-e}}\label{classanalysis_1_1DefaultAnalysis_a9ab7c962fd435cee1fdf526bb7c58f4d}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a238f08c30c09c02e8b583f110223ba2c}{float {\bfseries \-\_\-elec\-\_\-p}}\label{classanalysis_1_1DefaultAnalysis_a238f08c30c09c02e8b583f110223ba2c}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a5ce51cfe745fbf0327541a1877a99f87}{float {\bfseries \-\_\-elec\-\_\-c}}\label{classanalysis_1_1DefaultAnalysis_a5ce51cfe745fbf0327541a1877a99f87}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a30083329a7849f56d3e05470ff3d6b05}{float {\bfseries \-\_\-elec\-\_\-vx}}\label{classanalysis_1_1DefaultAnalysis_a30083329a7849f56d3e05470ff3d6b05}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a82803efed0c001b0d53aa6b9bb5b534b}{float {\bfseries \-\_\-elec\-\_\-vy}}\label{classanalysis_1_1DefaultAnalysis_a82803efed0c001b0d53aa6b9bb5b534b}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ad728b8375e4d62c128d767fcebbab1d9}{float {\bfseries \-\_\-elec\-\_\-vz}}\label{classanalysis_1_1DefaultAnalysis_ad728b8375e4d62c128d767fcebbab1d9}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ab6eca9a94c20a6fb7e127043f165ff9b}{int {\bfseries \-\_\-npi0}}\label{classanalysis_1_1DefaultAnalysis_ab6eca9a94c20a6fb7e127043f165ff9b}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a2a00585c8fd4fcc84f42d50f271ff78a}{int {\bfseries \-\_\-pi0}}\label{classanalysis_1_1DefaultAnalysis_a2a00585c8fd4fcc84f42d50f271ff78a}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a5f8ea8660f464dc9989d67580c71d411}{float {\bfseries \-\_\-pi0\-\_\-e}}\label{classanalysis_1_1DefaultAnalysis_a5f8ea8660f464dc9989d67580c71d411}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a8ce31c103841737c85362ac4a2f5e665}{float {\bfseries \-\_\-pi0\-\_\-p}}\label{classanalysis_1_1DefaultAnalysis_a8ce31c103841737c85362ac4a2f5e665}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a255069926e7e8a83629b9dac19bf7473}{float {\bfseries \-\_\-pi0\-\_\-c}}\label{classanalysis_1_1DefaultAnalysis_a255069926e7e8a83629b9dac19bf7473}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_afb7f9e564492c71227112ce13f52ce9c}{int {\bfseries \-\_\-nneutron}}\label{classanalysis_1_1DefaultAnalysis_afb7f9e564492c71227112ce13f52ce9c}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a10ce44826114a375e883d727ed0ad876}{int {\bfseries \-\_\-nproton}}\label{classanalysis_1_1DefaultAnalysis_a10ce44826114a375e883d727ed0ad876}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a8fd1f5d981dc5860f0c829c2b88a1363}{int {\bfseries \-\_\-proton}}\label{classanalysis_1_1DefaultAnalysis_a8fd1f5d981dc5860f0c829c2b88a1363}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_abcc03286098558941e61edbc07f34d97}{float {\bfseries \-\_\-proton\-\_\-e}}\label{classanalysis_1_1DefaultAnalysis_abcc03286098558941e61edbc07f34d97}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ab2da28c512097799b3509f3c800f8cc8}{float {\bfseries \-\_\-proton\-\_\-p}}\label{classanalysis_1_1DefaultAnalysis_ab2da28c512097799b3509f3c800f8cc8}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a643cc086bdfa4332ced72f6d4e5ce233}{float {\bfseries \-\_\-proton\-\_\-c}}\label{classanalysis_1_1DefaultAnalysis_a643cc086bdfa4332ced72f6d4e5ce233}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a39a918abd4b60bf475907f5778ba5e9a}{int {\bfseries \-\_\-npion}}\label{classanalysis_1_1DefaultAnalysis_a39a918abd4b60bf475907f5778ba5e9a}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ac146d38b0cac5f30ea28c76f21cacdb1}{int {\bfseries \-\_\-pion}}\label{classanalysis_1_1DefaultAnalysis_ac146d38b0cac5f30ea28c76f21cacdb1}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_abb14ca7b3fab23d351343681ebe04e39}{float {\bfseries \-\_\-pion\-\_\-e}}\label{classanalysis_1_1DefaultAnalysis_abb14ca7b3fab23d351343681ebe04e39}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ab00137bb368e7d1e41814047aeb4a430}{float {\bfseries \-\_\-pion\-\_\-p}}\label{classanalysis_1_1DefaultAnalysis_ab00137bb368e7d1e41814047aeb4a430}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a9978effbcfba62536fc88a73fa985fe9}{float {\bfseries \-\_\-pion\-\_\-c}}\label{classanalysis_1_1DefaultAnalysis_a9978effbcfba62536fc88a73fa985fe9}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a8cbb24a231e167258d2914f92bc4af22}{std\-::string {\bfseries \-\_\-endmuonprocess}}\label{classanalysis_1_1DefaultAnalysis_a8cbb24a231e167258d2914f92bc4af22}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a3797bcb310074825add03ce03175fdc3}{float {\bfseries \-\_\-endmuonmichel}}\label{classanalysis_1_1DefaultAnalysis_a3797bcb310074825add03ce03175fdc3}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a3eddf49910782afed7f324755fffe681}{int {\bfseries \-\_\-nslice}}\label{classanalysis_1_1DefaultAnalysis_a3eddf49910782afed7f324755fffe681}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a84ce9904fa527012a65c2be203a38d38}{int {\bfseries \-\_\-crtveto}}\label{classanalysis_1_1DefaultAnalysis_a84ce9904fa527012a65c2be203a38d38}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a900ec35e3ca4a00d4625a1e632bb6b40}{float {\bfseries \-\_\-crthitpe}}\label{classanalysis_1_1DefaultAnalysis_a900ec35e3ca4a00d4625a1e632bb6b40}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_acbf0c279993cbefca72f38bc5e9f6627}{std\-::vector$<$ int $>$ {\bfseries \-\_\-pfp\-\_\-slice\-\_\-idx}}\label{classanalysis_1_1DefaultAnalysis_acbf0c279993cbefca72f38bc5e9f6627}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a28bd59dce75b8fd3be70bd4996354ae9}{std\-::vector$<$ int $>$ {\bfseries \-\_\-backtracked\-\_\-pdg}}\label{classanalysis_1_1DefaultAnalysis_a28bd59dce75b8fd3be70bd4996354ae9}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a2c16b4988d0bccf8b7ef96a52c173b80}{std\-::vector$<$ float $>$ {\bfseries \-\_\-backtracked\-\_\-e}}\label{classanalysis_1_1DefaultAnalysis_a2c16b4988d0bccf8b7ef96a52c173b80}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ad08d9b30c434685e350c5f292d4df08b}{std\-::vector$<$ float $>$ {\bfseries \-\_\-backtracked\-\_\-purity}}\label{classanalysis_1_1DefaultAnalysis_ad08d9b30c434685e350c5f292d4df08b}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a60ef3ec6e332c118c088e0203fb858d6}{std\-::vector$<$ float $>$ {\bfseries \-\_\-backtracked\-\_\-completeness}}\label{classanalysis_1_1DefaultAnalysis_a60ef3ec6e332c118c088e0203fb858d6}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ab00e533228597e83340a23d04b986086}{float {\bfseries \-\_\-lep\-\_\-e}}\label{classanalysis_1_1DefaultAnalysis_ab00e533228597e83340a23d04b986086}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a8d58d05d4b0750a67babff41beece3ac}{int {\bfseries \-\_\-pass}}\label{classanalysis_1_1DefaultAnalysis_a8d58d05d4b0750a67babff41beece3ac}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a6ab8489552ea4bfceb0301df80100c65}{float {\bfseries \-\_\-xtimeoffset}}\label{classanalysis_1_1DefaultAnalysis_a6ab8489552ea4bfceb0301df80100c65}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a31b53194403f7db533cd349a0f85a62c}{float {\bfseries \-\_\-xsceoffset}}\label{classanalysis_1_1DefaultAnalysis_a31b53194403f7db533cd349a0f85a62c}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_aa3948474002486f07a07ff52f24976ce}{float {\bfseries \-\_\-ysceoffset}}\label{classanalysis_1_1DefaultAnalysis_aa3948474002486f07a07ff52f24976ce}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_af2471e0f1bf6cf3c5bec18f830f41c8d}{float {\bfseries \-\_\-zsceoffset}}\label{classanalysis_1_1DefaultAnalysis_af2471e0f1bf6cf3c5bec18f830f41c8d}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a32911aea589477a3832a4de8d134696d}{int {\bfseries evnhits}}\label{classanalysis_1_1DefaultAnalysis_a32911aea589477a3832a4de8d134696d}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a9763429d7ed32c67e96d981d14893c06}{int {\bfseries slpdg}}\label{classanalysis_1_1DefaultAnalysis_a9763429d7ed32c67e96d981d14893c06}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a9f003b22425d9db3b27eabee64700028}{int {\bfseries slnhits}}\label{classanalysis_1_1DefaultAnalysis_a9f003b22425d9db3b27eabee64700028}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a5d3ad6cd0930367cafe48e485aa19d20}{std\-::vector$<$ int $>$ {\bfseries pfpdg}}\label{classanalysis_1_1DefaultAnalysis_a5d3ad6cd0930367cafe48e485aa19d20}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a8d010c569e35c153059a6db573b9542d}{std\-::vector$<$ int $>$ {\bfseries pfnhits}}\label{classanalysis_1_1DefaultAnalysis_a8d010c569e35c153059a6db573b9542d}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a868edc3f02a7f71619edef7ee0d3df5c}{std\-::vector$<$ std\-::vector$<$ int $>$ $>$ {\bfseries pfnplanehits}}\label{classanalysis_1_1DefaultAnalysis_a868edc3f02a7f71619edef7ee0d3df5c}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a71d00d09f361b64c3b8491f1f83db0f9}{unsigned int {\bfseries \-\_\-hits\-\_\-u}}\label{classanalysis_1_1DefaultAnalysis_a71d00d09f361b64c3b8491f1f83db0f9}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a0d34f0785933a50dd9692651610b65c5}{unsigned int {\bfseries \-\_\-hits\-\_\-v}}\label{classanalysis_1_1DefaultAnalysis_a0d34f0785933a50dd9692651610b65c5}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a30b699a515887188545764f63babb58d}{unsigned int {\bfseries \-\_\-hits\-\_\-y}}\label{classanalysis_1_1DefaultAnalysis_a30b699a515887188545764f63babb58d}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_aa4e3c702d047e53f6838d1655b12877a}{unsigned int {\bfseries \-\_\-overlay\-\_\-hits}}\label{classanalysis_1_1DefaultAnalysis_aa4e3c702d047e53f6838d1655b12877a}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_aaaba27518c55c8797bbff0649cc48a8b}{unsigned int {\bfseries \-\_\-mc\-\_\-hits}}\label{classanalysis_1_1DefaultAnalysis_aaaba27518c55c8797bbff0649cc48a8b}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a5266889bcb108bee88f2de9a096139fc}{std\-::vector$<$ int $>$ {\bfseries \-\_\-mc\-\_\-pdg}}\label{classanalysis_1_1DefaultAnalysis_a5266889bcb108bee88f2de9a096139fc}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a5a4b7cd8b1c041d748d0f79f9454a497}{std\-::vector$<$ double $>$ {\bfseries \-\_\-mc\-\_\-\-E}}\label{classanalysis_1_1DefaultAnalysis_a5a4b7cd8b1c041d748d0f79f9454a497}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a89369e0ff2b2cae1f6dd4bf28bb10a56}{std\-::vector$<$ double $>$ {\bfseries \-\_\-mc\-\_\-px}}\label{classanalysis_1_1DefaultAnalysis_a89369e0ff2b2cae1f6dd4bf28bb10a56}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a1753a1725a7e915b926c76e35d29b28d}{std\-::vector$<$ double $>$ {\bfseries \-\_\-mc\-\_\-py}}\label{classanalysis_1_1DefaultAnalysis_a1753a1725a7e915b926c76e35d29b28d}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a40dba6bf58a6fe478b303dc0e4058ecb}{std\-::vector$<$ double $>$ {\bfseries \-\_\-mc\-\_\-pz}}\label{classanalysis_1_1DefaultAnalysis_a40dba6bf58a6fe478b303dc0e4058ecb}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a056e019be4a1b233c8950d2421ca376b}{std\-::vector$<$ double $>$ {\bfseries \-\_\-mc\-\_\-vx}}\label{classanalysis_1_1DefaultAnalysis_a056e019be4a1b233c8950d2421ca376b}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ab29bcace0a1f5a0b1a2ccaec386792db}{std\-::vector$<$ double $>$ {\bfseries \-\_\-mc\-\_\-vy}}\label{classanalysis_1_1DefaultAnalysis_ab29bcace0a1f5a0b1a2ccaec386792db}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_acae14997de5435520ddbd1f322b1e42a}{std\-::vector$<$ double $>$ {\bfseries \-\_\-mc\-\_\-vz}}\label{classanalysis_1_1DefaultAnalysis_acae14997de5435520ddbd1f322b1e42a}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a5b2694afe4fe53c733c85618a7ab3b6a}{std\-::vector$<$ double $>$ {\bfseries \-\_\-mc\-\_\-endx}}\label{classanalysis_1_1DefaultAnalysis_a5b2694afe4fe53c733c85618a7ab3b6a}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a62e24346719bb9dbc3ecebb229f016b6}{std\-::vector$<$ double $>$ {\bfseries \-\_\-mc\-\_\-endy}}\label{classanalysis_1_1DefaultAnalysis_a62e24346719bb9dbc3ecebb229f016b6}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a5a0d1e94059b1e603ececb4a5552580a}{std\-::vector$<$ double $>$ {\bfseries \-\_\-mc\-\_\-endz}}\label{classanalysis_1_1DefaultAnalysis_a5a0d1e94059b1e603ececb4a5552580a}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a5c1d5fd76a2fe1bbaa2128a31e57e353}{float {\bfseries \-\_\-true\-\_\-pt}}\label{classanalysis_1_1DefaultAnalysis_a5c1d5fd76a2fe1bbaa2128a31e57e353}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ad3d3d328b95e1bfba25dec06bbf65e19}{float {\bfseries \-\_\-true\-\_\-pt\-\_\-visible}}\label{classanalysis_1_1DefaultAnalysis_ad3d3d328b95e1bfba25dec06bbf65e19}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a30d3e2ce93ebecdc920c42e20e40fa3d}{float {\bfseries \-\_\-true\-\_\-p}}\label{classanalysis_1_1DefaultAnalysis_a30d3e2ce93ebecdc920c42e20e40fa3d}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_ab1a9c86edcadc341c35095dbc8adc0f0}{float {\bfseries \-\_\-true\-\_\-p\-\_\-visible}}\label{classanalysis_1_1DefaultAnalysis_ab1a9c86edcadc341c35095dbc8adc0f0}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a171eba362428f26115887382836d8132}{float {\bfseries \-\_\-true\-\_\-e\-\_\-visible}}\label{classanalysis_1_1DefaultAnalysis_a171eba362428f26115887382836d8132}
+
+\item 
+\hypertarget{classanalysis_1_1DefaultAnalysis_a9f48c688197e7a82d15a7edbb0b4df06}{float {\bfseries \-\_\-leeweight}}\label{classanalysis_1_1DefaultAnalysis_a9f48c688197e7a82d15a7edbb0b4df06}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classanalysis_1_1DefaultAnalysis_a857349701c91ee06075ea01c5edc15b6}{\index{analysis\-::\-Default\-Analysis@{analysis\-::\-Default\-Analysis}!Default\-Analysis@{Default\-Analysis}}
+\index{Default\-Analysis@{Default\-Analysis}!analysis::DefaultAnalysis@{analysis\-::\-Default\-Analysis}}
+\subsubsection[{Default\-Analysis}]{\setlength{\rightskip}{0pt plus 5cm}analysis\-::\-Default\-Analysis\-::\-Default\-Analysis (
+\begin{DoxyParamCaption}
+\item[{const fhicl\-::\-Parameter\-Set \&}]{p}
+\end{DoxyParamCaption}
+)}}\label{classanalysis_1_1DefaultAnalysis_a857349701c91ee06075ea01c5edc15b6}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pset} & Constructor.\\
+\hline
+\end{DoxyParams}
+Arguments\-:
+
+pset -\/ Fcl parameters. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classanalysis_1_1DefaultAnalysis_a0cf6d593602ba67c23fae67ca7989c10}{\index{analysis\-::\-Default\-Analysis@{analysis\-::\-Default\-Analysis}!analyze\-Event@{analyze\-Event}}
+\index{analyze\-Event@{analyze\-Event}!analysis::DefaultAnalysis@{analysis\-::\-Default\-Analysis}}
+\subsubsection[{analyze\-Event}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\-::\-Default\-Analysis\-::analyze\-Event (
+\begin{DoxyParamCaption}
+\item[{art\-::\-Event const \&}]{e, }
+\item[{bool}]{f\-Data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}}\label{classanalysis_1_1DefaultAnalysis_a0cf6d593602ba67c23fae67ca7989c10}
+
+
+Analysis function. 
+
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. 
+
+Implements \hyperlink{classanalysis_1_1AnalysisToolBase_ad5079f85c78e6c40f70ebf4ee31f5600}{analysis\-::\-Analysis\-Tool\-Base}.
+
+\hypertarget{classanalysis_1_1DefaultAnalysis_a475f62ff6b6dae44bb4f3c917f0970de}{\index{analysis\-::\-Default\-Analysis@{analysis\-::\-Default\-Analysis}!configure@{configure}}
+\index{configure@{configure}!analysis::DefaultAnalysis@{analysis\-::\-Default\-Analysis}}
+\subsubsection[{configure}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\-::\-Default\-Analysis\-::configure (
+\begin{DoxyParamCaption}
+\item[{fhicl\-::\-Parameter\-Set const \&}]{p}
+\end{DoxyParamCaption}
+)}}\label{classanalysis_1_1DefaultAnalysis_a475f62ff6b6dae44bb4f3c917f0970de}
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. \hypertarget{classanalysis_1_1DefaultAnalysis_a51efe899f0117f479c9f833663c7111f}{\index{analysis\-::\-Default\-Analysis@{analysis\-::\-Default\-Analysis}!is\-Fiducial@{is\-Fiducial}}
+\index{is\-Fiducial@{is\-Fiducial}!analysis::DefaultAnalysis@{analysis\-::\-Default\-Analysis}}
+\subsubsection[{is\-Fiducial}]{\setlength{\rightskip}{0pt plus 5cm}bool analysis\-::\-Default\-Analysis\-::is\-Fiducial (
+\begin{DoxyParamCaption}
+\item[{const double}]{x\mbox{[}3\mbox{]}}
+\end{DoxyParamCaption}
+) const\hspace{0.3cm}{\ttfamily [private]}}}\label{classanalysis_1_1DefaultAnalysis_a51efe899f0117f479c9f833663c7111f}
+
+
+Determine if the specified point is in the fiducial volume Not recommended, no array size checking is done. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & array of 3\-D location \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the point is inside the fiducial volume 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Selection/\-Analysis\-Tools/Default\-Analysis\-\_\-tool.\-cc\end{DoxyCompactItemize}

@@ -1,0 +1,100 @@
+\hypertarget{classCosmicRejection}{\section{Cosmic\-Rejection Class Reference}
+\label{classCosmicRejection}\index{Cosmic\-Rejection@{Cosmic\-Rejection}}
+}
+Inheritance diagram for Cosmic\-Rejection\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classCosmicRejection}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classCosmicRejection_a7663d784ec40b8a3ba79b76b775118c7}{{\bfseries Cosmic\-Rejection} (fhicl\-::\-Parameter\-Set const \&p)}\label{classCosmicRejection_a7663d784ec40b8a3ba79b76b775118c7}
+
+\item 
+\hypertarget{classCosmicRejection_aa06f3640dbccac91b299101b712bbe97}{{\bfseries Cosmic\-Rejection} (\hyperlink{classCosmicRejection}{Cosmic\-Rejection} const \&)=delete}\label{classCosmicRejection_aa06f3640dbccac91b299101b712bbe97}
+
+\item 
+\hypertarget{classCosmicRejection_a391a622a1cfb9b03d3298d046e850f63}{{\bfseries Cosmic\-Rejection} (\hyperlink{classCosmicRejection}{Cosmic\-Rejection} \&\&)=delete}\label{classCosmicRejection_a391a622a1cfb9b03d3298d046e850f63}
+
+\item 
+\hypertarget{classCosmicRejection_a49fdc618e61833a84f5f548a16dab324}{\hyperlink{classCosmicRejection}{Cosmic\-Rejection} \& {\bfseries operator=} (\hyperlink{classCosmicRejection}{Cosmic\-Rejection} const \&)=delete}\label{classCosmicRejection_a49fdc618e61833a84f5f548a16dab324}
+
+\item 
+\hypertarget{classCosmicRejection_a07294b34f21bfa92ece444820e96faac}{\hyperlink{classCosmicRejection}{Cosmic\-Rejection} \& {\bfseries operator=} (\hyperlink{classCosmicRejection}{Cosmic\-Rejection} \&\&)=delete}\label{classCosmicRejection_a07294b34f21bfa92ece444820e96faac}
+
+\item 
+\hypertarget{classCosmicRejection_a5275aff5d81db9b43574ea13d1f15d12}{void {\bfseries produce} (art\-::\-Event \&e) override}\label{classCosmicRejection_a5275aff5d81db9b43574ea13d1f15d12}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classCosmicRejection_a3d08aca297afc5331fdbab328b356137}{void {\bfseries Add\-Daughters} (const art\-::\-Ptr$<$ recob\-::\-P\-F\-Particle $>$ \&pfp, const art\-::\-Valid\-Handle$<$ std\-::vector$<$ recob\-::\-P\-F\-Particle $>$ $>$ \&pfp\-\_\-h, std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-P\-F\-Particle $>$ $>$ \&pfp\-\_\-v)}\label{classCosmicRejection_a3d08aca297afc5331fdbab328b356137}
+
+\item 
+\hypertarget{classCosmicRejection_afc2a715c5cf89aa6c20faebe5b5f7119}{bool {\bfseries Obvious\-Cosmic} (const std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Track $>$ $>$ \&pfp\-\_\-track\-\_\-assn\-\_\-v)}\label{classCosmicRejection_afc2a715c5cf89aa6c20faebe5b5f7119}
+
+\item 
+\hypertarget{classCosmicRejection_a1538163eeb6a0ed22f6bba844952f1f0}{bool {\bfseries Track\-In\-Time} (const art\-::\-Ptr$<$ recob\-::\-Track $>$ \&pfp\-\_\-track\-\_\-assn\-\_\-v)}\label{classCosmicRejection_a1538163eeb6a0ed22f6bba844952f1f0}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classCosmicRejection_a032c55a459e56180eb0041033fa3ef34}{std\-::string {\bfseries f\-P\-F\-Pproducer}}\label{classCosmicRejection_a032c55a459e56180eb0041033fa3ef34}
+
+\item 
+\hypertarget{classCosmicRejection_a8f638302d646f661ce8926cf5442783f}{std\-::string {\bfseries f\-Space\-Pointproducer}}\label{classCosmicRejection_a8f638302d646f661ce8926cf5442783f}
+
+\item 
+\hypertarget{classCosmicRejection_a89d060de9ac73f2847caf864c6eed691}{std\-::unique\-\_\-ptr\\*
+$<$ \hyperlink{classflashmatch_1_1FlashMatchingToolBase}{flashmatch\-::\-Flash\-Matching\-Tool\-Base} $>$ \hyperlink{classCosmicRejection_a89d060de9ac73f2847caf864c6eed691}{\-\_\-flashmatch\-Tool}}\label{classCosmicRejection_a89d060de9ac73f2847caf864c6eed691}
+
+\begin{DoxyCompactList}\small\item\em The slice id tool. \end{DoxyCompactList}\item 
+\hypertarget{classCosmicRejection_a3c8cc182ac836bfe075b7ff7958dc691}{T\-Tree $\ast$ {\bfseries \-\_\-tree}}\label{classCosmicRejection_a3c8cc182ac836bfe075b7ff7958dc691}
+
+\item 
+\hypertarget{classCosmicRejection_a67ae851b53fcd9254bafa834368aacf9}{float {\bfseries \-\_\-score}}\label{classCosmicRejection_a67ae851b53fcd9254bafa834368aacf9}
+
+\item 
+\hypertarget{classCosmicRejection_a2a52872e6ac61b0948c0d6a27f49f827}{float {\bfseries \-\_\-best\-\_\-score}}\label{classCosmicRejection_a2a52872e6ac61b0948c0d6a27f49f827}
+
+\item 
+\hypertarget{classCosmicRejection_a33b7e7bb2de6fffbb340b9b061904dca}{float {\bfseries \-\_\-xe}}\label{classCosmicRejection_a33b7e7bb2de6fffbb340b9b061904dca}
+
+\item 
+\hypertarget{classCosmicRejection_ac33522cd488a11284d2c1041114842e2}{float {\bfseries \-\_\-ye}}\label{classCosmicRejection_ac33522cd488a11284d2c1041114842e2}
+
+\item 
+\hypertarget{classCosmicRejection_a577912c55709ae4899aa9381034babe4}{float {\bfseries \-\_\-ze}}\label{classCosmicRejection_a577912c55709ae4899aa9381034babe4}
+
+\item 
+\hypertarget{classCosmicRejection_a3d9f8e6b3c8b618de508fe4fc0d481bd}{float {\bfseries \-\_\-xs}}\label{classCosmicRejection_a3d9f8e6b3c8b618de508fe4fc0d481bd}
+
+\item 
+\hypertarget{classCosmicRejection_aaec4fa1fe29d24b18e27bb90f23f5615}{float {\bfseries \-\_\-ys}}\label{classCosmicRejection_aaec4fa1fe29d24b18e27bb90f23f5615}
+
+\item 
+\hypertarget{classCosmicRejection_af6eb1f4fc0e76bd7767fee1853ea9df0}{float {\bfseries \-\_\-zs}}\label{classCosmicRejection_af6eb1f4fc0e76bd7767fee1853ea9df0}
+
+\item 
+\hypertarget{classCosmicRejection_a67ce3a575fc7851f38c25e72b0fa5ba7}{int {\bfseries \-\_\-obvious}}\label{classCosmicRejection_a67ce3a575fc7851f38c25e72b0fa5ba7}
+
+\item 
+\hypertarget{classCosmicRejection_ad779ba81aabfa19efc0bb5ff510efc1f}{std\-::vector$<$ float $>$ {\bfseries \-\_\-pe\-Spectrum}}\label{classCosmicRejection_ad779ba81aabfa19efc0bb5ff510efc1f}
+
+\item 
+\hypertarget{classCosmicRejection_a8a5730ec0de3b8a24c74a68a0da49933}{std\-::vector$<$ float $>$ {\bfseries \-\_\-pe\-Hypothesis}}\label{classCosmicRejection_a8a5730ec0de3b8a24c74a68a0da49933}
+
+\item 
+\hypertarget{classCosmicRejection_ab7db5d48133461aa8039101823987404}{std\-::map$<$ unsigned int, \\*
+unsigned int $>$ {\bfseries \-\_\-pfpmap}}\label{classCosmicRejection_ab7db5d48133461aa8039101823987404}
+
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Flash\-Matching/Cosmic\-Rejection\-\_\-module.\-cc\end{DoxyCompactItemize}

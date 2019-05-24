@@ -1,0 +1,164 @@
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching}{\section{analysis\-:\-:Obvious\-Cosmic\-Flash\-Matching Class Reference}
+\label{classanalysis_1_1ObviousCosmicFlashMatching}\index{analysis\-::\-Obvious\-Cosmic\-Flash\-Matching@{analysis\-::\-Obvious\-Cosmic\-Flash\-Matching}}
+}
+Inheritance diagram for analysis\-:\-:Obvious\-Cosmic\-Flash\-Matching\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classanalysis_1_1ObviousCosmicFlashMatching}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classanalysis_1_1ObviousCosmicFlashMatching_a83be7e60be73f5d4297ae617b5f7c70f}{Obvious\-Cosmic\-Flash\-Matching} (const fhicl\-::\-Parameter\-Set \&pset)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a130b94ad72bcc4157edc74e53d26d1c6}{\hyperlink{classanalysis_1_1ObviousCosmicFlashMatching_a130b94ad72bcc4157edc74e53d26d1c6}{$\sim$\-Obvious\-Cosmic\-Flash\-Matching} ()}\label{classanalysis_1_1ObviousCosmicFlashMatching_a130b94ad72bcc4157edc74e53d26d1c6}
+
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1ObviousCosmicFlashMatching_a1ab342bc97749873a4e3118ab541af86}{configure} (fhicl\-::\-Parameter\-Set const \&pset)
+\item 
+void \hyperlink{classanalysis_1_1ObviousCosmicFlashMatching_ac2abf5075cbd03ffde102e14ae260707}{analyze\-Event} (art\-::\-Event const \&e, bool f\-Data) override
+\begin{DoxyCompactList}\small\item\em Analysis function. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_adbdb066be56f971dc6dc4191a56b5693}{void \hyperlink{classanalysis_1_1ObviousCosmicFlashMatching_adbdb066be56f971dc6dc4191a56b5693}{analyze\-Slice} (art\-::\-Event const \&e, std\-::vector$<$ Proxy\-Pfp\-Elem\-\_\-t $>$ \&slice\-\_\-pfp\-\_\-v, bool f\-Data, bool selected) override}\label{classanalysis_1_1ObviousCosmicFlashMatching_adbdb066be56f971dc6dc4191a56b5693}
+
+\begin{DoxyCompactList}\small\item\em Analyze slice. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_ae3cb2192a7edde6b72b18f172f012c12}{void \hyperlink{classanalysis_1_1ObviousCosmicFlashMatching_ae3cb2192a7edde6b72b18f172f012c12}{set\-Branches} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1ObviousCosmicFlashMatching_ae3cb2192a7edde6b72b18f172f012c12}
+
+\begin{DoxyCompactList}\small\item\em set branches for T\-Tree \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a8de3a3d2c1688baf8ba9b08dc8566498}{void \hyperlink{classanalysis_1_1ObviousCosmicFlashMatching_a8de3a3d2c1688baf8ba9b08dc8566498}{reset\-T\-Tree} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1ObviousCosmicFlashMatching_a8de3a3d2c1688baf8ba9b08dc8566498}
+
+\begin{DoxyCompactList}\small\item\em reset ttree branches \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a6a39083532d8b742b9f490d99c8f6ba2}{void {\bfseries Add\-Daughters} (const art\-::\-Ptr$<$ recob\-::\-P\-F\-Particle $>$ \&pfp\-\_\-ptr, const art\-::\-Valid\-Handle$<$ std\-::vector$<$ recob\-::\-P\-F\-Particle $>$ $>$ \&pfp\-\_\-h, std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-P\-F\-Particle $>$ $>$ \&pfp\-\_\-v)}\label{classanalysis_1_1ObviousCosmicFlashMatching_a6a39083532d8b742b9f490d99c8f6ba2}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a4eaa251b09b9ede8ddf15abfe54acb5d}{bool {\bfseries Track\-In\-Time} (const art\-::\-Ptr$<$ recob\-::\-Track $>$ \&pfp\-\_\-track\-\_\-assn\-\_\-v)}\label{classanalysis_1_1ObviousCosmicFlashMatching_a4eaa251b09b9ede8ddf15abfe54acb5d}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a83588accbd48ba35aeadafeb9d4e40b0}{art\-::\-Input\-Tag {\bfseries f\-P\-F\-Pproducer}}\label{classanalysis_1_1ObviousCosmicFlashMatching_a83588accbd48ba35aeadafeb9d4e40b0}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a0de5fce6b932c6f067e9bd29e67ba66c}{art\-::\-Input\-Tag {\bfseries f\-Space\-Pointproducer}}\label{classanalysis_1_1ObviousCosmicFlashMatching_a0de5fce6b932c6f067e9bd29e67ba66c}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a216ba00d70eb9c1efa2650899c07d08a}{float {\bfseries \-\_\-obvious\-\_\-flashmatch\-\_\-score}}\label{classanalysis_1_1ObviousCosmicFlashMatching_a216ba00d70eb9c1efa2650899c07d08a}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a6de846555ca701bb3736814e3b7fcdd0}{float {\bfseries \-\_\-neutrino\-\_\-score}}\label{classanalysis_1_1ObviousCosmicFlashMatching_a6de846555ca701bb3736814e3b7fcdd0}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_abde344e78325b762b59e7fef1512b57a}{float {\bfseries \-\_\-score}}\label{classanalysis_1_1ObviousCosmicFlashMatching_abde344e78325b762b59e7fef1512b57a}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_af0525e226ace7b7e9267d52f1813d008}{int {\bfseries \-\_\-obvious}}\label{classanalysis_1_1ObviousCosmicFlashMatching_af0525e226ace7b7e9267d52f1813d008}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_aac4450d61a632ccafb9399a51f0f0965}{int {\bfseries \-\_\-obvious\-\_\-cosmics}}\label{classanalysis_1_1ObviousCosmicFlashMatching_aac4450d61a632ccafb9399a51f0f0965}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a1695f5108b8b9ffe1d6019912a23f69f}{float {\bfseries \-\_\-obvious\-\_\-trklen}}\label{classanalysis_1_1ObviousCosmicFlashMatching_a1695f5108b8b9ffe1d6019912a23f69f}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a552228843e9c68e59327cbeec9f18b0f}{float {\bfseries \-\_\-obvious\-\_\-startx}}\label{classanalysis_1_1ObviousCosmicFlashMatching_a552228843e9c68e59327cbeec9f18b0f}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a9efa838d3025aed6f83e665d6ab8032e}{float {\bfseries \-\_\-obvious\-\_\-starty}}\label{classanalysis_1_1ObviousCosmicFlashMatching_a9efa838d3025aed6f83e665d6ab8032e}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a128e53a7cbe7724d8a2a7f66c0fe6441}{float {\bfseries \-\_\-obvious\-\_\-startz}}\label{classanalysis_1_1ObviousCosmicFlashMatching_a128e53a7cbe7724d8a2a7f66c0fe6441}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a9302fa7f0150051d458ce920322d494d}{float {\bfseries \-\_\-obvious\-\_\-endx}}\label{classanalysis_1_1ObviousCosmicFlashMatching_a9302fa7f0150051d458ce920322d494d}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_ab3c098b4bb9ee7f207e947832bbca631}{float {\bfseries \-\_\-obvious\-\_\-endy}}\label{classanalysis_1_1ObviousCosmicFlashMatching_ab3c098b4bb9ee7f207e947832bbca631}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_add557e72442a1b02896c93b8b8c10a41}{float {\bfseries \-\_\-obvious\-\_\-endz}}\label{classanalysis_1_1ObviousCosmicFlashMatching_add557e72442a1b02896c93b8b8c10a41}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_ae29dc413c11e938d1d48f3929b80575b}{std\-::vector$<$ float $>$ {\bfseries \-\_\-pe\-Spectrum}}\label{classanalysis_1_1ObviousCosmicFlashMatching_ae29dc413c11e938d1d48f3929b80575b}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a4851858c7c539f65cfee32fe84fe6b37}{std\-::vector$<$ float $>$ {\bfseries \-\_\-pe\-Hypothesis}}\label{classanalysis_1_1ObviousCosmicFlashMatching_a4851858c7c539f65cfee32fe84fe6b37}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a65f21e28e97d83c884fe4122def4319f}{std\-::vector$<$ float $>$ {\bfseries \-\_\-pe\-Hypothesis\-Nu}}\label{classanalysis_1_1ObviousCosmicFlashMatching_a65f21e28e97d83c884fe4122def4319f}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_af9ea95ef3df8a9f78c137a9c4f7eda3a}{std\-::vector$<$ float $>$ {\bfseries \-\_\-pe\-Hypothesis\-Cosmic}}\label{classanalysis_1_1ObviousCosmicFlashMatching_af9ea95ef3df8a9f78c137a9c4f7eda3a}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a55b71fbfeae7daaf9bf673b7565503cc}{std\-::map$<$ unsigned int, \\*
+unsigned int $>$ {\bfseries \-\_\-pfpmap}}\label{classanalysis_1_1ObviousCosmicFlashMatching_a55b71fbfeae7daaf9bf673b7565503cc}
+
+\item 
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a6142bc3956c3c5463c7146a3053f9025}{std\-::unique\-\_\-ptr\\*
+$<$ \hyperlink{classflashmatch_1_1FlashMatchingToolBase}{flashmatch\-::\-Flash\-Matching\-Tool\-Base} $>$ \hyperlink{classanalysis_1_1ObviousCosmicFlashMatching_a6142bc3956c3c5463c7146a3053f9025}{\-\_\-flashmatch\-Tool}}\label{classanalysis_1_1ObviousCosmicFlashMatching_a6142bc3956c3c5463c7146a3053f9025}
+
+\begin{DoxyCompactList}\small\item\em The slice id tool. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a83be7e60be73f5d4297ae617b5f7c70f}{\index{analysis\-::\-Obvious\-Cosmic\-Flash\-Matching@{analysis\-::\-Obvious\-Cosmic\-Flash\-Matching}!Obvious\-Cosmic\-Flash\-Matching@{Obvious\-Cosmic\-Flash\-Matching}}
+\index{Obvious\-Cosmic\-Flash\-Matching@{Obvious\-Cosmic\-Flash\-Matching}!analysis::ObviousCosmicFlashMatching@{analysis\-::\-Obvious\-Cosmic\-Flash\-Matching}}
+\subsubsection[{Obvious\-Cosmic\-Flash\-Matching}]{\setlength{\rightskip}{0pt plus 5cm}analysis\-::\-Obvious\-Cosmic\-Flash\-Matching\-::\-Obvious\-Cosmic\-Flash\-Matching (
+\begin{DoxyParamCaption}
+\item[{const fhicl\-::\-Parameter\-Set \&}]{p}
+\end{DoxyParamCaption}
+)}}\label{classanalysis_1_1ObviousCosmicFlashMatching_a83be7e60be73f5d4297ae617b5f7c70f}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pset} & Constructor.\\
+\hline
+\end{DoxyParams}
+Arguments\-:
+
+pset -\/ Fcl parameters. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_ac2abf5075cbd03ffde102e14ae260707}{\index{analysis\-::\-Obvious\-Cosmic\-Flash\-Matching@{analysis\-::\-Obvious\-Cosmic\-Flash\-Matching}!analyze\-Event@{analyze\-Event}}
+\index{analyze\-Event@{analyze\-Event}!analysis::ObviousCosmicFlashMatching@{analysis\-::\-Obvious\-Cosmic\-Flash\-Matching}}
+\subsubsection[{analyze\-Event}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\-::\-Obvious\-Cosmic\-Flash\-Matching\-::analyze\-Event (
+\begin{DoxyParamCaption}
+\item[{art\-::\-Event const \&}]{e, }
+\item[{bool}]{f\-Data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}}\label{classanalysis_1_1ObviousCosmicFlashMatching_ac2abf5075cbd03ffde102e14ae260707}
+
+
+Analysis function. 
+
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. 
+
+Implements \hyperlink{classanalysis_1_1AnalysisToolBase_ad5079f85c78e6c40f70ebf4ee31f5600}{analysis\-::\-Analysis\-Tool\-Base}.
+
+\hypertarget{classanalysis_1_1ObviousCosmicFlashMatching_a1ab342bc97749873a4e3118ab541af86}{\index{analysis\-::\-Obvious\-Cosmic\-Flash\-Matching@{analysis\-::\-Obvious\-Cosmic\-Flash\-Matching}!configure@{configure}}
+\index{configure@{configure}!analysis::ObviousCosmicFlashMatching@{analysis\-::\-Obvious\-Cosmic\-Flash\-Matching}}
+\subsubsection[{configure}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\-::\-Obvious\-Cosmic\-Flash\-Matching\-::configure (
+\begin{DoxyParamCaption}
+\item[{fhicl\-::\-Parameter\-Set const \&}]{p}
+\end{DoxyParamCaption}
+)}}\label{classanalysis_1_1ObviousCosmicFlashMatching_a1ab342bc97749873a4e3118ab541af86}
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. 
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Selection/\-Analysis\-Tools/Obvious\-Cosmic\-Flash\-Matching\-\_\-tool.\-cc\end{DoxyCompactItemize}

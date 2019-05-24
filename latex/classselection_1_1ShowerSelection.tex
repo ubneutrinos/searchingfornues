@@ -1,0 +1,193 @@
+\hypertarget{classselection_1_1ShowerSelection}{\section{selection\-:\-:Shower\-Selection Class Reference}
+\label{classselection_1_1ShowerSelection}\index{selection\-::\-Shower\-Selection@{selection\-::\-Shower\-Selection}}
+}
+Inheritance diagram for selection\-:\-:Shower\-Selection\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classselection_1_1ShowerSelection}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classselection_1_1ShowerSelection_a07b97cd199fb1eba72923555c4d05ec7}{Shower\-Selection} (const fhicl\-::\-Parameter\-Set \&pset)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hypertarget{classselection_1_1ShowerSelection_a59328cc3ca5b6875244f1d2c6a2f3b8e}{\hyperlink{classselection_1_1ShowerSelection_a59328cc3ca5b6875244f1d2c6a2f3b8e}{$\sim$\-Shower\-Selection} ()}\label{classselection_1_1ShowerSelection_a59328cc3ca5b6875244f1d2c6a2f3b8e}
+
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+void \hyperlink{classselection_1_1ShowerSelection_a723729db901f048f4fcb5501895305eb}{configure} (fhicl\-::\-Parameter\-Set const \&pset)
+\item 
+bool \hyperlink{classselection_1_1ShowerSelection_aa538b905ab6e8a329acf3eaa97cc0af9}{select\-Event} (art\-::\-Event const \&e, const std\-::vector$<$ Proxy\-Pfp\-Elem\-\_\-t $>$ \&pfp\-\_\-pxy\-\_\-v)
+\begin{DoxyCompactList}\small\item\em Selection function. \end{DoxyCompactList}\item 
+\hypertarget{classselection_1_1ShowerSelection_a1ea09a0f7da6a3e7b9f1eb9728bff1cf}{void \hyperlink{classselection_1_1ShowerSelection_a1ea09a0f7da6a3e7b9f1eb9728bff1cf}{set\-Branches} (T\-Tree $\ast$\-\_\-tree)}\label{classselection_1_1ShowerSelection_a1ea09a0f7da6a3e7b9f1eb9728bff1cf}
+
+\begin{DoxyCompactList}\small\item\em set branches for T\-Tree \end{DoxyCompactList}\item 
+\hypertarget{classselection_1_1ShowerSelection_a9d35d47af8468781d97c4e872c96d768}{void \hyperlink{classselection_1_1ShowerSelection_a9d35d47af8468781d97c4e872c96d768}{reset\-T\-Tree} (T\-Tree $\ast$\-\_\-tree)}\label{classselection_1_1ShowerSelection_a9d35d47af8468781d97c4e872c96d768}
+
+\begin{DoxyCompactList}\small\item\em reset ttree branches \end{DoxyCompactList}\item 
+\hypertarget{classselection_1_1ShowerSelection_aa790f42dca70058f567f15e130627011}{void \hyperlink{classselection_1_1ShowerSelection_aa790f42dca70058f567f15e130627011}{Reset} ()}\label{classselection_1_1ShowerSelection_aa790f42dca70058f567f15e130627011}
+
+\begin{DoxyCompactList}\small\item\em reset module \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a9cf0d6d41063cb9137db9d37500be7dd}{void {\bfseries Track\-Fitd\-Edx} (const searchingfornues\-::\-Proxy\-Calo\-Elem\-\_\-t \&trk, float \&dedx\-U, float \&dedx\-V, float \&dedx\-Y)}\label{classselection_1_1ShowerSelection_a9cf0d6d41063cb9137db9d37500be7dd}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a9f007d4be7a578b6d07db9172ad4ab14}{void \hyperlink{classselection_1_1ShowerSelection_a9f007d4be7a578b6d07db9172ad4ab14}{Store\-Vertex} (const Proxy\-Pfp\-Elem\-\_\-t \&pfp\-\_\-pxy, T\-Vector3 \&nuvtx)}\label{classselection_1_1ShowerSelection_a9f007d4be7a578b6d07db9172ad4ab14}
+
+\begin{DoxyCompactList}\small\item\em given a P\-F\-P (the neutrino one) grab the associated vertex and store vertex by reference \end{DoxyCompactList}\item 
+\hypertarget{classselection_1_1ShowerSelection_aa4c7b1935b0705093c8be5065a2d25ed}{float {\bfseries Get\-Track\-Shower\-Score} (const Proxy\-Pfp\-Elem\-\_\-t \&pfp\-\_\-pxy)}\label{classselection_1_1ShowerSelection_aa4c7b1935b0705093c8be5065a2d25ed}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a61892b39930f340e6e869707cb40b1a6}{int {\bfseries \-\_\-nshower}}\label{classselection_1_1ShowerSelection_a61892b39930f340e6e869707cb40b1a6}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_abd4e9031fc17ec7d447d5bc29237b01a}{int {\bfseries \-\_\-ntrack}}\label{classselection_1_1ShowerSelection_abd4e9031fc17ec7d447d5bc29237b01a}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_adb663ffb64456c3b652d22460d4d7047}{int {\bfseries \-\_\-nupdgreco}}\label{classselection_1_1ShowerSelection_adb663ffb64456c3b652d22460d4d7047}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a9fac735cbf38a99c3cdb52aa61a3f5d6}{float {\bfseries \-\_\-maxtrklen}}\label{classselection_1_1ShowerSelection_a9fac735cbf38a99c3cdb52aa61a3f5d6}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a018104d30f773a2d8a3187197f0de81b}{float {\bfseries \-\_\-shr\-\_\-score}}\label{classselection_1_1ShowerSelection_a018104d30f773a2d8a3187197f0de81b}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a2ffda067ae39e512f913bbedaeed401e}{float {\bfseries \-\_\-shr\-\_\-energy\-\_\-\-Y}}\label{classselection_1_1ShowerSelection_a2ffda067ae39e512f913bbedaeed401e}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a17ab853b88beb71102fac8504fec4268}{float {\bfseries \-\_\-shr\-\_\-energy\-\_\-\-V}}\label{classselection_1_1ShowerSelection_a17ab853b88beb71102fac8504fec4268}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_ad45d91e1d71b9fea3aa65bf07fe5b2b3}{float {\bfseries \-\_\-shr\-\_\-energy\-\_\-\-U}}\label{classselection_1_1ShowerSelection_ad45d91e1d71b9fea3aa65bf07fe5b2b3}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a1a2d2a155400549bac972a0faf999494}{float {\bfseries \-\_\-shr\-\_\-dedx\-\_\-\-Y}}\label{classselection_1_1ShowerSelection_a1a2d2a155400549bac972a0faf999494}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_aa9b0c099e5f831864cd44ace8e055957}{float {\bfseries \-\_\-shr\-\_\-dedx\-\_\-\-V}}\label{classselection_1_1ShowerSelection_aa9b0c099e5f831864cd44ace8e055957}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a6f3b7dba2f0ebc492efcf48d805eb602}{float {\bfseries \-\_\-shr\-\_\-dedx\-\_\-\-U}}\label{classselection_1_1ShowerSelection_a6f3b7dba2f0ebc492efcf48d805eb602}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_ad50bf825fa5ee3fdb2b821770b2aa5cd}{float {\bfseries \-\_\-shr\-\_\-dedx\-\_\-fit\-\_\-\-Y}}\label{classselection_1_1ShowerSelection_ad50bf825fa5ee3fdb2b821770b2aa5cd}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a1ef8d85de723f1de698db73e9f39746e}{float {\bfseries \-\_\-shr\-\_\-dedx\-\_\-fit\-\_\-\-V}}\label{classselection_1_1ShowerSelection_a1ef8d85de723f1de698db73e9f39746e}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a2f1221e97e38ff069830f7255bebc237}{float {\bfseries \-\_\-shr\-\_\-dedx\-\_\-fit\-\_\-\-U}}\label{classselection_1_1ShowerSelection_a2f1221e97e38ff069830f7255bebc237}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_af3564629f032f48d86f256015ad9f64e}{float {\bfseries \-\_\-shr\-\_\-dist}}\label{classselection_1_1ShowerSelection_af3564629f032f48d86f256015ad9f64e}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a4e1a5f0cb830990b6b62014de57f4335}{float {\bfseries \-\_\-shr\-\_\-x}}\label{classselection_1_1ShowerSelection_a4e1a5f0cb830990b6b62014de57f4335}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a0f632f8445e6cc9993a2f2df9d03804a}{float {\bfseries \-\_\-shr\-\_\-y}}\label{classselection_1_1ShowerSelection_a0f632f8445e6cc9993a2f2df9d03804a}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_abd94487a568b61515d1dd98e8d68c2b2}{float {\bfseries \-\_\-shr\-\_\-z}}\label{classselection_1_1ShowerSelection_abd94487a568b61515d1dd98e8d68c2b2}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a9e37701dfc18e9e9d953ed6513bef260}{float {\bfseries \-\_\-shr\-\_\-px}}\label{classselection_1_1ShowerSelection_a9e37701dfc18e9e9d953ed6513bef260}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_af1a9676b2eb26d0c70c463f7092914ae}{float {\bfseries \-\_\-shr\-\_\-py}}\label{classselection_1_1ShowerSelection_af1a9676b2eb26d0c70c463f7092914ae}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_af701aae8694be9339ced383ccbc0b999}{float {\bfseries \-\_\-shr\-\_\-pz}}\label{classselection_1_1ShowerSelection_af701aae8694be9339ced383ccbc0b999}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_aed0d279cec89fbc428d9e59df7fb9f09}{size\-\_\-t {\bfseries \-\_\-shr\-\_\-maxe\-\_\-pfp\-\_\-i}}\label{classselection_1_1ShowerSelection_aed0d279cec89fbc428d9e59df7fb9f09}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a2af278b93c55ba7eb0c9266e50a7c5bc}{float {\bfseries f\-Trk\-Shrscore}}\label{classselection_1_1ShowerSelection_a2af278b93c55ba7eb0c9266e50a7c5bc}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a470499e9d5ac01695e2484f475734300}{float {\bfseries f\-Shrdedxmax}}\label{classselection_1_1ShowerSelection_a470499e9d5ac01695e2484f475734300}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_ac97e2dd5963ae97983d98424bef0ec20}{float {\bfseries f\-Shr\-Radlen}}\label{classselection_1_1ShowerSelection_ac97e2dd5963ae97983d98424bef0ec20}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a033c15eae1bbdeb65df67c79a0b815fd}{float {\bfseries f\-Shr\-Energy}}\label{classselection_1_1ShowerSelection_a033c15eae1bbdeb65df67c79a0b815fd}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a3cbe6b998a95bf55da6ef1a94bdac9c0}{float {\bfseries f\-Max\-Trklen}}\label{classselection_1_1ShowerSelection_a3cbe6b998a95bf55da6ef1a94bdac9c0}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_a681be5a0cf499e8ac32078ab941fc9e1}{art\-::\-Input\-Tag {\bfseries f\-T\-R\-Kproducer}}\label{classselection_1_1ShowerSelection_a681be5a0cf499e8ac32078ab941fc9e1}
+
+\item 
+\hypertarget{classselection_1_1ShowerSelection_acb7a3a664589240707094c08825d4383}{art\-::\-Input\-Tag {\bfseries f\-C\-A\-Lproducer}}\label{classselection_1_1ShowerSelection_acb7a3a664589240707094c08825d4383}
+
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classselection_1_1ShowerSelection_a07b97cd199fb1eba72923555c4d05ec7}{\index{selection\-::\-Shower\-Selection@{selection\-::\-Shower\-Selection}!Shower\-Selection@{Shower\-Selection}}
+\index{Shower\-Selection@{Shower\-Selection}!selection::ShowerSelection@{selection\-::\-Shower\-Selection}}
+\subsubsection[{Shower\-Selection}]{\setlength{\rightskip}{0pt plus 5cm}selection\-::\-Shower\-Selection\-::\-Shower\-Selection (
+\begin{DoxyParamCaption}
+\item[{const fhicl\-::\-Parameter\-Set \&}]{pset}
+\end{DoxyParamCaption}
+)}}\label{classselection_1_1ShowerSelection_a07b97cd199fb1eba72923555c4d05ec7}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pset} & Constructor.\\
+\hline
+\end{DoxyParams}
+Arguments\-:
+
+pset -\/ Fcl parameters. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classselection_1_1ShowerSelection_a723729db901f048f4fcb5501895305eb}{\index{selection\-::\-Shower\-Selection@{selection\-::\-Shower\-Selection}!configure@{configure}}
+\index{configure@{configure}!selection::ShowerSelection@{selection\-::\-Shower\-Selection}}
+\subsubsection[{configure}]{\setlength{\rightskip}{0pt plus 5cm}void selection\-::\-Shower\-Selection\-::configure (
+\begin{DoxyParamCaption}
+\item[{fhicl\-::\-Parameter\-Set const \&}]{pset}
+\end{DoxyParamCaption}
+)}}\label{classselection_1_1ShowerSelection_a723729db901f048f4fcb5501895305eb}
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. \hypertarget{classselection_1_1ShowerSelection_aa538b905ab6e8a329acf3eaa97cc0af9}{\index{selection\-::\-Shower\-Selection@{selection\-::\-Shower\-Selection}!select\-Event@{select\-Event}}
+\index{select\-Event@{select\-Event}!selection::ShowerSelection@{selection\-::\-Shower\-Selection}}
+\subsubsection[{select\-Event}]{\setlength{\rightskip}{0pt plus 5cm}bool selection\-::\-Shower\-Selection\-::select\-Event (
+\begin{DoxyParamCaption}
+\item[{art\-::\-Event const \&}]{e, }
+\item[{const std\-::vector$<$ Proxy\-Pfp\-Elem\-\_\-t $>$ \&}]{pfp\-\_\-pxy\-\_\-v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classselection_1_1ShowerSelection_aa538b905ab6e8a329acf3eaa97cc0af9}
+
+
+Selection function. 
+
+select\-Event
+
+Arguments\-:
+
+art\-::\-Event slice track pointer vector slice shower pointer vector 
+
+Implements \hyperlink{classselection_1_1SelectionToolBase_ab63818dac49b43418fe9eb3b8cd98c9c}{selection\-::\-Selection\-Tool\-Base}.
+
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Selection/\-Selection\-Tools/Shower\-Selection\-\_\-tool.\-cc\end{DoxyCompactItemize}

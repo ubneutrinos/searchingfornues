@@ -1,0 +1,222 @@
+\hypertarget{classanalysis_1_1SlicePurCompl}{\section{analysis\-:\-:Slice\-Pur\-Compl Class Reference}
+\label{classanalysis_1_1SlicePurCompl}\index{analysis\-::\-Slice\-Pur\-Compl@{analysis\-::\-Slice\-Pur\-Compl}}
+}
+Inheritance diagram for analysis\-:\-:Slice\-Pur\-Compl\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classanalysis_1_1SlicePurCompl}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classanalysis_1_1SlicePurCompl_a8d0b7176feea1c0cda563f1a528a4643}{Slice\-Pur\-Compl} (const fhicl\-::\-Parameter\-Set \&pset)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_aba1c519efb59ad152d186ab4a1a2c6ca}{\hyperlink{classanalysis_1_1SlicePurCompl_aba1c519efb59ad152d186ab4a1a2c6ca}{$\sim$\-Slice\-Pur\-Compl} ()}\label{classanalysis_1_1SlicePurCompl_aba1c519efb59ad152d186ab4a1a2c6ca}
+
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1SlicePurCompl_a902e57f96d7a335793856af6c7f7580f}{configure} (fhicl\-::\-Parameter\-Set const \&pset)
+\item 
+void \hyperlink{classanalysis_1_1SlicePurCompl_af71528c37c501d30f5bbc1e75b50b3f6}{analyze\-Event} (art\-::\-Event const \&e, bool f\-Data) override
+\begin{DoxyCompactList}\small\item\em Analysis function. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_ab13316464f9ed61e81b18d59ca38d9a1}{void \hyperlink{classanalysis_1_1SlicePurCompl_ab13316464f9ed61e81b18d59ca38d9a1}{analyze\-Slice} (art\-::\-Event const \&e, std\-::vector$<$ Proxy\-Pfp\-Elem\-\_\-t $>$ \&slice\-\_\-pfp\-\_\-v, bool f\-Data, bool selected) override}\label{classanalysis_1_1SlicePurCompl_ab13316464f9ed61e81b18d59ca38d9a1}
+
+\begin{DoxyCompactList}\small\item\em Analyze slice. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a39079f2f29d253440c7ebd2deeaccfef}{void \hyperlink{classanalysis_1_1SlicePurCompl_a39079f2f29d253440c7ebd2deeaccfef}{Save\-Truth} (art\-::\-Event const \&e)}\label{classanalysis_1_1SlicePurCompl_a39079f2f29d253440c7ebd2deeaccfef}
+
+\begin{DoxyCompactList}\small\item\em Save truth info for event associated to neutrino. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_ae7e1131785f819a530a573c6b20d1cbc}{void \hyperlink{classanalysis_1_1SlicePurCompl_ae7e1131785f819a530a573c6b20d1cbc}{set\-Branches} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1SlicePurCompl_ae7e1131785f819a530a573c6b20d1cbc}
+
+\begin{DoxyCompactList}\small\item\em set branches for T\-Tree \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a43bf5b44e619f2dc3e5d00098048471b}{void \hyperlink{classanalysis_1_1SlicePurCompl_a43bf5b44e619f2dc3e5d00098048471b}{reset\-T\-Tree} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1SlicePurCompl_a43bf5b44e619f2dc3e5d00098048471b}
+
+\begin{DoxyCompactList}\small\item\em reset ttree branches \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a1cab4a3ebdd3aae05b22ad5d06a6ce1b}{void {\bfseries fill\-Id} (const std\-::vector$<$ double $>$ \&p, const simb\-::\-M\-C\-Particle \&mcp, std\-::vector$<$ size\-\_\-t $>$ \&id)}\label{classanalysis_1_1SlicePurCompl_a1cab4a3ebdd3aae05b22ad5d06a6ce1b}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a3ae6a4a95f5d387edd47f3646bc39c70}{void {\bfseries increment\-Counts} (const std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Hit $>$ $>$ \&hits, const std\-::unique\-\_\-ptr$<$ art\-::\-Find\-Many\-P$<$ simb\-::\-M\-C\-Particle, anab\-::\-Back\-Tracker\-Hit\-Matching\-Data $>$ $>$ \&assoc\-M\-C\-Part, const std\-::vector$<$ size\-\_\-t $>$ \&lepid, const std\-::vector$<$ size\-\_\-t $>$ \&proid, const std\-::vector$<$ size\-\_\-t $>$ \&pi1id, const std\-::vector$<$ size\-\_\-t $>$ \&pi0id, const std\-::vector$<$ size\-\_\-t $>$ \&neuid, const std\-::vector$<$ size\-\_\-t $>$ \&gamid, const std\-::vector$<$ size\-\_\-t $>$ \&othid, int \&nlephits, int \&nprohits, int \&npi1hits, int \&npi0hits, int \&nneuhits, int \&ngamhits, int \&nothhits) const }\label{classanalysis_1_1SlicePurCompl_a3ae6a4a95f5d387edd47f3646bc39c70}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a307c2d9ddcce991a9d96dd3a2671fc3b}{art\-::\-Input\-Tag {\bfseries f\-C\-L\-Sproducer}}\label{classanalysis_1_1SlicePurCompl_a307c2d9ddcce991a9d96dd3a2671fc3b}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a3df191801ef5aac0aedb5adcd820c250}{art\-::\-Input\-Tag {\bfseries f\-S\-L\-Cproducer}}\label{classanalysis_1_1SlicePurCompl_a3df191801ef5aac0aedb5adcd820c250}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_ae71cdd3989046e48d2251aa373ecfa98}{art\-::\-Input\-Tag {\bfseries f\-M\-C\-Tproducer}}\label{classanalysis_1_1SlicePurCompl_ae71cdd3989046e48d2251aa373ecfa98}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a6b925d0776a50667c224a8e74922d845}{art\-::\-Input\-Tag {\bfseries f\-M\-C\-Pproducer}}\label{classanalysis_1_1SlicePurCompl_a6b925d0776a50667c224a8e74922d845}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_ac9a3b16af45681b89a5899fedc01696a}{art\-::\-Input\-Tag {\bfseries f\-Hproducer}}\label{classanalysis_1_1SlicePurCompl_ac9a3b16af45681b89a5899fedc01696a}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a0f80f3d333ae1c52518f0a364afd4647}{art\-::\-Input\-Tag {\bfseries f\-H\-Tproducer}}\label{classanalysis_1_1SlicePurCompl_a0f80f3d333ae1c52518f0a364afd4647}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_ad45bcb68994499cd6582911929ba617e}{std\-::vector$<$ size\-\_\-t $>$ {\bfseries lepid}}\label{classanalysis_1_1SlicePurCompl_ad45bcb68994499cd6582911929ba617e}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a43aab4b627345ae1059d838eaf05322d}{std\-::vector$<$ size\-\_\-t $>$ {\bfseries proid}}\label{classanalysis_1_1SlicePurCompl_a43aab4b627345ae1059d838eaf05322d}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a70db8876abcc7434d813d235acac332c}{std\-::vector$<$ size\-\_\-t $>$ {\bfseries pi1id}}\label{classanalysis_1_1SlicePurCompl_a70db8876abcc7434d813d235acac332c}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_aaa4d7b9339cb5e7e1b2abce6b4784532}{std\-::vector$<$ size\-\_\-t $>$ {\bfseries pi0id}}\label{classanalysis_1_1SlicePurCompl_aaa4d7b9339cb5e7e1b2abce6b4784532}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a1f6b97343b50a45f6d08c9b7a77cafc8}{std\-::vector$<$ size\-\_\-t $>$ {\bfseries neuid}}\label{classanalysis_1_1SlicePurCompl_a1f6b97343b50a45f6d08c9b7a77cafc8}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a4123f24a7b7c48a0b8d035d8f6cd8855}{std\-::vector$<$ size\-\_\-t $>$ {\bfseries gamid}}\label{classanalysis_1_1SlicePurCompl_a4123f24a7b7c48a0b8d035d8f6cd8855}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_ab09dc6647525b89ebee6e9ee622cce58}{std\-::vector$<$ size\-\_\-t $>$ {\bfseries othid}}\label{classanalysis_1_1SlicePurCompl_ab09dc6647525b89ebee6e9ee622cce58}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_aee3dce7966b5e1ea71c93413bcbc6d8a}{std\-::unique\-\_\-ptr\\*
+$<$ art\-::\-Find\-Many\-P\\*
+$<$ simb\-::\-M\-C\-Particle, \\*
+anab\-::\-Back\-Tracker\-Hit\-Matching\-Data $>$ $>$ {\bfseries assoc\-M\-C\-Part}}\label{classanalysis_1_1SlicePurCompl_aee3dce7966b5e1ea71c93413bcbc6d8a}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_abb4d90c2bccf98be8583ee7ec4786e7b}{int {\bfseries evnunhits}}\label{classanalysis_1_1SlicePurCompl_abb4d90c2bccf98be8583ee7ec4786e7b}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_acb6c47c5f5079404267f46ad6ccd843e}{int {\bfseries evlepnhits}}\label{classanalysis_1_1SlicePurCompl_acb6c47c5f5079404267f46ad6ccd843e}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a3b7e6beaede5fdaab4b4d58e3702fea1}{int {\bfseries evpronhits}}\label{classanalysis_1_1SlicePurCompl_a3b7e6beaede5fdaab4b4d58e3702fea1}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a2b450063c61b0408260de63628f3d544}{int {\bfseries evpi1nhits}}\label{classanalysis_1_1SlicePurCompl_a2b450063c61b0408260de63628f3d544}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a09f10f4336fd100d37288c28aa760d6c}{int {\bfseries evpi0nhits}}\label{classanalysis_1_1SlicePurCompl_a09f10f4336fd100d37288c28aa760d6c}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_ab2c486fe3cd267b02bfe43287e0292cc}{int {\bfseries evneunhits}}\label{classanalysis_1_1SlicePurCompl_ab2c486fe3cd267b02bfe43287e0292cc}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a7e73b2e419ef876d6eb5461cb0f545e8}{int {\bfseries evgamnhits}}\label{classanalysis_1_1SlicePurCompl_a7e73b2e419ef876d6eb5461cb0f545e8}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a4ffaa86db84a7b653e5cb9d46a438ad6}{int {\bfseries evothnhits}}\label{classanalysis_1_1SlicePurCompl_a4ffaa86db84a7b653e5cb9d46a438ad6}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_af47aa616a06d9b8d3faa339d84ae4438}{int {\bfseries slnunhits}}\label{classanalysis_1_1SlicePurCompl_af47aa616a06d9b8d3faa339d84ae4438}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_add1eb3fea3a112c87148a2ae1b8277c3}{int {\bfseries sllepnhits}}\label{classanalysis_1_1SlicePurCompl_add1eb3fea3a112c87148a2ae1b8277c3}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a61e069054e22a820fb8dc7d66256a910}{int {\bfseries slpronhits}}\label{classanalysis_1_1SlicePurCompl_a61e069054e22a820fb8dc7d66256a910}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a50a372d72b26c4d5a9a9ade5f2f5eab2}{int {\bfseries slpi1nhits}}\label{classanalysis_1_1SlicePurCompl_a50a372d72b26c4d5a9a9ade5f2f5eab2}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_ad703a2ae2ce73fbd89da4a70d3580528}{int {\bfseries slpi0nhits}}\label{classanalysis_1_1SlicePurCompl_ad703a2ae2ce73fbd89da4a70d3580528}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a19d1e785c35c38700153641be818f294}{int {\bfseries slneunhits}}\label{classanalysis_1_1SlicePurCompl_a19d1e785c35c38700153641be818f294}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a60ead841a2465f1988407ce2acabc127}{int {\bfseries slgamnhits}}\label{classanalysis_1_1SlicePurCompl_a60ead841a2465f1988407ce2acabc127}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a91211d43ef13153108fe8c5890959e41}{int {\bfseries slothnhits}}\label{classanalysis_1_1SlicePurCompl_a91211d43ef13153108fe8c5890959e41}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a1110efa7e03c55c097074dfaff97cc76}{std\-::vector$<$ int $>$ {\bfseries pfnunhits}}\label{classanalysis_1_1SlicePurCompl_a1110efa7e03c55c097074dfaff97cc76}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_ac95a09b13737e44d4fd2c3290f697789}{std\-::vector$<$ int $>$ {\bfseries pflepnhits}}\label{classanalysis_1_1SlicePurCompl_ac95a09b13737e44d4fd2c3290f697789}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a897ea8a7d8edad962708cd07e81e4027}{std\-::vector$<$ int $>$ {\bfseries pfpronhits}}\label{classanalysis_1_1SlicePurCompl_a897ea8a7d8edad962708cd07e81e4027}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_ac139f48479667236bead6aaac1832285}{std\-::vector$<$ int $>$ {\bfseries pfpi1nhits}}\label{classanalysis_1_1SlicePurCompl_ac139f48479667236bead6aaac1832285}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a7d1e165214a285fd67d5f46690888716}{std\-::vector$<$ int $>$ {\bfseries pfpi0nhits}}\label{classanalysis_1_1SlicePurCompl_a7d1e165214a285fd67d5f46690888716}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a076e4b38d7fdc869f72bf783ea425e1c}{std\-::vector$<$ int $>$ {\bfseries pfneunhits}}\label{classanalysis_1_1SlicePurCompl_a076e4b38d7fdc869f72bf783ea425e1c}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a1ebbad4d92fab6cc0383b7c378350f6b}{std\-::vector$<$ int $>$ {\bfseries pfgamnhits}}\label{classanalysis_1_1SlicePurCompl_a1ebbad4d92fab6cc0383b7c378350f6b}
+
+\item 
+\hypertarget{classanalysis_1_1SlicePurCompl_a2925bdf47da943b053693527fbbca375}{std\-::vector$<$ int $>$ {\bfseries pfothnhits}}\label{classanalysis_1_1SlicePurCompl_a2925bdf47da943b053693527fbbca375}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classanalysis_1_1SlicePurCompl_a8d0b7176feea1c0cda563f1a528a4643}{\index{analysis\-::\-Slice\-Pur\-Compl@{analysis\-::\-Slice\-Pur\-Compl}!Slice\-Pur\-Compl@{Slice\-Pur\-Compl}}
+\index{Slice\-Pur\-Compl@{Slice\-Pur\-Compl}!analysis::SlicePurCompl@{analysis\-::\-Slice\-Pur\-Compl}}
+\subsubsection[{Slice\-Pur\-Compl}]{\setlength{\rightskip}{0pt plus 5cm}analysis\-::\-Slice\-Pur\-Compl\-::\-Slice\-Pur\-Compl (
+\begin{DoxyParamCaption}
+\item[{const fhicl\-::\-Parameter\-Set \&}]{p}
+\end{DoxyParamCaption}
+)}}\label{classanalysis_1_1SlicePurCompl_a8d0b7176feea1c0cda563f1a528a4643}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pset} & Constructor.\\
+\hline
+\end{DoxyParams}
+Arguments\-:
+
+pset -\/ Fcl parameters. 
+
+\subsection{Member Function Documentation}
+\hypertarget{classanalysis_1_1SlicePurCompl_af71528c37c501d30f5bbc1e75b50b3f6}{\index{analysis\-::\-Slice\-Pur\-Compl@{analysis\-::\-Slice\-Pur\-Compl}!analyze\-Event@{analyze\-Event}}
+\index{analyze\-Event@{analyze\-Event}!analysis::SlicePurCompl@{analysis\-::\-Slice\-Pur\-Compl}}
+\subsubsection[{analyze\-Event}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\-::\-Slice\-Pur\-Compl\-::analyze\-Event (
+\begin{DoxyParamCaption}
+\item[{art\-::\-Event const \&}]{e, }
+\item[{bool}]{f\-Data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}}\label{classanalysis_1_1SlicePurCompl_af71528c37c501d30f5bbc1e75b50b3f6}
+
+
+Analysis function. 
+
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. 
+
+Implements \hyperlink{classanalysis_1_1AnalysisToolBase_ad5079f85c78e6c40f70ebf4ee31f5600}{analysis\-::\-Analysis\-Tool\-Base}.
+
+\hypertarget{classanalysis_1_1SlicePurCompl_a902e57f96d7a335793856af6c7f7580f}{\index{analysis\-::\-Slice\-Pur\-Compl@{analysis\-::\-Slice\-Pur\-Compl}!configure@{configure}}
+\index{configure@{configure}!analysis::SlicePurCompl@{analysis\-::\-Slice\-Pur\-Compl}}
+\subsubsection[{configure}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\-::\-Slice\-Pur\-Compl\-::configure (
+\begin{DoxyParamCaption}
+\item[{fhicl\-::\-Parameter\-Set const \&}]{p}
+\end{DoxyParamCaption}
+)}}\label{classanalysis_1_1SlicePurCompl_a902e57f96d7a335793856af6c7f7580f}
+Reconfigure method.
+
+Arguments\-:
+
+pset -\/ Fcl parameter set. 
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Selection/\-Analysis\-Tools/Slice\-Pur\-Compl\-\_\-tool.\-cc\end{DoxyCompactItemize}
