@@ -19,6 +19,9 @@
 # iconv built into libc) for the transcoding. See
 # http://www.gnu.org/software/libiconv for the list of possible encodings.
 
+INPUT                  = README.md other_sources
+USE_MDFILE_AS_MAINPAGE = README.md
+
 DOXYFILE_ENCODING      = UTF-8
 
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded
@@ -590,7 +593,7 @@ FILE_PATTERNS          =
 # should be searched for input files as well. Possible values are YES and NO.
 # If left blank NO is used.
 
-RECURSIVE              = NO
+RECURSIVE              = YES
 
 # The EXCLUDE tag can be used to specify files and/or directories that should
 # excluded from the INPUT source files. This way you can easily exclude a
