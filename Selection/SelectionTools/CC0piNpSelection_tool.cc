@@ -173,6 +173,7 @@ private:
     unsigned int _shr_tkfit_nhits_V;
     unsigned int _shr_tkfit_nhits_U;
     unsigned int _hits_outfv;
+    float _contained_fraction;
 
     float _trk_energy_hits_tot;
 
@@ -673,7 +674,9 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     _tksh_distance = (trk_vtx - shr_vtx).Mag();
     _tksh_angle = trk_p.Dot(shr_p) / (trk_p.Mag() * shr_p.Mag());
 
-    if ((float)(_hits_outfv + _trk_hits_tot + _shr_hits_tot) / (_trk_hits_tot + _shr_hits_tot) < 0.9)
+    _contained_fraction = ((float)(_trk_hits_tot + _shr_hits_tot)) / (_trk_hits_tot + _shr_hits_tot + _hits_outfv);
+
+    if (_contained_fraction < 0.9)
         return false;
 
     if (!(_n_tracks_cc0pinp > 0 && _n_showers_cc0pinp > 0))
@@ -767,6 +770,7 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _extra_energy_y = 0;
     _trk_energy_hits_tot = 0;
     _hits_outfv = 0;
+    _contained_fraction = 0;
 }
 
 void CC0piNpSelection::setBranches(TTree *_tree)
@@ -853,7 +857,7 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("dep_E", &_dep_E, "dep_E/F");
 
     _tree->Branch("hits_ratio", &_hits_ratio, "hits_ratio/F");
-    _tree->Branch("hits_outfv", &_hits_outfv, "hits_outfv/i");
+    _tree->Branch("contained_fraction", &_contained_fraction, "contained_fraction/F");
     _tree->Branch("pt", &_pt, "pt/F");
     _tree->Branch("p", &_p, "p/F");
 }
