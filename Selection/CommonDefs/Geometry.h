@@ -42,8 +42,8 @@ namespace searchingfornues
     if (plane == 0) return YZtoUcoordinate(y, z);
     if (plane == 1) return YZtoVcoordinate(y, z);
     if (plane == 2) return YZtoYcoordinate(y, z);
+    else return std::numeric_limits<float>::lowest();
   }
-
 } // namespace searchingfornues
 
 #endif

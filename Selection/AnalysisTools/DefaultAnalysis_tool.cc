@@ -486,10 +486,30 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         {
           // _backtracked_idx.push_back(0);
           // _backtracked_tid.push_back(0);
-          _backtracked_e.push_back(0);
+          _backtracked_e.push_back(std::numeric_limits<float>::lowest());
           _backtracked_pdg.push_back(0);
-          _backtracked_purity.push_back(0.);
-          _backtracked_completeness.push_back(0.);
+          _backtracked_purity.push_back(std::numeric_limits<float>::lowest());
+          _backtracked_completeness.push_back(std::numeric_limits<float>::lowest());
+
+          _backtracked_px.push_back(std::numeric_limits<float>::lowest());
+          _backtracked_py.push_back(std::numeric_limits<float>::lowest());
+          _backtracked_pz.push_back(std::numeric_limits<float>::lowest());
+          _backtracked_start_x.push_back(std::numeric_limits<float>::lowest());
+          _backtracked_start_y.push_back(std::numeric_limits<float>::lowest());
+          _backtracked_start_z.push_back(std::numeric_limits<float>::lowest());
+          _backtracked_start_t.push_back(std::numeric_limits<float>::lowest());
+
+          _backtracked_start_U.push_back(std::numeric_limits<float>::lowest());
+          _backtracked_start_V.push_back(std::numeric_limits<float>::lowest());
+          _backtracked_start_Y.push_back(std::numeric_limits<float>::lowest());
+
+          _backtracked_sce_start_x.push_back(std::numeric_limits<float>::lowest());
+          _backtracked_sce_start_y.push_back(std::numeric_limits<float>::lowest());
+          _backtracked_sce_start_z.push_back(std::numeric_limits<float>::lowest());
+
+          _backtracked_sce_start_U.push_back(std::numeric_limits<float>::lowest());
+          _backtracked_sce_start_V.push_back(std::numeric_limits<float>::lowest());
+          _backtracked_sce_start_Y.push_back(std::numeric_limits<float>::lowest());
         }
       } // if there are associated clusters
     }   // if MC
