@@ -91,6 +91,8 @@ private:
   detinfo::DetectorProperties const *detprop;
 
   float wireSpacing;
+
+  art::InputTag fCLSproducer;     // cluster associated to PFP
 };
 
 //----------------------------------------------------------------------------
@@ -104,6 +106,7 @@ ShowerStartPoint::ShowerStartPoint(const fhicl::ParameterSet &p)
 {
   detprop = lar::providerFrom<detinfo::DetectorPropertiesService>();
   wireSpacing = 0.3;
+  fCLSproducer = p.get<art::InputTag>("CLSproducer");
 }
 
 //----------------------------------------------------------------------------
@@ -131,6 +134,9 @@ void ShowerStartPoint::analyzeEvent(art::Event const &e, bool fData)
 
 void ShowerStartPoint::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
 {
+  ProxyClusColl_t const &clus_proxy = proxy::getCollection<std::vector<recob::Cluster>>(e, fCLSproducer,
+                                                                                        proxy::withAssociated<recob::Hit>(fCLSproducer));
+
   Double_t reco_vtx[3] = {};
 
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
@@ -198,22 +204,23 @@ void ShowerStartPoint::analyzeSlice(art::Event const &e, std::vector<ProxyPfpEle
 
     // cluster per pfparticle
     auto clusters = slice_pfp_v[i_pfp].get<recob::Cluster>();
-    for (const auto cluster : clusters)
+    for (const auto ass_cluster : clusters)
     {
-      int i_plane = cluster->Plane().Plane;
+      int i_plane = ass_cluster->Plane().Plane;
       float wire_reco_vtx = searchingfornues::YZtoPlanecoordinate(reco_vtx[1], reco_vtx[2], i_plane);
 
       //loop on the hits
       float smallest_hit_distance = std::numeric_limits<float>::max();
       float wire_coord_hit_min = std::numeric_limits<float>::max();
       float x_hit_min = std::numeric_limits<float>::max();
+      const auto &cluster = clus_proxy[ass_cluster.key()];
       auto hits = cluster.get<recob::Hit>();
       for (size_t i = 0; i < hits.size(); i++)
       {
         const auto &hit = hits[i];
 
         float wire_coord_hit = hit->WireID().Wire * wireSpacing;
-        float x_hit = detprop->ConvertTicksToX(hit->PeakTime(), cluster->Plane());
+        float x_hit = detprop->ConvertTicksToX(hit->PeakTime(), ass_cluster->Plane());
 
         float distance_wrt_vertex = searchingfornues::distance2d(x_hit, wire_coord_hit,
                                                reco_vtx[0], wire_reco_vtx);

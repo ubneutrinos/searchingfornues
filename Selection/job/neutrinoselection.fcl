@@ -9,6 +9,7 @@
 
 ShowerStartPointTool: {
     tool_type: "ShowerStartPoint"
+    CLSproducer: "pandora"
 }
 
 ShowerAnalysisTool: {
