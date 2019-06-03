@@ -16,16 +16,8 @@
 
 namespace selection
 {
-////////////////////////////////////////////////////////////////////////
-///
-/// Class:       CC0piNpSelection
-/// File:        CC0piNpSelection_tool.cc
-///
-///              Selection of electron neutrinos with 0 pions and at least on proton in the final state
-///
-/// Created by Stefano Roberto Soleti (srsoleti@fnal.gov) on 04/11/2019
-///
-////////////////////////////////////////////////////////////////////////
+
+//! Selection of electron neutrinos with 0 pions and at least on proton in the final state
 
 class CC0piNpSelection : public SelectionToolBase
 {
@@ -152,7 +144,6 @@ private:
     float _trk_bkt_E;
     int _trk_bkt_pdg;
 
-    float _dep_E;
     float _matched_E;
 
     float _shr_tkfit_start_x;
@@ -271,30 +262,6 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
         btparts_v = searchingfornues::initBacktrackingParticleVec(inputMCShower, inputMCTrack, *inputHits, assocMCPart);
 
-        auto const &mcp_h = e.getValidHandle<std::vector<simb::MCParticle>>(fMCPproducer);
-        for (size_t p = 0; p < mcp_h->size(); p++)
-        {
-            auto mcp = mcp_h->at(p);
-            if (!(mcp.Process() == "primary" &&
-                  mcp.StatusCode() == 1))
-            {
-                continue;
-            }
-
-            auto PDG = mcp.PdgCode();
-            if (fabs(PDG) == proton->PdgCode())
-            {
-                double ke = mcp.E() - proton->Mass();
-                if (ke > 0.040)
-                    _dep_E += ke;
-            }
-            if (fabs(PDG) == electron->PdgCode())
-            {
-                double ke = mcp.E() - electron->Mass();
-                if (ke > 0.030)
-                    _dep_E += ke;
-            }
-        }
     }
 
     for (unsigned int inpf = 0; inpf < inputPfParticle->size(); ++inpf)
@@ -375,6 +342,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     TVector3 shr_vtx;
     TVector3 trk_p;
     TVector3 shr_p;
+    std::vector< float > matched_energies;
 
     for (size_t i_pfp = 0; i_pfp < pfp_pxy_v.size(); i_pfp++)
     {
@@ -447,6 +415,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                             int ibt = searchingfornues::getAssocBtPart(hit_v, assocMCPart, btparts_v, purity, completeness);
                             if (ibt >= 0)
                             {
+                                std::cout << "IBT" << ibt << std::endl;
                                 auto &mcp = btparts_v[ibt];
                                 auto PDG = mcp.pdg;
                                 auto E = mcp.e;
@@ -454,7 +423,15 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                                 _shr_bkt_purity = purity;
                                 _shr_bkt_completeness = completeness;
                                 _shr_bkt_E = E;
-                                _matched_E += E;
+                                bool already_matched = (std::find(matched_energies.begin(), matched_energies.end(), E) != matched_energies.end());
+                                if (!already_matched) {
+                                    TParticlePDG *particle_pdg = TDatabasePDG::Instance()->GetParticle(PDG);
+                                    float ke = E - particle_pdg->Mass();
+                                    _matched_E += ke;
+                                    std::cout << "ke " << ke << std::endl;
+                                    std::cout << "matched_E " << _matched_E << std::endl;
+                                    matched_energies.push_back(E);
+                                }
                             }
                         }
                     }
@@ -634,7 +611,16 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                                 _trk_bkt_purity = purity;
                                 _trk_bkt_completeness = completeness;
                                 _trk_bkt_E = E;
-                                _matched_E += E;
+                                bool already_matched = (std::find(matched_energies.begin(), matched_energies.end(), E) != matched_energies.end());
+                                if (!already_matched)
+                                {
+                                    TParticlePDG *particle_pdg = TDatabasePDG::Instance()->GetParticle(PDG);
+                                    float ke = E - particle_pdg->Mass();
+                                    _matched_E += ke;
+                                    std::cout << "ke " << ke << std::endl;
+                                    std::cout << "matched_E " << _matched_E << std::endl;
+                                    matched_energies.push_back(E);
+                                }
                             }
                         }
                     }
@@ -764,7 +750,6 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_tkfit_nhits_Y = 0;
     _shr_tkfit_nhits_U = 0;
     _shr_tkfit_nhits_V = 0;
-    _dep_E = 0;
     _matched_E = 0;
     _total_hits_y = 0;
     _extra_energy_y = 0;
@@ -854,7 +839,6 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("n_tracks_contained", &_n_tracks_contained, "n_tracks_contained/i");
     _tree->Branch("n_showers_contained", &_n_showers_contained, "n_showers_contained/i");
 
-    _tree->Branch("dep_E", &_dep_E, "dep_E/F");
     _tree->Branch("matched_E", &_matched_E, "matched_E/F");
 
     _tree->Branch("hits_ratio", &_hits_ratio, "hits_ratio/F");

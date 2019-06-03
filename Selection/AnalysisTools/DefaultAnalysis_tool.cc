@@ -143,31 +143,34 @@ private:
 
   int _run, _sub, _evt; // event info
   // neutrino information
-  float _nu_e;                  // neutrino energy [GeV]
-  int _nu_pdg;                  // neutrino PDG code
-  int _ccnc;                    // CC or NC tag from GENIE
-  int _interaction;             // Interaction code from GENIE
-  float _vtx_x, _vtx_y, _vtx_z; // neutrino interaction vertex coordinates [cm]
-  float _vtx_t;                 // neutrino generation time
-  bool _isVtxInActive;          // true if neutrino in active volume, 0 < x < 256 -116 < y < 116;  0 < z <  1036
-  bool _isVtxInFiducial;        // true if neutrino in fiducial volume
+  float _nu_e;                  /**< neutrino energy [GeV] */
+  float _nu_pt;                 /**< transverse momentum of interaction [GeV/c] */
+  float _theta;                 /**< angle between incoming and outgoing leptons, in radians */
+
+  int _nu_pdg;                  /**< neutrino PDG code */
+  int _ccnc;                    /**< CC or NC tag from GENIE */
+  int _interaction;             /**< Interaction code from GENIE */
+  float _vtx_x, _vtx_y, _vtx_z; /**< neutrino interaction vertex coordinates [cm] */
+  float _vtx_t;                 /**< neutrino generation time */
+  bool _isVtxInActive;          /**< true if neutrino in active volume, 0 < x < 256 -116 < y < 116;  0 < z <  1036 */
+  bool _isVtxInFiducial;        /**< true if neutrino in fiducial volume */
 
   // final state particle information
-  int _nmuon;                            // is there a final-state muon from the neutrino? [1=yes 0=no]
-  float _muon_e, _muon_p, _muon_c;       // energy, purity, completeness.
-  int _nelec;                            // is there a final-state electron from the neutrino? [1=yes 0=no]
-  float _elec_e, _elec_p, _elec_c;       // energy, purity, completeness.
-  float _elec_vx, _elec_vy, _elec_vz;       // energy, purity, completeness.
-  int _npi0;                             // how many pi0s are there?
-  int _pi0;                              // is there a final-state pi0 from the neutrino? [1=yes 0=no]
-  float _pi0_e, _pi0_p, _pi0_c;          // energy, purity, completeness.
-  int _nneutron;                         // how many neutrons are there?
-  int _nproton;                          // how many protons are there?
-  int _proton;                           // is there a final-state proton from the neutrino? [1=yes 0=no]
-  float _proton_e, _proton_p, _proton_c; // energy, purity, completeness.
-  int _npion;                            // how many pions are there?
-  int _pion;                             // is there a final-state charged pion from the neutrino? [1=yes 0=no]
-  float _pion_e, _pion_p, _pion_c;       // energy, purity, completeness.
+  int _nmuon;                            /**< is there a final-state muon from the neutrino? [1=yes 0=no] */
+  float _muon_e, _muon_p, _muon_c;       /**< energy, purity, completeness. */
+  int _nelec;                            /**< is there a final-state electron from the neutrino? [1=yes 0=no] */
+  float _elec_e, _elec_p, _elec_c;       /**< energy, purity, completeness. */
+  float _elec_vx, _elec_vy, _elec_vz;    /**< electron vertex. */
+  int _npi0;                             /**< how many pi0s are there? */
+  int _pi0;                              /**< is there a final-state pi0 from the neutrino? [1=yes 0=no] */
+  float _pi0_e, _pi0_p, _pi0_c;          /**< energy, purity, completeness. */
+  int _nneutron;                         /**< how many neutrons are there? */
+  int _nproton;                          /**< how many protons are there? */
+  int _proton;                           /**< is there a final-state proton from the neutrino? [1=yes 0=no] */
+  float _proton_e, _proton_p, _proton_c; /**< energy, purity, completeness. */
+  int _npion;                            /**< how many pions are there? */
+  int _pion;                             /**< is there a final-state charged pion from the neutrino? [1=yes 0=no] */
+  float _pion_e, _pion_p, _pion_c;       /**< energy, purity, completeness. */
 
   // end muon process
   std::string _endmuonprocess;
@@ -184,21 +187,21 @@ private:
   // reco PFParticle backtracking. One entry for PFParticle in the slice
   // std::vector<int>   _backtracked_idx;    // index of PFP [key]
   // std::vector<int>   _backtracked_tid;    // TrackID of backtracked MCParticle
-  std::vector<int> _backtracked_pdg;            // PDG code of backtracked particle
-  std::vector<float> _backtracked_e;            // energy of backtracked particle
-  std::vector<float> _backtracked_purity;       // purity of backtracking
-  std::vector<float> _backtracked_completeness; // completeness of backtracking
+  std::vector<int> _backtracked_pdg;            /**< PDG code of backtracked particle */
+  std::vector<float> _backtracked_e;            /**< energy of backtracked particle */
+  std::vector<float> _backtracked_purity;       /**< purity of backtracking */
+  std::vector<float> _backtracked_completeness; /**< completeness of backtracking */
 
-  float _lep_e;                                              // lepton energy (if one exists) [GeV]
-  int _pass;                                                 // does the slice pass the selection
-  float _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset; // offsets for generation time and SCE
+  float _lep_e;                                              /**< lepton energy (if one exists) [GeV] */
+  int _pass;                                                 /**< does the slice pass the selection */
+  float _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset; /**< offsets for generation time and SCE */
 
-  int evnhits;                                // number of hits in event
-  int slpdg;                                  // PDG code of primary pfp in slice
-  int slnhits;                                // number of hits in slice
-  std::vector<int> pfpdg;                     // PDG code of pfp in slice
-  std::vector<int> pfnhits;                   // number of hits in pfp
-  std::vector<std::vector<int>> pfnplanehits; // number of hits in pfp
+  int evnhits;                                /**< number of hits in event */
+  int slpdg;                                  /**< PDG code of primary pfp in slice */
+  int slnhits;                                /**< number of hits in slice */
+  std::vector<int> pfpdg;                     /**< PDG code of pfp in slice */
+  std::vector<int> pfnhits;                   /**< number of hits in pfp */
+  std::vector<std::vector<int>> pfnplanehits; /**< number of hits in pfp */
   unsigned int _hits_u;
   unsigned int _hits_v;
   unsigned int _hits_y;
@@ -614,6 +617,9 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("ccnc", &_ccnc, "ccnc/I");
   _tree->Branch("interaction", &_interaction, "interaction/I");
   _tree->Branch("nu_e", &_nu_e, "nu_e/F");
+  _tree->Branch("nu_pt", &_nu_pt, "nu_pt/F");
+  _tree->Branch("theta", &_theta, "theta/F");
+
   _tree->Branch("vtx_x", &_vtx_x, "vtx_x/F");
   _tree->Branch("vtx_y", &_vtx_y, "vtx_y/F");
   _tree->Branch("vtx_z", &_vtx_z, "vtx_z/F");
@@ -730,6 +736,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _sub = std::numeric_limits<int>::lowest();
   _evt = std::numeric_limits<int>::lowest();
   _nu_e = std::numeric_limits<float>::lowest();
+  _theta = std::numeric_limits<float>::lowest();
+  _nu_pt = std::numeric_limits<float>::lowest();
+
   _nu_pdg = std::numeric_limits<int>::lowest();
   _ccnc = std::numeric_limits<int>::lowest();
   _interaction = std::numeric_limits<int>::lowest();
@@ -850,6 +859,8 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _vtx_y = nu.EndY();
   _vtx_z = nu.EndZ();
   _vtx_t = nu.T();
+  _theta = neutrino.Theta();
+  _nu_pt = neutrino.Pt();
 
   art::ServiceHandle<geo::Geometry> geo;
 
@@ -905,7 +916,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     } // if muon
 
     // if electron
-    if ((std::abs(part.PdgCode()) == electron->PdgCode()) and (part.StatusCode() == 1))
+    else if ((std::abs(part.PdgCode()) == electron->PdgCode()) and (part.StatusCode() == 1))
     {
       if (part.Momentum(0).E() - electron->Mass() > fElectronThreshold) {
         _nelec += 1;
@@ -917,7 +928,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     } // if electron
 
     // if pi0
-    if ((part.PdgCode() == pi0->PdgCode()) and (part.StatusCode() == 1))
+    else if ((part.PdgCode() == pi0->PdgCode()) and (part.StatusCode() == 1))
     {
       _npi0 += 1;
       total_p_visible += part.Momentum(0);
@@ -927,7 +938,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     } // if pi0
 
     // if proton
-    if ((part.PdgCode() == proton->PdgCode()) and (part.StatusCode() == 1))
+    else if ((part.PdgCode() == proton->PdgCode()) and (part.StatusCode() == 1))
     {
       if (part.Momentum(0).E() - proton->Mass() > fProtonThreshold) {
         total_p_visible += part.Momentum(0);
@@ -940,13 +951,13 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     } // if proton
 
     // if neutron
-    if ((part.PdgCode() == neutron->PdgCode()) and (part.StatusCode() == 1))
+    else if ((part.PdgCode() == neutron->PdgCode()) and (part.StatusCode() == 1))
     {
       _nneutron += 1;
     }
 
     // if pion
-    if ((std::abs(part.PdgCode()) == pion->PdgCode()) and (part.StatusCode() == 1))
+    else if ((std::abs(part.PdgCode()) == pion->PdgCode()) and (part.StatusCode() == 1))
     {
       if (part.Momentum(0).E() - pion->Mass() > fPionThreshold) {
         _npion += 1;
@@ -956,6 +967,12 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
       if (part.Momentum(0).E() > _pion_e)
         _pion_e = part.Momentum(0).E();
     } // if pion
+
+    else
+    {
+      TParticlePDG *particle_pdg = TDatabasePDG::Instance()->GetParticle(part.PdgCode());
+      _true_e_visible += part.Momentum(0).E() - particle_pdg->Mass();
+    }
 
   }   // for all MCParticles
 
