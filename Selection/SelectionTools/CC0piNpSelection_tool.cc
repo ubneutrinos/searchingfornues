@@ -415,7 +415,6 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                             int ibt = searchingfornues::getAssocBtPart(hit_v, assocMCPart, btparts_v, purity, completeness);
                             if (ibt >= 0)
                             {
-                                std::cout << "IBT" << ibt << std::endl;
                                 auto &mcp = btparts_v[ibt];
                                 auto PDG = mcp.pdg;
                                 auto E = mcp.e;
@@ -425,12 +424,12 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                                 _shr_bkt_E = E;
                                 bool already_matched = (std::find(matched_energies.begin(), matched_energies.end(), E) != matched_energies.end());
                                 if (!already_matched) {
-                                    TParticlePDG *particle_pdg = TDatabasePDG::Instance()->GetParticle(PDG);
-                                    float ke = E - particle_pdg->Mass();
-                                    _matched_E += ke;
-                                    std::cout << "ke " << ke << std::endl;
-                                    std::cout << "matched_E " << _matched_E << std::endl;
-                                    matched_energies.push_back(E);
+                                    if (PDG < 9999 && PDG > -9999) { // PDG codes corresponding to ions e.g. 2000000101 causes a Segmentation fault because they are not in the map
+                                        TParticlePDG *particle_pdg = TDatabasePDG::Instance()->GetParticle(PDG);
+                                        float ke = E - particle_pdg->Mass();
+                                        _matched_E += ke;
+                                        matched_energies.push_back(E);
+                                    }
                                 }
                             }
                         }
@@ -614,12 +613,12 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                                 bool already_matched = (std::find(matched_energies.begin(), matched_energies.end(), E) != matched_energies.end());
                                 if (!already_matched)
                                 {
-                                    TParticlePDG *particle_pdg = TDatabasePDG::Instance()->GetParticle(PDG);
-                                    float ke = E - particle_pdg->Mass();
-                                    _matched_E += ke;
-                                    std::cout << "ke " << ke << std::endl;
-                                    std::cout << "matched_E " << _matched_E << std::endl;
-                                    matched_energies.push_back(E);
+                                    if (PDG < 9999 && PDG > -9999) { // PDG codes corresponding to ions e.g. 2000000101 causes a Segmentation fault because they are not in the map
+                                        TParticlePDG *particle_pdg = TDatabasePDG::Instance()->GetParticle(PDG);
+                                        float ke = E - particle_pdg->Mass();
+                                        _matched_E += ke;
+                                        matched_energies.push_back(E);
+                                    }
                                 }
                             }
                         }

@@ -307,6 +307,7 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
     } else {
       std::cout << "LEE MCEventWeight not present" << std::endl;
     }
+
     // SaveTruth
     SaveTruth(e);
 
@@ -899,7 +900,6 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     }
 
     total_p += part.Momentum(0);
-
     // if muon
     if ((std::abs(part.PdgCode()) == muon->PdgCode()) and (part.StatusCode() == 1))
     {
@@ -970,8 +970,10 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
 
     else
     {
-      TParticlePDG *particle_pdg = TDatabasePDG::Instance()->GetParticle(part.PdgCode());
-      _true_e_visible += part.Momentum(0).E() - particle_pdg->Mass();
+      if (part.PdgCode() > -9999 && part.PdgCode() < 9999) { // PDG codes corresponding to ions e.g. 2000000101 causes a Segmentation fault because they are not in the map
+        TParticlePDG *particle_pdg = TDatabasePDG::Instance()->GetParticle(part.PdgCode());
+        _true_e_visible += part.Momentum(0).E() - particle_pdg->Mass();
+      }
     }
 
   }   // for all MCParticles
