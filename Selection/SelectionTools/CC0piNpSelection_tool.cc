@@ -17,18 +17,14 @@
 namespace selection
 {
 ////////////////////////////////////////////////////////////////////////
-//
-// Class:       CC0piNpSelection
-// File:        CC0piNpSelection_tool.cc
-//
-//              nu_e CC0pi-Np selection tool
-//
-// Configuration parameters:
-//
-// TBD
-//
-// Created by Stefano Roberto Soleti (srsoleti@fnal.gov) on 04/11/2019
-//
+///
+/// Class:       CC0piNpSelection
+/// File:        CC0piNpSelection_tool.cc
+///
+///              Selection of electron neutrinos with 0 pions and at least on proton in the final state
+///
+/// Created by Stefano Roberto Soleti (srsoleti@fnal.gov) on 04/11/2019
+///
 ////////////////////////////////////////////////////////////////////////
 
 class CC0piNpSelection : public SelectionToolBase
@@ -38,7 +34,7 @@ public:
     /**
      *  @brief  Constructor
      *
-     *  @param  pset
+     *  @param  pset List of parameters in the FCL file
      */
     CC0piNpSelection(const fhicl::ParameterSet &pset);
 
@@ -57,17 +53,17 @@ public:
                      const std::vector<ProxyPfpElem_t> &pfp_pxy_v);
 
     /**
-     * @brief set branches for TTree
+     * @brief Set branches for TTree
      */
     void setBranches(TTree *_tree);
 
     /**
-     * @brief reset ttree branches
+     * @brief Reset TTree branches
      */
     void resetTTree(TTree *_tree);
 
     /**
-     * @brief check if inside fiducial volume
+     * @brief Check if inside fiducial volume
      */
     bool isFiducial(const double x[3]) const;
 
@@ -94,18 +90,18 @@ private:
     art::InputTag fMCPproducer;
     art::InputTag fCALproducer;
 
-    unsigned int _n_showers_cc0pinp;
-    unsigned int _n_tracks_cc0pinp;
-    unsigned int _max_hits_shower;
-    unsigned int _max_hits_track;
-    unsigned int _shr_hits_tot;
-    unsigned int _trk_hits_tot;
-    unsigned int _trk_hits_y_tot;
-    unsigned int _trk_hits_v_tot;
-    unsigned int _trk_hits_u_tot;
-    unsigned int _shr_hits_y_tot;
-    unsigned int _shr_hits_v_tot;
-    unsigned int _shr_hits_u_tot;
+    unsigned int _n_showers_contained; /**< Number of showers with a starting point within the fiducial volume */
+    unsigned int _n_tracks_contained; /**< Number of tracks fully contained in the fiducial volume */
+    unsigned int _shr_hits_max; /**< Number of hits of the leading shower */
+    unsigned int _trk_hits_max; /**< Number of hits of the leading track */
+    unsigned int _shr_hits_tot; /**< Total number of shower hits */
+    unsigned int _trk_hits_tot; /**< Total number of track hits */
+    unsigned int _trk_hits_y_tot; /**< Total number of track hits on the Y plane */
+    unsigned int _trk_hits_v_tot; /**< Total number of track hits on the V plane */
+    unsigned int _trk_hits_u_tot; /**< Total number of track hits on the U plane */
+    unsigned int _shr_hits_y_tot; /**< Total number of shower hits on the Y plane */
+    unsigned int _shr_hits_v_tot; /**< Total number of shower hits on the V plane */
+    unsigned int _shr_hits_u_tot; /**< Total number of shower hits on the U plane */
     float _shr_energy;
     float _shr_energy_tot;
     float _shr_dedx_Y;
@@ -157,6 +153,7 @@ private:
     int _trk_bkt_pdg;
 
     float _dep_E;
+    float _matched_E;
 
     float _shr_tkfit_start_x;
     float _shr_tkfit_start_y;
@@ -410,7 +407,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     continue;
                 }
 
-                _n_showers_cc0pinp++;
+                _n_showers_contained++;
 
                 unsigned int shr_hits = 0;
 
@@ -440,7 +437,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
                 _shr_energy_tot += shr->Energy()[2] / 1000;
                 _shr_hits_tot += shr_hits;
-                if (shr_hits > _max_hits_shower)
+                if (shr_hits > _shr_hits_max)
                 {
                     if (!fData)
                     {
@@ -457,6 +454,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                                 _shr_bkt_purity = purity;
                                 _shr_bkt_completeness = completeness;
                                 _shr_bkt_E = E;
+                                _matched_E += E;
                             }
                         }
                     }
@@ -473,7 +471,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr_start_z = shr->ShowerStart().Z();
                     _shr_energy = shr->Energy()[2] / 1000; // GeV
                     _shr_pfp_id = i_pfp;
-                    _max_hits_shower = shr_hits;
+                    _shr_hits_max = shr_hits;
                     _shr_score = trkshrscore;
                     _shr_theta = shr->Direction().Theta();
                     _shr_phi = shr->Direction().Phi();
@@ -571,7 +569,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     }
                     continue;
                 }
-                _n_tracks_cc0pinp++;
+                _n_tracks_contained++;
                 unsigned int trk_hits = 0;
 
                 std::vector<art::Ptr<recob::Hit>> hit_v;
@@ -619,7 +617,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         _trk_pidchipr_worst = chipr;
                 }
 
-                if (trk_hits > _max_hits_track)
+                if (trk_hits > _trk_hits_max)
                 {
                     if (!fData)
                     {
@@ -636,6 +634,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                                 _trk_bkt_purity = purity;
                                 _trk_bkt_completeness = completeness;
                                 _trk_bkt_E = E;
+                                _matched_E += E;
                             }
                         }
                     }
@@ -645,7 +644,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _trk_len = trk->Length();
                     _trk_energy = energy_proton;
                     _trk_pfp_id = i_pfp;
-                    _max_hits_track = trk_hits;
+                    _trk_hits_max = trk_hits;
                     _trk_theta = trk->Theta();
                     _trk_phi = trk->Phi();
                     trk_p.SetXYZ(trk->StartDirection().X(), trk->StartDirection().Y(), trk->StartDirection().Z());
@@ -679,7 +678,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     if (_contained_fraction < 0.9)
         return false;
 
-    if (!(_n_tracks_cc0pinp > 0 && _n_showers_cc0pinp > 0))
+    if (!(_n_tracks_contained > 0 && _n_showers_contained > 0))
         return false;
     return true;
 }
@@ -690,8 +689,8 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_pfp_id = 0;
     _trk_pfp_id = 0;
 
-    _max_hits_track = 0;
-    _max_hits_shower = 0;
+    _trk_hits_max = 0;
+    _shr_hits_max = 0;
 
     _shr_dedx_Y = std::numeric_limits<float>::lowest();
     _shr_dedx_V = std::numeric_limits<float>::lowest();
@@ -703,8 +702,8 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _tksh_distance = std::numeric_limits<float>::lowest();
     _tksh_angle = std::numeric_limits<float>::lowest();
 
-    _n_showers_cc0pinp = 0;
-    _n_tracks_cc0pinp = 0;
+    _n_showers_contained = 0;
+    _n_tracks_contained = 0;
 
     _trk_distance = std::numeric_limits<float>::lowest();
     _trk_len = std::numeric_limits<float>::lowest();
@@ -766,6 +765,7 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_tkfit_nhits_U = 0;
     _shr_tkfit_nhits_V = 0;
     _dep_E = 0;
+    _matched_E = 0;
     _total_hits_y = 0;
     _extra_energy_y = 0;
     _trk_energy_hits_tot = 0;
@@ -834,8 +834,8 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("trk_bragg_mu", &_trk_bragg_mu, "trk_bragg_mu/F");
     _tree->Branch("trk_bragg_mip", &_trk_bragg_mip, "trk_bragg_mip/F");
 
-    _tree->Branch("trk_hits_max", &_max_hits_track, "trk_hits_max/i");
-    _tree->Branch("shr_hits_max", &_max_hits_shower, "shr_hits_max/i");
+    _tree->Branch("trk_hits_max", &_trk_hits_max, "trk_hits_max/i");
+    _tree->Branch("shr_hits_max", &_shr_hits_max, "shr_hits_max/i");
 
     _tree->Branch("total_hits_y", &_total_hits_y, "total_hits_y/i");
     _tree->Branch("extra_energy_y", &_extra_energy_y, "extra_energy_y/F");
@@ -851,10 +851,11 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("trk_hits_u_tot", &_trk_hits_u_tot, "trk_hits_u_tot/i");
     _tree->Branch("trk_hits_v_tot", &_trk_hits_v_tot, "trk_hits_v_tot/i");
 
-    _tree->Branch("n_tracks_cc0pinp", &_n_tracks_cc0pinp, "n_tracks_cc0pinp/i");
-    _tree->Branch("n_showers_cc0pinp", &_n_showers_cc0pinp, "n_showers_cc0pinp/i");
+    _tree->Branch("n_tracks_contained", &_n_tracks_contained, "n_tracks_contained/i");
+    _tree->Branch("n_showers_contained", &_n_showers_contained, "n_showers_contained/i");
 
     _tree->Branch("dep_E", &_dep_E, "dep_E/F");
+    _tree->Branch("matched_E", &_matched_E, "matched_E/F");
 
     _tree->Branch("hits_ratio", &_hits_ratio, "hits_ratio/F");
     _tree->Branch("contained_fraction", &_contained_fraction, "contained_fraction/F");
