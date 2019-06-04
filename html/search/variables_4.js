@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['slnhits',['slnhits',['../classanalysis_1_1DefaultAnalysis.html#a9f003b22425d9db3b27eabee64700028',1,'analysis::DefaultAnalysis']]],
-  ['slpdg',['slpdg',['../classanalysis_1_1DefaultAnalysis.html#a9763429d7ed32c67e96d981d14893c06',1,'analysis::DefaultAnalysis']]]
+  ['pfnhits',['pfnhits',['../classanalysis_1_1DefaultAnalysis.html#a8d010c569e35c153059a6db573b9542d',1,'analysis::DefaultAnalysis']]],
+  ['pfnplanehits',['pfnplanehits',['../classanalysis_1_1DefaultAnalysis.html#a868edc3f02a7f71619edef7ee0d3df5c',1,'analysis::DefaultAnalysis']]],
+  ['pfpdg',['pfpdg',['../classanalysis_1_1DefaultAnalysis.html#a5d3ad6cd0930367cafe48e485aa19d20',1,'analysis::DefaultAnalysis']]]
 ];
