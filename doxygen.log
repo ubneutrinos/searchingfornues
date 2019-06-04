@@ -29,6 +29,7 @@ Searching for files in directory /home/travis/build/ubneutrinos/searchingfornues
 Searching for files in directory /home/travis/build/ubneutrinos/searchingfornues/Selection/job
 Searching for files in directory /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools
 Searching for files in directory /home/travis/build/ubneutrinos/searchingfornues/ShowerReco
+Searching for files in directory /home/travis/build/ubneutrinos/searchingfornues/xml
 Reading and parsing tag files
 Parsing files
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc...
@@ -92,8 +93,7 @@ Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/Selectio
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionExample_tool.cc...
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h...
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h...
-Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/ShowerSelection_tool.cc...
-Parsing file /home/travis/build/ubneutrinos/searchingfornues/Sele/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingToolBase_tool.h:2: warning: the name `larpandora/LArPandoraEventBuilding/SliceIdTools/FlashNeutrinoId_tool.h' supplied as the second argument in the \file statement is not an input file
+Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/ShowerS/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingToolBase_tool.h:2: warning: the name `larpandora/LArPandoraEventBuilding/SliceIdTools/FlashNeutrinoId_tool.h' supplied as the second argument in the \file statement is not an input file
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:35: warning: Compound analysis::DefaultAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/PMTNoise_tool.cc:37: warning: Compound analysis::PMTNoise is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ShowerMerger_module.cc:36: warning: Compound ShowerMerger is not documented.
@@ -658,58 +658,8 @@ Parsing file /home/travis/build/ubneutrinos/searchingfornues/Sele/home/travis/bu
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/SlicePurCompl_tool.cc:134: warning: argument 'pset' of command @param is not found in the argument list of analysis::SlicePurCompl::SlicePurCompl(const fhicl::ParameterSet &p)
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/SlicePurCompl_tool.cc:134: warning: The following parameters of analysis::SlicePurCompl::SlicePurCompl(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:83: warning: Member _trkmom (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:85: warning: Member proton (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:86: warning: Member muon (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:88: warning: Member fCALOproducer (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:89: warning: Member fPIDproducer (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:90: warning: Member fTRKproducer (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:92: warning: Member _trk_pfp_id (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:94: warning: Member _trkscore_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:96: warning: Member _trk_start_x (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:97: warning: Member _trk_start_y (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:98: warning: Member _trk_start_z (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:100: warning: Member _trk_distance (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:102: warning: Member _trk_theta (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:103: warning: Member _trk_phi (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:105: warning: Member _trk_dir_x (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:106: warning: Member _trk_dir_y (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:107: warning: Member _trk_dir_z (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:109: warning: Member _trk_end_x (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:110: warning: Member _trk_end_y (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:111: warning: Member _trk_end_z (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:113: warning: Member _trk_length (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:115: warning: Member _trk_bragg_p (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:116: warning: Member _trk_bragg_mu (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:117: warning: Member _trk_bragg_mip (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:119: warning: Member _trk_pidchi (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:120: warning: Member _trk_pidchipr (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:121: warning: Member _trk_pidchika (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:122: warning: Member _trk_pidchipi (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:123: warning: Member _trk_pidchimu (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:124: warning: Member _trk_pida (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:125: warning: Member _trk_energy_proton (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:126: warning: Member _trk_energy_muon (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:132: warning: argument 'pset' of command @param is not found in the argument list of analysis::TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p)
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:132: warning: The following parameters of analysis::TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p) are not documented:
-  parameter 'p'
-/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:35: warning: Member configure(const fhicl::ParameterSet &pset) (function) of class flashmatch::FlashMatchingTool is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:51: warning: Member ClassifyTrack(const art::Event &evt, const std::vector< art::Ptr< recob::SpacePoint > > &spacepoint_v, const std::vector< art::Ptr< recob::Hit > > &hit_v, std::vector< float > &recospectrum, std::vector< float > &hypospectrum) (function) of class flashmatch::FlashMatchingTool is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingToolBase_tool.h:45: warning: Member ClassifySlice() (function) of class flashmatch::FlashMatchingToolBase is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:778: warning: Member SliceCandidateVector (typedef) of class flashmatch::FlashMatchingTool is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:779: warning: Member FlashCandidateVector (typedef) of class flashmatch::FlashMatchingTool is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:38: warning: argument 'slices' of command @param is not found in the argument list of flashmatch::FlashMatchingTool::ClassifySlice(const art::Event &evt, const std::vector< art::Ptr< recob::PFParticle > > &pfp_v, const std::vector< std::vector< art::Ptr< recob::SpacePoint > > > &spacepoint_v_v, const std::vector< std::vector< art::Ptr< recob::Hit > > > &hit_v_v, std::vector< float > &recospectrum, std::vector< float > &hypospectrum)
-/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:38: warning: The following parameters of flashmatch::FlashMatchingTool::ClassifySlice(const art::Event &evt, const std::vector< art::Ptr< recob::PFParticle > > &pfp_v, const std::vector< std::vector< art::Ptr< recob::SpacePoint > > > &spacepoint_v_v, const std::vector< std::vector< art::Ptr< recob::Hit > > > &hit_v_v, std::vector< float > &recospectrum, std::vector< float > &hypospectrum) are not documented:
-  parameter 'pfp_v'
-  parameter 'spacepoint_v_v'
-  parameter 'hit_v_v'
-  parameter 'recospectrum'
-  parameter 'hypospectrum'
-/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:801: warning: Found unknown command `\breif'
-/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:853: warning: argument 'sliceCandidates' of command @param is not found in the argument list of flashmatch::FlashMatchingTool::GetSliceScore(FlashCandidate &beamFlash, SliceCandidate &slice)
-/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:853: warning: The following parameters of flashmatch::FlashMatchingTool::GetSliceScore(FlashCandidate &beamFlash, SliceCandidate &slice) are not documented:
-  parameter 'slice'
-ction/SelectionTools/ShowerSelection_tool.cc...
+election_tool.cc...
+Parsing file /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/ShowerSelection_tool.cc...
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ShowerMerger_module.cc...
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ShowerMerger_module.cc...
 Building group list...
@@ -794,9 +744,58 @@ Generating docs for compound analysis::Pi0TruthAnalysis...
 Generating docs for compound analysis::PMTNoise...
 Generating docs for compound analysis::ShowerAnalysis...
 Generating docs for compound analysis::SlicePurCompl...
-Generating docs for compound analysis::TrackAnalysis...
-Generating docs for compound flashmatch::FlashMatchingTool...
-Generating docs for/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:88: warning: Member Print() (function) of class flashmatch::FlashMatchingTool::FailureMode is not documented.
+Generating docs for compound analysis::TrackAnalysis/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:83: warning: Member _trkmom (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:85: warning: Member proton (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:86: warning: Member muon (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:88: warning: Member fCALOproducer (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:89: warning: Member fPIDproducer (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:90: warning: Member fTRKproducer (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:92: warning: Member _trk_pfp_id (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:94: warning: Member _trkscore_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:96: warning: Member _trk_start_x (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:97: warning: Member _trk_start_y (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:98: warning: Member _trk_start_z (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:100: warning: Member _trk_distance (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:102: warning: Member _trk_theta (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:103: warning: Member _trk_phi (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:105: warning: Member _trk_dir_x (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:106: warning: Member _trk_dir_y (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:107: warning: Member _trk_dir_z (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:109: warning: Member _trk_end_x (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:110: warning: Member _trk_end_y (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:111: warning: Member _trk_end_z (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:113: warning: Member _trk_length (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:115: warning: Member _trk_bragg_p (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:116: warning: Member _trk_bragg_mu (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:117: warning: Member _trk_bragg_mip (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:119: warning: Member _trk_pidchi (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:120: warning: Member _trk_pidchipr (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:121: warning: Member _trk_pidchika (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:122: warning: Member _trk_pidchipi (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:123: warning: Member _trk_pidchimu (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:124: warning: Member _trk_pida (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:125: warning: Member _trk_energy_proton (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:126: warning: Member _trk_energy_muon (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:132: warning: argument 'pset' of command @param is not found in the argument list of analysis::TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p)
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:132: warning: The following parameters of analysis::TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p) are not documented:
+  parameter 'p'
+/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:35: warning: Member configure(const fhicl::ParameterSet &pset) (function) of class flashmatch::FlashMatchingTool is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:51: warning: Member ClassifyTrack(const art::Event &evt, const std::vector< art::Ptr< recob::SpacePoint > > &spacepoint_v, const std::vector< art::Ptr< recob::Hit > > &hit_v, std::vector< float > &recospectrum, std::vector< float > &hypospectrum) (function) of class flashmatch::FlashMatchingTool is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingToolBase_tool.h:45: warning: Member ClassifySlice() (function) of class flashmatch::FlashMatchingToolBase is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:778: warning: Member SliceCandidateVector (typedef) of class flashmatch::FlashMatchingTool is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:779: warning: Member FlashCandidateVector (typedef) of class flashmatch::FlashMatchingTool is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:38: warning: argument 'slices' of command @param is not found in the argument list of flashmatch::FlashMatchingTool::ClassifySlice(const art::Event &evt, const std::vector< art::Ptr< recob::PFParticle > > &pfp_v, const std::vector< std::vector< art::Ptr< recob::SpacePoint > > > &spacepoint_v_v, const std::vector< std::vector< art::Ptr< recob::Hit > > > &hit_v_v, std::vector< float > &recospectrum, std::vector< float > &hypospectrum)
+/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:38: warning: The following parameters of flashmatch::FlashMatchingTool::ClassifySlice(const art::Event &evt, const std::vector< art::Ptr< recob::PFParticle > > &pfp_v, const std::vector< std::vector< art::Ptr< recob::SpacePoint > > > &spacepoint_v_v, const std::vector< std::vector< art::Ptr< recob::Hit > > > &hit_v_v, std::vector< float > &recospectrum, std::vector< float > &hypospectrum) are not documented:
+  parameter 'pfp_v'
+  parameter 'spacepoint_v_v'
+  parameter 'hit_v_v'
+  parameter 'recospectrum'
+  parameter 'hypospectrum'
+/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:801: warning: Found unknown command `\breif'
+/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:853: warning: argument 'sliceCandidates' of command @param is not found in the argument list of flashmatch::FlashMatchingTool::GetSliceScore(FlashCandidate &beamFlash, SliceCandidate &slice)
+/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:853: warning: The following parameters of flashmatch::FlashMatchingTool::GetSliceScore(FlashCandidate &beamFlash, SliceCandidate &slice) are not documented:
+  parameter 'slice'
+/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:88: warning: Member Print() (function) of class flashmatch::FlashMatchingTool::FailureMode is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:250: warning: Found unknown command `\breif'
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:228: warning: argument 'beamWindowWend' of command @param is not found in the argument list of flashmatch::FlashMatchingTool::FlashCandidate::IsInBeamWindow(const float beamWindowStart, const float beamWindowEnd)
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:228: warning: The following parameters of flashmatch::FlashMatchingTool::FlashCandidate::IsInBeamWindow(const float beamWindowStart, const float beamWindowEnd) are not documented:
@@ -1010,7 +1009,9 @@ Generating docs for/home/travis/build/ubneutrinos/searchingfornues/FlashMatching
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/ShowerSelection_tool.cc:101: warning: Member fTRKproducer (variable) of class selection::ShowerSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/ShowerSelection_tool.cc:102: warning: Member fCALproducer (variable) of class selection::ShowerSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:82: warning: Member fData (variable) of class selection::SelectionToolBase is not documented.
- nested compound flashmatch::FlashMatchingTool::FailureMode...
+...
+Generating docs for compound flashmatch::FlashMatchingTool...
+Generating docs for nested compound flashmatch::FlashMatchingTool::FailureMode...
 Generating docs for nested compound flashmatch::FlashMatchingTool::FlashCandidate...
 Generating docs for nested compound flashmatch::FlashMatchingTool::OutputEvent...
 Generating docs for nested compound flashmatch::FlashMatchingTool::SliceCandidate...
