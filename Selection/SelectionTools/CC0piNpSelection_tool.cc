@@ -17,7 +17,10 @@
 namespace selection
 {
 
-//! Selection of electron neutrinos with 0 pions and at least on proton in the final state
+/**
+ *  Selection of electron neutrinos with 0 pions and at least on proton in the final state
+ *  Author: Stefano Roberto Soleti (srsoleti@fnal.gov)
+ */
 
 class CC0piNpSelection : public SelectionToolBase
 {
@@ -40,22 +43,31 @@ public:
 
     /**
      * @brief Selection function
+     *
+     * @param e art Event
+     * @param pfp_pxy_v Proxy of PFParticle vector in the slice
      */
     bool selectEvent(art::Event const &e,
                      const std::vector<ProxyPfpElem_t> &pfp_pxy_v);
 
     /**
      * @brief Set branches for TTree
+     *
+     * @param _tree ROOT TTree with the selection information
      */
     void setBranches(TTree *_tree);
 
     /**
      * @brief Reset TTree branches
+     *
+     * @param _tree ROOT TTree with the selection information
      */
     void resetTTree(TTree *_tree);
 
     /**
-     * @brief Check if inside fiducial volume
+     * @brief Check if point is inside fiducial volume
+     *
+     * @param x array of coordinates
      */
     bool isFiducial(const double x[3]) const;
 
@@ -65,13 +77,13 @@ private:
     TParticlePDG *electron = TDatabasePDG::Instance()->GetParticle(11);
     TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
 
-    float fTrkShrscore;
-    float fFidvolZstart;
-    float fFidvolZend;
-    float fFidvolYstart;
-    float fFidvolYend;
-    float fFidvolXstart;
-    float fFidvolXend;
+    float fTrkShrscore; /**< Threshold on the Pandora track score (default 0.5) */
+    float fFidvolZstart; /**< Fiducial volume distance from the start of the TPC on the z axis (default 10 cm) */
+    float fFidvolZend; /**< Fiducial volume distance from the end of the TPC on the z axis (default 50 cm) */
+    float fFidvolYstart; /**< Fiducial volume distance from the bottom of the TPC on the y axis (default 15 cm) */
+    float fFidvolYend; /**< Fiducial volume distance from the top of the TPC on the y axis (default 15 cm) */
+    float fFidvolXstart; /**< Fiducial volume distance from the start of the TPC on the x axis (default 10 cm) */
+    float fFidvolXend; /**< Fiducial volume distance from the end of the TPC on the x axis (default 10 cm) */
 
     art::InputTag fCLSproducer;
     art::InputTag fPIDproducer;
@@ -94,79 +106,80 @@ private:
     unsigned int _shr_hits_y_tot; /**< Total number of shower hits on the Y plane */
     unsigned int _shr_hits_v_tot; /**< Total number of shower hits on the V plane */
     unsigned int _shr_hits_u_tot; /**< Total number of shower hits on the U plane */
-    float _shr_energy;
-    float _shr_energy_tot;
-    float _shr_dedx_Y;
-    float _shr_dedx_V;
-    float _shr_dedx_U;
-    float _shr_distance;
-    float _tksh_distance;
-    float _tksh_angle;
-    float _shr_score;
-    float _shr_theta;
-    float _shr_phi;
-    float _shr_px;
-    float _shr_py;
-    float _shr_pz;
-    float _shr_openangle;
+    float _shr_energy; /**< Energy of the shower with the largest number of hits (in GeV) */
+    float _shr_energy_tot; /**< Sum of the energy of the showers (in GeV) */
+    float _shr_dedx_Y; /**< dE/dx of the leading shower on the Y plane with the 1x4 cm box method */
+    float _shr_dedx_V; /**< dE/dx of the leading shower on the V plane with the 1x4 cm box method */
+    float _shr_dedx_U; /**< dE/dx of the leading shower on the U plane with the 1x4 cm box method */
+    float _shr_distance; /**< Distance between leading shower vertex and reconstructed neutrino vertex */
+    float _tksh_distance; /**< Distance between leading shower vertex and longest track vertex */
+    float _tksh_angle; /**< Angle between leading shower vertex and longest track vertex */
+    float _shr_score; /**< Pandora track score for the leading shower */
+    float _shr_theta; /**< Reconstructed theta angle for the leading shower */
+    float _shr_phi; /**< Reconstructed phi angle for the leading shower */
+    float _shr_px; /**< X component of the reconstructed momentum of the leading shower (in GeV/c) */
+    float _shr_py; /**< Y component of the reconstructed momentum of the leading shower (in GeV/c) */
+    float _shr_pz; /**< Z component of the reconstructed momentum of the leading shower (in GeV/c) */
+    float _shr_openangle; /**< Opening angle of the shower */
 
-    size_t _shr_pfp_id;
+    size_t _shr_pfp_id; /**< Index of the leading shower in the PFParticle vector */
 
-    float _trk_len;
-    float _trk_energy;
-    float _trk_energy_tot;
-    float _trk_distance;
-    float _trk_theta;
-    float _trk_phi;
-    size_t _trk_pfp_id;
+    float _trk_len; /**< Length of the longest track */
+    float _trk_energy;  /**< Energy of the longest track assuming it's a proton and using stopping power in LAr */
+    float _trk_energy_tot;  /**< Sum of the track energies assuming they are protons and using stopping power in LAr */
+    float _trk_distance;  /**< Distance between longest track and reconstructed neutrino vertex */
+    float _trk_theta; /**< Reconstructed theta angle for the longest track */
+    float _trk_phi; /**< Reconstructed phi angle for the longest track */
+    size_t _trk_pfp_id; /**< Index of the longest track in the PFParticle vector */
 
-    float _hits_ratio;
-    float _trk_bragg_p;
-    float _trk_bragg_mu;
-    float _trk_bragg_mip;
-    float _trk_pidchipr;
-    float _trk_pidchipr_best;
-    float _trk_pidchipr_worst;
+    float _hits_ratio; /**< Ratio between hits from showers and total number of hits */
+    float _trk_bragg_p; /**< Proton Bragg likelihood score for the longest track */
+    float _trk_bragg_mu; /**< Muon Bragg likelihood score for the longest track */
+    float _trk_bragg_mip; /**< MIP Bragg likelihood score for the longest track */
+    float _trk_pidchipr; /**< Chi2 proton score for the longest track */
+    float _trk_pidchipr_best; /**< Best Chi2 proton score amongst all the tracks */
+    float _trk_pidchipr_worst; /**< Worst Chi2 proton score amongst all the tracks */
 
-    float _trk_pidchimu;
-    float _trk_pida;
-    float _trk_score;
+    float _trk_pidchimu; /**< Chi2 muon score for the longest track */
+    float _trk_pida; /**< PIDA score for the longest track */
+    float _trk_score; /**< Pandora track score for the longest track */
 
-    float _pt;
-    float _p;
+    float _pt; /**< Total reconstructed transverse momentum, assuming all the tracks are protons and all the showers are electrons */
+    float _p; /**< Total reconstructed momentum, assuming all the tracks are protons and all the showers are electrons */
 
-    float _shr_bkt_purity;
-    float _shr_bkt_completeness;
-    float _shr_bkt_E;
-    int _shr_bkt_pdg;
-    float _trk_bkt_purity;
-    float _trk_bkt_completeness;
-    float _trk_bkt_E;
-    int _trk_bkt_pdg;
+    float _shr_bkt_purity; /**< Purity of the leading shower */
+    float _shr_bkt_completeness; /**< Completeness of the leading shower */
+    float _shr_bkt_E; /**< Energy of the MCParticle matched to the leading shower */
+    int _shr_bkt_pdg; /**< PDG code of the MCParticle matched to the leading shower */
+    float _trk_bkt_purity; /**< Purity of the longest track */
+    float _trk_bkt_completeness; /**< Completeness of the longest track */
+    float _trk_bkt_E; /**< Energy of the MCParticle matched to the longest track */
+    int _trk_bkt_pdg; /**< PDG code of the MCParticle matched to the longest track */
 
-    float _matched_E;
+    float _matched_E; /**< Total kinetic energy of the MCParticles matched to PFParticles */
 
-    float _shr_tkfit_start_x;
-    float _shr_tkfit_start_y;
-    float _shr_tkfit_start_z;
-    float _shr_start_x;
-    float _shr_start_y;
-    float _shr_start_z;
-    float _shr_tkfit_phi;
-    float _shr_tkfit_theta;
-    float _shr_tkfit_dedx_Y;
-    float _shr_tkfit_dedx_U;
-    float _shr_tkfit_dedx_V;
-    unsigned int _shr_tkfit_nhits_Y;
-    unsigned int _shr_tkfit_nhits_V;
-    unsigned int _shr_tkfit_nhits_U;
-    unsigned int _hits_outfv;
-    float _contained_fraction;
+    float _shr_tkfit_start_x; /**< Start x coordinate of the leading shower obtained with the track fitting */
+    float _shr_tkfit_start_y; /**< Start y coordinate of the leading shower obtained with the track fitting */
+    float _shr_tkfit_start_z; /**< Start z coordinate of the leading shower obtained with the track fitting */
+    float _shr_start_x; /**< Start x coordinate of the leading shower */
+    float _shr_start_y; /**< Start y coordinate of the leading shower */
+    float _shr_start_z; /**< Start z coordinate of the leading shower */
+    float _shr_tkfit_phi;  /**< Phi angle of the leading shower obtained with the track fitting */
+    float _shr_tkfit_theta; /**< Track angle of the leading shower obtained with the track fitting */
+    float _shr_tkfit_dedx_Y; /**< dE/dx of the leading shower on the Y plane with the track fitting */
+    float _shr_tkfit_dedx_V; /**< dE/dx of the leading shower on the V plane with the track fitting */
+    float _shr_tkfit_dedx_U; /**< dE/dx of the leading shower on the U plane with the track fitting */
 
-    float _trk_energy_hits_tot;
+    unsigned int _shr_tkfit_nhits_Y; /**< Number of hits in the 1x4 cm box on the Y plane with the track fitting */
+    unsigned int _shr_tkfit_nhits_V; /**< Number of hits in the 1x4 cm box on the V plane with the track fitting */
+    unsigned int _shr_tkfit_nhits_U; /**< Number of hits in the 1x4 cm box on the U plane with the track fitting */
+    unsigned int _hits_outfv; /**< Number of hits of PFParticles outside the fiducial volume */
+    float _contained_fraction; /**< Fraction of hits of the PFParticles contained in the fiducial volume */
 
-    unsigned int _total_hits_y;
-    float _extra_energy_y;
+    float _trk_energy_hits_tot; /**< Sum of the energy of the tracks obtained with the deposited charge */
+
+    unsigned int _total_hits_y; /**< Total number of hits on the Y plane */
+    float _extra_energy_y; /**< Total energy of the unclustered hits on the Y plane */
 };
 
 //----------------------------------------------------------------------------
@@ -424,8 +437,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                                 _shr_bkt_E = E;
                                 bool already_matched = (std::find(matched_energies.begin(), matched_energies.end(), E) != matched_energies.end());
                                 if (!already_matched) {
-                                    if (PDG < 9999 && PDG > -9999) { // PDG codes corresponding to ions e.g. 2000000101 causes a Segmentation fault because they are not in the map
-                                        TParticlePDG *particle_pdg = TDatabasePDG::Instance()->GetParticle(PDG);
+                                    TParticlePDG *particle_pdg = TDatabasePDG::Instance()->GetParticle(PDG);
+                                    if (particle_pdg != NULL) {// PDG codes corresponding to ions e.g. 2000000101 are not in the database
                                         float ke = E - particle_pdg->Mass();
                                         _matched_E += ke;
                                         matched_energies.push_back(E);
@@ -613,12 +626,12 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                                 bool already_matched = (std::find(matched_energies.begin(), matched_energies.end(), E) != matched_energies.end());
                                 if (!already_matched)
                                 {
-                                    if (PDG < 9999 && PDG > -9999) { // PDG codes corresponding to ions e.g. 2000000101 causes a Segmentation fault because they are not in the map
                                         TParticlePDG *particle_pdg = TDatabasePDG::Instance()->GetParticle(PDG);
-                                        float ke = E - particle_pdg->Mass();
-                                        _matched_E += ke;
-                                        matched_energies.push_back(E);
-                                    }
+                                        if (particle_pdg != NULL) {// PDG codes corresponding to ions e.g. 2000000101 are not in the database
+                                            float ke = E - particle_pdg->Mass();
+                                            _matched_E += ke;
+                                            matched_energies.push_back(E);
+                                        }
                                 }
                             }
                         }

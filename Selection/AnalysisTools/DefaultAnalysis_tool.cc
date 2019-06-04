@@ -172,17 +172,14 @@ private:
   int _pion;                             /**< is there a final-state charged pion from the neutrino? [1=yes 0=no] */
   float _pion_e, _pion_p, _pion_c;       /**< energy, purity, completeness. */
 
-  // end muon process
-  std::string _endmuonprocess;
-  float _endmuonmichel;
+  std::string _endmuonprocess; /**< End muon process name */
+  float _endmuonmichel; /**< End muon Michel electron energy */
 
-  // number of slices in the event
-  int _nslice;
-  int _crtveto;    // is the event vetoed by the CRT Veto?
-  float _crthitpe; // pe associated to CRT hit
+  int _nslice;     /**< number of slice in the event */
+  int _crtveto;    /**< is the event vetoed by the CRT Veto? */
+  float _crthitpe; /**< pe associated to CRT hit */
 
-  //
-  std::vector<int> _pfp_slice_idx; // index of PFP is vector of PFPs in nu slice
+  std::vector<int> _pfp_slice_idx; /**< index of PFP is vector of PFPs in nu slice */
 
   // reco PFParticle backtracking. One entry for PFParticle in the slice
   // std::vector<int>   _backtracked_idx;    // index of PFP [key]
@@ -970,10 +967,9 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
 
     else
     {
-      if (part.PdgCode() > -9999 && part.PdgCode() < 9999) { // PDG codes corresponding to ions e.g. 2000000101 causes a Segmentation fault because they are not in the map
-        TParticlePDG *particle_pdg = TDatabasePDG::Instance()->GetParticle(part.PdgCode());
+      TParticlePDG *particle_pdg = TDatabasePDG::Instance()->GetParticle(part.PdgCode());
+      if (particle_pdg != NULL) // PDG codes corresponding to ions e.g. 2000000101 are not in the database
         _true_e_visible += part.Momentum(0).E() - particle_pdg->Mass();
-      }
     }
 
   }   // for all MCParticles
