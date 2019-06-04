@@ -1,0 +1,5 @@
+#include "run_neutrinoselectionfilter_run1_data_mcreco.fcl"
+
+physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
+physics.filters.nuselection.IsData: false
+physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool
