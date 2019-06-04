@@ -81,6 +81,9 @@ private:
   std::vector<float> _shr_spacepoint_start_y_v;
   std::vector<float> _shr_spacepoint_start_z_v;
 
+  std::vector<float> _shr_spacepoint_start_U_v;
+  std::vector<float> _shr_spacepoint_start_V_v;
+
   std::vector<float> _shr_hits_start_U_wire_v;
   std::vector<float> _shr_hits_start_U_x_v;
   std::vector<float> _shr_hits_start_V_wire_v;
@@ -200,6 +203,9 @@ void ShowerStartPoint::analyzeSlice(art::Event const &e, std::vector<ProxyPfpEle
       _shr_spacepoint_start_x_v.back() = spacepoints[index_smallest_distance]->XYZ()[0];
       _shr_spacepoint_start_y_v.back() = spacepoints[index_smallest_distance]->XYZ()[1];
       _shr_spacepoint_start_z_v.back() = spacepoints[index_smallest_distance]->XYZ()[2];
+
+      _shr_spacepoint_start_U_v.back() = searchingfornues::YZtoPlanecoordinate(_shr_spacepoint_start_y_v.back(), _shr_spacepoint_start_z_v.back(), 0);
+      _shr_spacepoint_start_V_v.back() = searchingfornues::YZtoPlanecoordinate(_shr_spacepoint_start_y_v.back(), _shr_spacepoint_start_z_v.back(), 1);
     }
 
     // cluster per pfparticle
@@ -258,6 +264,9 @@ void ShowerStartPoint::fillDefault()
   _shr_spacepoint_start_y_v.push_back(std::numeric_limits<float>::lowest());
   _shr_spacepoint_start_z_v.push_back(std::numeric_limits<float>::lowest());
 
+  _shr_spacepoint_start_U_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_spacepoint_start_V_v.push_back(std::numeric_limits<float>::lowest());
+
   _shr_hits_start_U_wire_v.push_back(std::numeric_limits<float>::lowest());
   _shr_hits_start_U_x_v.push_back(std::numeric_limits<float>::lowest());
   _shr_hits_start_V_wire_v.push_back(std::numeric_limits<float>::lowest());
@@ -272,6 +281,9 @@ void ShowerStartPoint::setBranches(TTree *_tree)
   _tree->Branch("shr_spacepoint_start_y_v", "std::vector<float>", &_shr_spacepoint_start_y_v);
   _tree->Branch("shr_spacepoint_start_z_v", "std::vector<float>", &_shr_spacepoint_start_z_v);
 
+  _tree->Branch("shr_spacepoint_start_U_v", "std::vector<float>", &_shr_spacepoint_start_U_v);
+  _tree->Branch("shr_spacepoint_start_V_v", "std::vector<float>", &_shr_spacepoint_start_V_v);
+
   _tree->Branch("shr_hits_start_U_wire_v", "std::vector<float>", &_shr_hits_start_U_wire_v);
   _tree->Branch("shr_hits_start_U_x_v", "std::vector<float>", &_shr_hits_start_U_x_v);
   _tree->Branch("shr_hits_start_V_wire_v", "std::vector<float>", &_shr_hits_start_V_wire_v);
@@ -285,6 +297,9 @@ void ShowerStartPoint::resetTTree(TTree *_tree)
   _shr_spacepoint_start_x_v.clear();
   _shr_spacepoint_start_y_v.clear();
   _shr_spacepoint_start_z_v.clear();
+
+  _shr_spacepoint_start_U_v.clear();
+  _shr_spacepoint_start_V_v.clear();
 
   _shr_hits_start_U_wire_v.clear();
   _shr_hits_start_U_x_v.clear();

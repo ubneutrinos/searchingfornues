@@ -5,6 +5,9 @@
 #include "lardata/DetectorInfoServices/DetectorPropertiesService.h"
 #include "lardata/DetectorInfoServices/DetectorClocksService.h"
 
+#include "larcore/Geometry/Geometry.h"
+#include "lardata/Utilities/GeometryUtilities.h"
+
 namespace searchingfornues
 {
   float distance2d(const float& x1, const float& y1,
@@ -22,27 +25,34 @@ namespace searchingfornues
                 (z1-z2)*(z1-z2));
   }
 
-  float YZtoUcoordinate(const float& y, const float& z)
-  {
-    return -sqrt(3.)/2. * y + 1./2. * z;
-  }
+  // float YZtoUcoordinate(const float& y, const float& z)
+  // {
+  //   return -sqrt(3.)/2. * y + 1./2. * z;
+  // }
+  //
+  // float YZtoVcoordinate(const float& y, const float& z)
+  // {
+  //   return +sqrt(3.)/2. * y + 1./2. * z;
+  // }
+  //
+  // float YZtoYcoordinate(const float& y, const float& z)
+  // {
+  //   return z;
+  // }
+  //
+  // float YZtoPlanecoordinate(const float& y, const float& z, const int& plane)
+  // {
+  //   if (plane == 0) return YZtoUcoordinate(y, z);
+  //   if (plane == 1) return YZtoVcoordinate(y, z);
+  //   if (plane == 2) return YZtoYcoordinate(y, z);
+  //   else return std::numeric_limits<float>::lowest();
+  // }
 
-  float YZtoVcoordinate(const float& y, const float& z)
+  float YZtoPlanecoordinate(const float y, const float z, const int plane)
   {
-    return +sqrt(3.)/2. * y + 1./2. * z;
-  }
-
-  float YZtoYcoordinate(const float& y, const float& z)
-  {
-    return z;
-  }
-
-  float YZtoPlanecoordinate(const float& y, const float& z, const int& plane)
-  {
-    if (plane == 0) return YZtoUcoordinate(y, z);
-    if (plane == 1) return YZtoVcoordinate(y, z);
-    if (plane == 2) return YZtoYcoordinate(y, z);
-    else return std::numeric_limits<float>::lowest();
+    auto const* geom = ::lar::providerFrom<geo::Geometry>();
+    double _wire2cm = geom->WirePitch(0, 0, 0);
+    return geom->WireCoordinate(y, z, geo::PlaneID(0, 0, plane)) * _wire2cm;
   }
 } // namespace searchingfornues
 

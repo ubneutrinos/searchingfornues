@@ -11,6 +11,7 @@
 // backtracking tools
 #include "../CommonDefs/BacktrackingFuncs.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
+#include "../CommonDefs/Geometry.h"
 
 namespace analysis
 {
@@ -98,6 +99,9 @@ private:
   std::vector<float> _shr_start_y_v;
   std::vector<float> _shr_start_z_v;
 
+  std::vector<float> _shr_start_U_v;
+  std::vector<float> _shr_start_V_v;
+
   std::vector<float> _shr_dist_v;
 
   std::vector<float> _shr_px_v;
@@ -112,6 +116,10 @@ private:
   std::vector<float> _shr_tkfit_start_x_v;
   std::vector<float> _shr_tkfit_start_y_v;
   std::vector<float> _shr_tkfit_start_z_v;
+
+  std::vector<float> _shr_tkfit_start_U_v;
+  std::vector<float> _shr_tkfit_start_V_v;
+
   std::vector<float> _shr_tkfit_theta_v;
   std::vector<float> _shr_tkfit_phi_v;
 
@@ -226,6 +234,10 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_start_x_v.push_back(shr->ShowerStart().X());
       _shr_start_y_v.push_back(shr->ShowerStart().Y());
       _shr_start_z_v.push_back(shr->ShowerStart().Z());
+
+      _shr_start_U_v.push_back(searchingfornues::YZtoPlanecoordinate(shr->ShowerStart().Y(), shr->ShowerStart().Z(), 0));
+      _shr_start_V_v.push_back(searchingfornues::YZtoPlanecoordinate(shr->ShowerStart().Y(), shr->ShowerStart().Z(), 1));
+
       _trkshr_score_v.push_back(searchingfornues::GetTrackShowerScore(slice_pfp_v[i_pfp]));
 
       //fill dummy track fit values, overwrite them later
@@ -233,6 +245,10 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_tkfit_start_x_v.push_back(std::numeric_limits<float>::lowest());
       _shr_tkfit_start_y_v.push_back(std::numeric_limits<float>::lowest());
       _shr_tkfit_start_z_v.push_back(std::numeric_limits<float>::lowest());
+
+      _shr_tkfit_start_U_v.push_back(std::numeric_limits<float>::lowest());
+      _shr_tkfit_start_V_v.push_back(std::numeric_limits<float>::lowest());
+
       _shr_tkfit_phi_v.push_back(std::numeric_limits<float>::lowest());
       _shr_tkfit_theta_v.push_back(std::numeric_limits<float>::lowest());
 
@@ -264,6 +280,10 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
         _shr_tkfit_start_x_v.back() = tk->Start().X();
         _shr_tkfit_start_y_v.back() = tk->Start().Y();
         _shr_tkfit_start_z_v.back() = tk->Start().Z();
+
+        _shr_tkfit_start_U_v.back() = searchingfornues::YZtoPlanecoordinate(_shr_tkfit_start_y_v.back(), _shr_tkfit_start_z_v.back(), 0);
+        _shr_tkfit_start_V_v.back() = searchingfornues::YZtoPlanecoordinate(_shr_tkfit_start_y_v.back(), _shr_tkfit_start_z_v.back(), 1);
+
         _shr_tkfit_phi_v.back() = tk->StartDirection().Phi();
         _shr_tkfit_theta_v.back() = tk->StartDirection().Theta();
 
@@ -326,6 +346,9 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_start_y_v", "std::vector< float >", &_shr_start_y_v);
   _tree->Branch("shr_start_z_v", "std::vector< float >", &_shr_start_z_v);
 
+  _tree->Branch("shr_start_U_v", "std::vector< float >", &_shr_start_U_v);
+  _tree->Branch("shr_start_V_v", "std::vector< float >", &_shr_start_V_v);
+
   _tree->Branch("shr_dist_v", "std::vector< float >", &_shr_dist_v);
 
 
@@ -344,6 +367,10 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_tkfit_start_x_v", "std::vector< float >", &_shr_tkfit_start_x_v);
   _tree->Branch("shr_tkfit_start_y_v", "std::vector< float >", &_shr_tkfit_start_y_v);
   _tree->Branch("shr_tkfit_start_z_v", "std::vector< float >", &_shr_tkfit_start_z_v);
+
+  _tree->Branch("shr_tkfit_start_U_v", "std::vector< float >", &_shr_tkfit_start_U_v);
+  _tree->Branch("shr_tkfit_start_V_v", "std::vector< float >", &_shr_tkfit_start_V_v);
+
   _tree->Branch("shr_tkfit_theta_v", "std::vector< float >", &_shr_tkfit_theta_v);
   _tree->Branch("shr_tkfit_phi_v", "std::vector< float >", &_shr_tkfit_phi_v);
   _tree->Branch("shr_tkfit_dedx_u_v", "std::vector< float >", &_shr_tkfit_dedx_u_v);
@@ -370,6 +397,9 @@ void ShowerAnalysis::fillDefault()
   _shr_start_y_v.push_back(std::numeric_limits<float>::lowest());
   _shr_start_z_v.push_back(std::numeric_limits<float>::lowest());
 
+  _shr_start_U_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_start_V_v.push_back(std::numeric_limits<float>::lowest());
+
   _shr_theta_v.push_back(std::numeric_limits<float>::lowest());
   _shr_phi_v.push_back(std::numeric_limits<float>::lowest());
   _shr_dist_v.push_back(std::numeric_limits<float>::lowest());
@@ -384,6 +414,10 @@ void ShowerAnalysis::fillDefault()
   _shr_tkfit_start_x_v.push_back(std::numeric_limits<float>::lowest());
   _shr_tkfit_start_y_v.push_back(std::numeric_limits<float>::lowest());
   _shr_tkfit_start_z_v.push_back(std::numeric_limits<float>::lowest());
+
+  _shr_tkfit_start_U_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_tkfit_start_V_v.push_back(std::numeric_limits<float>::lowest());
+
   _shr_tkfit_theta_v.push_back(std::numeric_limits<float>::lowest());
   _shr_tkfit_phi_v.push_back(std::numeric_limits<float>::lowest());
 
@@ -413,6 +447,9 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
   _shr_start_y_v.clear();
   _shr_start_z_v.clear();
 
+  _shr_start_U_v.clear();
+  _shr_start_V_v.clear();
+
   _shr_theta_v.clear();
   _shr_phi_v.clear();
   _shr_dist_v.clear();
@@ -428,6 +465,10 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
   _shr_tkfit_start_x_v.clear();
   _shr_tkfit_start_y_v.clear();
   _shr_tkfit_start_z_v.clear();
+
+  _shr_tkfit_start_U_v.clear();
+  _shr_tkfit_start_V_v.clear();
+
   _shr_tkfit_theta_v.clear();
   _shr_tkfit_phi_v.clear();
 
