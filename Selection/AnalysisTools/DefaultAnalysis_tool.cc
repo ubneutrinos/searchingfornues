@@ -443,18 +443,24 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           _backtracked_start_V.push_back(searchingfornues::YZtoVcoordinate(mcp.start_y, mcp.start_z));
           _backtracked_start_Y.push_back(searchingfornues::YZtoYcoordinate(mcp.start_y, mcp.start_z));
 
-          float reco_st_x = mcp.start_x;
-          float reco_st_y = mcp.start_y;
-          float reco_st_z = mcp.start_z;
-          searchingfornues::True2RecoMappingXYZ(mcp.start_t, reco_st_x, reco_st_y, reco_st_z);
+          float reco_st[3] = {mcp.start_x, mcp.start_y, mcp.start_z};
 
-          _backtracked_sce_start_x.push_back(reco_st_x);
-          _backtracked_sce_start_y.push_back(reco_st_y);
-          _backtracked_sce_start_z.push_back(reco_st_z);
+          if (PDG == 11 || PDG == 22)
+          {
+            reco_st[0] += searchingfornues::x_offset(mcp.start_t);
+          }
+          else
+          {
+            searchingfornues::True2RecoMappingXYZ(mcp.start_t, mcp.start_x, mcp.start_y, mcp.start_z, reco_st);
+          }
 
-          _backtracked_sce_start_U.push_back(searchingfornues::YZtoUcoordinate(reco_st_y, reco_st_z));
-          _backtracked_sce_start_V.push_back(searchingfornues::YZtoVcoordinate(reco_st_y, reco_st_z));
-          _backtracked_sce_start_Y.push_back(searchingfornues::YZtoYcoordinate(reco_st_y, reco_st_z));
+          _backtracked_sce_start_x.push_back(reco_st[0]);
+          _backtracked_sce_start_y.push_back(reco_st[1]);
+          _backtracked_sce_start_z.push_back(reco_st[2]);
+
+          _backtracked_sce_start_U.push_back(searchingfornues::YZtoUcoordinate(reco_st[1], reco_st[2]));
+          _backtracked_sce_start_V.push_back(searchingfornues::YZtoVcoordinate(reco_st[1], reco_st[2]));
+          _backtracked_sce_start_Y.push_back(searchingfornues::YZtoYcoordinate(reco_st[1], reco_st[2]));
 
           // if this is an interesting particle, save it to the TTree
           if (fabs(PDG) == muon->PdgCode())
