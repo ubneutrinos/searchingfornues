@@ -197,7 +197,6 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 
     for (const auto &shr : slice_pfp_v[i_pfp].get<recob::Shower>())
     {
-      _n_showers++;
       _shr_dedx_u_v.push_back(shr->dEdx()[0]);
       _shr_dedx_v_v.push_back(shr->dEdx()[1]);
       _shr_dedx_y_v.push_back(shr->dEdx()[2]);
@@ -212,7 +211,11 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_start_x_v.push_back(shr->ShowerStart().X());
       _shr_start_y_v.push_back(shr->ShowerStart().Y());
       _shr_start_z_v.push_back(shr->ShowerStart().Z());
-      _trkshr_score_v.push_back(searchingfornues::GetTrackShowerScore(slice_pfp_v[i_pfp]));
+      float trkshr_score = searchingfornues::GetTrackShowerScore(slice_pfp_v[i_pfp]);
+      if (trkshr_score < 0.5) {
+        _n_showers++;
+      }
+      _trkshr_score_v.push_back(trkshr_score);
 
       //fill dummy track fit values, overwrite them later
       _shr_tkfit_nhits_v.push_back(std::numeric_limits<int>::lowest());

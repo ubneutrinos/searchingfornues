@@ -89,6 +89,8 @@ private:
   art::InputTag fPIDproducer;
   art::InputTag fTRKproducer;
 
+  unsigned int _n_tracks;
+
   std::vector<size_t> _trk_pfp_id;
 
   std::vector<float> _trkscore_v;
@@ -239,6 +241,8 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 
     double pida_mean = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 2);
 
+    _n_tracks++;
+
     _trk_bragg_p.push_back(bragg_p);
     _trk_bragg_mu.push_back(bragg_mu);
     _trk_bragg_mip.push_back(bragg_mip);
@@ -286,6 +290,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 
 void TrackAnalysis::setBranches(TTree *_tree)
 {
+  _tree->Branch("n_tracks", &_n_tracks, "n_tracks/i");
   _tree->Branch("trkscore_v", "std::vector<float>",  &_trkscore_v);
   _tree->Branch("trk_bragg_p_v", "std::vector< double >", &_trk_bragg_p);
   _tree->Branch("trk_bragg_mu_v", "std::vector< double >", &_trk_bragg_mu);
@@ -319,6 +324,8 @@ void TrackAnalysis::setBranches(TTree *_tree)
 
 void TrackAnalysis::resetTTree(TTree *_tree)
 {
+  _n_tracks = 0;
+
   _trkscore_v.clear();
   _trk_bragg_p.clear();
   _trk_bragg_mu.clear();
