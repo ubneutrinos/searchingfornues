@@ -10,6 +10,7 @@
 #include "../CommonDefs/Typedefs.h"
 #include "../CommonDefs/PIDFuncs.h"
 #include "larcore/Geometry/Geometry.h"
+
 // backtracking tools
 #include "../CommonDefs/BacktrackingFuncs.h"
 #include "canvas/Persistency/Common/FindManyP.h"
@@ -120,6 +121,9 @@ private:
     float _shr_px; /**< X component of the reconstructed momentum of the leading shower (in GeV/c) */
     float _shr_py; /**< Y component of the reconstructed momentum of the leading shower (in GeV/c) */
     float _shr_pz; /**< Z component of the reconstructed momentum of the leading shower (in GeV/c) */
+    float _shr_pca_0; /**< First eigenvalue of the PCAxis of the leading shower */
+    float _shr_pca_1; /**< Second eigenvalue of the PCAxis of the leading shower */
+    float _shr_pca_2; /**< Third eigenvalue of the PCAxis of the leading shower */
     float _shr_openangle; /**< Opening angle of the shower */
 
     size_t _shr_pfp_id; /**< Index of the leading shower in the PFParticle vector */
@@ -373,6 +377,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         {
             if (trkshrscore < fTrkShrscore)
             {
+
                 double shr_vertex[3] = {shr->ShowerStart().X(), shr->ShowerStart().Y(), shr->ShowerStart().Z()};
                 auto clus_pxy_v = pfp_pxy.get<recob::Cluster>();
                 std::vector<art::Ptr<recob::Hit>> hit_v;
@@ -389,6 +394,14 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 }
 
                 _n_showers_contained++;
+
+                auto &pca_pxy_v = pfp_pxy.get<recob::PCAxis>();
+                if (pca_pxy_v.size() > 0)
+                {
+                    _shr_pca_0 = pca_pxy_v[0]->getEigenValues()[0];
+                    _shr_pca_1 = pca_pxy_v[0]->getEigenValues()[1];
+                    _shr_pca_2 = pca_pxy_v[0]->getEigenValues()[2];
+                }
 
                 unsigned int shr_hits = 0;
 
@@ -742,6 +755,10 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_px = 0;
     _shr_py = 0;
     _shr_pz = 0;
+    _shr_pca_0 = std::numeric_limits<float>::lowest();
+    _shr_pca_1 = std::numeric_limits<float>::lowest();
+    _shr_pca_2 = std::numeric_limits<float>::lowest();
+
     _shr_openangle = std::numeric_limits<float>::lowest();
     _shr_bkt_pdg = 0;
     _shr_bkt_purity = std::numeric_limits<float>::lowest();
@@ -780,6 +797,10 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_energy", &_shr_energy, "shr_energy/F");
     _tree->Branch("shr_theta", &_shr_theta, "shr_theta/F");
     _tree->Branch("shr_phi", &_shr_phi, "shr_phi/F");
+    _tree->Branch("shr_pca_0", &_shr_pca_0, "shr_pca_0/F");
+    _tree->Branch("shr_pca_1", &_shr_pca_1, "shr_pca_1/F");
+    _tree->Branch("shr_pca_2", &_shr_pca_2, "shr_pca_2/F");
+
     _tree->Branch("shr_px", &_shr_px, "shr_px/F");
     _tree->Branch("shr_py", &_shr_py, "shr_py/F");
     _tree->Branch("shr_pz", &_shr_pz, "shr_pz/F");

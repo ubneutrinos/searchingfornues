@@ -59,6 +59,7 @@ private:
   art::InputTag fMCTproducer;
   art::InputTag fPFPproducer;
   art::InputTag fCLSproducer; // cluster associated to PFP
+  art::InputTag fPCAproducer; // PCAxis associated to PFP
   art::InputTag fSLCproducer; // slice associated to PFP
   art::InputTag fHITproducer; // hit associated to cluster
   art::InputTag fSHRproducer; // shower associated to PFP
@@ -124,6 +125,7 @@ ShowerMerger::ShowerMerger(fhicl::ParameterSet const& p)
 
   fMCTproducer = p.get< art::InputTag > ("MCTproducer");
   fPFPproducer = p.get< art::InputTag > ("PFPproducer");
+  fPFPproducer = p.get< art::InputTag > ("PCAproducer");
   fSHRproducer = p.get< art::InputTag > ("SHRproducer");
   fHITproducer = p.get< art::InputTag > ("HITproducer");
   fCLSproducer = p.get< art::InputTag > ("CLSproducer");
@@ -209,7 +211,8 @@ void ShowerMerger::produce(art::Event& e)
 													    proxy::withAssociated<recob::Slice>(fSLCproducer),
 													    proxy::withAssociated<recob::Track>(fTRKproducer),
 													    proxy::withAssociated<recob::Vertex>(fVTXproducer),
-													    proxy::withAssociated<recob::Shower>(fSHRproducer));  
+                              proxy::withAssociated<recob::PCAxis>(fPCAproducer),
+													    proxy::withAssociated<recob::Shower>(fSHRproducer));
 
   // grab cluster -> hit association
   searchingfornues::ProxyClusColl_t const& clus_proxy = proxy::getCollection<std::vector<recob::Cluster> >(e, fCLSproducer,

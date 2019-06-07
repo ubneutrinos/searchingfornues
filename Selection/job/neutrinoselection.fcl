@@ -134,6 +134,7 @@ NuSelectionFilter:{
     CLSproducer: "pandora"
     SLCproducer: "pandora"
     VTXproducer: "pandora"
+    PCAproducer: "pandora"
     TRKproducer: "pandora" #"pandora" #pandoraTrack if you want to reconstruct every PFParticle as a track
     MCTproducer: "generator"
     SelectionTool: {
