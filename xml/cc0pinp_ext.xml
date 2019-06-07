@@ -6,7 +6,7 @@
 <!ENTITY release "v08_00_00_09">
 <!ENTITY file_type "mcc9">
 <!ENTITY run_type "physics">
-<!ENTITY name "cc0pinp_dirt">
+<!ENTITY name "cc0pinp_ext">
 <!ENTITY tag "devel">
 <!ENTITY date "0603">
 <!ENTITY user "srsoleti">
