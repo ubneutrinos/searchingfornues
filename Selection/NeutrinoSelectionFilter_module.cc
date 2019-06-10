@@ -202,6 +202,7 @@ bool NeutrinoSelectionFilter::filter(art::Event &e)
     std::cout << "new event : [run,event] : [" << e.run() << ", " << e.event() << "]" << std::endl;
   }
 
+
   // grab PFParticles in event
   selection::ProxyPfpColl_t const &pfp_proxy = proxy::getCollection<std::vector<recob::PFParticle>>(e, fPFPproducer,
                                                                                                     proxy::withAssociated<larpandoraobj::PFParticleMetadata>(fPFPproducer),

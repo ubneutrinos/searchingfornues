@@ -89,11 +89,13 @@ private:
     art::InputTag fCLSproducer;
     art::InputTag fPIDproducer;
     art::InputTag fTRKproducer;
+    art::InputTag fTRKproducerTrkFit;
     art::InputTag fBacktrackTag;
     art::InputTag fHproducer;
     art::InputTag fMCRproducer;
     art::InputTag fMCPproducer;
     art::InputTag fCALproducer;
+    art::InputTag fCALproducerTrkFit;
 
     unsigned int _n_showers_contained; /**< Number of showers with a starting point within the fiducial volume */
     unsigned int _n_tracks_contained; /**< Number of tracks fully contained in the fiducial volume */
@@ -125,6 +127,7 @@ private:
     float _shr_pca_1; /**< Second eigenvalue of the PCAxis of the leading shower */
     float _shr_pca_2; /**< Third eigenvalue of the PCAxis of the leading shower */
     float _shr_openangle; /**< Opening angle of the shower */
+    float _shr_pidchipr; /**< Chi2 proton score for the leading shower (with the shower reconstructed as track) */
 
     size_t _shr_pfp_id; /**< Index of the leading shower in the PFParticle vector */
 
@@ -227,9 +230,12 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
 {
     fTrkShrscore = pset.get<float>("TrkShrscore", 0.5);
     fCLSproducer = pset.get<art::InputTag>("CLSproducer", "pandora");
-    fTRKproducer = pset.get<art::InputTag>("TRKproducer", "shrreco3dKalmanShower");
-    fPIDproducer = pset.get<art::InputTag>("PIDproducer", "pandoracalipidSCE");
-    fCALproducer = pset.get<art::InputTag>("CALproducer", "shrreco3dKalmanShowercali");
+    fTRKproducer = pset.get<art::InputTag>("TRKproducer", "pandoraTrack");
+    fTRKproducerTrkFit = pset.get<art::InputTag>("TRKproducerTrkFit", "shrreco3dKalmanShower");
+
+    fPIDproducer = pset.get<art::InputTag>("PIDproducer", "pandoraTrackcalipidSCE");
+    fCALproducer = pset.get<art::InputTag>("CALproducer", "pandoraTrackcaliSCE");
+    fCALproducerTrkFit = pset.get<art::InputTag>("CALproducer", "shrreco3dKalmanShowercali");
     fHproducer = pset.get<art::InputTag>("Hproducer", "gaushit");
     fMCRproducer = pset.get<art::InputTag>("MCRproducer", "mcreco");
     fBacktrackTag = pset.get<art::InputTag>("BacktrackTag", "gaushitTruthMatch");
@@ -264,9 +270,9 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     auto assocSlice = std::unique_ptr<art::FindManyP<recob::Slice>>(new art::FindManyP<recob::Slice>(inputPfParticle, e, fCLSproducer));
     art::FindManyP<larpandoraobj::PFParticleMetadata> pfPartToMetadataAssoc(inputPfParticle, e, fCLSproducer);
     searchingfornues::ProxyCaloColl_t const *tkcalo_proxy = NULL;
-    if (fTRKproducer != "")
+    if (fTRKproducerTrkFit != "")
     {
-        tkcalo_proxy = new searchingfornues::ProxyCaloColl_t(proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer, proxy::withAssociated<anab::Calorimetry>(fCALproducer)));
+        tkcalo_proxy = new searchingfornues::ProxyCaloColl_t(proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducerTrkFit, proxy::withAssociated<anab::Calorimetry>(fCALproducerTrkFit)));
     }
     // load backtrack information
     std::vector<searchingfornues::BtPart> btparts_v;
@@ -372,10 +378,11 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
             continue;
 
         auto trkshrscore = searchingfornues::GetTrackShowerScore(pfp_pxy);
-
-        for (const auto &shr : pfp_pxy.get<recob::Shower>())
+        if (trkshrscore < fTrkShrscore)
         {
-            if (trkshrscore < fTrkShrscore)
+            unsigned int shr_hits = 0;
+
+            for (const auto &shr : pfp_pxy.get<recob::Shower>())
             {
 
                 double shr_vertex[3] = {shr->ShowerStart().X(), shr->ShowerStart().Y(), shr->ShowerStart().Z()};
@@ -403,7 +410,6 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr_pca_2 = pca_pxy_v[0]->getEigenValues()[2];
                 }
 
-                unsigned int shr_hits = 0;
 
                 for (auto ass_clus : clus_pxy_v)
                 {
@@ -550,6 +556,16 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     }
                 }
             }
+            for (const auto &trk : pfp_pxy.get<recob::Track>())
+            {
+                if (shr_hits == _shr_hits_max) {
+                    auto trkpxy2 = pid_proxy[trk.key()];
+                    auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
+                    if (pidpxy_v.size() > 0) {
+                        _shr_pidchipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, proton->PdgCode(), 2);
+                    }
+                }
+            }
         }
 
         for (const auto &trk : pfp_pxy.get<recob::Track>())
@@ -609,7 +625,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
                 auto trkpxy2 = pid_proxy[trk.key()];
                 auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
-                float chipr = std::numeric_limits<float>::lowest();;
+                float chipr = std::numeric_limits<float>::lowest();
                 if (pidpxy_v.size() != 0)
                 {
                     chipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, proton->PdgCode(), 2);
@@ -661,17 +677,19 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     trk_p.SetXYZ(trk->StartDirection().X(), trk->StartDirection().Y(), trk->StartDirection().Z());
                     trk_p.SetMag(sqrt(pow(energy_proton + proton->Mass(), 2) - pow(proton->Mass(), 2)));
                     total_p += trk_p;
-
+                    if (pidpxy_v.size() != 0)
+                    {
+                        _trk_bragg_p = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, proton->PdgCode(), 2),
+                                                searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, proton->PdgCode(), 2));
+                        _trk_bragg_mu = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, muon->PdgCode(), 2),
+                                                 searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, muon->PdgCode(), 2));
+                        _trk_bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
+                        _trk_pidchipr = chipr;
+                        _trk_pidchimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, muon->PdgCode(), 2);
+                        _trk_pida = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 2);
+                    }
                     _trk_score = trkshrscore;
 
-                    _trk_bragg_p = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, proton->PdgCode(), 2),
-                                            searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, proton->PdgCode(), 2));
-                    _trk_bragg_mu = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, muon->PdgCode(), 2),
-                                             searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, muon->PdgCode(), 2));
-                    _trk_bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
-                    _trk_pidchipr = chipr;
-                    _trk_pidchimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, muon->PdgCode(), 2);
-                    _trk_pida = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 2);
                 }
             }
         }
@@ -779,6 +797,9 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_tkfit_nhits_Y = 0;
     _shr_tkfit_nhits_U = 0;
     _shr_tkfit_nhits_V = 0;
+
+    _shr_pidchipr = std::numeric_limits<float>::lowest();
+
     _matched_E = 0;
     _total_hits_y = 0;
     _extra_energy_y = 0;
@@ -822,6 +843,8 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_tkfit_nhits_Y", &_shr_tkfit_nhits_Y, "shr_tkfit_nhits_Y/i");
     _tree->Branch("shr_tkfit_nhits_V", &_shr_tkfit_nhits_V, "shr_tkfit_nhits_V/i");
     _tree->Branch("shr_tkfit_nhits_U", &_shr_tkfit_nhits_U, "shr_tkfit_nhits_U/i");
+    _tree->Branch("shr_chipr", &_shr_pidchipr, "shr_chipr/F");
+
     _tree->Branch("tksh_distance", &_tksh_distance, "tksh_distance/F");
     _tree->Branch("tksh_angle", &_tksh_angle, "tksh_angle/F");
     _tree->Branch("shr_distance", &_shr_distance, "shr_distance/F");

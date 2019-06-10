@@ -16,9 +16,9 @@ ShowerAnalysisTool: {
 
 TrackAnalysisTool: {
     tool_type: "TrackAnalysis"
-    TRKproducer: "pandora"
-    CALOproducer: "pandoracaliSCE"     # "pandoraKalmanShower"     #remove or leave empty of there are no track fits of the shower
-    PIDproducer: "pandoracalipidSCE" # "pandoraKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
+    TRKproducer: "pandoraTrack"
+    CALOproducer: "pandoraTrackcali"     # "pandoraKalmanShower"     #remove or leave empty of there are no track fits of the shower
+    PIDproducer: "pandoraTrackcalipid" # "pandoraKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
 }
 
 
@@ -135,11 +135,11 @@ NuSelectionFilter:{
     SLCproducer: "pandora"
     VTXproducer: "pandora"
     PCAproducer: "pandora"
-    TRKproducer: "pandora" #"pandora" #pandoraTrack if you want to reconstruct every PFParticle as a track
+    TRKproducer: "pandoraTrack"
     MCTproducer: "generator"
     SelectionTool: {
         tool_type: "EmptySelection"
-        }
+    }
     AnalysisTools: {
         default: @local::DefaultAnalysisTool
         # you can add more analysis tools here
@@ -151,8 +151,8 @@ NuSelectionFilter:{
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
-       }
     }
+}
 
 
 NuSelectionFilterEmpty: @local::NuSelectionFilter
@@ -183,6 +183,11 @@ CC0PiNpSelectionTool: {
     tool_type: "CC0piNpSelection"
     TrkShrscore: 0.5
     CLSproducer: "pandora"
+    TRKproducer: "pandoraTrack"
+    PIDproducer: "pandoraTrackcalipid"
+    CALproducerTrkFit: "shrreco3dKalmanShowercali"
+    TRKproducerTrkFit: "shrreco3dKalmanShower"
+
 }
 
 

@@ -88,6 +88,7 @@ private:
   art::InputTag fCALOproducer;
   art::InputTag fPIDproducer;
   art::InputTag fTRKproducer;
+  float fTrkShrScore; /**< Threshold on the Pandora track score (default 0.5) */
 
   unsigned int _n_tracks;
 
@@ -143,6 +144,7 @@ TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p)
   fCALOproducer = p.get< art::InputTag > ("CALOproducer");
   fPIDproducer  = p.get< art::InputTag > ("PIDproducer" );
   fTRKproducer  = p.get< art::InputTag > ("TRKproducer" );
+  fTrkShrScore  = p.get<float>("TrkShrScore", 0.5);
 
 }
 
@@ -217,73 +219,77 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
     if (ntrk != 1)
       continue;
 
+
     auto trk = trk_v.at(0);
-    // get track proxy in order to fetch calorimtry
-    // auto trkpxy1 = calo_proxy[trk.key()];
-    // auto calopxy_v = trkpxy1.get<anab::Calorimetry>();
+    float trkscore = searchingfornues::GetTrackShowerScore(slice_pfp_v[i_pfp]);
 
-    // get trk proxy in order to fetch PID
-    auto trkpxy2 = pid_proxy[trk.key()];
-    auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
+    // if (trkscore > fTrkShrScore) {
+      // get track proxy in order to fetch calorimtry
+      // auto trkpxy1 = calo_proxy[trk.key()];
+      // auto calopxy_v = trkpxy1.get<anab::Calorimetry>();
 
-    double bragg_p = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 2),
-                              searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 2));
+      // get trk proxy in order to fetch PID
+      auto trkpxy2 = pid_proxy[trk.key()];
+      auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
 
-    double bragg_mu = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 2),
-                                searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 2));
+      double bragg_p = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 2),
+                                searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 2));
 
-    double bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
+      double bragg_mu = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 2),
+                                  searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 2));
 
-    double pidchipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 0);
-    double pidchimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 13, 0);
-    double pidchipi = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 211, 0);
-    double pidchika = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 321, 0);
+      double bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
 
-    double pida_mean = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 2);
+      double pidchipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 0);
+      double pidchimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 13, 0);
+      double pidchipi = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 211, 0);
+      double pidchika = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 321, 0);
 
-    _n_tracks++;
+      double pida_mean = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 2);
 
-    _trk_bragg_p.push_back(bragg_p);
-    _trk_bragg_mu.push_back(bragg_mu);
-    _trk_bragg_mip.push_back(bragg_mip);
-    _trk_pida.push_back(pida_mean);
-    _trk_pidchipr.push_back(pidchipr);
-    _trk_pidchimu.push_back(pidchimu);
-    _trk_pidchipi.push_back(pidchipi);
-    _trk_pidchika.push_back(pidchika);
+      _n_tracks++;
 
-    // Kinetic energy using tabulated stopping power (GeV)
-    double energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), 2212), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
-    double energy_muon = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), 13), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
+      _trk_bragg_p.push_back(bragg_p);
+      _trk_bragg_mu.push_back(bragg_mu);
+      _trk_bragg_mip.push_back(bragg_mip);
+      _trk_pida.push_back(pida_mean);
+      _trk_pidchipr.push_back(pidchipr);
+      _trk_pidchimu.push_back(pidchimu);
+      _trk_pidchipi.push_back(pidchipi);
+      _trk_pidchika.push_back(pidchika);
 
-    _trk_energy_proton.push_back(energy_proton);
-    _trk_energy_muon.push_back(energy_muon);
+      // Kinetic energy using tabulated stopping power (GeV)
+      double energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), 2212), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
+      double energy_muon = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), 13), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
 
-    _trk_dir_x.push_back(trk->StartDirection().X());
-    _trk_dir_y.push_back(trk->StartDirection().Y());
-    _trk_dir_z.push_back(trk->StartDirection().Z());
+      _trk_energy_proton.push_back(energy_proton);
+      _trk_energy_muon.push_back(energy_muon);
 
-    _trk_start_x.push_back(trk->Start().X());
-    _trk_start_y.push_back(trk->Start().Y());
-    _trk_start_z.push_back(trk->Start().Z());
+      _trk_dir_x.push_back(trk->StartDirection().X());
+      _trk_dir_y.push_back(trk->StartDirection().Y());
+      _trk_dir_z.push_back(trk->StartDirection().Z());
 
-    _trk_end_x.push_back(trk->End().X());
-    _trk_end_y.push_back(trk->End().Y());
-    _trk_end_z.push_back(trk->End().Z());
+      _trk_start_x.push_back(trk->Start().X());
+      _trk_start_y.push_back(trk->Start().Y());
+      _trk_start_z.push_back(trk->Start().Z());
 
-    _trk_theta.push_back(trk->Theta());
-    _trk_phi.push_back(trk->Phi());
+      _trk_end_x.push_back(trk->End().X());
+      _trk_end_y.push_back(trk->End().Y());
+      _trk_end_z.push_back(trk->End().Z());
 
-    _trk_length.push_back(trk->Length());
+      _trk_theta.push_back(trk->Theta());
+      _trk_phi.push_back(trk->Phi());
 
-    TVector3 trk_vtx;
-    trk_vtx.SetXYZ(trk->Start().X(), trk->Start().Y(), trk->Start().Z());
-    trk_vtx -= nuvtx;
-    _trk_distance.push_back(trk_vtx.Mag());
+      _trk_length.push_back(trk->Length());
 
-    _trkscore_v.push_back(searchingfornues::GetTrackShowerScore(slice_pfp_v[i_pfp]));
-    _trk_pfp_id.push_back(i_pfp);
+      TVector3 trk_vtx;
+      trk_vtx.SetXYZ(trk->Start().X(), trk->Start().Y(), trk->Start().Z());
+      trk_vtx -= nuvtx;
+      _trk_distance.push_back(trk_vtx.Mag());
 
+      _trkscore_v.push_back(trkscore);
+      _trk_pfp_id.push_back(i_pfp);
+    // }
   } // for all PFParticles
 }
 

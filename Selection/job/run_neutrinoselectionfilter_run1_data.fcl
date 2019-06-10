@@ -1,5 +1,9 @@
 #include "neutrinoselection.fcl"
 
+DummyAnalyzer: {
+    module_type:                "DummyAnalyzer"
+}
+
 process_name: NeutrinoSelectionFilter
 
 services:
@@ -16,7 +20,7 @@ services:
     DetectorClocksService:          @local::microboone_detectorclocks
     PhotonVisibilityService:    @local::microboone_photonvisibilityservice
     @table::microboone_services_reco
-    #@table::microboone_reco_data_services
+    # @table::microboone_reco_data_services
     message:      @local::standard_info
 }
 
@@ -65,11 +69,11 @@ physics:
         shrreco3dKalmanShower: @local::shrreco3dKalmanShower
         shrreco3dKalmanShowercalo: @local::shrreco3dKalmanShowercalodata
         shrreco3dKalmanShowercali: @local::shrreco3dKalmanShowercalidata
-        # pandoraTrack:                     @local::microboone_pandoraTrackCreation
-        # pandoraTrackcalo:                 @local::microboone_calodata
-        # pandoraTrackpid:                  @local::microboone_chi2pid
-        # pandoraTrackcali:                 @local::microboone_calibrationdedx
-        # pandoraTrackcalipid:              @local::microboone_chi2pid
+        pandoraTrack:                     @local::microboone_pandoraTrackCreation
+        pandoraTrackcalo:                 @local::microboone_calodata
+        pandoraTrackpid:                  @local::microboone_chi2pid
+        pandoraTrackcali:                 @local::microboone_calibrationdedx
+        pandoraTrackcalipid:              @local::microboone_chi2pid
 
  }
  filters:
@@ -82,11 +86,12 @@ physics:
  }
 
  #define the producer and filter modules for this path, order matters,
- ana:  []
-#  p1: [ pandoraTrack,  pandoraTrackcalo, pandoraTrackpid, pandoraTrackcali, pandoraTrackcalipid, shrreco3dKalmanShower, shrreco3dKalmanShowercalo, shrreco3dKalmanShowercali, nuselection ]
- p1: [ shrreco3dKalmanShower, shrreco3dKalmanShowercalo, shrreco3dKalmanShowercali, nuselection ]
-#  p2: [ nuselection ]
+ ana:  [ ]
+
+ p1: [ pandoraTrack, pandoraTrackcalo, pandoraTrackpid, pandoraTrackcali, pandoraTrackcalipid, shrreco3dKalmanShower, shrreco3dKalmanShowercalo, shrreco3dKalmanShowercali, nuselection ]
+
  e1: [ rootout ]
+
  #define the output stream, there could be more than one if using filters
  stream1:  [ out1 ]
 
@@ -97,23 +102,28 @@ physics:
  #end_paths is a keyword and contains the paths that do not modify the art::Event,
  #ie analyzers and output streams.  these all run simultaneously
  #end_paths:     [ stream1, ana ]
- end_paths:     [ ana ] #, e1 ]
+ end_paths:     [ ]
 }
 
 physics.filters.nuselection.SelectionTool: @local::ShowerSelectionTool
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "" #"gaushitTruthMatch"
 physics.filters.nuselection.IsData: true
 
+physics.producers.pandoraTrack.PFParticleLabel:                                                "pandora"
+physics.producers.pandoraTrack.UseAllParticles:                                                true
 
-# physics.producers.pandoraTrack.PFParticleLabel:                                                "pandora"
-# physics.producers.pandoraTrack.UseAllParticles:                                                true
-# physics.producers.pandoraTrackcalipid.TrackModuleLabel:                                        "pandoraTrack"
-# physics.producers.pandoraTrackcalipid.CalorimetryModuleLabel:                                  "pandoraTrackcali"
-# physics.producers.pandoraTrackcalipid.Chi2PIDAlg.UseMedian:                                    true
+physics.producers.pandoraTrackcalipid.TrackModuleLabel:                                        "pandoraTrack"
+physics.producers.pandoraTrackcalipid.CalorimetryModuleLabel:                                  "pandoraTrackcali"
+physics.producers.pandoraTrackcalipid.Chi2PIDAlg.UseMedian:                                    true
 
-# physics.producers.pandoraTrackcalo.TrackModuleLabel:                                           "pandoraTrack"
-# physics.producers.pandoraTrackcalo.SpacePointModuleLabel:                                      "pandora"
-# physics.producers.pandoraTrackpid.CalorimetryModuleLabel:                                      "pandoraTrackcalo"
-# physics.producers.pandoraTrackpid.TrackModuleLabel:                                            "pandoraTrack"
-# physics.producers.pandoraTrackcali.TrackModuleLabel:                                           "pandoraTrack"
-# physics.producers.pandoraTrackcali.CalorimetryModuleLabel:                                     "pandoraTrackcalo"
+physics.producers.pandoraTrackcalo.TrackModuleLabel:                                           "pandoraTrack"
+physics.producers.pandoraTrackcalo.SpacePointModuleLabel:                                      "pandora"
+
+physics.producers.pandoraTrackpid.CalorimetryModuleLabel:                                      "pandoraTrackcalo"
+physics.producers.pandoraTrackpid.TrackModuleLabel:                                            "pandoraTrack"
+
+physics.producers.pandoraTrackcali.TrackModuleLabel:                                           "pandoraTrack"
+physics.producers.pandoraTrackcali.CalorimetryModuleLabel:                                     "pandoraTrackcalo"
+
+physics.producers.pandoraTrackcali.CorrectSCE:                                                 true
+physics.producers.pandoraTrackcalo.CorrectSCE:                                                 true
