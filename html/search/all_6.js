@@ -13,5 +13,5 @@ var searchData=
   ['flashmatchingtool',['FlashMatchingTool',['../classflashmatch_1_1FlashMatchingTool.html#a8c6b08ba5404a69ad5fc984eaf8a1eba',1,'flashmatch::FlashMatchingTool']]],
   ['flashmatchingtool',['FlashMatchingTool',['../classflashmatch_1_1FlashMatchingTool.html',1,'flashmatch']]],
   ['flashmatchingtoolbase',['FlashMatchingToolBase',['../classflashmatch_1_1FlashMatchingToolBase.html',1,'flashmatch']]],
-  ['ftrkshrscore',['fTrkShrscore',['../classselection_1_1CC0piNpSelection.html#ab72eccf7dab3acafa294a0d8f3e225a0',1,'selection::CC0piNpSelection']]]
+  ['ftrkshrscore',['fTrkShrscore',['../classselection_1_1CC0piNpSelection.html#ab72eccf7dab3acafa294a0d8f3e225a0',1,'selection::CC0piNpSelection::fTrkShrscore()'],['../classanalysis_1_1TrackAnalysis.html#a49502213574f13be542aaab647940ffd',1,'analysis::TrackAnalysis::fTrkShrScore()']]]
 ];
