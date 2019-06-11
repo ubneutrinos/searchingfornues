@@ -1,6 +1,6 @@
 #ifndef PIDFUNCS_H
 #define PIDFUNCS_H
-
+#include "ubana/ParticleID/Algorithms/uB_PlaneIDBitsetHelperFunctions.h"
 
 namespace searchingfornues
 {
@@ -17,15 +17,7 @@ namespace searchingfornues
     for (size_t i_algscore = 0; i_algscore < AlgScoresVec.size(); i_algscore++)
     {
         anab::sParticleIDAlgScores AlgScore = AlgScoresVec.at(i_algscore);
-        int planeid = -1;
-        if (AlgScore.fPlaneMask.test(0))
-        planeid = 0;
-        else if (AlgScore.fPlaneMask.test(1))
-        planeid = 1;
-        else if (AlgScore.fPlaneMask.test(2))
-        planeid = 2;
-        else
-        planeid = -1;
+        int planeid = UBPID::uB_getSinglePlane(AlgScore.fPlaneMask);
 
         if (selectedPlane != planeid) {
         continue;

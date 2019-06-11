@@ -269,8 +269,8 @@ bool NeutrinoSelectionFilter::filter(art::Event &e)
       } // for all PFParticles in the slice
 
       // check that # of PFP and # trk + shr matches
-      if ((slice_pfp_v.size() - 1) != (sliceTracks.size() + sliceShowers.size()))
-        std::cout << "ERROR : there are " << slice_pfp_v.size() << " PFP but " << sliceTracks.size() << " + " << sliceShowers.size() << " tracks + showers" << std::endl;
+      // if ((slice_pfp_v.size() - 1) != (sliceTracks.size() + sliceShowers.size()))
+      //   std::cout << "ERROR : there are " << slice_pfp_v.size() << " PFP but " << sliceTracks.size() << " + " << sliceShowers.size() << " tracks + showers" << std::endl;
 
       // run selection on this slice
       bool selected = _selectionTool->selectEvent(e, slice_pfp_v);
