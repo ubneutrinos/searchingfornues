@@ -18,18 +18,12 @@ namespace searchingfornues
     {
         anab::sParticleIDAlgScores AlgScore = AlgScoresVec.at(i_algscore);
         int planeid = -1;
-        // std::cout << "AlgScore index " << i_algscore << " plane " << AlgScore.fPlaneMask<< std::endl;
-        if (AlgScore.fPlaneMask.none() || AlgScore.fPlaneMask.count() > 1 || (AlgScore.fPlaneMask.count() == 1 && !(AlgScore.fPlaneMask.test(0) || AlgScore.fPlaneMask.test(1) || AlgScore.fPlaneMask.test(2))))
-        {
-        // std::cout << "[uB_PlaneIDBitsetHelper] Cannot return a single MicroBooNE plane for bitset " << AlgScore.fPlaneMask << ". Returning -1 (invalid planeID)." << std::endl;
-        continue;
-        }
-        else if (AlgScore.fPlaneMask.test(0))
-        planeid = 2;
+        if (AlgScore.fPlaneMask.test(0))
+        planeid = 0;
         else if (AlgScore.fPlaneMask.test(1))
         planeid = 1;
         else if (AlgScore.fPlaneMask.test(2))
-        planeid = 0;
+        planeid = 2;
         else
         planeid = -1;
 

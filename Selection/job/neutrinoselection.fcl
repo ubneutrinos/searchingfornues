@@ -4,9 +4,9 @@
 #include "calorimetry_microboone.fcl"
 #include "particleid_microboone.fcl"
 #include "calibration_microboone.fcl"
+#include "config_particle_identification.fcl"
 #include "services_microboone.fcl"
 #include "flashmatchsetup.fcl"
-
 
 ShowerAnalysisTool: {
     tool_type: "ShowerAnalysis"
@@ -147,7 +147,7 @@ NuSelectionFilter:{
         slicepurcompl: @local::SlicePurComplTool
         containment:   @local::ContainmentAnalysis
         shower:        @local::ShowerAnalysisTool
-        track:         @local::TrackAnalysisTool
+        # track:         @local::TrackAnalysisTool
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
@@ -184,6 +184,7 @@ CC0PiNpSelectionTool: {
     TrkShrscore: 0.5
     CLSproducer: "pandora"
     TRKproducer: "pandoraTrack"
+    CALproducer: "pandoraTrackcali"
     PIDproducer: "pandoraTrackcalipid"
     CALproducerTrkFit: "shrreco3dKalmanShowercali"
     TRKproducerTrkFit: "shrreco3dKalmanShower"

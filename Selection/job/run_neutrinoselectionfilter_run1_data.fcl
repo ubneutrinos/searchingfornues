@@ -71,9 +71,9 @@ physics:
         shrreco3dKalmanShowercali: @local::shrreco3dKalmanShowercalidata
         pandoraTrack:                     @local::microboone_pandoraTrackCreation
         pandoraTrackcalo:                 @local::microboone_calodata
-        pandoraTrackpid:                  @local::microboone_chi2pid
+        pandoraTrackpid:                  @local::particleidconfig
         pandoraTrackcali:                 @local::microboone_calibrationdedx
-        pandoraTrackcalipid:              @local::microboone_chi2pid
+        pandoraTrackcalipid:              @local::particleidconfig
 
  }
  filters:

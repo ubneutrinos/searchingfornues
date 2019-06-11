@@ -77,6 +77,8 @@ private:
     TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
     TParticlePDG *electron = TDatabasePDG::Instance()->GetParticle(11);
     TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
+    TParticlePDG *pion = TDatabasePDG::Instance()->GetParticle(211);
+    TParticlePDG *kaon = TDatabasePDG::Instance()->GetParticle(321);
 
     float fTrkShrscore; /**< Threshold on the Pandora track score (default 0.5) */
     float fFidvolZstart; /**< Fiducial volume distance from the start of the TPC on the z axis (default 10 cm) */
@@ -128,6 +130,12 @@ private:
     float _shr_pca_2; /**< Third eigenvalue of the PCAxis of the leading shower */
     float _shr_openangle; /**< Opening angle of the shower */
     float _shr_pidchipr; /**< Chi2 proton score for the leading shower (with the shower reconstructed as track) */
+    float _shr_pidchimu; /**< Chi2 muon score for the leading shower (with the shower reconstructed as track) */
+    float _shr_bragg_p; /**< Proton Bragg likelihood score for the leading shower (with the shower reconstructed as track) */
+    float _shr_bragg_mu; /**< Muon Bragg likelihood score for the leading shower (with the shower reconstructed as track) */
+    float _shr_bragg_mip; /**< MIP Bragg likelihood score for the leading shower (with the shower reconstructed as track) */
+    float _shr_bragg_pion; /**< Pion Bragg likelihood for the leading shower (with the shower reconstructed as track) */
+    float _shr_bragg_kaon; /**< Kaon Bragg likelihood for the leading shower (with the shower reconstructed as track) */
 
     size_t _shr_pfp_id; /**< Index of the leading shower in the PFParticle vector */
 
@@ -143,6 +151,9 @@ private:
     float _trk_bragg_p; /**< Proton Bragg likelihood score for the longest track */
     float _trk_bragg_mu; /**< Muon Bragg likelihood score for the longest track */
     float _trk_bragg_mip; /**< MIP Bragg likelihood score for the longest track */
+    float _trk_bragg_pion; /**< Pion Bragg likelihood score for the longest track */
+    float _trk_bragg_kaon; /**< Kaon Bragg likelihood score for the longest track */
+
     float _trk_pidchipr; /**< Chi2 proton score for the longest track */
     float _trk_pidchipr_best; /**< Best Chi2 proton score amongst all the tracks */
     float _trk_pidchipr_worst; /**< Worst Chi2 proton score amongst all the tracks */
@@ -233,8 +244,8 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
     fTRKproducer = pset.get<art::InputTag>("TRKproducer", "pandoraTrack");
     fTRKproducerTrkFit = pset.get<art::InputTag>("TRKproducerTrkFit", "shrreco3dKalmanShower");
 
-    fPIDproducer = pset.get<art::InputTag>("PIDproducer", "pandoraTrackcalipidSCE");
-    fCALproducer = pset.get<art::InputTag>("CALproducer", "pandoraTrackcaliSCE");
+    fPIDproducer = pset.get<art::InputTag>("PIDproducer", "pandoraTrackcalipid");
+    fCALproducer = pset.get<art::InputTag>("CALproducer", "pandoraTrackcali");
     fCALproducerTrkFit = pset.get<art::InputTag>("CALproducer", "shrreco3dKalmanShowercali");
     fHproducer = pset.get<art::InputTag>("Hproducer", "gaushit");
     fMCRproducer = pset.get<art::InputTag>("MCRproducer", "mcreco");
@@ -563,6 +574,17 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
                     if (pidpxy_v.size() > 0) {
                         _shr_pidchipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, proton->PdgCode(), 2);
+                        _shr_pidchimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, muon->PdgCode(), 2);
+                        _shr_bragg_p = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, proton->PdgCode(), 2),
+                                                searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, proton->PdgCode(), 2));
+                        _shr_bragg_mu = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, muon->PdgCode(), 2),
+                                                 searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, muon->PdgCode(), 2));
+                        _shr_bragg_pion = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, pion->PdgCode(), 2),
+                                                   searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, pion->PdgCode(), 2));
+                        _shr_bragg_kaon = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, kaon->PdgCode(), 2),
+                                                   searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, kaon->PdgCode(), 2));
+                        _shr_bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
+
                     }
                 }
             }
@@ -681,12 +703,17 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     {
                         _trk_bragg_p = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, proton->PdgCode(), 2),
                                                 searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, proton->PdgCode(), 2));
+                        std::cout << "Bragg p " << _trk_bragg_p << std::endl;
                         _trk_bragg_mu = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, muon->PdgCode(), 2),
                                                  searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, muon->PdgCode(), 2));
+                        _trk_bragg_pion = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, pion->PdgCode(), 2),
+                                                   searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, pion->PdgCode(), 2));
+                        _trk_bragg_kaon = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, kaon->PdgCode(), 2),
+                                                   searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, kaon->PdgCode(), 2));
                         _trk_bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
                         _trk_pidchipr = chipr;
                         _trk_pidchimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, muon->PdgCode(), 2);
-                        _trk_pida = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 2);
+                        _trk_pida = searchingfornues::PID(pidpxy_v[0], "PIDA_median", anab::kPIDA, anab::kForward, 0, 2);
                     }
                     _trk_score = trkshrscore;
 
@@ -752,6 +779,8 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _trk_bragg_p = std::numeric_limits<float>::lowest();
     _trk_bragg_mu = std::numeric_limits<float>::lowest();
     _trk_bragg_mip = std::numeric_limits<float>::lowest();
+    _trk_bragg_pion = std::numeric_limits<float>::lowest();
+    _trk_bragg_kaon = std::numeric_limits<float>::lowest();
     _trk_pidchipr = std::numeric_limits<float>::lowest();
     _trk_pidchipr_best = std::numeric_limits<float>::max();
     _trk_pidchipr_worst = std::numeric_limits<float>::lowest();
@@ -799,6 +828,12 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_tkfit_nhits_V = 0;
 
     _shr_pidchipr = std::numeric_limits<float>::lowest();
+    _shr_pidchimu = std::numeric_limits<float>::lowest();
+    _shr_bragg_p = std::numeric_limits<float>::lowest();
+    _shr_bragg_mu = std::numeric_limits<float>::lowest();
+    _shr_bragg_mip = std::numeric_limits<float>::lowest();
+    _shr_bragg_pion = std::numeric_limits<float>::lowest();
+    _shr_bragg_kaon = std::numeric_limits<float>::lowest();
 
     _matched_E = 0;
     _total_hits_y = 0;
@@ -844,6 +879,12 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_tkfit_nhits_V", &_shr_tkfit_nhits_V, "shr_tkfit_nhits_V/i");
     _tree->Branch("shr_tkfit_nhits_U", &_shr_tkfit_nhits_U, "shr_tkfit_nhits_U/i");
     _tree->Branch("shr_chipr", &_shr_pidchipr, "shr_chipr/F");
+    _tree->Branch("shr_chimu", &_shr_pidchimu, "shr_chimu/F");
+    _tree->Branch("shr_bragg_p", &_shr_bragg_p, "shr_bragg_p/F");
+    _tree->Branch("shr_bragg_mu", &_shr_bragg_mu, "shr_bragg_mu/F");
+    _tree->Branch("shr_bragg_mip", &_shr_bragg_mip, "shr_bragg_mip/F");
+    _tree->Branch("shr_bragg_kaon", &_shr_bragg_kaon, "shr_bragg_kaon/F");
+    _tree->Branch("shr_bragg_pion", &_shr_bragg_pion, "shr_bragg_pion/F");
 
     _tree->Branch("tksh_distance", &_tksh_distance, "tksh_distance/F");
     _tree->Branch("tksh_angle", &_tksh_angle, "tksh_angle/F");
@@ -874,6 +915,8 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("trk_bragg_p", &_trk_bragg_p, "trk_bragg_p/F");
     _tree->Branch("trk_bragg_mu", &_trk_bragg_mu, "trk_bragg_mu/F");
     _tree->Branch("trk_bragg_mip", &_trk_bragg_mip, "trk_bragg_mip/F");
+    _tree->Branch("trk_bragg_kaon", &_trk_bragg_kaon, "trk_bragg_kaon/F");
+    _tree->Branch("trk_bragg_pion", &_trk_bragg_pion, "trk_bragg_pion/F");
 
     _tree->Branch("trk_hits_max", &_trk_hits_max, "trk_hits_max/i");
     _tree->Branch("shr_hits_max", &_shr_hits_max, "shr_hits_max/i");
