@@ -565,7 +565,7 @@ bool ShowerMerger::FindShowerTrunk(const size_t shr_pfp_idx,
     // distance between shower start and track start/end
     // whicever is smallest
     double TrkShrDist = (shrVtx - trkVtx).Mag();
-    if ( ((shrVtx - trkEnd).Mag() ) < TrkShrDot )
+    if ( ((shrVtx - trkEnd).Mag() ) < TrkShrDist )
       TrkShrDist = (shrVtx - trkEnd).Mag();
 
     std::cout << "Compare new track..." << std::endl;
