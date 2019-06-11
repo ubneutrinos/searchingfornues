@@ -122,7 +122,7 @@ namespace analysis
   void CosmicIP::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
   {
 
-    std::cout << "[NEW EVENT]" << e.event() << std::endl;
+    // std::cout << "[NEW EVENT]" << e.event() << std::endl;
 
     // set defaults
     _CosmicIP = 9999.;
@@ -193,7 +193,7 @@ namespace analysis
       // cut on PDG code. We do not want the neutrino candidate!
       if (pfp.PdgCode() != 13) continue;
 
-      bool clearCosmic = false;
+      // bool clearCosmic = false;
 
       // get metadata for this PFP
       const std::vector< art::Ptr<larpandoraobj::PFParticleMetadata> > &pfParticleMetadataList(pfPartToMetadataAssoc.at(p));
@@ -206,13 +206,13 @@ namespace analysis
 	if (!pfParticlePropertiesMap.empty())
 	  for (std::map<std::string, float>::const_iterator it = pfParticlePropertiesMap.begin(); it != pfParticlePropertiesMap.end(); ++it) {
 	    if ( it->first == "IsClearCosmic" ) {
-	      clearCosmic = true;
+	      // clearCosmic = true;
 	      break;
 	    }
 	  }// for all metadata items in the particle metadata
       }// for entries in list
 
-      if (clearCosmic) { std::cout << "ClearCosmic" << std::endl; }
+      // if (clearCosmic) { std::cout << "ClearCosmic" << std::endl; }
 
       // get spacepoints associated to PFParticle
       const art::Ptr<recob::PFParticle> pfp_ptr(pfp_h, p);
@@ -237,23 +237,23 @@ namespace analysis
       if (dmax < _CosmicIP) 
 	_CosmicIP = dmax;
 
-      std::cout << "DMAX is      : " << dmax << std::endl;
-      std::cout << "Cosmic IP is : " << _CosmicIP << std::endl;
-      std::cout << std::endl;
-      
+      // std::cout << "DMAX is      : " << dmax << std::endl;
+      // std::cout << "Cosmic IP is : " << _CosmicIP << std::endl;
+      // std::cout << std::endl;
+
     }// for all pfparticles
-    
-    std::cout << "COSMIC IP is " << _CosmicIP << std::endl;
+
+    // std::cout << "COSMIC IP is " << _CosmicIP << std::endl;
     
     return;
   }
 
   void CosmicIP::analyzeEvent(art::Event const &e, bool fData)
   {
-    std::cout << "analyze event" << std::endl;
+    // std::cout << "analyze event" << std::endl;
   }
 
-  void CosmicIP::setBranches(TTree* _tree) 
+  void CosmicIP::setBranches(TTree* _tree)
   {
     _tree->Branch("CosmicIP",&_CosmicIP,"CosmicIP/F");
   }
