@@ -156,7 +156,6 @@ NuSelectionFilter:{
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
         eventweighttree:    @local::EventWeightTreeTool
-       }
     }
 }
 

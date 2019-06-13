@@ -97,7 +97,7 @@ physics:
  ana:  [ ]
 
  p1: [ pandoraTrack, pandoraTrackcalo, pandoraTrackpid, pandoraTrackcali, pandoraTrackcalipid, shrreco3dKalmanShower, shrreco3dKalmanShowercalo, shrreco3dKalmanShowercali,
-#  eventweight,
+# eventweight,
   nuselection ]
 
  e1: [ rootout ]
@@ -135,13 +135,8 @@ physics.producers.pandoraTrackpid.TrackModuleLabel:                             
 physics.producers.pandoraTrackcali.TrackModuleLabel:                                           "pandoraTrack"
 physics.producers.pandoraTrackcali.CalorimetryModuleLabel:                                     "pandoraTrackcalo"
 
-<<<<<<< HEAD
-# physics.producers.pandoraTrackcalo.TrackModuleLabel:                                           "pandoraTrack"
-# physics.producers.pandoraTrackcalo.SpacePointModuleLabel:                                      "pandora"
-# physics.producers.pandoraTrackpid.CalorimetryModuleLabel:                                      "pandoraTrackcalo"
-# physics.producers.pandoraTrackpid.TrackModuleLabel:                                            "pandoraTrack"
-# physics.producers.pandoraTrackcali.TrackModuleLabel:                                           "pandoraTrack"
-# physics.producers.pandoraTrackcali.CalorimetryModuleLabel:                                     "pandoraTrackcalo"
+physics.producers.pandoraTrackcali.CorrectSCE:                                                 true
+physics.producers.pandoraTrackcalo.CorrectSCE:                                                 true
 
 # Control which sets of event weights are run
 physics.producers.eventweight.weight_functions: [
@@ -149,7 +144,3 @@ physics.producers.eventweight.weight_functions: [
   @sequence::microboone_eventweight.weight_functions_genie,
   @sequence::microboone_eventweight.weight_functions_reint
 ]
-=======
-physics.producers.pandoraTrackcali.CorrectSCE:                                                 true
-physics.producers.pandoraTrackcalo.CorrectSCE:                                                 true
->>>>>>> 8f2082ee5666e168f708645892697a976881949b
