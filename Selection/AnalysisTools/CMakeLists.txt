@@ -8,7 +8,8 @@ art_make( TOOL_LIBRARIES lardataobj_RecoBase
                          larcore_Geometry_Geometry_service
                          lardata_RecoObjects
                          lardata_Utilities
-                         larreco_RecoAlg
+			 larreco_RecoAlg
+                         larsim_EventWeight_Base
                          ${ART_FRAMEWORK_CORE}
                          ${ART_FRAMEWORK_PRINCIPAL}
                          ${ART_FRAMEWORK_SERVICES_REGISTRY}
