@@ -1,4 +1,4 @@
-#include "run_neutrinoselectionfilter_run1_data.fcl"
+#include "run_neutrinoselectionfilter_run1_mc.fcl"
 
 physics.filters.nuselection.SHRproducer: "shrreco3d"
 
@@ -12,4 +12,3 @@ physics.filters.nuselection.AnalysisTools: {
     }
 
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
-physics.filters.nuselection.IsData: false
