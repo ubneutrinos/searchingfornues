@@ -109,7 +109,10 @@ private:
   std::vector<double> _shr_tkfit_start_z_v;
   std::vector<double> _shr_tkfit_theta_v;
   std::vector<double> _shr_tkfit_phi_v;
-  std::vector<std::vector<double>> _shr_tkfit_dedx_v;
+  std::vector<double> _shr_tkfit_dedx_y_v;
+  std::vector<double> _shr_tkfit_dedx_v_v;
+  std::vector<double> _shr_tkfit_dedx_u_v;
+
   std::vector<std::vector<int>> _shr_tkfit_dedx_nhits_v;
 };
 
@@ -194,7 +197,6 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 
     for (const auto &shr : slice_pfp_v[i_pfp].get<recob::Shower>())
     {
-      _n_showers++;
       _shr_dedx_u_v.push_back(shr->dEdx()[0]);
       _shr_dedx_v_v.push_back(shr->dEdx()[1]);
       _shr_dedx_y_v.push_back(shr->dEdx()[2]);
@@ -209,7 +211,11 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_start_x_v.push_back(shr->ShowerStart().X());
       _shr_start_y_v.push_back(shr->ShowerStart().Y());
       _shr_start_z_v.push_back(shr->ShowerStart().Z());
-      _trkshr_score_v.push_back(searchingfornues::GetTrackShowerScore(slice_pfp_v[i_pfp]));
+      float trkshr_score = searchingfornues::GetTrackShowerScore(slice_pfp_v[i_pfp]);
+      if (trkshr_score < 0.5) {
+        _n_showers++;
+      }
+      _trkshr_score_v.push_back(trkshr_score);
 
       //fill dummy track fit values, overwrite them later
       _shr_tkfit_nhits_v.push_back(std::numeric_limits<int>::lowest());
@@ -218,7 +224,10 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_tkfit_start_z_v.push_back(std::numeric_limits<double>::lowest());
       _shr_tkfit_phi_v.push_back(std::numeric_limits<double>::lowest());
       _shr_tkfit_theta_v.push_back(std::numeric_limits<double>::lowest());
-      _shr_tkfit_dedx_v.push_back(std::vector<double>(3, std::numeric_limits<double>::lowest()));
+      _shr_tkfit_dedx_v_v.push_back(std::numeric_limits<double>::lowest());
+      _shr_tkfit_dedx_u_v.push_back(std::numeric_limits<double>::lowest());
+      _shr_tkfit_dedx_y_v.push_back(std::numeric_limits<double>::lowest());
+
       _shr_tkfit_dedx_nhits_v.push_back(std::vector<int>(3, -1));
       _shr_px_v.push_back(shr->Direction().X());
       _shr_py_v.push_back(shr->Direction().Y());
@@ -265,7 +274,13 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
             else
               dedx4cm_med = 0.5 * (dedx4cm[dedx4cm.size() / 2] + dedx4cm[dedx4cm.size() / 2 - 1]);
           }
-          _shr_tkfit_dedx_v.back()[tkcalo->PlaneID().Plane] = dedx4cm_med;
+          if (tkcalo->PlaneID().Plane == 2) {
+            _shr_tkfit_dedx_y_v.push_back(dedx4cm_med);
+          } else if (tkcalo->PlaneID().Plane == 1) {
+            _shr_tkfit_dedx_v_v.push_back(dedx4cm_med);
+          } else if (tkcalo->PlaneID().Plane == 0) {
+            _shr_tkfit_dedx_u_v.push_back(dedx4cm_med);
+          }
           _shr_tkfit_dedx_nhits_v.back()[tkcalo->PlaneID().Plane] = dedx4cm.size();
         }
       }
@@ -309,7 +324,10 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_tkfit_start_z_v", "std::vector< double >", &_shr_tkfit_start_z_v);
   _tree->Branch("shr_tkfit_theta_v", "std::vector< double >", &_shr_tkfit_theta_v);
   _tree->Branch("shr_tkfit_phi_v", "std::vector< double >", &_shr_tkfit_phi_v);
-  _tree->Branch("shr_tkfit_dedx_v", "std::vector< std::vector< double > >", &_shr_tkfit_dedx_v);
+  _tree->Branch("shr_tkfit_dedx_y_v", "std::vector< double >", &_shr_tkfit_dedx_y_v);
+  _tree->Branch("shr_tkfit_dedx_u_v", "std::vector< double >", &_shr_tkfit_dedx_u_v);
+  _tree->Branch("shr_tkfit_dedx_v_v", "std::vector< double >", &_shr_tkfit_dedx_v_v);
+
   _tree->Branch("shr_tkfit_dedx_nhits_v", "std::vector< std::vector< int > >", &_shr_tkfit_dedx_nhits_v);
 }
 
@@ -346,7 +364,10 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
   _shr_tkfit_start_z_v.clear();
   _shr_tkfit_theta_v.clear();
   _shr_tkfit_phi_v.clear();
-  _shr_tkfit_dedx_v.clear();
+  _shr_tkfit_dedx_y_v.clear();
+  _shr_tkfit_dedx_v_v.clear();
+  _shr_tkfit_dedx_u_v.clear();
+
   _shr_tkfit_dedx_nhits_v.clear();
 }
 

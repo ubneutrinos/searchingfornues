@@ -4,9 +4,9 @@
 #include "calorimetry_microboone.fcl"
 #include "particleid_microboone.fcl"
 #include "calibration_microboone.fcl"
+#include "config_particle_identification.fcl"
 #include "services_microboone.fcl"
 #include "flashmatchsetup.fcl"
-
 
 ShowerAnalysisTool: {
     tool_type: "ShowerAnalysis"
@@ -16,11 +16,18 @@ ShowerAnalysisTool: {
 
 TrackAnalysisTool: {
     tool_type: "TrackAnalysis"
-    TRKproducer: "pandora"
-    CALOproducer: "pandoracaliSCE"     # "pandoraKalmanShower"     #remove or leave empty of there are no track fits of the shower
-    PIDproducer: "pandoracalipidSCE" # "pandoraKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
+    TRKproducer: "pandoraTrack"
+    CALOproducer: "pandoraTrackcali"     # "pandoraKalmanShower"     #remove or leave empty of there are no track fits of the shower
+    PIDproducer: "pandoraTrackcalipid" # "pandoraKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
 }
 
+
+CosmicIPTool: {
+    tool_type: "CosmicIP"
+    SpacePointproducer: "pandora"
+    PFPproducer: "pandora"
+    TrkShrScore: 0.5
+}
 
 DefaultAnalysisTool: {
     tool_type: "DefaultAnalysis"
@@ -131,11 +138,12 @@ NuSelectionFilter:{
     CLSproducer: "pandora"
     SLCproducer: "pandora"
     VTXproducer: "pandora"
-    TRKproducer: "pandora" #"pandora" #pandoraTrack if you want to reconstruct every PFParticle as a track
+    PCAproducer: "pandora"
+    TRKproducer: "pandoraTrack"
     MCTproducer: "generator"
     SelectionTool: {
         tool_type: "EmptySelection"
-        }
+    }
     AnalysisTools: {
         default: @local::DefaultAnalysisTool
         # you can add more analysis tools here
@@ -143,12 +151,14 @@ NuSelectionFilter:{
         slicepurcompl: @local::SlicePurComplTool
         containment:   @local::ContainmentAnalysis
         shower:        @local::ShowerAnalysisTool
-        track:         @local::TrackAnalysisTool
+        # track:         @local::TrackAnalysisTool
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
+        cosmicip:      @local::CosmicIPTool
         eventweighttree:    @local::EventWeightTreeTool
        }
     }
+}
 
 
 NuSelectionFilterEmpty: @local::NuSelectionFilter
@@ -179,6 +189,12 @@ CC0PiNpSelectionTool: {
     tool_type: "CC0piNpSelection"
     TrkShrscore: 0.5
     CLSproducer: "pandora"
+    TRKproducer: "pandoraTrack"
+    CALproducer: "pandoraTrackcali"
+    PIDproducer: "pandoraTrackcalipid"
+    CALproducerTrkFit: "shrreco3dKalmanShowercali"
+    TRKproducerTrkFit: "shrreco3dKalmanShower"
+
 }
 
 

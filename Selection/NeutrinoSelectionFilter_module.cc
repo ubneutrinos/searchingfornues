@@ -70,6 +70,7 @@ private:
   art::InputTag fSHRproducer; // shower associated to PFP
   art::InputTag fVTXproducer; // vertex associated to PFP
   art::InputTag fTRKproducer; // track associated to PFP
+  art::InputTag fPCAproducer; // PCAxis associated to PFP
   art::InputTag fMCTproducer;
   bool fVerbose;
   bool fData;
@@ -150,6 +151,7 @@ NeutrinoSelectionFilter::NeutrinoSelectionFilter(fhicl::ParameterSet const &p)
   fCLSproducer = p.get<art::InputTag>("CLSproducer");
   fSLCproducer = p.get<art::InputTag>("SLCproducer");
   fVTXproducer = p.get<art::InputTag>("VTXproducer");
+  fPCAproducer = p.get<art::InputTag>("PCAproducer");
   fTRKproducer = p.get<art::InputTag>("TRKproducer");
   fMCTproducer = p.get<art::InputTag>("MCTproducer");
   fVerbose = p.get<bool>("Verbose");
@@ -200,6 +202,7 @@ bool NeutrinoSelectionFilter::filter(art::Event &e)
     std::cout << "new event : [run,event] : [" << e.run() << ", " << e.event() << "]" << std::endl;
   }
 
+
   // grab PFParticles in event
   selection::ProxyPfpColl_t const &pfp_proxy = proxy::getCollection<std::vector<recob::PFParticle>>(e, fPFPproducer,
                                                                                                     proxy::withAssociated<larpandoraobj::PFParticleMetadata>(fPFPproducer),
@@ -207,6 +210,7 @@ bool NeutrinoSelectionFilter::filter(art::Event &e)
                                                                                                     proxy::withAssociated<recob::Slice>(fSLCproducer),
                                                                                                     proxy::withAssociated<recob::Track>(fTRKproducer),
                                                                                                     proxy::withAssociated<recob::Vertex>(fVTXproducer),
+                                                                                                    proxy::withAssociated<recob::PCAxis>(fPCAproducer),
                                                                                                     proxy::withAssociated<recob::Shower>(fSHRproducer));
 
   BuildPFPMap(pfp_proxy);
@@ -265,8 +269,8 @@ bool NeutrinoSelectionFilter::filter(art::Event &e)
       } // for all PFParticles in the slice
 
       // check that # of PFP and # trk + shr matches
-      if ((slice_pfp_v.size() - 1) != (sliceTracks.size() + sliceShowers.size()))
-        std::cout << "ERROR : there are " << slice_pfp_v.size() << " PFP but " << sliceTracks.size() << " + " << sliceShowers.size() << " tracks + showers" << std::endl;
+      // if ((slice_pfp_v.size() - 1) != (sliceTracks.size() + sliceShowers.size()))
+      //   std::cout << "ERROR : there are " << slice_pfp_v.size() << " PFP but " << sliceTracks.size() << " + " << sliceShowers.size() << " tracks + showers" << std::endl;
 
       // run selection on this slice
       bool selected = _selectionTool->selectEvent(e, slice_pfp_v);

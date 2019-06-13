@@ -1,10 +1,6 @@
-#include "eventweight_microboone.fcl"
-#include "microboone_eventweight_service.fcl"
+#include "mcreco.fcl"
 #include "neutrinoselection.fcl"
 
-DummyAnalyzer: {
-    module_type:                "DummyAnalyzer"
-}
 
 process_name: NeutrinoSelectionFilter
 
@@ -22,7 +18,7 @@ services:
     DetectorClocksService:          @local::microboone_detectorclocks
     PhotonVisibilityService:    @local::microboone_photonvisibilityservice
     @table::microboone_services_reco
-    # @table::microboone_reco_data_services
+    #@table::microboone_reco_data_services
     message:      @local::standard_info
 }
 
@@ -37,17 +33,11 @@ services.SpaceCharge.EnableSimSpatialSCE: true
 services.SpaceCharge.RepresentationType: "Voxelized_TH3"
 services.SpaceCharge.CalibrationInputFilename: "SpaceCharge/SCEoffsets_dataDriven_combined_bkwd_Jan18.root"
 
-#Force loading ubsim EventWeight calculator libraries instead of larsim default
-services.UBEventWeight: @local::microboone_eventweight_service
-
 #source is now a root file
 source:
 {
     module_type: RootInput
     maxEvents:  -1            # Number of events to create
-    fileNames:[
-        # "/pnfs/uboone/overlay/uboone/reconstructed/prod_v08_00_00_12/prodgenie_bnb_intrinsic_nue_uboone_overlay_mcc9_TESTv12/run1_reco2/PhysicsRun-2016_2_23_18_49_33-0005122-00012_20160224T070605_ext_unbiased_20160225T030422_merged_gen_20190330T031808_g4_detsim_mix_r1a_r1b_postdlmctrut_716c068e-5113-4230-92e7-2caacb54a3c4.root"
-    ]
 }
 
 outputs:
@@ -79,10 +69,10 @@ physics:
         shrreco3dKalmanShowercali: @local::shrreco3dKalmanShowercalidata
         pandoraTrack:                     @local::microboone_pandoraTrackCreation
         pandoraTrackcalo:                 @local::microboone_calodata
-        pandoraTrackpid:                  @local::particleidconfig
+        pandoraTrackpid:                  @local::microboone_chi2pid
         pandoraTrackcali:                 @local::microboone_calibrationdedx
-        pandoraTrackcalipid:              @local::particleidconfig
-        eventweight:                       @local::microboone_eventweight #Change which event weights are added below
+        pandoraTrackcalipid:              @local::microboone_chi2pid
+        mcreco:    @local::standard_mcreco
  }
  filters:
  {
@@ -94,12 +84,10 @@ physics:
  }
 
  #define the producer and filter modules for this path, order matters,
- ana:  [ ]
-
- p1: [ pandoraTrack, pandoraTrackcalo, pandoraTrackpid, pandoraTrackcali, pandoraTrackcalipid, shrreco3dKalmanShower, shrreco3dKalmanShowercalo, shrreco3dKalmanShowercali,
-#  eventweight,
-  nuselection ]
-
+ ana:  []
+#  p1: [ pandoraTrack,  pandoraTrackcalo, pandoraTrackpid, pandoraTrackcali, pandoraTrackcalipid, shrreco3dKalmanShower, shrreco3dKalmanShowercalo, shrreco3dKalmanShowercali, nuselection ]
+ p1: [ mcreco, pandoraTrack, pandoraTrackcalo, pandoraTrackpid, pandoraTrackcali, pandoraTrackcalipid, shrreco3dKalmanShower, shrreco3dKalmanShowercalo, shrreco3dKalmanShowercali, nuselection ]
+#  p2: [ nuselection ]
  e1: [ rootout ]
 
  #define the output stream, there could be more than one if using filters
@@ -114,6 +102,12 @@ physics:
  #end_paths:     [ stream1, ana ]
  end_paths:     [ ]
 }
+
+
+physics.producers.mcreco.MCParticleLabel: "largeant"
+physics.producers.mcreco.SimChannelLabel: "ionization" # "driftWC:simpleSC"
+physics.producers.mcreco.UseSimEnergyDeposit: true
+physics.producers.mcreco.MCRecoPart.SavePathPDGList: [13,-13,211,-211,111,311,310,130,321,-321,2212,2112,2224,2214,2114,1114,3122,1000010020,1000010030,1000020030,1000020040]
 
 physics.filters.nuselection.SelectionTool: @local::ShowerSelectionTool
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "" #"gaushitTruthMatch"
@@ -135,21 +129,5 @@ physics.producers.pandoraTrackpid.TrackModuleLabel:                             
 physics.producers.pandoraTrackcali.TrackModuleLabel:                                           "pandoraTrack"
 physics.producers.pandoraTrackcali.CalorimetryModuleLabel:                                     "pandoraTrackcalo"
 
-<<<<<<< HEAD
-# physics.producers.pandoraTrackcalo.TrackModuleLabel:                                           "pandoraTrack"
-# physics.producers.pandoraTrackcalo.SpacePointModuleLabel:                                      "pandora"
-# physics.producers.pandoraTrackpid.CalorimetryModuleLabel:                                      "pandoraTrackcalo"
-# physics.producers.pandoraTrackpid.TrackModuleLabel:                                            "pandoraTrack"
-# physics.producers.pandoraTrackcali.TrackModuleLabel:                                           "pandoraTrack"
-# physics.producers.pandoraTrackcali.CalorimetryModuleLabel:                                     "pandoraTrackcalo"
-
-# Control which sets of event weights are run
-physics.producers.eventweight.weight_functions: [
-  @sequence::microboone_eventweight.weight_functions_flux,
-  @sequence::microboone_eventweight.weight_functions_genie,
-  @sequence::microboone_eventweight.weight_functions_reint
-]
-=======
 physics.producers.pandoraTrackcali.CorrectSCE:                                                 true
 physics.producers.pandoraTrackcalo.CorrectSCE:                                                 true
->>>>>>> 8f2082ee5666e168f708645892697a976881949b
