@@ -1,5 +1,3 @@
-#include "eventweight_microboone.fcl"
-#include "microboone_eventweight_service.fcl"
 #include "neutrinoselection.fcl"
 
 DummyAnalyzer: {
@@ -36,9 +34,6 @@ services.SpaceCharge.EnableSimEFieldSCE: true
 services.SpaceCharge.EnableSimSpatialSCE: true
 services.SpaceCharge.RepresentationType: "Voxelized_TH3"
 services.SpaceCharge.CalibrationInputFilename: "SpaceCharge/SCEoffsets_dataDriven_combined_bkwd_Jan18.root"
-
-#Force loading ubsim EventWeight calculator libraries instead of larsim default
-services.UBEventWeight: @local::microboone_eventweight_service
 
 #source is now a root file
 source:
@@ -82,7 +77,6 @@ physics:
         pandoraTrackpid:                  @local::particleidconfig
         pandoraTrackcali:                 @local::microboone_calibrationdedx
         pandoraTrackcalipid:              @local::particleidconfig
-        eventweight:                       @local::microboone_eventweight #Change which event weights are added below
  }
  filters:
  {
@@ -96,9 +90,7 @@ physics:
  #define the producer and filter modules for this path, order matters,
  ana:  [ ]
 
- p1: [ pandoraTrack, pandoraTrackcalo, pandoraTrackpid, pandoraTrackcali, pandoraTrackcalipid, shrreco3dKalmanShower, shrreco3dKalmanShowercalo, shrreco3dKalmanShowercali,
-# eventweight,
-  nuselection ]
+ p1: [ pandoraTrack, pandoraTrackcalo, pandoraTrackpid, pandoraTrackcali, pandoraTrackcalipid, shrreco3dKalmanShower, shrreco3dKalmanShowercalo, shrreco3dKalmanShowercali, nuselection]
 
  e1: [ rootout ]
 
@@ -137,10 +129,3 @@ physics.producers.pandoraTrackcali.CalorimetryModuleLabel:                      
 
 physics.producers.pandoraTrackcali.CorrectSCE:                                                 true
 physics.producers.pandoraTrackcalo.CorrectSCE:                                                 true
-
-# Control which sets of event weights are run
-physics.producers.eventweight.weight_functions: [
-  @sequence::microboone_eventweight.weight_functions_flux,
-  @sequence::microboone_eventweight.weight_functions_genie,
-  @sequence::microboone_eventweight.weight_functions_reint
-]
