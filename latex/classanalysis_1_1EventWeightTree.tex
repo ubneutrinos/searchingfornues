@@ -1,0 +1,66 @@
+\hypertarget{classanalysis_1_1EventWeightTree}{\section{analysis\-:\-:Event\-Weight\-Tree Class Reference}
+\label{classanalysis_1_1EventWeightTree}\index{analysis\-::\-Event\-Weight\-Tree@{analysis\-::\-Event\-Weight\-Tree}}
+}
+Inheritance diagram for analysis\-:\-:Event\-Weight\-Tree\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classanalysis_1_1EventWeightTree}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classanalysis_1_1EventWeightTree_a481af16f4e8721805bbe7fb5f0b1da2a}{Event\-Weight\-Tree} (const fhicl\-::\-Parameter\-Set \&pset)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1EventWeightTree_ac4c13dc05b4378d910f25afdd410475b}{\hyperlink{classanalysis_1_1EventWeightTree_ac4c13dc05b4378d910f25afdd410475b}{$\sim$\-Event\-Weight\-Tree} ()}\label{classanalysis_1_1EventWeightTree_ac4c13dc05b4378d910f25afdd410475b}
+
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1EventWeightTree_a1998d34a8451a1e7ec8a6131fc50f97d}{void {\bfseries configure} (fhicl\-::\-Parameter\-Set const \&pset)}\label{classanalysis_1_1EventWeightTree_a1998d34a8451a1e7ec8a6131fc50f97d}
+
+\item 
+\hypertarget{classanalysis_1_1EventWeightTree_a1af84126be9ecd2ae71013db4d2c1af7}{void \hyperlink{classanalysis_1_1EventWeightTree_a1af84126be9ecd2ae71013db4d2c1af7}{analyze\-Event} (art\-::\-Event const \&e, bool f\-Data) override}\label{classanalysis_1_1EventWeightTree_a1af84126be9ecd2ae71013db4d2c1af7}
+
+\begin{DoxyCompactList}\small\item\em Analysis function. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1EventWeightTree_a2e30de7f19d6f20e6c3f7ffdb41b22a6}{void \hyperlink{classanalysis_1_1EventWeightTree_a2e30de7f19d6f20e6c3f7ffdb41b22a6}{analyze\-Slice} (art\-::\-Event const \&e, std\-::vector$<$ Proxy\-Pfp\-Elem\-\_\-t $>$ \&slice\-\_\-pfp\-\_\-v, bool f\-Data, bool selected) override}\label{classanalysis_1_1EventWeightTree_a2e30de7f19d6f20e6c3f7ffdb41b22a6}
+
+\begin{DoxyCompactList}\small\item\em Analyze slice. \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1EventWeightTree_a7f86ad4b26cab90a5e90a84d57530a26}{void \hyperlink{classanalysis_1_1EventWeightTree_a7f86ad4b26cab90a5e90a84d57530a26}{set\-Branches} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1EventWeightTree_a7f86ad4b26cab90a5e90a84d57530a26}
+
+\begin{DoxyCompactList}\small\item\em set branches for T\-Tree \end{DoxyCompactList}\item 
+\hypertarget{classanalysis_1_1EventWeightTree_a1f2a0ae51f500a3e4d0690f9b16505da}{void \hyperlink{classanalysis_1_1EventWeightTree_a1f2a0ae51f500a3e4d0690f9b16505da}{reset\-T\-Tree} (T\-Tree $\ast$\-\_\-tree) override}\label{classanalysis_1_1EventWeightTree_a1f2a0ae51f500a3e4d0690f9b16505da}
+
+\begin{DoxyCompactList}\small\item\em reset ttree branches \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classanalysis_1_1EventWeightTree_a007ac1f04819cff64bb54b6206966408}{T\-Tree $\ast$ {\bfseries \-\_\-weightstree}}\label{classanalysis_1_1EventWeightTree_a007ac1f04819cff64bb54b6206966408}
+
+\item 
+\hypertarget{classanalysis_1_1EventWeightTree_a53ea863f60b296f796545baac7accc12}{std\-::map$<$ std\-::string, \\*
+std\-::vector$<$ double $>$ $>$ {\bfseries \-\_\-weights}}\label{classanalysis_1_1EventWeightTree_a53ea863f60b296f796545baac7accc12}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classanalysis_1_1EventWeightTree_a481af16f4e8721805bbe7fb5f0b1da2a}{\index{analysis\-::\-Event\-Weight\-Tree@{analysis\-::\-Event\-Weight\-Tree}!Event\-Weight\-Tree@{Event\-Weight\-Tree}}
+\index{Event\-Weight\-Tree@{Event\-Weight\-Tree}!analysis::EventWeightTree@{analysis\-::\-Event\-Weight\-Tree}}
+\subsubsection[{Event\-Weight\-Tree}]{\setlength{\rightskip}{0pt plus 5cm}analysis\-::\-Event\-Weight\-Tree\-::\-Event\-Weight\-Tree (
+\begin{DoxyParamCaption}
+\item[{const fhicl\-::\-Parameter\-Set \&}]{pset}
+\end{DoxyParamCaption}
+)}}\label{classanalysis_1_1EventWeightTree_a481af16f4e8721805bbe7fb5f0b1da2a}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pset} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Selection/\-Analysis\-Tools/Event\-Weight\-Tree\-\_\-tool.\-cc\end{DoxyCompactItemize}
