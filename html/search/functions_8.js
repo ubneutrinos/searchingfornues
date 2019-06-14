@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['obviouscosmicflashmatching',['ObviousCosmicFlashMatching',['../classanalysis_1_1ObviousCosmicFlashMatching.html#a83be7e60be73f5d4297ae617b5f7c70f',1,'analysis::ObviousCosmicFlashMatching']]]
+  ['numuselection',['NuMuSelection',['../classselection_1_1NuMuSelection.html#a6c36dee1cdd9d72715fd43325dfdd585',1,'selection::NuMuSelection']]]
 ];

@@ -9,7 +9,7 @@ var indexSectionsWithContent =
 {
   0: "_abcdefgimnoprst~",
   1: "abcdefmnopst",
-  2: "abcdefgioprst~",
+  2: "abcdefginoprst~",
   3: "_efmps"
 };
 
