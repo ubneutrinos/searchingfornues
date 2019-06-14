@@ -74,10 +74,6 @@ PMTNoiseTool: {
     tool_type: "PMTNoise"
 }
 
-EventWeightTreeTool: {
-    tool_type: "EventWeightTree"
-}
-
 ContainmentAnalysis: {
     tool_type: "ContainmentAnalysis"
     FV: 10
@@ -155,7 +151,6 @@ NuSelectionFilter:{
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
-        eventweighttree:    @local::EventWeightTreeTool
     }
 }
 

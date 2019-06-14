@@ -12,6 +12,11 @@ physics.filters.nuselection.IsData: false
 #Force loading ubsim EventWeight calculator libraries instead of larsim default
 services.UBEventWeight: @local::microboone_eventweight_service
 
+EventWeightTreeTool: {
+    tool_type: "EventWeightTree"
+}
+physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeightTreeTool
+
 physics.producers.eventweight: @local::microboone_eventweight
 physics.p1: [eventweight, @sequence::physics.p1]
 

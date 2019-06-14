@@ -11,4 +11,6 @@ physics.filters.nuselection.AnalysisTools: {
     default: @local::DefaultAnalysisTool
     }
 
+physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeightTreeTool
+
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
