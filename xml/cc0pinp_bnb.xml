@@ -3,12 +3,12 @@
 <!-- Production Project -->
 
 <!DOCTYPE project [
-<!ENTITY release "v08_00_00_09">
+<!ENTITY release "v08_00_00_13">
 <!ENTITY file_type "mcc9">
 <!ENTITY run_type "physics">
 <!ENTITY name "cc0pinp_bnb">
 <!ENTITY tag "devel">
-<!ENTITY date "0603">
+<!ENTITY date "0611">
 <!ENTITY user "srsoleti">
 <!-- nue intrinsic overlay : -->
 <!-- <!ENTITY defname "prodgenie_bnb_intrinsic_nue_uboone_overlay_mcc9.0_C1_reco2" > -->
