@@ -117,7 +117,7 @@ private:
   float fFidvolZend;
 
   const int k_nu_e_other = 1;
-  const int k_nu_e_cc0pi0p =10;
+  const int k_nu_e_cc0pi0p = 10;
   const int k_nu_e_cc0pinp = 11;
   const int k_nu_mu_other = 2;
   const int k_nu_mu_pi0 = 21;
@@ -143,9 +143,9 @@ private:
 
   int _run, _sub, _evt; // event info
   // neutrino information
-  float _nu_e;                  /**< neutrino energy [GeV] */
-  float _nu_pt;                 /**< transverse momentum of interaction [GeV/c] */
-  float _theta;                 /**< angle between incoming and outgoing leptons, in radians */
+  float _nu_e;  /**< neutrino energy [GeV] */
+  float _nu_pt; /**< transverse momentum of interaction [GeV/c] */
+  float _theta; /**< angle between incoming and outgoing leptons, in radians */
 
   int _nu_pdg;                  /**< neutrino PDG code */
   int _ccnc;                    /**< CC or NC tag from GENIE */
@@ -173,7 +173,7 @@ private:
   float _pion_e, _pion_p, _pion_c;       /**< energy, purity, completeness. */
 
   std::string _endmuonprocess; /**< End muon process name */
-  float _endmuonmichel; /**< End muon Michel electron energy */
+  float _endmuonmichel;        /**< End muon Michel electron energy */
 
   int _nslice;     /**< number of slice in the event */
   int _crtveto;    /**< is the event vetoed by the CRT Veto? */
@@ -196,6 +196,7 @@ private:
   int evnhits;                                /**< number of hits in event */
   int slpdg;                                  /**< PDG code of primary pfp in slice */
   int slnhits;                                /**< number of hits in slice */
+  float _topo_score;                          /**< topological score of the slice */
   std::vector<int> pfpdg;                     /**< PDG code of pfp in slice */
   std::vector<int> pfnhits;                   /**< number of hits in pfp */
   std::vector<std::vector<int>> pfnplanehits; /**< number of hits in pfp */
@@ -297,17 +298,19 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
       std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
       for (std::map<std::string, std::vector<double>>::iterator it = evtwgt_map.begin(); it != evtwgt_map.end(); ++it)
       {
-        if (it->second.size() == 1) {
+        if (it->second.size() == 1)
+        {
           _leeweight = it->second[0];
         }
       }
-    } else {
+    }
+    else
+    {
       std::cout << "LEE MCEventWeight not present" << std::endl;
     }
 
     // SaveTruth
     SaveTruth(e);
-
   }
 
   // Grab CRT veto information if available - CRT should probably have its own tool?
@@ -378,6 +381,21 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       }
       auto slicehits = assocSliceHit->at(slice_pxy_v[0].key());
       slnhits = slicehits.size();
+
+      auto metadata_pxy_v = pfp.get<larpandoraobj::PFParticleMetadata>();
+
+      if (metadata_pxy_v.size() != 0)
+      {
+        for (unsigned int j = 0; j < metadata_pxy_v.size(); ++j)
+        {
+          const art::Ptr<larpandoraobj::PFParticleMetadata> &pfParticleMetadata(metadata_pxy_v.at(j));
+          auto pfParticlePropertiesMap = pfParticleMetadata->GetPropertiesMap();
+          if (!pfParticlePropertiesMap.empty())
+          {
+            _topo_score = pfParticlePropertiesMap.at("NuScore");
+          } // if PFP metadata exists!
+        }
+      }
     }
 
     if ((pfp->PdgCode() == electron_neutrino->PdgCode()) || (pfp->PdgCode() == muon_neutrino->PdgCode()))
@@ -419,12 +437,16 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       auto clus_hit_v = clus.get<recob::Hit>();
       nplanehits[clus->Plane().Plane] = clus_hit_v.size();
 
-
-      if (clus->Plane().Plane == 0) {
+      if (clus->Plane().Plane == 0)
+      {
         _hits_u += clus_hit_v.size();
-      } else if (clus->Plane().Plane == 1) {
+      }
+      else if (clus->Plane().Plane == 1)
+      {
         _hits_v += clus_hit_v.size();
-      } else if (clus->Plane().Plane == 2) {
+      }
+      else if (clus->Plane().Plane == 2)
+      {
         _hits_y += clus_hit_v.size();
       }
 
@@ -506,7 +528,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     // std::vector<int>::iterator cosmic_id = std::find(_backtracked_pdg.begin(), _backtracked_pdg.end(), 0);
     // bool there_is_reco_cosmic = cosmic_id != _backtracked_pdg.end();
 
-    bool there_is_reco_cosmic = (float)_overlay_hits/(_overlay_hits+_mc_hits) > 0.5;
+    bool there_is_reco_cosmic = (float)_overlay_hits / (_overlay_hits + _mc_hits) > 0.5;
 
     bool there_is_true_proton = _nproton > 0;
     bool there_is_true_pi = _npion > 0;
@@ -528,7 +550,8 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           {
             _category = k_nu_e_cc0pinp;
           }
-          else if (!there_is_true_pi && !there_is_true_proton && !there_is_true_pi0){
+          else if (!there_is_true_pi && !there_is_true_proton && !there_is_true_pi0)
+          {
             _category = k_nu_e_cc0pi0p;
           }
           else
@@ -697,6 +720,7 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("hits_u", &_hits_u, "hits_u/i");
   _tree->Branch("hits_v", &_hits_v, "hits_v/i");
   _tree->Branch("hits_y", &_hits_y, "hits_y/i");
+  _tree->Branch("topological_score", &_topo_score, "topological_score/F");
 
   _tree->Branch("mc_pdg", "std::vector< int >", &_mc_pdg);
   _tree->Branch("mc_E", "std::vector< double >", &_mc_E);
@@ -804,6 +828,7 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
 
   evnhits = std::numeric_limits<int>::lowest();
   slpdg = std::numeric_limits<int>::lowest();
+  _topo_score = std::numeric_limits<float>::lowest();
   slnhits = std::numeric_limits<int>::lowest();
   pfpdg.clear();
   pfnhits.clear();
@@ -902,7 +927,8 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     {
       muonMomentum = part.Momentum(0).E();
 
-      if (part.Momentum(0).E() - muon->Mass() > fMuonThreshold) {
+      if (part.Momentum(0).E() - muon->Mass() > fMuonThreshold)
+      {
         _true_e_visible += part.Momentum(0).E() - muon->Mass();
         total_p_visible += part.Momentum(0);
         _nmuon += 1;
@@ -915,7 +941,8 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     // if electron
     else if ((std::abs(part.PdgCode()) == electron->PdgCode()) and (part.StatusCode() == 1))
     {
-      if (part.Momentum(0).E() - electron->Mass() > fElectronThreshold) {
+      if (part.Momentum(0).E() - electron->Mass() > fElectronThreshold)
+      {
         _nelec += 1;
         total_p_visible += part.Momentum(0);
         _true_e_visible += part.Momentum(0).E() - electron->Mass();
@@ -937,7 +964,8 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     // if proton
     else if ((part.PdgCode() == proton->PdgCode()) and (part.StatusCode() == 1))
     {
-      if (part.Momentum(0).E() - proton->Mass() > fProtonThreshold) {
+      if (part.Momentum(0).E() - proton->Mass() > fProtonThreshold)
+      {
         total_p_visible += part.Momentum(0);
         _true_e_visible += part.Momentum(0).E() - proton->Mass();
         _nproton += 1;
@@ -956,7 +984,8 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     // if pion
     else if ((std::abs(part.PdgCode()) == pion->PdgCode()) and (part.StatusCode() == 1))
     {
-      if (part.Momentum(0).E() - pion->Mass() > fPionThreshold) {
+      if (part.Momentum(0).E() - pion->Mass() > fPionThreshold)
+      {
         _npion += 1;
         total_p_visible += part.Momentum(0);
         _true_e_visible += part.Momentum(0).E() - pion->Mass();
@@ -972,7 +1001,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
         _true_e_visible += part.Momentum(0).E() - particle_pdg->Mass();
     }
 
-  }   // for all MCParticles
+  } // for all MCParticles
 
   _true_pt = total_p.Perp();
   _true_pt_visible = total_p_visible.Perp();
@@ -983,11 +1012,13 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   {
     auto mcp = mcp_h->at(p);
     if (!(mcp.Process() == "primary" &&
-          mcp.StatusCode() == 1)) {
+          mcp.StatusCode() == 1))
+    {
       continue;
     }
 
-    if (mcp.PdgCode() == electron->PdgCode()) {
+    if (mcp.PdgCode() == electron->PdgCode())
+    {
       _elec_vx = mcp.Vx();
       _elec_vy = mcp.Vy();
       _elec_vz = mcp.Vz();
