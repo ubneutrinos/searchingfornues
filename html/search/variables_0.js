@@ -94,6 +94,7 @@ var searchData=
   ['_5ftheta',['_theta',['../classanalysis_1_1DefaultAnalysis.html#adb169ccacccada1a17b6699a25f3fd67',1,'analysis::DefaultAnalysis']]],
   ['_5ftksh_5fangle',['_tksh_angle',['../classselection_1_1CC0piNpSelection.html#a959adc6093ff4d2730dac8f75dd1245c',1,'selection::CC0piNpSelection']]],
   ['_5ftksh_5fdistance',['_tksh_distance',['../classselection_1_1CC0piNpSelection.html#a73d772bb569336b56a3f14cee752e2f3',1,'selection::CC0piNpSelection']]],
+  ['_5ftopo_5fscore',['_topo_score',['../classanalysis_1_1DefaultAnalysis.html#a950efb6f4e8f1ad6dd00e24bc74002c2',1,'analysis::DefaultAnalysis']]],
   ['_5ftotal_5fhits_5fy',['_total_hits_y',['../classselection_1_1CC0piNpSelection.html#a819d1d973e74bcd2ad82aa01ea24ac37',1,'selection::CC0piNpSelection']]],
   ['_5ftrk_5fbkt_5fcompleteness',['_trk_bkt_completeness',['../classselection_1_1CC0piNpSelection.html#aab22ce289e2d4a109440369e30fddf52',1,'selection::CC0piNpSelection']]],
   ['_5ftrk_5fbkt_5fe',['_trk_bkt_E',['../classselection_1_1CC0piNpSelection.html#aa7a6076f1169185e0b2b02fbb03aba22',1,'selection::CC0piNpSelection']]],
