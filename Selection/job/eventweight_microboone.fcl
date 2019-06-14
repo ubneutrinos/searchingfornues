@@ -35,7 +35,7 @@ microboone_eventweight: {
     parameter_sigma: 1 
     mode: multisim
     scale_factor: 1
-    number_of_multisims: 1000
+    number_of_multisims: 50 #1000
     PrimaryHadronGeantCode: 211 # geant code for particle production on Be
     weight_calculator: "MicroBooNE" # "MicroBooNE" OR "MiniBooNE"
     ExternalData: "beamData/ExternalData/BNBExternalData_uBooNE_SplinesHARP.root"
@@ -50,7 +50,7 @@ microboone_eventweight: {
     parameter_sigma: 1 
     mode: multisim
     scale_factor: 1
-    number_of_multisims: 1000
+    number_of_multisims: 50 #1000
     PrimaryHadronGeantCode: -211 # geant code for particle production on Be
     weight_calculator: "MicroBooNE" # "MicroBooNE" OR "MiniBooNE"
     ExternalData: "beamData/ExternalData/BNBExternalData_uBooNE_SplinesHARP.root"
@@ -63,7 +63,7 @@ microboone_eventweight: {
     random_seed: 4
     parameter_sigma: 1 
     mode: multisim
-    number_of_multisims: 1000
+    number_of_multisims: 50 #1000
     PrimaryHadronGeantCode: 321 # geant code for particle production on Be
     weight_calculator: "MicroBooNE" # "MicroBooNE" OR "MiniBooNE"
     ExternalData: "beamData/ExternalData/BNBExternalData_uBooNE.root"
@@ -85,7 +85,7 @@ microboone_eventweight: {
     parameter_sigma: 1
     mode: multisim
     scale_factor: 1
-    number_of_multisims: 1000
+    number_of_multisims: 50 #1000
     PrimaryHadronGeantCode: [130, 310, 311] # geant code for particle production on Be
     weight_calculator: "MicroBooNE" # "MicroBooNE" OR "MiniBooNE"
     ExternalData: "beamData/ExternalData/BNBExternalData_uBooNE.root"
@@ -99,7 +99,7 @@ microboone_eventweight: {
     parameter_sigma: 1
     mode: multisim
     scale_factor: 1
-    number_of_multisims: 1000
+    number_of_multisims: 50 #1000
     PrimaryHadronGeantCode: -321 # geant code for particle production on Be
     weight_calculator: "MicroBooNE" # "MicroBooNE" OR "MiniBooNE"
     use_MiniBooNE_random_numbers: false
@@ -116,7 +116,7 @@ microboone_eventweight: {
     scale_factor_neg: 1
     weight_calculator: "MicroBooNE" # "MicroBooNE" OR "MiniBooNE"
     mode: multisim
-    number_of_multisims: 1000
+    number_of_multisims: 50 #1000
     use_MiniBooNE_random_numbers: false
   }
 
@@ -131,7 +131,7 @@ microboone_eventweight: {
     scale_factor_neg: 1
     weight_calculator: "MicroBooNE" # "MicroBooNE" OR "MiniBooNE"
     mode: multisim
-    number_of_multisims: 1000
+    number_of_multisims: 50 #1000
     use_MiniBooNE_random_numbers: false
   }
 
@@ -146,7 +146,7 @@ microboone_eventweight: {
     scale_factor_neg: 1
     weight_calculator: "MicroBooNE" # "MicroBooNE" OR "MiniBooNE"
     mode: multisim
-    number_of_multisims: 1000
+    number_of_multisims: 50 #1000
     use_MiniBooNE_random_numbers: false
   }
 
@@ -161,7 +161,7 @@ microboone_eventweight: {
     scale_factor_neg: 0.573 #From MiniBooNE
     weight_calculator: "MicroBooNE" # "MicroBooNE" OR "MiniBooNE"
     mode: multisim
-    number_of_multisims: 1000
+    number_of_multisims: 50 #1000
     use_MiniBooNE_random_numbers: false
   }
 
@@ -176,7 +176,7 @@ microboone_eventweight: {
     scale_factor_neg: 1
     weight_calculator: "MicroBooNE" # "MicroBooNE" OR "MiniBooNE"
     mode: multisim
-    number_of_multisims: 1000
+    number_of_multisims: 50 #1000
     use_MiniBooNE_random_numbers: false
   }
 
@@ -191,7 +191,7 @@ microboone_eventweight: {
     scale_factor_neg: 0.585 #From MiniBooNE
     weight_calculator: "MicroBooNE" # "MicroBooNE" OR "MiniBooNE"
     mode: multisim
-    number_of_multisims: 1000
+    number_of_multisims: 50 #1000
     use_MiniBooNE_random_numbers: false
   }
 
@@ -206,7 +206,7 @@ microboone_eventweight: {
     scale_factor_neg: 1
     weight_calculator: "MicroBooNE" # "MicroBooNE" OR "MiniBooNE"
     mode: multisim
-    number_of_multisims: 1000
+    number_of_multisims: 50 #1000
     use_MiniBooNE_random_numbers: false
   }
 
@@ -221,7 +221,7 @@ microboone_eventweight: {
     scale_factor_neg: 1
     weight_calculator: "MicroBooNE" # "MicroBooNE" OR "MiniBooNE"
     mode: multisim
-    number_of_multisims: 1000
+    number_of_multisims: 50 #1000
     use_MiniBooNE_random_numbers: false
   }
 
@@ -274,7 +274,9 @@ microboone_eventweight: {
     genie_IntraNukeNinel, genie_IntraNukeNabs, genie_IntraNukeNpi,
     genie_IntraNukePImfp, genie_IntraNukePIcex,
     # genie_IntraNukePIel, #Not needed in Genie 3
-    genie_IntraNukePIinel, genie_IntraNukePIabs, genie_IntraNukePIpi
+    genie_IntraNukePIinel,
+    # genie_IntraNukePIabs, #Add back in future?
+    genie_IntraNukePIpi
   ]
  
   genie_qema: {
@@ -283,7 +285,7 @@ microboone_eventweight: {
     parameter_list: ["QEMA"] 
     parameter_sigma: [ 1 ] 
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_qevec: {
@@ -292,7 +294,7 @@ microboone_eventweight: {
     parameter_list: ["QEVec"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_ncelAxial: {
@@ -301,7 +303,7 @@ microboone_eventweight: {
     parameter_list: ["NCELaxial"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_ncelEta: {
@@ -310,7 +312,7 @@ microboone_eventweight: {
     parameter_list: ["NCELeta"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
 
@@ -320,7 +322,7 @@ microboone_eventweight: {
     parameter_list: ["CCResAxial"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10 
+    number_of_multisims: 50 #10 
   }
 
   genie_ccresVector: {
@@ -329,7 +331,7 @@ microboone_eventweight: {
     parameter_list: ["CCResVector"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_ncresAxial: {
@@ -338,7 +340,7 @@ microboone_eventweight: {
     parameter_list: ["NCResAxial"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_ncresVector: {
@@ -347,7 +349,7 @@ microboone_eventweight: {
     parameter_list: ["NCResVector"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
  
   genie_cohMA: {
@@ -356,7 +358,7 @@ microboone_eventweight: {
     parameter_list: ["CohMA"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   } 
 
   genie_cohR0: {
@@ -365,7 +367,7 @@ microboone_eventweight: {
     parameter_list: ["CohR0"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_NonResRvp1pi: {
@@ -374,7 +376,7 @@ microboone_eventweight: {
     parameter_list: ["NonResRvp1pi"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_NonResRvbarp1pi: {
@@ -383,7 +385,7 @@ microboone_eventweight: {
     parameter_list: ["NonResRvbarp1pi"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_NonResRvp2pi: {
@@ -392,7 +394,7 @@ microboone_eventweight: {
     parameter_list: ["NonResRvp2pi"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_NonResRvbarp2pi: {
@@ -401,7 +403,7 @@ microboone_eventweight: {
     parameter_list: ["NonResRvbarp2pi"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_ResDecayGamma: {
@@ -410,7 +412,7 @@ microboone_eventweight: {
     parameter_list: ["ResDecayGamma"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_ResDecayEta: {
@@ -419,7 +421,7 @@ microboone_eventweight: {
     parameter_list: ["ResDecayEta"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_ResDecayTheta: {
@@ -428,7 +430,7 @@ microboone_eventweight: {
     parameter_list: ["ResDecayTheta"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_NC: {
@@ -437,7 +439,7 @@ microboone_eventweight: {
     parameter_list: ["NC"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_DISAth: {
@@ -446,7 +448,7 @@ microboone_eventweight: {
     parameter_list: ["DISAth"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_DISBth: {
@@ -455,7 +457,7 @@ microboone_eventweight: {
     parameter_list: ["DISBth"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_DISCv1u: {
@@ -464,7 +466,7 @@ microboone_eventweight: {
     parameter_list: ["DISCv1u"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_DISCv2u: {
@@ -473,7 +475,7 @@ microboone_eventweight: {
     parameter_list: ["DISCv2u"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
  
   genie_AGKYxF: {
@@ -482,7 +484,7 @@ microboone_eventweight: {
     parameter_list: ["AGKYxF"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_AGKYpT: {
@@ -491,7 +493,7 @@ microboone_eventweight: {
     parameter_list: ["AGKYpT"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_FormZone: {
@@ -500,7 +502,7 @@ microboone_eventweight: {
     parameter_list: ["FormZone"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_FermiGasModelKf: {
@@ -509,7 +511,7 @@ microboone_eventweight: {
     parameter_list: ["FermiGasModelKf"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_FermiGasModelSf: {
@@ -518,7 +520,7 @@ microboone_eventweight: {
     parameter_list: ["FermiGasModelSf"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_IntraNukeNmfp: {
@@ -527,7 +529,7 @@ microboone_eventweight: {
     parameter_list: ["IntraNukeNmfp"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_IntraNukeNcex: {
@@ -536,7 +538,7 @@ microboone_eventweight: {
     parameter_list: ["IntraNukeNcex"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   } 
 
   genie_IntraNukeNel: {
@@ -545,7 +547,7 @@ microboone_eventweight: {
     parameter_list: ["IntraNukeNel"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   } 
 
   genie_IntraNukeNinel: {
@@ -554,7 +556,7 @@ microboone_eventweight: {
     parameter_list: ["IntraNukeNinel"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   } 
 
   genie_IntraNukeNabs: {
@@ -563,7 +565,7 @@ microboone_eventweight: {
     parameter_list: ["IntraNukeNabs"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   } 
 
   genie_IntraNukeNpi: {
@@ -572,7 +574,7 @@ microboone_eventweight: {
     parameter_list: ["IntraNukeNpi"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   } 
 
   genie_IntraNukePImfp: {
@@ -581,7 +583,7 @@ microboone_eventweight: {
     parameter_list: ["IntraNukePImfp"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   } 
 
   genie_IntraNukePIcex: {
@@ -590,7 +592,7 @@ microboone_eventweight: {
     parameter_list: ["IntraNukePIcex"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_IntraNukePIel: {
@@ -599,7 +601,7 @@ microboone_eventweight: {
     parameter_list: ["IntraNukePIel"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_IntraNukePIinel: {
@@ -608,7 +610,7 @@ microboone_eventweight: {
     parameter_list: ["IntraNukePIinel"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_IntraNukePIabs: {
@@ -617,7 +619,7 @@ microboone_eventweight: {
     parameter_list: ["IntraNukePIabs"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
 
   genie_IntraNukePIpi: {
@@ -626,7 +628,7 @@ microboone_eventweight: {
     parameter_list: ["IntraNukePIpi"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
  
   # Single function to reweight all GENIE parameters at once
@@ -649,7 +651,7 @@ microboone_eventweight: {
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
     ]
     mode: multisim
-    number_of_multisims: 10
+    number_of_multisims: 50 #10
   }
     ##########################################################
   ## Hadron reinteraction uncertainties
@@ -672,7 +674,7 @@ microboone_eventweight: {
     parameter_list: ["p"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 100
+    number_of_multisims: 50 #100
   }
 
   reinteractions_piplus: {
@@ -681,7 +683,7 @@ microboone_eventweight: {
     parameter_list: ["pip"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 100
+    number_of_multisims: 50 #100
   }
 
   reinteractions_piminus: {
@@ -690,7 +692,7 @@ microboone_eventweight: {
     parameter_list: ["pim"]
     parameter_sigma: [ 1 ]
     mode: multisim
-    number_of_multisims: 100
+    number_of_multisims: 50 #100
   }
 
   reinteractions_all: {
@@ -699,7 +701,7 @@ microboone_eventweight: {
     parameter_list: ["p", "pip", "pim"]
     parameter_sigma: [ 1, 1, 1 ]
     mode: multisim
-    number_of_multisims: 100
+    number_of_multisims: 50 #100
   }
 }
 

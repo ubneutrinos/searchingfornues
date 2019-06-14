@@ -1,3 +1,5 @@
+#include "eventweight_microboone.fcl"
+#include "microboone_eventweight_service.fcl"
 #include "run_neutrinoselectionfilter_run1_data.fcl"
 
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
@@ -6,3 +8,16 @@ physics.filters.nuselection.IsData: false
 # I think the lines below need to be uncommented for pure MC but is ok to leave out for overlays
 ###physics.producers.shrreco3dKalmanShowercalo: @local::shrreco3dKalmanShowercalomc
 ###physics.producers.shrreco3dKalmanShowercali: @local::shrreco3dKalmanShowercalimc
+
+#Force loading ubsim EventWeight calculator libraries instead of larsim default
+services.UBEventWeight: @local::microboone_eventweight_service
+
+physics.producers.eventweight: @local::microboone_eventweight
+physics.p1: [eventweight, @sequence::physics.p1]
+
+# Control which sets of event weights are run
+physics.producers.eventweight.weight_functions: [
+  @sequence::microboone_eventweight.weight_functions_flux,
+  @sequence::microboone_eventweight.weight_functions_genie,
+  @sequence::microboone_eventweight.weight_functions_reint
+]
