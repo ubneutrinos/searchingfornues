@@ -101,7 +101,7 @@ private:
 
   std::vector<double> _shr_theta_v;
   std::vector<double> _shr_phi_v;
-  std::vector<double> _trkshr_score_v;
+  std::vector<double> _shr_score_v;
 
   std::vector<int> _shr_tkfit_nhits_v;
   std::vector<double> _shr_tkfit_start_x_v;
@@ -215,7 +215,7 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       if (trkshr_score < 0.5) {
         _n_showers++;
       }
-      _trkshr_score_v.push_back(trkshr_score);
+      _shr_score_v.push_back(trkshr_score);
 
       //fill dummy track fit values, overwrite them later
       _shr_tkfit_nhits_v.push_back(std::numeric_limits<int>::lowest());
@@ -314,7 +314,7 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_theta_v", "std::vector< double >", &_shr_theta_v);
   _tree->Branch("shr_phi_v", "std::vector< double >", &_shr_phi_v);
 
-  _tree->Branch("trkshr_score_v", "std::vector< double >", &_trkshr_score_v);
+  _tree->Branch("shr_score_v", "std::vector< double >", &_shr_score_v);
 
   _tree->Branch("n_showers", &_n_showers, "n_showers/i");
 
@@ -356,7 +356,7 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
   _shr_pz_v.clear();
 
   _n_showers = 0;
-  _trkshr_score_v.clear();
+  _shr_score_v.clear();
 
   _shr_tkfit_nhits_v.clear();
   _shr_tkfit_start_x_v.clear();
