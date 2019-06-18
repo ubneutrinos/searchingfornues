@@ -75,7 +75,7 @@ physics:
         pandoraTrack:                     @local::microboone_pandoraTrackCreation
         pandoraTrackcalo:                 @local::microboone_calodata
         pandoraTrackpid:                  @local::particleidconfig
-        pandoraTrackcali:                 @local::microboone_calibrationdedx
+        pandoraTrackcali:                 @local::microboone_calibrationdedx_data
         pandoraTrackcalipid:              @local::particleidconfig
  }
  filters:
@@ -120,6 +120,7 @@ physics.producers.pandoraTrackcalipid.Chi2PIDAlg.UseMedian:                     
 
 physics.producers.pandoraTrackcalo.TrackModuleLabel:                                           "pandoraTrack"
 physics.producers.pandoraTrackcalo.SpacePointModuleLabel:                                      "pandora"
+physics.producers.pandoraTrackcalo.CaloAlg.CalAreaConstants:                                   [4.31e-3, 4.02e-3, 4.26e-3]
 
 physics.producers.pandoraTrackpid.CalorimetryModuleLabel:                                      "pandoraTrackcalo"
 physics.producers.pandoraTrackpid.TrackModuleLabel:                                            "pandoraTrack"
