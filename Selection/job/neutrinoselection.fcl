@@ -8,6 +8,11 @@
 #include "services_microboone.fcl"
 #include "flashmatchsetup.fcl"
 
+ShowerStartPointTool: {
+    tool_type: "ShowerStartPoint"
+    CLSproducer: "pandora"
+}
+
 ShowerAnalysisTool: {
     tool_type: "ShowerAnalysis"
     TRKproducer: "shrreco3dKalmanShower"     # "pandoraKalmanShower"     #remove or leave empty of there are no track fits of the shower
@@ -147,6 +152,7 @@ NuSelectionFilter:{
         slicepurcompl: @local::SlicePurComplTool
         containment:   @local::ContainmentAnalysis
         shower:        @local::ShowerAnalysisTool
+        showerstart:        @local::ShowerStartPointTool
         track:         @local::TrackAnalysisTool
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
@@ -201,4 +207,3 @@ NuSelectionFilterRun3.AnalysisTools: {
         crtApproach:@local::CRTApproachAnalysisTool
         }
 NuSelectionFilterRun3.AnalysisTools.default.CRTVetoproducer: "crtveto"
-

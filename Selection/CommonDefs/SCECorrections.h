@@ -2,6 +2,8 @@
 #define SCECORRECTIONSFUNCS_H
 
 #include "larevt/SpaceChargeServices/SpaceChargeService.h"
+#include "lardata/DetectorInfoServices/DetectorPropertiesService.h"
+#include "lardata/DetectorInfoServices/DetectorClocksService.h"
 
 namespace searchingfornues
 {
@@ -9,42 +11,106 @@ namespace searchingfornues
   // apply the mapping of XYZ true -> XYZ position after SCE-induced shift.
   // to be applied to truth xyz in order to compare to reconstructed variables
   // e.g. used for resolution plots
-  void ApplySCEMappingXYZ(float& x, float& y, float& z) {
-
+  void ApplySCEMappingXYZ(float& x, float& y, float& z)
+  {
     auto const *SCE = lar::providerFrom<spacecharge::SpaceChargeService>();
 
-    if (SCE->EnableSpatialSCE() == true) {
-    
-      auto offset = SCE->GetPosOffsets(geo::Point_t(vtx_x,vtx_y,vtx_z));
+    if (SCE->EnableSimSpatialSCE() == true)
+    {
+      auto offset = SCE->GetPosOffsets(geo::Point_t(x, y, z));
       x -= offset.X();
       y += offset.Y();
       z += offset.Z();
-
     }
-    
   }
 
   // apply the SCE corrections to a reconstructed XYZ to see where the
   // XYZ position associated to the actual energy deposition should be
   // to be applied to reconstructed quantities to get a better XYZ coordinate.
-  void ApplySCECorrectionXYZ(float& x, float& y, float& z) {
-
+  void ApplySCECorrectionXYZ(float& x, float& y, float& z)
+  {
     auto const *SCE = lar::providerFrom<spacecharge::SpaceChargeService>();
-    
-    if (SCE->EnableCalSpatialSCE() == true) {
-      
-      auto offset = SCE->GetCalPosOffsets(geo::Point_t(x,y,z));
+
+    if (SCE->EnableCalSpatialSCE() == true)
+    {
+
+      auto offset = SCE->GetCalPosOffsets(geo::Point_t(x, y, z));
       x -= offset.X();
       y += offset.Y();
       z += offset.Z();
-      
     }// if spatial offset calibrations are enabled
-
   }
-  
-  return;
-}
 
+  // apply the mapping of XYZ true -> XYZ position as it would be recosntructed.
+  // takes into account SCE, trigger time offset, and wirecell-pandora offset.
+  // to be applied to truth xyz in order to compare to reconstructed variables
+  // e.g. used for resolution plots
+  void True2RecoMappingXYZ(float& t, float& x, float& y, float& z)
+  {
+    ApplySCEMappingXYZ(x, y, z);
+
+    auto const &detProperties = lar::providerFrom<detinfo::DetectorPropertiesService>();
+    auto const &detClocks = lar::providerFrom<detinfo::DetectorClocksService>();
+    double g4Ticks = detClocks->TPCG4Time2Tick(t) + detProperties->GetXTicksOffset(0, 0, 0) - detProperties->TriggerOffset();
+    float _xtimeoffset = detProperties->ConvertTicksToX(g4Ticks, 0, 0, 0);
+
+    x += _xtimeoffset;
+    x += 0.6;
+  }
+
+
+  // apply the mapping of XYZ true -> XYZ position after SCE-induced shift.
+  // to be applied to truth xyz in order to compare to reconstructed variables
+  // e.g. used for resolution plots
+  void ApplySCEMappingXYZ(float x, float y, float z, float out[3])
+  {
+    auto const *SCE = lar::providerFrom<spacecharge::SpaceChargeService>();
+
+    if (SCE->EnableSimSpatialSCE() == true)
+    {
+      auto offset = SCE->GetPosOffsets(geo::Point_t(x, y, z));
+      out[0] = (x - offset.X());
+      out[1] = (y + offset.Y());
+      out[2] = (z + offset.Z());
+    }
+  }
+
+  // apply the SCE corrections to a reconstructed XYZ to see where the
+  // XYZ position associated to the actual energy deposition should be
+  // to be applied to reconstructed quantities to get a better XYZ coordinate.
+  void ApplySCECorrectionXYZ(float x, float y, float z, float out[3])
+  {
+    auto const *SCE = lar::providerFrom<spacecharge::SpaceChargeService>();
+
+    if (SCE->EnableCalSpatialSCE() == true)
+    {
+      auto offset = SCE->GetCalPosOffsets(geo::Point_t(x, y, z));
+      out[0] = (x - offset.X());
+      out[1] = (y + offset.Y());
+      out[2] = (z + offset.Z());
+    }// if spatial offset calibrations are enabled
+  }
+
+  float x_offset(float t)
+  {
+    auto const &detProperties = lar::providerFrom<detinfo::DetectorPropertiesService>();
+    auto const &detClocks = lar::providerFrom<detinfo::DetectorClocksService>();
+    double g4Ticks = detClocks->TPCG4Time2Tick(t) + detProperties->GetXTicksOffset(0, 0, 0) - detProperties->TriggerOffset();
+    float xoffset = detProperties->ConvertTicksToX(g4Ticks, 0, 0, 0);
+    xoffset += 0.6;
+    return xoffset;
+  }
+
+  // apply the mapping of XYZ true -> XYZ position as it would be recosntructed.
+  // takes into account SCE, trigger time offset, and wirecell-pandora offset.
+  // to be applied to truth xyz in order to compare to reconstructed variables
+  // e.g. used for resolution plots
+  void True2RecoMappingXYZ(float t, float x, float y, float z, float out[3])
+  {
+    ApplySCEMappingXYZ(x, y, z, out);
+    float _xoffset = x_offset(t);
+    out[0] += _xoffset;
+  }
 } // namespace searchingfornues
 
 #endif

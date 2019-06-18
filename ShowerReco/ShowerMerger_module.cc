@@ -65,8 +65,9 @@ private:
   art::InputTag fSHRproducer; // shower associated to PFP
   art::InputTag fVTXproducer; // vertex associated to PFP
   art::InputTag fTRKproducer; // track associated to PFP
+  art::InputTag fSPPproducer; // SpacePoint associated to PFP
 
-  // trunk-merger 
+  // trunk-merger
   float fShrVtxTrkDistMax; // maximum distance between shower start and track start/end
   float fShrTrkDotMin;     // minimum alignment between track and shower direction
   // branch-merger
@@ -88,12 +89,12 @@ private:
   bool FindShowerBranches(const size_t shr_pfp_idx,
 			  const std::vector<searchingfornues::ProxyPfpElem_t>& slice_pfp_v,
 			  std::vector<size_t>& branch_pfp_idx_v);
-    
+
   bool FindShowerTrunk(const size_t shr_pfp_idx,
 		       const std::vector<searchingfornues::ProxyPfpElem_t>& slice_pfp_v,
 		       TVector3& vtxcandidate,
 		       size_t& trktrunk_pfp_idx);
-  
+
   /**
    * @brief function to builf a map linking PFParticle index to Self() attribute
    *
@@ -127,6 +128,7 @@ ShowerMerger::ShowerMerger(fhicl::ParameterSet const& p)
   fPFPproducer = p.get< art::InputTag > ("PFPproducer");
   fPFPproducer = p.get< art::InputTag > ("PCAproducer");
   fSHRproducer = p.get< art::InputTag > ("SHRproducer");
+  fSPPproducer = p.get< art::InputTag > ("SPPproducer");
   fHITproducer = p.get< art::InputTag > ("HITproducer");
   fCLSproducer = p.get< art::InputTag > ("CLSproducer");
   fSLCproducer = p.get< art::InputTag > ("SLCproducer");
@@ -174,13 +176,13 @@ ShowerMerger::ShowerMerger(fhicl::ParameterSet const& p)
   _tree->Branch("xsceoffset" ,&_xsceoffset ,"xsceoffset/F" );
   _tree->Branch("ysceoffset" ,&_ysceoffset ,"ysceoffset/F" );
   _tree->Branch("zsceoffset" ,&_zsceoffset ,"zsceoffset/F" );
-  
+
   return;
 }
 
 void ShowerMerger::produce(art::Event& e)
 {
-  
+
   std::cout << "DAVIDC PRODUCE" << std::endl;
 
   SaveTruth(e);
@@ -193,9 +195,9 @@ void ShowerMerger::produce(art::Event& e)
   art::PtrMaker<recob::Cluster>    ClsPtrMaker(e);
 
   // produce output PFParticles
-  std::unique_ptr< std::vector<recob::PFParticle> > PFParticle_v(new std::vector<recob::PFParticle> );  
-  std::unique_ptr< std::vector<recob::Vertex>     > Vertex_v(new std::vector<recob::Vertex>         );  
-  std::unique_ptr< std::vector<recob::Cluster>    > Cluster_v(new std::vector<recob::Cluster>       );  
+  std::unique_ptr< std::vector<recob::PFParticle> > PFParticle_v(new std::vector<recob::PFParticle> );
+  std::unique_ptr< std::vector<recob::Vertex>     > Vertex_v(new std::vector<recob::Vertex>         );
+  std::unique_ptr< std::vector<recob::Cluster>    > Cluster_v(new std::vector<recob::Cluster>       );
 
   std::unique_ptr< art::Assns <recob::PFParticle, recob::Vertex>  > PFP_Vtx_assn_v    ( new art::Assns<recob::PFParticle, recob::Vertex> );
   std::unique_ptr< art::Assns <recob::PFParticle, recob::Cluster> > PFP_Cls_assn_v    ( new art::Assns<recob::PFParticle, recob::Cluster>);
@@ -211,8 +213,9 @@ void ShowerMerger::produce(art::Event& e)
 													    proxy::withAssociated<recob::Slice>(fSLCproducer),
 													    proxy::withAssociated<recob::Track>(fTRKproducer),
 													    proxy::withAssociated<recob::Vertex>(fVTXproducer),
-                              proxy::withAssociated<recob::PCAxis>(fPCAproducer),
-													    proxy::withAssociated<recob::Shower>(fSHRproducer));
+													    proxy::withAssociated<recob::PCAxis>(fPCAproducer),
+                              proxy::withAssociated<recob::Shower>(fSHRproducer),
+                              proxy::withAssociated<recob::SpacePoint>(fSPPproducer));
 
   // grab cluster -> hit association
   searchingfornues::ProxyClusColl_t const& clus_proxy = proxy::getCollection<std::vector<recob::Cluster> >(e, fCLSproducer,
@@ -231,7 +234,7 @@ void ShowerMerger::produce(art::Event& e)
   float QMax = 0;
   bool largestShower = false;
   _nreco = 0;
-  
+
   // build PFParticle map  for this event
   BuildPFPMap(pfp_proxy);
 
@@ -242,14 +245,14 @@ void ShowerMerger::produce(art::Event& e)
 
     // get metadata for this PFP
     //const auto& pfParticleMetadataList = pfp_pxy.get<larpandoraobj::PFParticleMetadata>();
-    
+
     //  find neutrino candidate
     if (pfp_pxy->IsPrimary() == false) continue;
-    
+
     auto PDG = fabs(pfp_pxy->PdgCode());
 
     if ( (PDG == 12) || (PDG == 14) ) {
-      
+
       AddDaughters(pfp_pxy, pfp_proxy, slice_pfp_v);
 
     }// if neutrino like PFP
@@ -264,14 +267,14 @@ void ShowerMerger::produce(art::Event& e)
     auto pfp_pxy = slice_pfp_v[p];
 
     auto PDG = fabs(pfp_pxy->PdgCode());
-    
+
     if ( (PDG == 12) || (PDG == 14) )
       continue;
 
     auto ass_shr_v = pfp_pxy.get<recob::Shower>();
     //auto ass_trk_v = pfp_pxy.get<recob::Track>();
     //auto trkscore = searchingfornues::GetTrackShowerScore(slice_pfp_v[i_pfp]);
-    
+
     if (ass_shr_v.size() == 1) {
 
       // create new PFP for output
@@ -321,7 +324,7 @@ void ShowerMerger::produce(art::Event& e)
       std::cout << "There are " << out_clus_v.size() << " output clusters" << std::endl;
 
       if ( FindShowerTrunk(p, slice_pfp_v, vtxcandidate, trktrunk_pfp_idx) == true ) {
-	
+
 	// load new clusters to be added
 	auto new_clus_v = slice_pfp_v[trktrunk_pfp_idx].get<recob::Cluster>();
 	std::cout << "Will be adding " << new_clus_v.size() << " clusters!" << std::endl;
@@ -365,7 +368,7 @@ void ShowerMerger::produce(art::Event& e)
 	      auto nhits        = newclus->NHits() + out_clus_v[ newPl ].NHits();
 	      out_clus_v[ newPl ] = recob::Cluster(start_wire, start_wireS, start_tick, start_tickS, start_charge, start_angle, start_open,
 						   end_wire  , end_wireS  , end_tick  , end_tickS  , end_charge  , end_angle  , end_open,
-						   integral, 0., summedADC, 0., nhits, 0., 0., 
+						   integral, 0., summedADC, 0., nhits, 0., 0.,
 						   out_clus_v[ newPl ].ID(), out_clus_v[ newPl ].View(), out_clus_v[ newPl ].Plane() );
 
 	      std::cout << "New cluster has NHits " << nhits << " and " << out_clus_hit_assn_v[ newPl ].size() << " hits associated" << std::endl;
@@ -378,18 +381,18 @@ void ShowerMerger::produce(art::Event& e)
       else {
 	vtxcandidate = ass_shr_v[0]->ShowerStart();
       } //if this shower is not to be merged
-      
+
       // now find shower branches
-      
+
       std::vector<size_t> branches_pfp_idx_v;
       FindShowerBranches(p, slice_pfp_v, branches_pfp_idx_v);
 
       std::cout << "Shower is being merged with " << branches_pfp_idx_v.size() << " branches " << std::endl;
-      
+
       if (branches_pfp_idx_v.size() >= 1) {
-	
+
 	for (auto const& branch_idx : branches_pfp_idx_v) {
-	  
+
 	  // load new clusters to be added
 	  auto new_clus_v = slice_pfp_v[branch_idx].get<recob::Cluster>();
 	  std::cout << "Will be adding " << new_clus_v.size() << " clusters!" << std::endl;
@@ -399,9 +402,9 @@ void ShowerMerger::produce(art::Event& e)
 	    auto newclus = new_clus_v.at(c);
 	    auto newPl = newclus->Plane().Plane;
 	    if ( (newPl < out_clus_v.size()) && (newPl >= 0) ) {
-	      
+
 	      // store extra hits associated
-	      
+
 
 	      std::cout << "PRE @ plane " << newPl << " hits are " << out_clus_hit_assn_v[newPl].size() << std::endl;
 	      // clus -> hit associations
@@ -411,7 +414,7 @@ void ShowerMerger::produce(art::Event& e)
 		out_clus_hit_assn_v[ newPl ].push_back( new_clus_hit_v[i] );
 	      }// for all hits
 	      std::cout << "POST @ plane " << newPl << " hits are " << out_clus_hit_assn_v[newPl].size() << std::endl;
-	      
+
 	      // if the old cluster is garbage, simply load the new one
 	      if (out_clus_v[ newPl ].NHits() == 0) {
 		out_clus_v[ newPl ] = (*newclus);
@@ -436,22 +439,22 @@ void ShowerMerger::produce(art::Event& e)
 		auto nhits        = newclus->NHits() + out_clus_v[ newPl ].NHits();
 		out_clus_v[ newPl ] = recob::Cluster(start_wire, start_wireS, start_tick, start_tickS, start_charge, start_angle, start_open,
 						     end_wire  , end_wireS  , end_tick  , end_tickS  , end_charge  , end_angle  , end_open,
-						     integral, 0., summedADC, 0., nhits, 0., 0., 
+						     integral, 0., summedADC, 0., nhits, 0., 0.,
 						     out_clus_v[ newPl ].ID(), out_clus_v[ newPl ].View(), out_clus_v[ newPl ].Plane() );
-		
+
 		std::cout << "New cluster has NHits " << nhits << " and " << out_clus_hit_assn_v[ newPl ].size() << " hits associated" << std::endl;
-		
+
 	      }// if the old cluster exists and it needs to be updated
-	    }// if not out of bounds	      
+	    }// if not out of bounds
 	  }// for all clusters
-	  
+
 	}// for all branches to be merged
-	
+
       }// if there are branches to be merged
-      
-      
+
+
       PFParticle_v->emplace_back( outshrpfp );
-      
+
       // save vertex to be associated to this shower
       xyz[0] = vtxcandidate.X();
       xyz[1] = vtxcandidate.Y();
@@ -465,7 +468,7 @@ void ShowerMerger::produce(art::Event& e)
 	_Pshr_y = xyz[1];
 	_Pshr_z = xyz[2];
       }
-      
+
       art::Ptr<recob::PFParticle> const PFParticlePtr = PFParticlePtrMaker(PFParticle_v->size()-1);
       art::Ptr<recob::Vertex>     const VtxPtr        = VtxPtrMaker(Vertex_v->size()-1);
 
@@ -484,10 +487,10 @@ void ShowerMerger::produce(art::Event& e)
 	art::Ptr<recob::Cluster> const ClsPtr = ClsPtrMaker(Cluster_v->size()-1);
 	PFP_Cls_assn_v->addSingle( PFParticlePtr, ClsPtr);
 	// grab associated hit
-	for (size_t h=0; h < out_clus_hit_assn_v[ c ].size(); h++) 
+	for (size_t h=0; h < out_clus_hit_assn_v[ c ].size(); h++)
 	  Cls_Hit_assn_v->addSingle( ClsPtr, out_clus_hit_assn_v[ c ].at( h ) );
       }// for all clusters
-      
+
     }// if shower-like PFP
 
   }// for all slice PFPs
@@ -502,7 +505,7 @@ void ShowerMerger::produce(art::Event& e)
   e.put(std::move(PFP_Meta_assn_v));
   e.put(std::move(PFP_Vtx_assn_v));
   e.put(std::move(PFP_Cls_assn_v));
-  
+
   e.put(std::move(Cls_Hit_assn_v));
 
 }
@@ -531,7 +534,7 @@ bool ShowerMerger::FindShowerTrunk(const size_t shr_pfp_idx,
   if (ass_shr_v.size() != 1) return false;
 
   std::cout << "\t shower @ idx " << shr_pfp_idx << std::endl;
-  
+
   auto shr = ass_shr_v[0];
   // get shower 3D direction and starting point
   auto shrVtx = shr->ShowerStart(); // xyz coordinate [TVector3]
@@ -588,9 +591,9 @@ bool ShowerMerger::FindShowerTrunk(const size_t shr_pfp_idx,
       }
 
     }// if agrees within user-defined specs
-      
-  }// for all PFParticles 
-  
+
+  }// for all PFParticles
+
 
   // if bestdot != 0 -> means we found a compatible match
   if (bestdot == 0)
@@ -613,7 +616,7 @@ bool ShowerMerger::FindShowerBranches(const size_t shr_pfp_idx,
   if (ass_shr_v.size() != 1) return false;
 
   std::cout << "\t shower @ idx " << shr_pfp_idx << std::endl;
-  
+
   auto shr = ass_shr_v[0];
   // get shower 3D direction and starting point
   auto shrVtx = shr->ShowerStart(); // xyz coordinate [TVector3]
@@ -638,7 +641,7 @@ bool ShowerMerger::FindShowerBranches(const size_t shr_pfp_idx,
 
     }// if associated to a track
     else if (slice_pfp_v[p].get<recob::Shower>().size() == 1) {
-      
+
       auto shrB = slice_pfp_v[p].get<recob::Shower>()[0];
 
       BranchVtx = shrB->ShowerStart();
@@ -647,7 +650,7 @@ bool ShowerMerger::FindShowerBranches(const size_t shr_pfp_idx,
     }// if associated to a shower
 
     // is the branch candidate vertex compatible with the shower cone?
-    
+
     // (1) angle between shower direction and shr start -> branch start
     TVector3 Branch2ShrDir = (BranchVtx-shrVtx).Unit();
     double branchDot = Branch2ShrDir.Dot( shrDir );
@@ -666,19 +669,19 @@ bool ShowerMerger::FindShowerBranches(const size_t shr_pfp_idx,
 
     // made it this far -> add candidate branch
     branch_pfp_idx_v.push_back( p );
-      
-  }// for all PFParticles 
-  
+
+  }// for all PFParticles
+
 
   // if bestdot != 0 -> means we found a compatible match
   if (branch_pfp_idx_v.size() == 0)
     return false;
-  
+
   return true;
 }// end FindShowerTrunk
 
 void ShowerMerger::BuildPFPMap(const searchingfornues::ProxyPfpColl_t& pfp_pxy_col) {
-  
+
   _pfpmap.clear();
 
   unsigned int p=0;
@@ -693,27 +696,27 @@ void ShowerMerger::BuildPFPMap(const searchingfornues::ProxyPfpColl_t& pfp_pxy_c
 void ShowerMerger:: AddDaughters(const searchingfornues::ProxyPfpElem_t& pfp_pxy,
 				 const searchingfornues::ProxyPfpColl_t& pfp_pxy_col,
 				 std::vector<searchingfornues::ProxyPfpElem_t>& slice_v) {
-  
+
   auto daughters = pfp_pxy->Daughters();
-  
+
   slice_v.push_back(pfp_pxy);
-  
+
   for(auto const& daughterid : daughters) {
-    
+
     if (_pfpmap.find(daughterid) == _pfpmap.end()) {
       std::cout << "Did not find DAUGHTERID in map! error"<< std::endl;
       continue;
     }
-    
+
     // const art::Ptr<recob::PFParticle> pfp_pxy(pfp_pxy_col, _pfpmap.at(daughterid) );
     auto pfp_pxy2 = pfp_pxy_col.begin();
     for (size_t j=0; j<_pfpmap.at(daughterid); ++j) ++pfp_pxy2;
     // const T& pfp_pxy2 = (pfp_pxy_col.begin()+_pfpmap.at(daughterid));
-    
+
     AddDaughters(*pfp_pxy2, pfp_pxy_col, slice_v);
-    
+
   }// for all daughters
-  
+
   return;
 }// AddDaughters
 
@@ -746,7 +749,7 @@ void ShowerMerger::SaveTruth(art::Event const& e) {
       _elec_e = part.Momentum(0).E();
     }// if electron
   }// for all MCParticles
-  
+
   searchingfornues::ApplyDetectorOffsets(_vtx_t,_vtx_x,_vtx_y,_vtx_z,_xtimeoffset,_xsceoffset,_ysceoffset,_zsceoffset);
 
   return;

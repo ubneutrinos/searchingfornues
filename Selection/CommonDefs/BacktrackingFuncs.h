@@ -11,6 +11,7 @@
 
 #include "lardataobj/MCBase/MCShower.h"
 #include "lardataobj/MCBase/MCTrack.h"
+#include "lardataobj/MCBase/MCStep.h"
 
 #include "lardata/Utilities/FindManyInChainP.h"
 
@@ -87,10 +88,54 @@ public:
       : pdg(pdg_), px(px_), py(py_), pz(pz_), e(e_), tids(tids_) {}
   BtPart(const int pdg_, const float px_, const float py_, const float pz_, const float e_, const unsigned int tid_)
       : pdg(pdg_), px(px_), py(py_), pz(pz_), e(e_) { tids.push_back(tid_); }
+  BtPart(const int pdg_,
+         const float px_,
+         const float py_,
+         const float pz_,
+         const float e_,
+         const std::vector<unsigned int> &tids_,
+         const float start_x_,
+         const float start_y_,
+         const float start_z_,
+         const float start_t_) :
+      pdg(pdg_),
+      px(px_),
+      py(py_),
+      pz(pz_),
+      e(e_),
+      tids(tids_),
+      start_x(start_x_),
+      start_y(start_y_),
+      start_z(start_z_),
+      start_t(start_t_)
+      {}
+
+  BtPart(const int pdg_,
+         const float px_,
+         const float py_,
+         const float pz_,
+         const float e_,
+         const unsigned int tid_,
+         const float start_x_,
+         const float start_y_,
+         const float start_z_,
+         const float start_t_) :
+      pdg(pdg_),
+      px(px_),
+      py(py_),
+      pz(pz_),
+      e(e_),
+      start_x(start_x_),
+      start_y(start_y_),
+      start_z(start_z_),
+      start_t(start_t_)
+      { tids.push_back(tid_); }
+
   int pdg;
   float px, py, pz, e;
   std::vector<unsigned int> tids;
   int nhits = 0;
+  float start_x, start_y, start_z, start_t;
 };
 
 std::vector<BtPart> initBacktrackingParticleVec(const std::vector<sim::MCShower> &inputMCShower,
@@ -108,16 +153,20 @@ std::vector<BtPart> initBacktrackingParticleVec(const std::vector<sim::MCShower>
   {
     if (mcs.Process() == "primary" || (mcs.MotherPdgCode() == 111 && mcs.Process() == "Decay" && mcs.MotherProcess() == "primary"))
     {
+      sim::MCStep mc_step_shower_start = mcs.DetProfile();
       btparts_v.push_back(BtPart(mcs.PdgCode(), mcs.Start().Momentum().Px() * 0.001, mcs.Start().Momentum().Py() * 0.001,
-                                 mcs.Start().Momentum().Pz() * 0.001, mcs.Start().Momentum().E() * 0.001, mcs.DaughterTrackID()));
+                                 mcs.Start().Momentum().Pz() * 0.001, mcs.Start().Momentum().E() * 0.001, mcs.DaughterTrackID(),
+                                 mc_step_shower_start.X(), mc_step_shower_start.Y(), mc_step_shower_start.Z(), mc_step_shower_start.T()));
     }
   }
   for (auto mct : inputMCTrack)
   {
     if (mct.Process() == "primary")
     {
+      sim::MCStep mc_step_track_start = mct.Start();
       btparts_v.push_back(BtPart(mct.PdgCode(), mct.Start().Momentum().Px() * 0.001, mct.Start().Momentum().Py() * 0.001,
-                                 mct.Start().Momentum().Pz() * 0.001, mct.Start().Momentum().E() * 0.001, mct.TrackID()));
+                                 mct.Start().Momentum().Pz() * 0.001, mct.Start().Momentum().E() * 0.001, mct.TrackID(),
+                                 mc_step_track_start.X(), mc_step_track_start.Y(), mc_step_track_start.Z(), mc_step_track_start.T()));
     }
   }
   // Now let's fill the nhits member using all input hits
@@ -179,7 +228,7 @@ int getAssocBtPart(const std::vector<art::Ptr<recob::Hit>> &hits,
   unsigned int maxel = (std::max_element(bthitsv.begin(), bthitsv.end()) - bthitsv.begin());
   if (maxel == bthitsv.size())
     return -1;
-  
+
   if (bthitsv[maxel] == 0)
     return -1;
   //
