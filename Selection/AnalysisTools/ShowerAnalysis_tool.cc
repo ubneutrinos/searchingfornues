@@ -111,7 +111,7 @@ private:
 
   std::vector<float> _shr_theta_v;
   std::vector<float> _shr_phi_v;
-  std::vector<float> _trkshr_score_v;
+  std::vector<float> _shr_score_v;
 
   std::vector<int> _shr_tkfit_nhits_v;
   std::vector<float> _shr_tkfit_start_x_v;
@@ -188,7 +188,7 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
     if (PDG == 12 || PDG == 14)
     {
       // grab vertex
-      Double_t xyz[3] = {};
+      double xyz[3] = {};
 
       auto vtx = slice_pfp_v[i_pfp].get<recob::Vertex>();
       if (vtx.size() != 1)
@@ -366,7 +366,7 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_theta_v", "std::vector< float >", &_shr_theta_v);
   _tree->Branch("shr_phi_v", "std::vector< float >", &_shr_phi_v);
 
-  _tree->Branch("shr_score_v", "std::vector< double >", &_shr_score_v);
+  _tree->Branch("shr_score_v", "std::vector< float >", &_shr_score_v);
 
   _tree->Branch("n_showers", &_n_showers, "n_showers/i");
 
@@ -415,7 +415,7 @@ void ShowerAnalysis::fillDefault()
   _shr_py_v.push_back(std::numeric_limits<float>::lowest());
   _shr_pz_v.push_back(std::numeric_limits<float>::lowest());
 
-  _trkshr_score_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_score_v.push_back(std::numeric_limits<float>::lowest());
 
   _shr_tkfit_nhits_v.push_back(std::numeric_limits<int>::lowest());
   _shr_tkfit_start_x_v.push_back(std::numeric_limits<float>::lowest());
