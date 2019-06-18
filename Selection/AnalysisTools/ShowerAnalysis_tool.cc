@@ -82,6 +82,7 @@ public:
 private:
   art::InputTag fTRKproducer;
   art::InputTag fCALproducer;
+  float fTrkShrScore; /**< Threshold on the Pandora track score (default 0.5) */
 
   unsigned int _n_showers;
 
@@ -143,6 +144,7 @@ ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
 {
   fTRKproducer = p.get<art::InputTag>("TRKproducer", "");
   fCALproducer = p.get<art::InputTag>("CALproducer", "");
+  fTrkShrScore = p.get<float>("TrkShrScore", 0.5);
 }
 
 //----------------------------------------------------------------------------
@@ -239,7 +241,8 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_start_V_v.push_back(searchingfornues::YZtoPlanecoordinate(shr->ShowerStart().Y(), shr->ShowerStart().Z(), 1));
 
       float trkshr_score = searchingfornues::GetTrackShowerScore(slice_pfp_v[i_pfp]);
-      if (trkshr_score < 0.5) {
+      if (trkshr_score < fTrkShrScore)
+      {
         _n_showers++;
       }
       _shr_score_v.push_back(trkshr_score);
