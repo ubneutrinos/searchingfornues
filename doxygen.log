@@ -617,31 +617,34 @@ Generating docs for compound ACPT/home/travis/build/ubneutrinos/searchingfornues
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:218: warning: Member slnhits (variable) of class analysis::DefaultAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:220: warning: Member pfpdg (variable) of class analysis::DefaultAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:221: warning: Member pfnhits (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:222: warning: Member pfnplanehits (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:223: warning: Member _hits_u (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:224: warning: Member _hits_v (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:225: warning: Member _hits_y (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:226: warning: Member _overlay_hits (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:227: warning: Member _mc_hits (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:229: warning: Member _mc_pdg (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:230: warning: Member _mc_E (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:232: warning: Member _mc_px (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:233: warning: Member _mc_py (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:234: warning: Member _mc_pz (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:236: warning: Member _mc_vx (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:237: warning: Member _mc_vy (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:238: warning: Member _mc_vz (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:240: warning: Member _mc_endx (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:241: warning: Member _mc_endy (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:242: warning: Member _mc_endz (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:244: warning: Member _true_pt (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:245: warning: Member _true_pt_visible (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:246: warning: Member _true_p (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:247: warning: Member _true_p_visible (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:248: warning: Member _true_e_visible (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:249: warning: Member _leeweight (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:253: warning: argument 'pset' of command @param is not found in the argument list of analysis::DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:253: warning: The following parameters of analysis::DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p) are not documented:
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:222: warning: Member pfnplanehits_U (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:223: warning: Member pfnplanehits_V (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:224: warning: Member pfnplanehits_Y (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:226: warning: Member n_pfps (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:227: warning: Member _hits_u (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:228: warning: Member _hits_v (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:229: warning: Member _hits_y (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:230: warning: Member _overlay_hits (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:231: warning: Member _mc_hits (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:233: warning: Member _mc_pdg (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:234: warning: Member _mc_E (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:236: warning: Member _mc_px (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:237: warning: Member _mc_py (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:238: warning: Member _mc_pz (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:240: warning: Member _mc_vx (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:241: warning: Member _mc_vy (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:242: warning: Member _mc_vz (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:244: warning: Member _mc_endx (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:245: warning: Member _mc_endy (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:246: warning: Member _mc_endz (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:248: warning: Member _true_pt (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:249: warning: Member _true_pt_visible (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:250: warning: Member _true_p (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:251: warning: Member _true_p_visible (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:252: warning: Member _true_e_visible (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:253: warning: Member _leeweight (variable) of class analysis::DefaultAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:257: warning: argument 'pset' of command @param is not found in the argument list of analysis::DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:257: warning: The following parameters of analysis::DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:42: warning: Member configure(fhicl::ParameterSet const &pset) (function) of class analysis::EventWeightTree is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:65: warning: Member _weightstree (variable) of class analysis::EventWeightTree is not documented.
