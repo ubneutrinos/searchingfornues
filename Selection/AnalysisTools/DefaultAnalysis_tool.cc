@@ -219,7 +219,11 @@ private:
   float _topo_score;                          /**< topological score of the slice */
   std::vector<int> pfpdg;                     // PDG code of pfp in slice
   std::vector<int> pfnhits;                   // number of hits in pfp
-  std::vector<std::vector<int>> pfnplanehits; // number of hits in pfp
+  std::vector<int> pfnplanehits_U; // number of hits in pfp plane U
+  std::vector<int> pfnplanehits_V; // number of hits in pfp plane V
+  std::vector<int> pfnplanehits_Y; // number of hits in pfp plane Y
+
+  unsigned int n_pfps;
   unsigned int _hits_u;
   unsigned int _hits_v;
   unsigned int _hits_y;
@@ -227,19 +231,19 @@ private:
   unsigned int _mc_hits;
 
   std::vector<int> _mc_pdg;
-  std::vector<double> _mc_E;
+  std::vector<float> _mc_E;
 
-  std::vector<double> _mc_px;
-  std::vector<double> _mc_py;
-  std::vector<double> _mc_pz;
+  std::vector<float> _mc_px;
+  std::vector<float> _mc_py;
+  std::vector<float> _mc_pz;
 
-  std::vector<double> _mc_vx;
-  std::vector<double> _mc_vy;
-  std::vector<double> _mc_vz;
+  std::vector<float> _mc_vx;
+  std::vector<float> _mc_vy;
+  std::vector<float> _mc_vz;
 
-  std::vector<double> _mc_endx;
-  std::vector<double> _mc_endy;
-  std::vector<double> _mc_endz;
+  std::vector<float> _mc_endx;
+  std::vector<float> _mc_endy;
+  std::vector<float> _mc_endz;
 
   float _true_pt;
   float _true_pt_visible;
@@ -387,6 +391,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
   }
 
   size_t pfpidx = 0;
+  n_pfps = 0;
   for (auto pfp : slice_pfp_v)
   {
 
@@ -422,7 +427,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     {
 
       // grab vertex
-      Double_t xyz[3] = {};
+      double xyz[3] = {};
 
       auto vtx = pfp.get<recob::Vertex>();
       if (vtx.size() != 1)
@@ -442,41 +447,48 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
 
         ApplySCECorrection(_nu_vtx_x, _nu_vtx_y, _nu_vtx_z, _nu_sce_x, _nu_sce_y, _nu_sce_z);
       }
+      continue;
     } // if neutrino PFParticle
 
+    n_pfps ++;
     _pfp_slice_idx.push_back(pfpidx++);
     pfpdg.push_back(pfp->PdgCode());
-    std::vector<int> nplanehits(3, 0);
     // get hits associated to this PFParticle through the clusters
     std::vector<art::Ptr<recob::Hit>> hit_v;
     auto clus_pxy_v = pfp.get<recob::Cluster>();
+
+    pfnplanehits_U.push_back(0);
+    pfnplanehits_V.push_back(0);
+    pfnplanehits_Y.push_back(0);
+
     for (auto ass_clus : clus_pxy_v)
     {
       // get cluster proxy
       const auto &clus = clus_proxy[ass_clus.key()];
       auto clus_hit_v = clus.get<recob::Hit>();
-      nplanehits[clus->Plane().Plane] = clus_hit_v.size();
+      auto nhits = clus_hit_v.size();
 
       if (clus->Plane().Plane == 0)
       {
-        _hits_u += clus_hit_v.size();
+        _hits_u += nhits;
+        pfnplanehits_U.back() += nhits;
       }
       else if (clus->Plane().Plane == 1)
       {
-        _hits_v += clus_hit_v.size();
+        _hits_v += nhits;
+        pfnplanehits_V.back() += nhits;
       }
       else if (clus->Plane().Plane == 2)
       {
-        _hits_y += clus_hit_v.size();
+        _hits_y += nhits;
+        pfnplanehits_Y.back() += nhits;
       }
-
       for (const auto &hit : clus_hit_v)
       {
         hit_v.push_back(hit);
       }
     } // for all clusters associated to PFP
     pfnhits.push_back(hit_v.size());
-    pfnplanehits.push_back(nplanehits);
 
     // backtrack PFParticles in the slice
     if (!fData)
@@ -547,7 +559,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           }
           if (fabs(PDG) == proton->PdgCode())
           {
-            if (fabs(mcp.e - _proton_e) < 0.01)
+            if (fabs(mcp.e - _proton_e) < 0.0001)
             {
               _proton_p = purity;
               _proton_c = completeness;
@@ -805,37 +817,31 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("evnhits", &evnhits, "evnhits/I");
   _tree->Branch("slpdg", &slpdg, "slpdg/I");
   _tree->Branch("slnhits", &slnhits, "slnhits/I");
-  _tree->Branch("pfpdg", &pfpdg);
-  _tree->Branch("pfnhits", &pfnhits);
-  _tree->Branch("pfnplanehits", &pfnplanehits);
+  _tree->Branch("n_pfps", &n_pfps, "n_pfps/I");
+  _tree->Branch("pfpdg", "std::vector<int>", &pfpdg);
+  _tree->Branch("pfnhits", "std::vector<int>", &pfnhits);
+  _tree->Branch("pfnplanehits_U", "std::vector<int>", &pfnplanehits_U);
+  _tree->Branch("pfnplanehits_V", "std::vector<int>", &pfnplanehits_V);
+  _tree->Branch("pfnplanehits_Y", "std::vector<int>", &pfnplanehits_Y);
   _tree->Branch("hits_u", &_hits_u, "hits_u/i");
   _tree->Branch("hits_v", &_hits_v, "hits_v/i");
   _tree->Branch("hits_y", &_hits_y, "hits_y/i");
   _tree->Branch("topological_score", &_topo_score, "topological_score/F");
 
   _tree->Branch("mc_pdg", "std::vector< int >", &_mc_pdg);
-  _tree->Branch("mc_E", "std::vector< double >", &_mc_E);
+  _tree->Branch("mc_E", "std::vector< float >", &_mc_E);
 
-  _tree->Branch("mc_vx", "std::vector< double >",
-                &_mc_vx);
-  _tree->Branch("mc_vy", "std::vector< double >",
-                &_mc_vy);
-  _tree->Branch("mc_vz", "std::vector< double >",
-                &_mc_vz);
+  _tree->Branch("mc_vx", "std::vector< float >", &_mc_vx);
+  _tree->Branch("mc_vy", "std::vector< float >", &_mc_vy);
+  _tree->Branch("mc_vz", "std::vector< float >", &_mc_vz);
 
-  _tree->Branch("mc_endx", "std::vector< double >",
-                &_mc_endx);
-  _tree->Branch("mc_endy", "std::vector< double >",
-                &_mc_endy);
-  _tree->Branch("mc_endz", "std::vector< double >",
-                &_mc_endz);
+  _tree->Branch("mc_endx", "std::vector< float >", &_mc_endx);
+  _tree->Branch("mc_endy", "std::vector< float >", &_mc_endy);
+  _tree->Branch("mc_endz", "std::vector< float >", &_mc_endz);
 
-  _tree->Branch("mc_px", "std::vector< double >",
-                &_mc_px);
-  _tree->Branch("mc_py", "std::vector< double >",
-                &_mc_py);
-  _tree->Branch("mc_pz", "std::vector< double >",
-                &_mc_pz);
+  _tree->Branch("mc_px", "std::vector< float >", &_mc_px);
+  _tree->Branch("mc_py", "std::vector< float >", &_mc_py);
+  _tree->Branch("mc_pz", "std::vector< float >", &_mc_pz);
 
   _tree->Branch("endmuonprocess", &_endmuonprocess);
 
@@ -910,6 +916,7 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _endmuonprocess = "";
   _endmuonmichel = 0;
 
+  n_pfps = 0;
   // _backtracked_idx.clear();
   // _backtracked_tid.clear();
   _backtracked_e.clear();
@@ -941,7 +948,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   slnhits = std::numeric_limits<int>::lowest();
   pfpdg.clear();
   pfnhits.clear();
-  pfnplanehits.clear();
+  pfnplanehits_U.clear();
+  pfnplanehits_V.clear();
+  pfnplanehits_Y.clear();
 
   _hits_u = 0;
   _hits_v = 0;
