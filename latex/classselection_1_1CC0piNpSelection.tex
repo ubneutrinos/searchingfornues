@@ -28,7 +28,7 @@ bool \hyperlink{classselection_1_1CC0piNpSelection_ac3f55283ce26e2af8d5ba86a9faf
 \subsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{classselection_1_1CC0piNpSelection_a82c14d3fa8ea4b3edff07521b2f7c1b9}{trkf\-::\-Track\-Momentum\-Calculator {\bfseries \-\_\-trkmom}}\label{classselection_1_1CC0piNpSelection_a82c14d3fa8ea4b3edff07521b2f7c1b9}
+\hypertarget{classselection_1_1CC0piNpSelection_a320b14dcb3cc1674048bc4f0dd18fa45}{const trkf\-::\-Track\-Momentum\-Calculator {\bfseries \-\_\-trkmom}}\label{classselection_1_1CC0piNpSelection_a320b14dcb3cc1674048bc4f0dd18fa45}
 
 \item 
 \hypertarget{classselection_1_1CC0piNpSelection_a721706e2b68efe51225fa6388bc184d1}{T\-Particle\-P\-D\-G $\ast$ {\bfseries proton} = T\-Database\-P\-D\-G\-::\-Instance()-\/$>$Get\-Particle(2212)}\label{classselection_1_1CC0piNpSelection_a721706e2b68efe51225fa6388bc184d1}
@@ -118,11 +118,21 @@ float \hyperlink{classselection_1_1CC0piNpSelection_abf854f061d0476dc08ae8b3d71e
 \item 
 float \hyperlink{classselection_1_1CC0piNpSelection_a6e42f011e79f646f36df7148907d1b59}{\-\_\-shr\-\_\-energy\-\_\-tot}
 \item 
+float \hyperlink{classselection_1_1CC0piNpSelection_a910f18dc66ac2f22aa8cbdd6b86c7d0e}{\-\_\-shr\-\_\-energy\-\_\-cali}
+\item 
+float \hyperlink{classselection_1_1CC0piNpSelection_aae69f88600d31bb3456808268fb63c1c}{\-\_\-shr\-\_\-energy\-\_\-tot\-\_\-cali}
+\item 
 float \hyperlink{classselection_1_1CC0piNpSelection_a1af96c31bd3afe4b111f429927bbff1c}{\-\_\-shr\-\_\-dedx\-\_\-\-Y}
 \item 
 float \hyperlink{classselection_1_1CC0piNpSelection_a392211f6d023d92bf113c20098c5e7fe}{\-\_\-shr\-\_\-dedx\-\_\-\-V}
 \item 
 float \hyperlink{classselection_1_1CC0piNpSelection_ada2f72c2f814e7d06c24a50ff5ad4fcc}{\-\_\-shr\-\_\-dedx\-\_\-\-U}
+\item 
+float \hyperlink{classselection_1_1CC0piNpSelection_a114f4276a8931d33d8f77fede58398fa}{\-\_\-shr\-\_\-dedx\-\_\-\-Y\-\_\-cali}
+\item 
+float \hyperlink{classselection_1_1CC0piNpSelection_a0ef852fb0ecd8a3b6f871ed765be12da}{\-\_\-shr\-\_\-dedx\-\_\-\-V\-\_\-cali}
+\item 
+float \hyperlink{classselection_1_1CC0piNpSelection_a7c90820db5398c179aef3186ab11e521}{\-\_\-shr\-\_\-dedx\-\_\-\-U\-\_\-cali}
 \item 
 float \hyperlink{classselection_1_1CC0piNpSelection_a20705dc212e16009a0ce4ace27d54af7}{\-\_\-shr\-\_\-distance}
 \item 
@@ -448,22 +458,37 @@ Proton Bragg likelihood score for the leading shower (with the shower reconstruc
 Pion Bragg likelihood for the leading shower (with the shower reconstructed as track) \hypertarget{classselection_1_1CC0piNpSelection_ada2f72c2f814e7d06c24a50ff5ad4fcc}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-dedx\-\_\-\-U@{\-\_\-shr\-\_\-dedx\-\_\-\-U}}
 \index{\-\_\-shr\-\_\-dedx\-\_\-\-U@{\-\_\-shr\-\_\-dedx\-\_\-\-U}!selection::CC0piNpSelection@{selection\-::\-C\-C0pi\-Np\-Selection}}
 \subsubsection[{\-\_\-shr\-\_\-dedx\-\_\-\-U}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-C0pi\-Np\-Selection\-::\-\_\-shr\-\_\-dedx\-\_\-\-U\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CC0piNpSelection_ada2f72c2f814e7d06c24a50ff5ad4fcc}
-d\-E/dx of the leading shower on the U plane with the 1x4 cm box method \hypertarget{classselection_1_1CC0piNpSelection_a392211f6d023d92bf113c20098c5e7fe}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-dedx\-\_\-\-V@{\-\_\-shr\-\_\-dedx\-\_\-\-V}}
+d\-E/dx of the leading shower on the U plane with the 1x4 cm box method \hypertarget{classselection_1_1CC0piNpSelection_a7c90820db5398c179aef3186ab11e521}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-dedx\-\_\-\-U\-\_\-cali@{\-\_\-shr\-\_\-dedx\-\_\-\-U\-\_\-cali}}
+\index{\-\_\-shr\-\_\-dedx\-\_\-\-U\-\_\-cali@{\-\_\-shr\-\_\-dedx\-\_\-\-U\-\_\-cali}!selection::CC0piNpSelection@{selection\-::\-C\-C0pi\-Np\-Selection}}
+\subsubsection[{\-\_\-shr\-\_\-dedx\-\_\-\-U\-\_\-cali}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-C0pi\-Np\-Selection\-::\-\_\-shr\-\_\-dedx\-\_\-\-U\-\_\-cali\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CC0piNpSelection_a7c90820db5398c179aef3186ab11e521}
+Calibrated d\-E/dx of the leading shower on the U plane with the 1x4 cm box method \hypertarget{classselection_1_1CC0piNpSelection_a392211f6d023d92bf113c20098c5e7fe}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-dedx\-\_\-\-V@{\-\_\-shr\-\_\-dedx\-\_\-\-V}}
 \index{\-\_\-shr\-\_\-dedx\-\_\-\-V@{\-\_\-shr\-\_\-dedx\-\_\-\-V}!selection::CC0piNpSelection@{selection\-::\-C\-C0pi\-Np\-Selection}}
 \subsubsection[{\-\_\-shr\-\_\-dedx\-\_\-\-V}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-C0pi\-Np\-Selection\-::\-\_\-shr\-\_\-dedx\-\_\-\-V\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CC0piNpSelection_a392211f6d023d92bf113c20098c5e7fe}
-d\-E/dx of the leading shower on the V plane with the 1x4 cm box method \hypertarget{classselection_1_1CC0piNpSelection_a1af96c31bd3afe4b111f429927bbff1c}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-dedx\-\_\-\-Y@{\-\_\-shr\-\_\-dedx\-\_\-\-Y}}
+d\-E/dx of the leading shower on the V plane with the 1x4 cm box method \hypertarget{classselection_1_1CC0piNpSelection_a0ef852fb0ecd8a3b6f871ed765be12da}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-dedx\-\_\-\-V\-\_\-cali@{\-\_\-shr\-\_\-dedx\-\_\-\-V\-\_\-cali}}
+\index{\-\_\-shr\-\_\-dedx\-\_\-\-V\-\_\-cali@{\-\_\-shr\-\_\-dedx\-\_\-\-V\-\_\-cali}!selection::CC0piNpSelection@{selection\-::\-C\-C0pi\-Np\-Selection}}
+\subsubsection[{\-\_\-shr\-\_\-dedx\-\_\-\-V\-\_\-cali}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-C0pi\-Np\-Selection\-::\-\_\-shr\-\_\-dedx\-\_\-\-V\-\_\-cali\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CC0piNpSelection_a0ef852fb0ecd8a3b6f871ed765be12da}
+Calibrated d\-E/dx of the leading shower on the V plane with the 1x4 cm box method \hypertarget{classselection_1_1CC0piNpSelection_a1af96c31bd3afe4b111f429927bbff1c}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-dedx\-\_\-\-Y@{\-\_\-shr\-\_\-dedx\-\_\-\-Y}}
 \index{\-\_\-shr\-\_\-dedx\-\_\-\-Y@{\-\_\-shr\-\_\-dedx\-\_\-\-Y}!selection::CC0piNpSelection@{selection\-::\-C\-C0pi\-Np\-Selection}}
 \subsubsection[{\-\_\-shr\-\_\-dedx\-\_\-\-Y}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-C0pi\-Np\-Selection\-::\-\_\-shr\-\_\-dedx\-\_\-\-Y\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CC0piNpSelection_a1af96c31bd3afe4b111f429927bbff1c}
-d\-E/dx of the leading shower on the Y plane with the 1x4 cm box method \hypertarget{classselection_1_1CC0piNpSelection_a20705dc212e16009a0ce4ace27d54af7}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-distance@{\-\_\-shr\-\_\-distance}}
+d\-E/dx of the leading shower on the Y plane with the 1x4 cm box method \hypertarget{classselection_1_1CC0piNpSelection_a114f4276a8931d33d8f77fede58398fa}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-dedx\-\_\-\-Y\-\_\-cali@{\-\_\-shr\-\_\-dedx\-\_\-\-Y\-\_\-cali}}
+\index{\-\_\-shr\-\_\-dedx\-\_\-\-Y\-\_\-cali@{\-\_\-shr\-\_\-dedx\-\_\-\-Y\-\_\-cali}!selection::CC0piNpSelection@{selection\-::\-C\-C0pi\-Np\-Selection}}
+\subsubsection[{\-\_\-shr\-\_\-dedx\-\_\-\-Y\-\_\-cali}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-C0pi\-Np\-Selection\-::\-\_\-shr\-\_\-dedx\-\_\-\-Y\-\_\-cali\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CC0piNpSelection_a114f4276a8931d33d8f77fede58398fa}
+Calibrated d\-E/dx of the leading shower on the Y plane with the 1x4 cm box method \hypertarget{classselection_1_1CC0piNpSelection_a20705dc212e16009a0ce4ace27d54af7}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-distance@{\-\_\-shr\-\_\-distance}}
 \index{\-\_\-shr\-\_\-distance@{\-\_\-shr\-\_\-distance}!selection::CC0piNpSelection@{selection\-::\-C\-C0pi\-Np\-Selection}}
 \subsubsection[{\-\_\-shr\-\_\-distance}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-C0pi\-Np\-Selection\-::\-\_\-shr\-\_\-distance\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CC0piNpSelection_a20705dc212e16009a0ce4ace27d54af7}
 Distance between leading shower vertex and reconstructed neutrino vertex \hypertarget{classselection_1_1CC0piNpSelection_abf854f061d0476dc08ae8b3d71e7a86d}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-energy@{\-\_\-shr\-\_\-energy}}
 \index{\-\_\-shr\-\_\-energy@{\-\_\-shr\-\_\-energy}!selection::CC0piNpSelection@{selection\-::\-C\-C0pi\-Np\-Selection}}
 \subsubsection[{\-\_\-shr\-\_\-energy}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-C0pi\-Np\-Selection\-::\-\_\-shr\-\_\-energy\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CC0piNpSelection_abf854f061d0476dc08ae8b3d71e7a86d}
-Energy of the shower with the largest number of hits (in Ge\-V) \hypertarget{classselection_1_1CC0piNpSelection_a6e42f011e79f646f36df7148907d1b59}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-energy\-\_\-tot@{\-\_\-shr\-\_\-energy\-\_\-tot}}
+Energy of the shower with the largest number of hits (in Ge\-V) \hypertarget{classselection_1_1CC0piNpSelection_a910f18dc66ac2f22aa8cbdd6b86c7d0e}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-energy\-\_\-cali@{\-\_\-shr\-\_\-energy\-\_\-cali}}
+\index{\-\_\-shr\-\_\-energy\-\_\-cali@{\-\_\-shr\-\_\-energy\-\_\-cali}!selection::CC0piNpSelection@{selection\-::\-C\-C0pi\-Np\-Selection}}
+\subsubsection[{\-\_\-shr\-\_\-energy\-\_\-cali}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-C0pi\-Np\-Selection\-::\-\_\-shr\-\_\-energy\-\_\-cali\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CC0piNpSelection_a910f18dc66ac2f22aa8cbdd6b86c7d0e}
+Energy of the calibrated shower with the largest number of hits (in Ge\-V) \hypertarget{classselection_1_1CC0piNpSelection_a6e42f011e79f646f36df7148907d1b59}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-energy\-\_\-tot@{\-\_\-shr\-\_\-energy\-\_\-tot}}
 \index{\-\_\-shr\-\_\-energy\-\_\-tot@{\-\_\-shr\-\_\-energy\-\_\-tot}!selection::CC0piNpSelection@{selection\-::\-C\-C0pi\-Np\-Selection}}
 \subsubsection[{\-\_\-shr\-\_\-energy\-\_\-tot}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-C0pi\-Np\-Selection\-::\-\_\-shr\-\_\-energy\-\_\-tot\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CC0piNpSelection_a6e42f011e79f646f36df7148907d1b59}
-Sum of the energy of the showers (in Ge\-V) \hypertarget{classselection_1_1CC0piNpSelection_a750834ef52299d85f9596bbbafa1dffb}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-hits\-\_\-max@{\-\_\-shr\-\_\-hits\-\_\-max}}
+Sum of the energy of the showers (in Ge\-V) \hypertarget{classselection_1_1CC0piNpSelection_aae69f88600d31bb3456808268fb63c1c}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-energy\-\_\-tot\-\_\-cali@{\-\_\-shr\-\_\-energy\-\_\-tot\-\_\-cali}}
+\index{\-\_\-shr\-\_\-energy\-\_\-tot\-\_\-cali@{\-\_\-shr\-\_\-energy\-\_\-tot\-\_\-cali}!selection::CC0piNpSelection@{selection\-::\-C\-C0pi\-Np\-Selection}}
+\subsubsection[{\-\_\-shr\-\_\-energy\-\_\-tot\-\_\-cali}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-C0pi\-Np\-Selection\-::\-\_\-shr\-\_\-energy\-\_\-tot\-\_\-cali\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CC0piNpSelection_aae69f88600d31bb3456808268fb63c1c}
+Sum of the energy of the calibrated showers (in Ge\-V) \hypertarget{classselection_1_1CC0piNpSelection_a750834ef52299d85f9596bbbafa1dffb}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-hits\-\_\-max@{\-\_\-shr\-\_\-hits\-\_\-max}}
 \index{\-\_\-shr\-\_\-hits\-\_\-max@{\-\_\-shr\-\_\-hits\-\_\-max}!selection::CC0piNpSelection@{selection\-::\-C\-C0pi\-Np\-Selection}}
 \subsubsection[{\-\_\-shr\-\_\-hits\-\_\-max}]{\setlength{\rightskip}{0pt plus 5cm}unsigned int selection\-::\-C\-C0pi\-Np\-Selection\-::\-\_\-shr\-\_\-hits\-\_\-max\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CC0piNpSelection_a750834ef52299d85f9596bbbafa1dffb}
 Number of hits of the leading shower \hypertarget{classselection_1_1CC0piNpSelection_aa6e7162371e3e343df001f0afc8a20b8}{\index{selection\-::\-C\-C0pi\-Np\-Selection@{selection\-::\-C\-C0pi\-Np\-Selection}!\-\_\-shr\-\_\-hits\-\_\-tot@{\-\_\-shr\-\_\-hits\-\_\-tot}}
