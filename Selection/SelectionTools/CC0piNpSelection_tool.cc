@@ -9,11 +9,17 @@
 #include "TParticlePDG.h"
 #include "../CommonDefs/Typedefs.h"
 #include "../CommonDefs/PIDFuncs.h"
+#include "../CommonDefs/CalibrationFuncs.h"
+
 #include "larcore/Geometry/Geometry.h"
+#include "lardataobj/RecoBase/SpacePoint.h"
 
 // backtracking tools
 #include "../CommonDefs/BacktrackingFuncs.h"
 #include "canvas/Persistency/Common/FindManyP.h"
+
+#include "ubevt/Database/TPCEnergyCalib/TPCEnergyCalibProvider.h"
+#include "ubevt/Database/TPCEnergyCalib/TPCEnergyCalibService.h"
 
 namespace selection
 {
@@ -73,7 +79,8 @@ public:
     bool isFiducial(const double x[3]) const;
 
 private:
-    trkf::TrackMomentumCalculator _trkmom;
+    const trkf::TrackMomentumCalculator _trkmom;
+
     TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
     TParticlePDG *electron = TDatabasePDG::Instance()->GetParticle(11);
     TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
@@ -113,9 +120,14 @@ private:
     unsigned int _shr_hits_u_tot; /**< Total number of shower hits on the U plane */
     float _shr_energy; /**< Energy of the shower with the largest number of hits (in GeV) */
     float _shr_energy_tot; /**< Sum of the energy of the showers (in GeV) */
+    float _shr_energy_cali; /**< Energy of the calibrated shower with the largest number of hits (in GeV) */
+    float _shr_energy_tot_cali; /**< Sum of the energy of the calibrated showers (in GeV) */
     float _shr_dedx_Y; /**< dE/dx of the leading shower on the Y plane with the 1x4 cm box method */
     float _shr_dedx_V; /**< dE/dx of the leading shower on the V plane with the 1x4 cm box method */
     float _shr_dedx_U; /**< dE/dx of the leading shower on the U plane with the 1x4 cm box method */
+    float _shr_dedx_Y_cali; /**< Calibrated dE/dx of the leading shower on the Y plane with the 1x4 cm box method */
+    float _shr_dedx_V_cali; /**< Calibrated dE/dx of the leading shower on the V plane with the 1x4 cm box method */
+    float _shr_dedx_U_cali; /**< Calibrated dE/dx of the leading shower on the U plane with the 1x4 cm box method */
     float _shr_distance; /**< Distance between leading shower vertex and reconstructed neutrino vertex */
     float _tksh_distance; /**< Distance between leading shower vertex and longest track vertex */
     float _tksh_angle; /**< Angle between leading shower vertex and longest track vertex */
@@ -277,8 +289,15 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
     art::ValidHandle<std::vector<recob::PFParticle>> inputPfParticle = e.getValidHandle<std::vector<recob::PFParticle>>(fCLSproducer);
     art::ValidHandle<std::vector<recob::Slice>> inputSlice = e.getValidHandle<std::vector<recob::Slice>>(fCLSproducer);
+    art::ValidHandle<std::vector<recob::SpacePoint>> inputSpacePoint = e.getValidHandle<std::vector<recob::SpacePoint>>(fCLSproducer);
+
+
     auto assocSliceHit = std::unique_ptr<art::FindManyP<recob::Hit>>(new art::FindManyP<recob::Hit>(inputSlice, e, fCLSproducer));
     auto assocSlice = std::unique_ptr<art::FindManyP<recob::Slice>>(new art::FindManyP<recob::Slice>(inputPfParticle, e, fCLSproducer));
+    auto assocSpacePoint = std::unique_ptr<art::FindManyP<recob::SpacePoint>>(new art::FindManyP<recob::SpacePoint>(inputPfParticle, e, fCLSproducer));
+
+    auto assocSpacePointHit = std::unique_ptr<art::FindManyP<recob::Hit>>(new art::FindManyP<recob::Hit>(inputSpacePoint, e, fCLSproducer));
+
     art::FindManyP<larpandoraobj::PFParticleMetadata> pfPartToMetadataAssoc(inputPfParticle, e, fCLSproducer);
     searchingfornues::ProxyCaloColl_t const *tkcalo_proxy = NULL;
     if (fTRKproducerTrkFit != "")
@@ -447,6 +466,12 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 }
 
                 _shr_energy_tot += shr->Energy()[2] / 1000;
+
+                std::vector<float> cali_corr(3);
+                std::vector<art::Ptr<recob::SpacePoint>> spcpnts = assocSpacePoint->at(i_pfp);
+                searchingfornues::getCali(spcpnts, *assocSpacePointHit, cali_corr);
+                _shr_energy_tot_cali += shr->Energy()[2] / 1000 * cali_corr[2];
+
                 _shr_hits_tot += shr_hits;
                 if (shr_hits > _shr_hits_max)
                 {
@@ -477,18 +502,27 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                             }
                         }
                     }
+
                     _shr_distance = (shr->ShowerStart() - nuvtx).Mag();
                     shr_vtx = shr->ShowerStart();
                     shr_p.SetXYZ(shr->Direction().X(), shr->Direction().Y(), shr->Direction().Z());
                     shr_p.SetMag(sqrt(pow(shr->Energy()[2] / 1000. + electron->Mass(), 2) - pow(electron->Mass(), 2)));
                     total_p += shr_p;
+                    std::vector< float > dqdx_cali(3);
+                    searchingfornues::getDQdxCali(shr, dqdx_cali);
                     _shr_dedx_Y = shr->dEdx()[2];
                     _shr_dedx_V = shr->dEdx()[1];
                     _shr_dedx_U = shr->dEdx()[0];
+                    _shr_dedx_Y_cali = shr->dEdx()[2] * dqdx_cali[2];
+                    _shr_dedx_V_cali = shr->dEdx()[1] * dqdx_cali[1];
+                    _shr_dedx_U_cali = shr->dEdx()[0] * dqdx_cali[0];
                     _shr_start_x = shr->ShowerStart().X();
                     _shr_start_y = shr->ShowerStart().Y();
                     _shr_start_z = shr->ShowerStart().Z();
+
                     _shr_energy = shr->Energy()[2] / 1000; // GeV
+                    _shr_energy_cali = _shr_energy * cali_corr[2];
+
                     _shr_pfp_id = i_pfp;
                     _shr_hits_max = shr_hits;
                     _shr_score = trkshrscore;
@@ -750,8 +784,13 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_dedx_Y = std::numeric_limits<float>::lowest();
     _shr_dedx_V = std::numeric_limits<float>::lowest();
     _shr_dedx_U = std::numeric_limits<float>::lowest();
+    _shr_dedx_Y_cali = std::numeric_limits<float>::lowest();
+    _shr_dedx_V_cali = std::numeric_limits<float>::lowest();
+    _shr_dedx_U_cali = std::numeric_limits<float>::lowest();
     _shr_score = std::numeric_limits<float>::lowest();
     _shr_energy = 0;
+    _shr_energy_cali = 0;
+    _shr_energy_tot_cali = 0;
     _shr_energy_tot = 0;
     _shr_distance = std::numeric_limits<float>::lowest();
     _tksh_distance = std::numeric_limits<float>::lowest();
@@ -850,6 +889,8 @@ void CC0piNpSelection::setBranches(TTree *_tree)
 
     _tree->Branch("shr_energy_tot", &_shr_energy_tot, "shr_energy_tot/F");
     _tree->Branch("shr_energy", &_shr_energy, "shr_energy/F");
+    _tree->Branch("shr_energy_tot_cali", &_shr_energy_tot_cali, "shr_energy_tot_cali/F");
+    _tree->Branch("shr_energy_cali", &_shr_energy_cali, "shr_energy_cali/F");
     _tree->Branch("shr_theta", &_shr_theta, "shr_theta/F");
     _tree->Branch("shr_phi", &_shr_phi, "shr_phi/F");
     _tree->Branch("shr_pca_0", &_shr_pca_0, "shr_pca_0/F");
@@ -871,6 +912,9 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_dedx_Y", &_shr_dedx_Y, "shr_dedx_Y/F");
     _tree->Branch("shr_dedx_V", &_shr_dedx_V, "shr_dedx_V/F");
     _tree->Branch("shr_dedx_U", &_shr_dedx_U, "shr_dedx_U/F");
+    _tree->Branch("shr_dedx_Y_cali", &_shr_dedx_Y_cali, "shr_dedx_Y_cali/F");
+    _tree->Branch("shr_dedx_V_cali", &_shr_dedx_V_cali, "shr_dedx_V_cali/F");
+    _tree->Branch("shr_dedx_U_cali", &_shr_dedx_U_cali, "shr_dedx_U_cali/F");
     _tree->Branch("shr_tkfit_dedx_Y", &_shr_tkfit_dedx_Y, "shr_tkfit_dedx_Y/F");
     _tree->Branch("shr_tkfit_dedx_V", &_shr_tkfit_dedx_V, "shr_tkfit_dedx_V/F");
     _tree->Branch("shr_tkfit_dedx_U", &_shr_tkfit_dedx_U, "shr_tkfit_dedx_U/F");
