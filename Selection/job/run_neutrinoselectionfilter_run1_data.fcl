@@ -1,8 +1,5 @@
 #include "neutrinoselection.fcl"
 
-DummyAnalyzer: {
-    module_type:                "DummyAnalyzer"
-}
 
 process_name: NeutrinoSelectionFilter
 

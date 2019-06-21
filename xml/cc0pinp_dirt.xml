@@ -19,7 +19,7 @@
 <!-- data EXTBNB : -->
 <!--<!ENTITY defname "data_extbnb_mcc9.0_v08_00_00_13_new_run1_reco2" >-->
 <!-- dirt overlay : -->
-<!ENTITY defname "prodgenie_bnb_dirt_uboone_overlay_mcc9_v08_00_00_12_run1_reco2" >
+<!ENTITY defname "overlay_dirt_Run1_mcc9_v08_00_00_13d_reco2" >
 ]>
 
 <job>
@@ -33,14 +33,14 @@
   <os>SL6</os>
 
   <!-- Batch resources -->
-  <resource>DEDICATED,OPPORTUNISTIC,OFFSITE</resource>
+  <resource>DEDICATED,OPPORTUNISTIC</resource>
 
   <!-- Larsoft information -->
   <larsoft>
     <tag>&release;</tag>
     <qual>e17:prof</qual>
     <local>/pnfs/uboone/resilient/users/srsoleti/searchingfornues.tar</local>
-    <fcldir>/uboone/app/users/srsoleti/searchingfornues/srcs/ubana/ubana/searchingfornues/Selection/job</fcldir>
+    <fcldir>/uboone/app/users/srsoleti/v08_00_00_13/srcs/ubana/ubana/searchingfornues/Selection/job</fcldir>
   </larsoft>
 
   <!-- Project stages -->
@@ -48,7 +48,7 @@
   <stage name="cc0pinp_selection">
     <inputdef>&defname;</inputdef>
     <!--<inputlist>/pnfs/uboone/resilient/users/&user;/jobs/searchingfornues_v08_00_00_09/overlayMar19.list</inputlist>-->
-    <fcl>run_neutrinoselectionfilter_run1_dirt_cc0pinp.fcl</fcl>
+    <fcl>run_neutrinoselectionfilter_run1_mc_cc0pinp.fcl</fcl>
     <outdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&defname;/v00</outdir>
     <logdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&defname;/v00</logdir>
     <workdir>/pnfs/uboone/scratch/users/&user;/work/&release;/&name;/&date;/&defname;/v00</workdir>
@@ -58,7 +58,7 @@
     <check>0</check>
     <memory>2000</memory>
     <disk>10GB</disk>
-    <numjobs>44</numjobs>
+    <numjobs>98</numjobs>
     <maxfilesperjob>25</maxfilesperjob>
     <schema>root</schema>
     <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600 </jobsub>
