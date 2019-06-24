@@ -130,8 +130,8 @@ private:
    */
   /*
   size_t BackTrack(const art::FindMany<simb::MCParticle,anab::BackTrackerHitMatchingData> backtrack_h,
-		   const std::vector<unsigned int>& trackid_v,
-		   const std::vector<unsigned int>& hit_idx_v, float& completeness, float& purity);
+       const std::vector<unsigned int>& trackid_v,
+       const std::vector<unsigned int>& hit_idx_v, float& completeness, float& purity);
   */
 
   /**
