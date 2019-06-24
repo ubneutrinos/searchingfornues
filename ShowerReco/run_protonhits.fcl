@@ -1,6 +1,6 @@
 #include "services_microboone.fcl"
 #include "triggeralgo_service.fcl"
-#include "shrreco3d.fcl"
+#include "proximityclustering.fcl"
 
 process_name: ShrMerger
 
@@ -47,54 +47,56 @@ source:
 # Modules are grouped by type.
 physics:
 {
-
+    
     producers:
         {
-
+        
         ### random number saver
         rns:                 { module_type: RandomNumberSaver }
-
+        
         ### shower reco module
-
-        shrmerger: {
-            module_type: "ShowerMerger"
-            MCTproducer: "generator"
-            PFPproducer: "pandora"
-            PCAproducer: "pandora"
-            SHRproducer: "shrreco3d" #"pandora"
-            HITproducer: "pandora"
-            CLSproducer: "pandora"
-            SLCproducer: "pandora"
-            VTXproducer: "pandora"
-            TRKproducer: "pandora"
-            ShrVtxTrkDistMax: 1.0
-            ShrTrkDotMin: 0.9
-            MinBranchConeDot: 0.8
-            MinBranchVtxDist: 30.
+        
+        nuslice: {
+            module_type: "SaveSliceHits"
+            Hitproducer: "gaushit"
+            Clusterproducer: "pandora"
+            Pfpproducer: "pandora"
+            Sliceproducer: "pandora"
+            MinHitCharge: 180.
             }
 
-        shrrecomerger : @local::ShrReco3DPandora
+        proximity: @local::ProximityClustering
 
         }
     analyzers:
-        {
+        { 
+
+        protonpurity: {
+            module_type:     "ProtonHitPurity"
+            Clusterproducer: "proximity"
+            Hitproducer:     "gaushit"
+            MCPproducer:     "largeant"
+            PFPproducer:     "pandora"
+            SHRproducer:     "shrreco3d"
         }
 
+}
+    
     #reco: [ rns, ophit, opflash, simpleFlash, opflashfilter ]
-    reco: [ rns, shrmerger, shrrecomerger ]
-    # ana: [ nueana ]
-
-    #define the output stream, there could be more than one if using filters
+    reco: [ rns, nuslice, proximity ]
+     ana: [ protonpurity ]
+    
+    #define the output stream, there could be more than one if using filters 
     stream1:  [ out1 ]
-
-    #trigger_paths is a keyword and contains the paths that modify the art::event,
+    
+    #trigger_paths is a keyword and contains the paths that modify the art::event, 
     #ie filters and producers
-    #trigger_paths: [reco]
-
-    #end_paths is a keyword and contains the paths that do not modify the art::Event,
+    #trigger_paths: [reco] 
+    
+    #end_paths is a keyword and contains the paths that do not modify the art::Event, 
     #ie analyzers and output streams.  these all run simultaneously
     #end_paths:     [stream1,ana]
-    end_paths:     [stream1]
+    end_paths:     [ana]
     }
 
 #entry in the output stream you want those to go to, where XXX is the label of the filter module(s)
@@ -103,23 +105,12 @@ outputs:
     out1:
         {
         module_type: RootOutput
-        fileName:    "shrmerger.root"
+        fileName:    "slicehits.root"
         dataTier:    "reco"
         compressionLevel: 1
         }
     }
 
 
-physics.producers.shrrecomerger.BacktrackTag: ""
-physics.producers.shrrecomerger.ADCtoE: [240,240,240] # e-/ADC
-physics.producers.shrrecomerger.NeutrinoEvent: false
-physics.producers.shrrecomerger.PFPproducer:  "shrmerger"
-physics.producers.shrrecomerger.Clusproducer: "shrmerger"
-physics.producers.shrrecomerger.Vtxproducer:  "shrmerger"
-
-physics.producers.shrrecomerger.ProtoShowerTool.PFPproducer:  "shrmerger"
-physics.producers.shrrecomerger.ProtoShowerTool.Clusproducer: "shrmerger"
-physics.producers.shrrecomerger.ProtoShowerTool.Vtxproducer:  "shrmerger"
-
-
-### Here we include the file giving us run/data dependent overrides
+physics.producers.proximity.VtxProducer: "pandora"
+physics.producers.proximity.HitProducer: "nuslice"
