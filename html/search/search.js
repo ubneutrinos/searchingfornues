@@ -10,7 +10,7 @@ var indexSectionsWithContent =
   0: "_abcdefgimnoprst~",
   1: "abcdefmnopst",
   2: "abcdefginoprst~",
-  3: "_efmps"
+  3: "_fm"
 };
 
 var indexSectionNames =
