@@ -1,0 +1,143 @@
+\hypertarget{classProtonHitPurity}{\section{Proton\-Hit\-Purity Class Reference}
+\label{classProtonHitPurity}\index{Proton\-Hit\-Purity@{Proton\-Hit\-Purity}}
+}
+Inheritance diagram for Proton\-Hit\-Purity\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classProtonHitPurity}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classProtonHitPurity_abe7eb14746a7e1555142a2f97dd6c8a7}{{\bfseries Proton\-Hit\-Purity} (fhicl\-::\-Parameter\-Set const \&p)}\label{classProtonHitPurity_abe7eb14746a7e1555142a2f97dd6c8a7}
+
+\item 
+\hypertarget{classProtonHitPurity_a30e40f4da9dd297a45af8453698365be}{{\bfseries Proton\-Hit\-Purity} (\hyperlink{classProtonHitPurity}{Proton\-Hit\-Purity} const \&)=delete}\label{classProtonHitPurity_a30e40f4da9dd297a45af8453698365be}
+
+\item 
+\hypertarget{classProtonHitPurity_a5893503a8818f9e2b060529ff01c5643}{{\bfseries Proton\-Hit\-Purity} (\hyperlink{classProtonHitPurity}{Proton\-Hit\-Purity} \&\&)=delete}\label{classProtonHitPurity_a5893503a8818f9e2b060529ff01c5643}
+
+\item 
+\hypertarget{classProtonHitPurity_a79ea93f2e5ee376569b3db012f90bf72}{\hyperlink{classProtonHitPurity}{Proton\-Hit\-Purity} \& {\bfseries operator=} (\hyperlink{classProtonHitPurity}{Proton\-Hit\-Purity} const \&)=delete}\label{classProtonHitPurity_a79ea93f2e5ee376569b3db012f90bf72}
+
+\item 
+\hypertarget{classProtonHitPurity_af5c3fb096ec529ada9dbdb69ce78053f}{\hyperlink{classProtonHitPurity}{Proton\-Hit\-Purity} \& {\bfseries operator=} (\hyperlink{classProtonHitPurity}{Proton\-Hit\-Purity} \&\&)=delete}\label{classProtonHitPurity_af5c3fb096ec529ada9dbdb69ce78053f}
+
+\item 
+\hypertarget{classProtonHitPurity_a39595f8fc8677b6b95ce467f685ee276}{void {\bfseries analyze} (art\-::\-Event const \&e) override}\label{classProtonHitPurity_a39595f8fc8677b6b95ce467f685ee276}
+
+\item 
+\hypertarget{classProtonHitPurity_a6838668a5d854bd257375d1a437278ee}{void {\bfseries begin\-Job} () override}\label{classProtonHitPurity_a6838668a5d854bd257375d1a437278ee}
+
+\item 
+\hypertarget{classProtonHitPurity_accac7c769c035cb43c9d6e5a780ab241}{void {\bfseries end\-Job} () override}\label{classProtonHitPurity_accac7c769c035cb43c9d6e5a780ab241}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classProtonHitPurity_adfed832259669bb323f5a6a4eae7107e}{Build\-P\-F\-P\-Map} (const searchingfornues\-::\-Proxy\-Pfp\-Coll\-\_\-t \&pfp\-\_\-pxy\-\_\-col)
+\begin{DoxyCompactList}\small\item\em function to builf a map linking P\-F\-Particle index to Self() attribute \end{DoxyCompactList}\item 
+void \hyperlink{classProtonHitPurity_a7e468a256d51c80933e9bb9b6be77b94}{Add\-Daughters} (const searchingfornues\-::\-Proxy\-Pfp\-Elem\-\_\-t \&pfp\-\_\-pxy, const searchingfornues\-::\-Proxy\-Pfp\-Coll\-\_\-t \&pfp\-\_\-pxy\-\_\-col, std\-::vector$<$ searchingfornues\-::\-Proxy\-Pfp\-Elem\-\_\-t $>$ \&slice\-\_\-v)
+\begin{DoxyCompactList}\small\item\em build P\-F\-Particle hierarchy (i.\-e. slice) from parent \mbox{[}recursive function\mbox{]} \end{DoxyCompactList}\item 
+\hypertarget{classProtonHitPurity_af073c27c1dd243faec1019466e52dfdd}{std\-::vector$<$ art\-::\-Ptr\\*
+$<$ recob\-::\-Hit $>$ $>$ {\bfseries get\-Gauss\-Hits} (const std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Hit $>$$>$ \&hits, const art\-::\-Valid\-Handle$<$ std\-::vector$<$ recob\-::\-Hit $>$ $>$ gaushit\-\_\-h)}\label{classProtonHitPurity_af073c27c1dd243faec1019466e52dfdd}
+
+\item 
+\hypertarget{classProtonHitPurity_a8738628194b94c23f7666d3c85170a27}{bool {\bfseries Is\-Proton\-Isolated} (const std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Hit $>$$>$ \&hits, const art\-::\-Valid\-Handle$<$ std\-::vector$<$ recob\-::\-Hit $>$ $>$ gaushit\-\_\-h)}\label{classProtonHitPurity_a8738628194b94c23f7666d3c85170a27}
+
+\item 
+\hypertarget{classProtonHitPurity_a4b71c7c7e85e49f74bc98960166d1fcc}{void {\bfseries Proton\-Dot} (const float \&proton\-Wire, const float \&proton\-Time, const int \&pl, const T\-Vector3 \&shower\-Vtx, const T\-Vector3 \&shower\-Dir, float \&dot, float \&d2d)}\label{classProtonHitPurity_a4b71c7c7e85e49f74bc98960166d1fcc}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classProtonHitPurity_a9cde3bb38128414175bdec828c258628}{art\-::\-Input\-Tag {\bfseries f\-Clusterproducer}}\label{classProtonHitPurity_a9cde3bb38128414175bdec828c258628}
+
+\item 
+\hypertarget{classProtonHitPurity_a67a39931d4884a9b8551d5158f37c954}{art\-::\-Input\-Tag {\bfseries f\-H\-Tproducer}}\label{classProtonHitPurity_a67a39931d4884a9b8551d5158f37c954}
+
+\item 
+\hypertarget{classProtonHitPurity_a7285b631733a327b17852217edcf130c}{art\-::\-Input\-Tag {\bfseries f\-Hitproducer}}\label{classProtonHitPurity_a7285b631733a327b17852217edcf130c}
+
+\item 
+\hypertarget{classProtonHitPurity_a582ca83452036a5a15bde53595858dab}{art\-::\-Input\-Tag {\bfseries f\-M\-C\-Pproducer}}\label{classProtonHitPurity_a582ca83452036a5a15bde53595858dab}
+
+\item 
+\hypertarget{classProtonHitPurity_a58af404af2943b95545b5435f984b34c}{art\-::\-Input\-Tag {\bfseries f\-P\-F\-Pproducer}}\label{classProtonHitPurity_a58af404af2943b95545b5435f984b34c}
+
+\item 
+\hypertarget{classProtonHitPurity_ae02e24d9473737eba23b266383f240b0}{art\-::\-Input\-Tag {\bfseries f\-S\-H\-Rproducer}}\label{classProtonHitPurity_ae02e24d9473737eba23b266383f240b0}
+
+\item 
+\hypertarget{classProtonHitPurity_abaa0fd0f88cca733f6e1f58248d22e9b}{std\-::map$<$ unsigned int, \\*
+unsigned int $>$ {\bfseries \-\_\-pfpmap}}\label{classProtonHitPurity_abaa0fd0f88cca733f6e1f58248d22e9b}
+
+\item 
+\hypertarget{classProtonHitPurity_a6dd665c27aa4b6da7b90127e1fb2d773}{float {\bfseries \-\_\-wire2cm}}\label{classProtonHitPurity_a6dd665c27aa4b6da7b90127e1fb2d773}
+
+\item 
+\hypertarget{classProtonHitPurity_a8c08fb55f794adf3214370e803bb5a00}{float {\bfseries \-\_\-time2cm}}\label{classProtonHitPurity_a8c08fb55f794adf3214370e803bb5a00}
+
+\item 
+\hypertarget{classProtonHitPurity_a099b95a1f761865698b3518566f161d7}{T\-Tree $\ast$ {\bfseries \-\_\-tree}}\label{classProtonHitPurity_a099b95a1f761865698b3518566f161d7}
+
+\item 
+\hypertarget{classProtonHitPurity_a6844c4cad1d4dde899d327788ffb1fbe}{int {\bfseries \-\_\-nhit}}\label{classProtonHitPurity_a6844c4cad1d4dde899d327788ffb1fbe}
+
+\item 
+\hypertarget{classProtonHitPurity_aaa0874bba49cd73ac89fe3453f5e64d1}{int {\bfseries \-\_\-plane}}\label{classProtonHitPurity_aaa0874bba49cd73ac89fe3453f5e64d1}
+
+\item 
+\hypertarget{classProtonHitPurity_a517cc8f0dfc9a9a0ad5d9fc93df7c20d}{float {\bfseries \-\_\-charge}}\label{classProtonHitPurity_a517cc8f0dfc9a9a0ad5d9fc93df7c20d}
+
+\item 
+\hypertarget{classProtonHitPurity_a189e155a01fe3e39248465acddc04a8c}{float {\bfseries \-\_\-purity}}\label{classProtonHitPurity_a189e155a01fe3e39248465acddc04a8c}
+
+\item 
+\hypertarget{classProtonHitPurity_af81a5c842b98e216cc147e6df4b89946}{float {\bfseries \-\_\-shrdot}}\label{classProtonHitPurity_af81a5c842b98e216cc147e6df4b89946}
+
+\item 
+\hypertarget{classProtonHitPurity_ac45672d1231ae74ac9ffa9d5f7872de2}{float {\bfseries \-\_\-shrdist}}\label{classProtonHitPurity_ac45672d1231ae74ac9ffa9d5f7872de2}
+
+\item 
+\hypertarget{classProtonHitPurity_a4a83bd7758deeddbc8356ceb61e1ba7f}{float {\bfseries \-\_\-shrenergy}}\label{classProtonHitPurity_a4a83bd7758deeddbc8356ceb61e1ba7f}
+
+\item 
+\hypertarget{classProtonHitPurity_aee140d918772b3317099286660d08f1e}{int {\bfseries \-\_\-nshr}}\label{classProtonHitPurity_aee140d918772b3317099286660d08f1e}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classProtonHitPurity_a7e468a256d51c80933e9bb9b6be77b94}{\index{Proton\-Hit\-Purity@{Proton\-Hit\-Purity}!Add\-Daughters@{Add\-Daughters}}
+\index{Add\-Daughters@{Add\-Daughters}!ProtonHitPurity@{Proton\-Hit\-Purity}}
+\subsubsection[{Add\-Daughters}]{\setlength{\rightskip}{0pt plus 5cm}void Proton\-Hit\-Purity\-::\-Add\-Daughters (
+\begin{DoxyParamCaption}
+\item[{const searchingfornues\-::\-Proxy\-Pfp\-Elem\-\_\-t \&}]{pfp\-\_\-pxy, }
+\item[{const searchingfornues\-::\-Proxy\-Pfp\-Coll\-\_\-t \&}]{pfp\-\_\-pxy\-\_\-col, }
+\item[{std\-::vector$<$ searchingfornues\-::\-Proxy\-Pfp\-Elem\-\_\-t $>$ \&}]{slice\-\_\-v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}}\label{classProtonHitPurity_a7e468a256d51c80933e9bb9b6be77b94}
+
+
+build P\-F\-Particle hierarchy (i.\-e. slice) from parent \mbox{[}recursive function\mbox{]} 
+
+pfp\-\_\-pxy \-: parent pfparticle proxy for which to add daughters  pfp\-\_\-pxy\-\_\-col \-: evnt P\-F\-P proxy collection  slice\-\_\-v \-: passed by reference, slice containing all P\-F\-Particles in hierarchy \hypertarget{classProtonHitPurity_adfed832259669bb323f5a6a4eae7107e}{\index{Proton\-Hit\-Purity@{Proton\-Hit\-Purity}!Build\-P\-F\-P\-Map@{Build\-P\-F\-P\-Map}}
+\index{Build\-P\-F\-P\-Map@{Build\-P\-F\-P\-Map}!ProtonHitPurity@{Proton\-Hit\-Purity}}
+\subsubsection[{Build\-P\-F\-P\-Map}]{\setlength{\rightskip}{0pt plus 5cm}void Proton\-Hit\-Purity\-::\-Build\-P\-F\-P\-Map (
+\begin{DoxyParamCaption}
+\item[{const searchingfornues\-::\-Proxy\-Pfp\-Coll\-\_\-t \&}]{pfp\-\_\-pxy\-\_\-col}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}}\label{classProtonHitPurity_adfed832259669bb323f5a6a4eae7107e}
+
+
+function to builf a map linking P\-F\-Particle index to Self() attribute 
+
+handle to event pfparticle record 
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Shower\-Reco/Proton\-Hit\-Purity\-\_\-module.\-cc\end{DoxyCompactItemize}

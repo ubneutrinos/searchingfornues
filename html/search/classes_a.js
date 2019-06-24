@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['saveslicehits',['SaveSliceHits',['../classSaveSliceHits.html',1,'']]],
+  ['secondshowerpurity',['SecondShowerPurity',['../classSecondShowerPurity.html',1,'']]],
   ['selectionexample',['SelectionExample',['../classselection_1_1SelectionExample.html',1,'selection']]],
   ['selectiontoolbase',['SelectionToolBase',['../classselection_1_1SelectionToolBase.html',1,'selection']]],
   ['showeranalysis',['ShowerAnalysis',['../classanalysis_1_1ShowerAnalysis.html',1,'analysis']]],
