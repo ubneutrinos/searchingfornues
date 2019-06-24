@@ -1,0 +1,143 @@
+\hypertarget{classSecondShowerPurity}{\section{Second\-Shower\-Purity Class Reference}
+\label{classSecondShowerPurity}\index{Second\-Shower\-Purity@{Second\-Shower\-Purity}}
+}
+Inheritance diagram for Second\-Shower\-Purity\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classSecondShowerPurity}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSecondShowerPurity_a71eca6026bbad15c88a48b34137c3c9a}{{\bfseries Second\-Shower\-Purity} (fhicl\-::\-Parameter\-Set const \&p)}\label{classSecondShowerPurity_a71eca6026bbad15c88a48b34137c3c9a}
+
+\item 
+\hypertarget{classSecondShowerPurity_ac179e01d4ca5cc86bdbe60a96b7c77f6}{{\bfseries Second\-Shower\-Purity} (\hyperlink{classSecondShowerPurity}{Second\-Shower\-Purity} const \&)=delete}\label{classSecondShowerPurity_ac179e01d4ca5cc86bdbe60a96b7c77f6}
+
+\item 
+\hypertarget{classSecondShowerPurity_a84a772f635474b23f01ff0a9310a17ec}{{\bfseries Second\-Shower\-Purity} (\hyperlink{classSecondShowerPurity}{Second\-Shower\-Purity} \&\&)=delete}\label{classSecondShowerPurity_a84a772f635474b23f01ff0a9310a17ec}
+
+\item 
+\hypertarget{classSecondShowerPurity_a4eb7919d85a8756fe432dddd9061ea85}{\hyperlink{classSecondShowerPurity}{Second\-Shower\-Purity} \& {\bfseries operator=} (\hyperlink{classSecondShowerPurity}{Second\-Shower\-Purity} const \&)=delete}\label{classSecondShowerPurity_a4eb7919d85a8756fe432dddd9061ea85}
+
+\item 
+\hypertarget{classSecondShowerPurity_a6235a3f18b7a78b19a05047c644e31e4}{\hyperlink{classSecondShowerPurity}{Second\-Shower\-Purity} \& {\bfseries operator=} (\hyperlink{classSecondShowerPurity}{Second\-Shower\-Purity} \&\&)=delete}\label{classSecondShowerPurity_a6235a3f18b7a78b19a05047c644e31e4}
+
+\item 
+\hypertarget{classSecondShowerPurity_a3850d9497262ed256e5a7476d3982725}{void {\bfseries analyze} (art\-::\-Event const \&e) override}\label{classSecondShowerPurity_a3850d9497262ed256e5a7476d3982725}
+
+\item 
+\hypertarget{classSecondShowerPurity_a452d497e9edfaa2576a3b5a0540a22a8}{void {\bfseries begin\-Job} () override}\label{classSecondShowerPurity_a452d497e9edfaa2576a3b5a0540a22a8}
+
+\item 
+\hypertarget{classSecondShowerPurity_abf54dcc8e9113033b779484072ae1780}{void {\bfseries end\-Job} () override}\label{classSecondShowerPurity_abf54dcc8e9113033b779484072ae1780}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classSecondShowerPurity_a740e87a9a228f255bca15d2f04505aa9}{Build\-P\-F\-P\-Map} (const searchingfornues\-::\-Proxy\-Pfp\-Coll\-\_\-t \&pfp\-\_\-pxy\-\_\-col)
+\begin{DoxyCompactList}\small\item\em function to builf a map linking P\-F\-Particle index to Self() attribute \end{DoxyCompactList}\item 
+void \hyperlink{classSecondShowerPurity_a91a362195490bc158713e4ed84ed0fa2}{Add\-Daughters} (const searchingfornues\-::\-Proxy\-Pfp\-Elem\-\_\-t \&pfp\-\_\-pxy, const searchingfornues\-::\-Proxy\-Pfp\-Coll\-\_\-t \&pfp\-\_\-pxy\-\_\-col, std\-::vector$<$ searchingfornues\-::\-Proxy\-Pfp\-Elem\-\_\-t $>$ \&slice\-\_\-v)
+\begin{DoxyCompactList}\small\item\em build P\-F\-Particle hierarchy (i.\-e. slice) from parent \mbox{[}recursive function\mbox{]} \end{DoxyCompactList}\item 
+\hypertarget{classSecondShowerPurity_ad2c997fc6ccdea277c14cfcad5c83243}{std\-::vector$<$ art\-::\-Ptr\\*
+$<$ recob\-::\-Hit $>$ $>$ {\bfseries get\-Gauss\-Hits} (const std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Hit $>$$>$ \&hits, const art\-::\-Valid\-Handle$<$ std\-::vector$<$ recob\-::\-Hit $>$ $>$ gaushit\-\_\-h)}\label{classSecondShowerPurity_ad2c997fc6ccdea277c14cfcad5c83243}
+
+\item 
+\hypertarget{classSecondShowerPurity_aca45d8671bf9d292eed1ed00a80329b1}{bool {\bfseries Is\-Proton\-Isolated} (const std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Hit $>$$>$ \&hits, const art\-::\-Valid\-Handle$<$ std\-::vector$<$ recob\-::\-Hit $>$ $>$ gaushit\-\_\-h)}\label{classSecondShowerPurity_aca45d8671bf9d292eed1ed00a80329b1}
+
+\item 
+\hypertarget{classSecondShowerPurity_ac3aa736b52623968b984814ac75d6510}{void {\bfseries Gamma\-Dot} (const float \&gamma\-Wire, const float \&gamma\-Time, const int \&pl, const T\-Vector3 \&shower\-Vtx, const T\-Vector3 \&shower\-Dir, float \&dot, float \&d2d)}\label{classSecondShowerPurity_ac3aa736b52623968b984814ac75d6510}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSecondShowerPurity_a641801003f7a8cab0bb13efc21583739}{art\-::\-Input\-Tag {\bfseries f\-Clusterproducer}}\label{classSecondShowerPurity_a641801003f7a8cab0bb13efc21583739}
+
+\item 
+\hypertarget{classSecondShowerPurity_aac4bc55cedfa1905dfb2c60197198007}{art\-::\-Input\-Tag {\bfseries f\-H\-Tproducer}}\label{classSecondShowerPurity_aac4bc55cedfa1905dfb2c60197198007}
+
+\item 
+\hypertarget{classSecondShowerPurity_a397ee926f1a3b5594fde75933b30b48b}{art\-::\-Input\-Tag {\bfseries f\-Hitproducer}}\label{classSecondShowerPurity_a397ee926f1a3b5594fde75933b30b48b}
+
+\item 
+\hypertarget{classSecondShowerPurity_ab3ba769b6c15e325813bad206a7a2223}{art\-::\-Input\-Tag {\bfseries f\-P\-F\-Pproducer}}\label{classSecondShowerPurity_ab3ba769b6c15e325813bad206a7a2223}
+
+\item 
+\hypertarget{classSecondShowerPurity_af3cade2862986deb0c2333f7a13208ea}{art\-::\-Input\-Tag {\bfseries f\-S\-H\-Rproducer}}\label{classSecondShowerPurity_af3cade2862986deb0c2333f7a13208ea}
+
+\item 
+\hypertarget{classSecondShowerPurity_a267de14095ad791afcca1f3f2a568a87}{art\-::\-Input\-Tag {\bfseries f\-M\-C\-Sproducer}}\label{classSecondShowerPurity_a267de14095ad791afcca1f3f2a568a87}
+
+\item 
+\hypertarget{classSecondShowerPurity_af8a380f40bb05c2cb9b63ed3cfd9aa0f}{std\-::map$<$ unsigned int, \\*
+unsigned int $>$ {\bfseries \-\_\-pfpmap}}\label{classSecondShowerPurity_af8a380f40bb05c2cb9b63ed3cfd9aa0f}
+
+\item 
+\hypertarget{classSecondShowerPurity_a99010c0c89592e3dd9f696f490a1a7f7}{float {\bfseries \-\_\-wire2cm}}\label{classSecondShowerPurity_a99010c0c89592e3dd9f696f490a1a7f7}
+
+\item 
+\hypertarget{classSecondShowerPurity_ac3c7bec25a10542beb5f12e1f3fc03b2}{float {\bfseries \-\_\-time2cm}}\label{classSecondShowerPurity_ac3c7bec25a10542beb5f12e1f3fc03b2}
+
+\item 
+\hypertarget{classSecondShowerPurity_acc6a1cb74b439825c0c3e116e7e79990}{T\-Tree $\ast$ {\bfseries \-\_\-tree}}\label{classSecondShowerPurity_acc6a1cb74b439825c0c3e116e7e79990}
+
+\item 
+\hypertarget{classSecondShowerPurity_a4b4ced7189ab5da87a01efbf5efab94f}{int {\bfseries \-\_\-nhit}}\label{classSecondShowerPurity_a4b4ced7189ab5da87a01efbf5efab94f}
+
+\item 
+\hypertarget{classSecondShowerPurity_a46cb720b340572ad480511628fe77e89}{int {\bfseries \-\_\-plane}}\label{classSecondShowerPurity_a46cb720b340572ad480511628fe77e89}
+
+\item 
+\hypertarget{classSecondShowerPurity_a5bfedf045c3c104e60b2173ccb1d1338}{float {\bfseries \-\_\-charge}}\label{classSecondShowerPurity_a5bfedf045c3c104e60b2173ccb1d1338}
+
+\item 
+\hypertarget{classSecondShowerPurity_a96749b5f8597709f571d396df397c09e}{float {\bfseries \-\_\-purity}}\label{classSecondShowerPurity_a96749b5f8597709f571d396df397c09e}
+
+\item 
+\hypertarget{classSecondShowerPurity_ac760b87c66bded961e5af29ea7cc3b64}{float {\bfseries \-\_\-shrdot}}\label{classSecondShowerPurity_ac760b87c66bded961e5af29ea7cc3b64}
+
+\item 
+\hypertarget{classSecondShowerPurity_a5191904da66cd252ac24707a5bfdba35}{float {\bfseries \-\_\-shrdist}}\label{classSecondShowerPurity_a5191904da66cd252ac24707a5bfdba35}
+
+\item 
+\hypertarget{classSecondShowerPurity_a7247d04b7d470db3a7f0c65084187976}{float {\bfseries \-\_\-shrenergy}}\label{classSecondShowerPurity_a7247d04b7d470db3a7f0c65084187976}
+
+\item 
+\hypertarget{classSecondShowerPurity_a0031191dddf516922b44958d3b32d54c}{int {\bfseries \-\_\-nshr}}\label{classSecondShowerPurity_a0031191dddf516922b44958d3b32d54c}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classSecondShowerPurity_a91a362195490bc158713e4ed84ed0fa2}{\index{Second\-Shower\-Purity@{Second\-Shower\-Purity}!Add\-Daughters@{Add\-Daughters}}
+\index{Add\-Daughters@{Add\-Daughters}!SecondShowerPurity@{Second\-Shower\-Purity}}
+\subsubsection[{Add\-Daughters}]{\setlength{\rightskip}{0pt plus 5cm}void Second\-Shower\-Purity\-::\-Add\-Daughters (
+\begin{DoxyParamCaption}
+\item[{const searchingfornues\-::\-Proxy\-Pfp\-Elem\-\_\-t \&}]{pfp\-\_\-pxy, }
+\item[{const searchingfornues\-::\-Proxy\-Pfp\-Coll\-\_\-t \&}]{pfp\-\_\-pxy\-\_\-col, }
+\item[{std\-::vector$<$ searchingfornues\-::\-Proxy\-Pfp\-Elem\-\_\-t $>$ \&}]{slice\-\_\-v}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}}\label{classSecondShowerPurity_a91a362195490bc158713e4ed84ed0fa2}
+
+
+build P\-F\-Particle hierarchy (i.\-e. slice) from parent \mbox{[}recursive function\mbox{]} 
+
+pfp\-\_\-pxy \-: parent pfparticle proxy for which to add daughters  pfp\-\_\-pxy\-\_\-col \-: evnt P\-F\-P proxy collection  slice\-\_\-v \-: passed by reference, slice containing all P\-F\-Particles in hierarchy \hypertarget{classSecondShowerPurity_a740e87a9a228f255bca15d2f04505aa9}{\index{Second\-Shower\-Purity@{Second\-Shower\-Purity}!Build\-P\-F\-P\-Map@{Build\-P\-F\-P\-Map}}
+\index{Build\-P\-F\-P\-Map@{Build\-P\-F\-P\-Map}!SecondShowerPurity@{Second\-Shower\-Purity}}
+\subsubsection[{Build\-P\-F\-P\-Map}]{\setlength{\rightskip}{0pt plus 5cm}void Second\-Shower\-Purity\-::\-Build\-P\-F\-P\-Map (
+\begin{DoxyParamCaption}
+\item[{const searchingfornues\-::\-Proxy\-Pfp\-Coll\-\_\-t \&}]{pfp\-\_\-pxy\-\_\-col}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [private]}}}\label{classSecondShowerPurity_a740e87a9a228f255bca15d2f04505aa9}
+
+
+function to builf a map linking P\-F\-Particle index to Self() attribute 
+
+handle to event pfparticle record 
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Shower\-Reco/Second\-Shower\-Purity\-\_\-module.\-cc\end{DoxyCompactItemize}

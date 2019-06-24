@@ -1,0 +1,69 @@
+\hypertarget{classSaveSliceHits}{\section{Save\-Slice\-Hits Class Reference}
+\label{classSaveSliceHits}\index{Save\-Slice\-Hits@{Save\-Slice\-Hits}}
+}
+Inheritance diagram for Save\-Slice\-Hits\-:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classSaveSliceHits}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSaveSliceHits_a56e7e4878a9c004791e1d5a1c0555cd2}{{\bfseries Save\-Slice\-Hits} (fhicl\-::\-Parameter\-Set const \&p)}\label{classSaveSliceHits_a56e7e4878a9c004791e1d5a1c0555cd2}
+
+\item 
+\hypertarget{classSaveSliceHits_a21f4a1e618ae4562dd6aa2612f06849b}{{\bfseries Save\-Slice\-Hits} (\hyperlink{classSaveSliceHits}{Save\-Slice\-Hits} const \&)=delete}\label{classSaveSliceHits_a21f4a1e618ae4562dd6aa2612f06849b}
+
+\item 
+\hypertarget{classSaveSliceHits_a277a656266a5bfdac6491f0a59b8e441}{{\bfseries Save\-Slice\-Hits} (\hyperlink{classSaveSliceHits}{Save\-Slice\-Hits} \&\&)=delete}\label{classSaveSliceHits_a277a656266a5bfdac6491f0a59b8e441}
+
+\item 
+\hypertarget{classSaveSliceHits_ab30b09c8d4e1e79dfb9f105f412c90a1}{\hyperlink{classSaveSliceHits}{Save\-Slice\-Hits} \& {\bfseries operator=} (\hyperlink{classSaveSliceHits}{Save\-Slice\-Hits} const \&)=delete}\label{classSaveSliceHits_ab30b09c8d4e1e79dfb9f105f412c90a1}
+
+\item 
+\hypertarget{classSaveSliceHits_ae5329e70a6f07aef0b9a958a6abd0560}{\hyperlink{classSaveSliceHits}{Save\-Slice\-Hits} \& {\bfseries operator=} (\hyperlink{classSaveSliceHits}{Save\-Slice\-Hits} \&\&)=delete}\label{classSaveSliceHits_ae5329e70a6f07aef0b9a958a6abd0560}
+
+\item 
+\hypertarget{classSaveSliceHits_abec4f170d648b1855d5f26b563148cf6}{void {\bfseries produce} (art\-::\-Event \&e) override}\label{classSaveSliceHits_abec4f170d648b1855d5f26b563148cf6}
+
+\item 
+\hypertarget{classSaveSliceHits_a0ebe38a8c4f48a1d9c405787d076635a}{void {\bfseries begin\-Job} () override}\label{classSaveSliceHits_a0ebe38a8c4f48a1d9c405787d076635a}
+
+\item 
+\hypertarget{classSaveSliceHits_a48f6a563a927b9ff37d3a6f07462d8fd}{void {\bfseries end\-Job} () override}\label{classSaveSliceHits_a48f6a563a927b9ff37d3a6f07462d8fd}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSaveSliceHits_a13bfe5d175be84fe7b949a967a5da465}{void {\bfseries add\-Daughter} (const recob\-::\-P\-F\-Particle pfp, art\-::\-Valid\-Handle$<$ std\-::vector$<$ recob\-::\-P\-F\-Particle $>$ $>$ pfp\-\_\-h, art\-::\-Find\-Many\-P$<$ recob\-::\-Cluster $>$ pfp\-\_\-clus\-\_\-assn\-\_\-v, art\-::\-Find\-Many\-P$<$ recob\-::\-Hit $>$ clus\-\_\-hit\-\_\-assn\-\_\-v, std\-::vector$<$ unsigned int $>$ \&Pfp\-Hit\-Idx\-\_\-v)}\label{classSaveSliceHits_a13bfe5d175be84fe7b949a967a5da465}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSaveSliceHits_a4a8537787643bd309b910620bcb2e154}{std\-::map$<$ unsigned int, \\*
+unsigned int $>$ {\bfseries \-\_\-pfpmap}}\label{classSaveSliceHits_a4a8537787643bd309b910620bcb2e154}
+
+\item 
+\hypertarget{classSaveSliceHits_a6a289d782481d17dc39c931d62d0f31c}{art\-::\-Input\-Tag {\bfseries f\-Hitproducer}}\label{classSaveSliceHits_a6a289d782481d17dc39c931d62d0f31c}
+
+\item 
+\hypertarget{classSaveSliceHits_a4e6d5a3f1ab4ddc732f5758a3759effa}{art\-::\-Input\-Tag {\bfseries f\-Clusterproducer}}\label{classSaveSliceHits_a4e6d5a3f1ab4ddc732f5758a3759effa}
+
+\item 
+\hypertarget{classSaveSliceHits_ac2f381959f9bc912590888c6a86c8965}{art\-::\-Input\-Tag {\bfseries f\-Pfpproducer}}\label{classSaveSliceHits_ac2f381959f9bc912590888c6a86c8965}
+
+\item 
+\hypertarget{classSaveSliceHits_a942b1c4ea132e951aa39637e2f5d3e21}{art\-::\-Input\-Tag {\bfseries f\-Sliceproducer}}\label{classSaveSliceHits_a942b1c4ea132e951aa39637e2f5d3e21}
+
+\item 
+\hypertarget{classSaveSliceHits_a68cfd0c337276c49f781fa06495effb1}{float {\bfseries f\-Min\-Hit\-Charge}}\label{classSaveSliceHits_a68cfd0c337276c49f781fa06495effb1}
+
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Shower\-Reco/Save\-Slice\-Hits\-\_\-module.\-cc\end{DoxyCompactItemize}
