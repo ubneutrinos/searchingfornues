@@ -245,6 +245,9 @@ private:
   std::vector<float> _mc_endy;
   std::vector<float> _mc_endz;
 
+  std::vector<float> _mc_completeness;
+  std::vector<float> _mc_purity;
+
   float _true_pt;
   float _true_pt_visible;
   float _true_p;
@@ -521,6 +524,15 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           _backtracked_start_V.push_back(searchingfornues::YZtoPlanecoordinate(mcp.start_y, mcp.start_z, 1));
           _backtracked_start_Y.push_back(searchingfornues::YZtoPlanecoordinate(mcp.start_y, mcp.start_z, 2));
 
+          for (size_t i = 0; i < _mc_E.size(); i++)
+          {
+            if (_mc_E[i] == mcp.e)
+            {
+              _mc_completeness[i] = completeness;
+              _mc_purity[i] = purity;
+            }
+          }
+
           float reco_st[3] = {mcp.start_x, mcp.start_y, mcp.start_z};
 
           if (PDG == 11 || PDG == 22)
@@ -761,6 +773,7 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("proton_e", &_proton_e, "proton_e/F");
   _tree->Branch("proton_c", &_proton_c, "proton_c/F");
   _tree->Branch("proton_p", &_proton_p, "proton_p/F");
+
   // charged pions
   _tree->Branch("npion", &_npion, "npion/I");
   _tree->Branch("pion_e", &_pion_e, "pion_e/F");
@@ -842,6 +855,9 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("mc_px", "std::vector< float >", &_mc_px);
   _tree->Branch("mc_py", "std::vector< float >", &_mc_py);
   _tree->Branch("mc_pz", "std::vector< float >", &_mc_pz);
+
+  _tree->Branch("mc_completeness", "std::vector< float >", &_mc_completeness);
+  _tree->Branch("mc_purity", "std::vector< float >", &_mc_purity);
 
   _tree->Branch("endmuonprocess", &_endmuonprocess);
 
@@ -970,6 +986,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _mc_endx.clear();
   _mc_endy.clear();
   _mc_endz.clear();
+
+  _mc_completeness.clear();
+  _mc_purity.clear();
 
   _true_pt = 0;
   _true_pt_visible = 0;
@@ -1157,6 +1176,9 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     _mc_endx.push_back(mcp.EndX());
     _mc_endy.push_back(mcp.EndY());
     _mc_endz.push_back(mcp.EndZ());
+
+    _mc_completeness.push_back(std::numeric_limits<float>::lowest());
+    _mc_purity.push_back(std::numeric_limits<float>::lowest());
   }
 
   searchingfornues::ApplyDetectorOffsets(_vtx_t, _vtx_x, _vtx_y, _vtx_z, _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset);
