@@ -78,12 +78,15 @@ private:
   float _nu_e, _elec_e;
   int   _nelec, _nreco;
   float _vtx_x, _vtx_y, _vtx_z, _vtx_t;
+  float _rc_vtx_x, _rc_vtx_y, _rc_vtx_z;
   float _Ashr_x, _Ashr_y, _Ashr_z, _Ashr_q;
   float _Pshr_x, _Pshr_y, _Pshr_z, _Pshr_q;
   float _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset; // offsets for generation time and SCE
 
   // a map linking the PFP Self() attribute used for hierarchy building to the PFP index in the event record
   std::map<unsigned int, unsigned int> _pfpmap;
+
+  void ResetTTree();
 
   bool FindShowerBranches(const size_t shr_pfp_idx,
 			  const std::vector<searchingfornues::ProxyPfpElem_t>& slice_pfp_v,
@@ -125,7 +128,7 @@ ShowerMerger::ShowerMerger(fhicl::ParameterSet const& p)
 
   fMCTproducer = p.get< art::InputTag > ("MCTproducer");
   fPFPproducer = p.get< art::InputTag > ("PFPproducer");
-  fPFPproducer = p.get< art::InputTag > ("PCAproducer");
+  fPCAproducer = p.get< art::InputTag > ("PCAproducer");
   fSHRproducer = p.get< art::InputTag > ("SHRproducer");
   fHITproducer = p.get< art::InputTag > ("HITproducer");
   fCLSproducer = p.get< art::InputTag > ("CLSproducer");
@@ -160,6 +163,9 @@ ShowerMerger::ShowerMerger(fhicl::ParameterSet const& p)
   _tree->Branch("nelec",&_nelec,"nelec/I");
   _tree->Branch("elec_e",&_elec_e,"elec_e/F");
   // reco
+  _tree->Branch("rc_vtx_x" ,&_rc_vtx_x ,"rc_vtx_x/F" );
+  _tree->Branch("rc_vtx_y" ,&_rc_vtx_y ,"rc_vtx_y/F" );
+  _tree->Branch("rc_vtx_z" ,&_rc_vtx_z ,"rc_vtx_z/F" );
   _tree->Branch("nreco",&_nreco,"nreco/I");
   _tree->Branch("Ashr_x",&_Ashr_x,"Ashr_x/F");
   _tree->Branch("Ashr_y",&_Ashr_y,"Ashr_y/F");
@@ -174,14 +180,26 @@ ShowerMerger::ShowerMerger(fhicl::ParameterSet const& p)
   _tree->Branch("xsceoffset" ,&_xsceoffset ,"xsceoffset/F" );
   _tree->Branch("ysceoffset" ,&_ysceoffset ,"ysceoffset/F" );
   _tree->Branch("zsceoffset" ,&_zsceoffset ,"zsceoffset/F" );
+
   
   return;
+}
+
+void ShowerMerger::ResetTTree() {
+
+  _xtimeoffset = 0;
+  _xsceoffset = _ysceoffset = _zsceoffset = 0;
+  _Ashr_x = _Ashr_y = _Ashr_z = _Ashr_q = 0;
+  _Pshr_x = _Pshr_y = _Pshr_z = _Pshr_q = 0;
+  _nreco = 0;
+  _rc_vtx_x = _rc_vtx_y = _rc_vtx_z = 0;
+  
 }
 
 void ShowerMerger::produce(art::Event& e)
 {
   
-  std::cout << "DAVIDC PRODUCE" << std::endl;
+  ResetTTree();
 
   SaveTruth(e);
 
@@ -211,7 +229,7 @@ void ShowerMerger::produce(art::Event& e)
 													    proxy::withAssociated<recob::Slice>(fSLCproducer),
 													    proxy::withAssociated<recob::Track>(fTRKproducer),
 													    proxy::withAssociated<recob::Vertex>(fVTXproducer),
-                              proxy::withAssociated<recob::PCAxis>(fPCAproducer),
+													    proxy::withAssociated<recob::PCAxis>(fPCAproducer),
 													    proxy::withAssociated<recob::Shower>(fSHRproducer));
 
   // grab cluster -> hit association
@@ -249,18 +267,31 @@ void ShowerMerger::produce(art::Event& e)
     auto PDG = fabs(pfp_pxy->PdgCode());
 
     if ( (PDG == 12) || (PDG == 14) ) {
+
+      auto ass_vtx = pfp_pxy.get<recob::Vertex>();
+      if (ass_vtx.size() == 1) {
+	auto rcnuvtx = ass_vtx.at(0);
+	Double_t xyz[3] = {};
+        rcnuvtx->XYZ(xyz);
+        auto nuvtx = TVector3(xyz[0], xyz[1], xyz[2]);
+	_rc_vtx_x = nuvtx.X();
+	_rc_vtx_y = nuvtx.Y();
+	_rc_vtx_z = nuvtx.Z();
+      }
       
       AddDaughters(pfp_pxy, pfp_proxy, slice_pfp_v);
-
+      
     }// if neutrino like PFP
 
   }// for all PFParticles
 
-  std::cout << "New slice w/ " << slice_pfp_v.size() << " PFParticles " << std::endl;
+  // go through slice and find highest energy shower 
+  size_t shr_pfp_idx = 0;
+  largestShower = false;
+  float MaxEnergy = 0;
 
-  // go through slice and find shower-like particles
-  for (size_t p=0; p < slice_pfp_v.size(); p++) {
-
+  for (size_t  p=0; p < slice_pfp_v.size(); p++) {
+    
     auto pfp_pxy = slice_pfp_v[p];
 
     auto PDG = fabs(pfp_pxy->PdgCode());
@@ -269,61 +300,139 @@ void ShowerMerger::produce(art::Event& e)
       continue;
 
     auto ass_shr_v = pfp_pxy.get<recob::Shower>();
-    //auto ass_trk_v = pfp_pxy.get<recob::Track>();
-    //auto trkscore = searchingfornues::GetTrackShowerScore(slice_pfp_v[i_pfp]);
+
+    auto trkscore = searchingfornues::GetTrackShowerScore(slice_pfp_v[p]);
+    
+    if (trkscore > 0.5) continue;
     
     if (ass_shr_v.size() == 1) {
+      
+      auto energy = (ass_shr_v[0])->Energy()[2];
+      if (energy > MaxEnergy) {
+	MaxEnergy = energy;
+	largestShower = true;
+	shr_pfp_idx = p;
+      }// if highest energy shower
+    }// if there is an associated shower
+  }// for all PFParticles
+  
+  if (MaxEnergy > 0)  {
+    
+    auto pfp_pxy = slice_pfp_v[shr_pfp_idx];
 
-      // create new PFP for output
-      recob::PFParticle outshrpfp( pfp_h->at( pfp_pxy.index() ) );
-
-      // prepare new vertex location and track trunk
-      TVector3 vtxcandidate;
-      size_t   trktrunk_pfp_idx;
-      Double_t xyz[3] = {};
-
-      largestShower = false;
-
-      // load shower clusters
-      auto pfp_clus_v = pfp_pxy.get<recob::Cluster>();
-      // create one cluster per plane (will save non-empty ones)
-      std::vector<recob::Cluster> out_clus_v(3, recob::Cluster());
-      // vector of hit art::Ptr for cluster -> hit associations
-      std::vector< std::vector< art::Ptr<recob::Hit> > > out_clus_hit_assn_v(3, std::vector< art::Ptr<recob::Hit> >());
-      for (size_t c=0; c < pfp_clus_v.size(); c++) {
-	auto pl = pfp_clus_v[c]->Plane().Plane;
-	recob::Cluster newclus( *(pfp_clus_v[c]) );
-	out_clus_v[ pl ] = newclus;
-
-	_nreco += 1;
-
-	if (pl == 2) {
-	  //std::cout << "cluster has " << newclus.Integral() << " charge" << std::endl;
-	  if ( newclus.Integral() > QMax ) {
-	    largestShower = true;
-	    QMax = newclus.Integral();
-	    _Ashr_q = QMax;
-	    auto shr = pfp_pxy.get<recob::Shower>()[0];
-	    _Ashr_x = shr->ShowerStart().X();
-	    _Ashr_y = shr->ShowerStart().Y();
-	    _Ashr_z = shr->ShowerStart().Z();
+    auto ass_shr_v = pfp_pxy.get<recob::Shower>();
+    
+    // create new PFP for output
+    recob::PFParticle outshrpfp( pfp_h->at( pfp_pxy.index() ) );
+    
+    // prepare new vertex location and track trunk
+    TVector3 vtxcandidate;
+    size_t   trktrunk_pfp_idx;
+    Double_t xyz[3] = {};
+    
+    // load shower clusters
+    auto pfp_clus_v = pfp_pxy.get<recob::Cluster>();
+    // create one cluster per plane (will save non-empty ones)
+    std::vector<recob::Cluster> out_clus_v(3, recob::Cluster());
+    // vector of hit art::Ptr for cluster -> hit associations
+    std::vector< std::vector< art::Ptr<recob::Hit> > > out_clus_hit_assn_v(3, std::vector< art::Ptr<recob::Hit> >());
+    for (size_t c=0; c < pfp_clus_v.size(); c++) {
+      
+      auto pl = pfp_clus_v[c]->Plane().Plane;
+      recob::Cluster newclus( *(pfp_clus_v[c]) );
+      out_clus_v[ pl ] = newclus;
+      
+      _nreco += 1;
+      
+      if (pl == 2) {
+	QMax = newclus.Integral();
+	_Ashr_q = QMax;
+	auto shr = pfp_pxy.get<recob::Shower>()[0];
+	_Ashr_x = shr->ShowerStart().X();
+	_Ashr_y = shr->ShowerStart().Y();
+	_Ashr_z = shr->ShowerStart().Z();
+      }
+      
+      // clus -> hit associations
+      const auto& clus_pxy = clus_proxy[pfp_clus_v[c].key()];
+      auto clus_hit_v = clus_pxy.get<recob::Hit>();
+      for (size_t i=0; i < clus_hit_v.size(); i++) {
+	out_clus_hit_assn_v[ pl ].push_back( clus_hit_v[i] );
+      }// for all hits
+      std::cout << "there are " << out_clus_hit_assn_v[pl].size() << " hits associated with this cluster" << std::endl;
+    }// for all clusters
+    std::cout << "There are " << out_clus_v.size() << " output clusters" << std::endl;
+    
+    if ( FindShowerTrunk(shr_pfp_idx, slice_pfp_v, vtxcandidate, trktrunk_pfp_idx) == true ) {
+      
+      // load new clusters to be added
+      auto new_clus_v = slice_pfp_v[trktrunk_pfp_idx].get<recob::Cluster>();
+      std::cout << "Will be adding " << new_clus_v.size() << " clusters!" << std::endl;
+      // beacuse this is the trunk of the shower, we need to modify the cluster
+      // start/end points to match these new ones
+      for (size_t c=0; c < new_clus_v.size(); c++) {
+	auto newclus = new_clus_v.at(c);
+	auto newPl = newclus->Plane().Plane;
+	if ( (newPl < out_clus_v.size()) && (newPl >= 0) ) {
+	  
+	  // store extra hits associated
+	  
+	  // clus -> hit associations
+	  const auto& new_clus_pxy = clus_proxy[newclus.key()];
+	  auto new_clus_hit_v = new_clus_pxy.get<recob::Hit>();
+	  for (size_t i=0; i < new_clus_hit_v.size(); i++) {
+	    out_clus_hit_assn_v[ newPl ].push_back( new_clus_hit_v[i] );
+	  }// for all hits
+	  
+	  // if the old cluster is garbage, simply load the new one
+	  if (out_clus_v[ newPl ].NHits() == 0) {
+	    out_clus_v[ newPl ] = (*newclus);
 	  }
-	}
-
-	// clus -> hit associations
-	const auto& clus_pxy = clus_proxy[pfp_clus_v[c].key()];
-	auto clus_hit_v = clus_pxy.get<recob::Hit>();
-	for (size_t i=0; i < clus_hit_v.size(); i++) {
-	  out_clus_hit_assn_v[ pl ].push_back( clus_hit_v[i] );
-	}// for all hits
-	std::cout << "there are " << out_clus_hit_assn_v[pl].size() << " hits associated with this cluster" << std::endl;
-      }// for all clusters
-      std::cout << "There are " << out_clus_v.size() << " output clusters" << std::endl;
-
-      if ( FindShowerTrunk(p, slice_pfp_v, vtxcandidate, trktrunk_pfp_idx) == true ) {
+	  else {
+	    auto start_wire   = newclus->StartWire();
+	    auto start_wireS  = newclus->SigmaStartWire();
+	    auto start_tick   = newclus->StartTick();
+	    auto start_tickS  = newclus->SigmaStartTick();
+	    auto start_charge = newclus->StartCharge();
+	    auto start_angle  = newclus->StartAngle();
+	    auto start_open   = newclus->StartOpeningAngle();
+	    auto end_wire     = out_clus_v[ newPl ].EndWire();
+	    auto end_wireS    = out_clus_v[ newPl ].SigmaEndWire();
+	    auto end_tick     = out_clus_v[ newPl ].EndTick();
+	    auto end_tickS    = out_clus_v[ newPl ].SigmaEndTick();
+	    auto end_charge   = out_clus_v[ newPl ].EndCharge();
+	    auto end_angle    = out_clus_v[ newPl ].EndAngle();
+	    auto end_open     = out_clus_v[ newPl ].EndOpeningAngle();
+	    auto integral     = newclus->Integral()  + out_clus_v[ newPl ].Integral();
+	    auto summedADC    = newclus->SummedADC() + out_clus_v[ newPl ].SummedADC();
+	    auto nhits        = newclus->NHits() + out_clus_v[ newPl ].NHits();
+	    out_clus_v[ newPl ] = recob::Cluster(start_wire, start_wireS, start_tick, start_tickS, start_charge, start_angle, start_open,
+						 end_wire  , end_wireS  , end_tick  , end_tickS  , end_charge  , end_angle  , end_open,
+						 integral, 0., summedADC, 0., nhits, 0., 0., 
+						 out_clus_v[ newPl ].ID(), out_clus_v[ newPl ].View(), out_clus_v[ newPl ].Plane() );
+	    
+	    std::cout << "New cluster has NHits " << nhits << " and " << out_clus_hit_assn_v[ newPl ].size() << " hits associated" << std::endl;
+	    
+	  }// if the old cluster exists and it needs to be updated
+	}// if not out of bounds
+	
+      }// for all new clusters to be merged
+    }// if we need to merge the shower-trunk
+    else {
+      vtxcandidate = ass_shr_v[0]->ShowerStart();
+    } //if this shower is not to be merged
+    
+    // now find shower branches
+    
+    std::vector<size_t> branches_pfp_idx_v;
+    FindShowerBranches(shr_pfp_idx, slice_pfp_v, branches_pfp_idx_v);
+    
+    if (branches_pfp_idx_v.size() >= 1) {
+      
+      for (auto const& branch_idx : branches_pfp_idx_v) {
 	
 	// load new clusters to be added
-	auto new_clus_v = slice_pfp_v[trktrunk_pfp_idx].get<recob::Cluster>();
+	auto new_clus_v = slice_pfp_v[branch_idx].get<recob::Cluster>();
 	std::cout << "Will be adding " << new_clus_v.size() << " clusters!" << std::endl;
 	// beacuse this is the trunk of the shower, we need to modify the cluster
 	// start/end points to match these new ones
@@ -331,35 +440,34 @@ void ShowerMerger::produce(art::Event& e)
 	  auto newclus = new_clus_v.at(c);
 	  auto newPl = newclus->Plane().Plane;
 	  if ( (newPl < out_clus_v.size()) && (newPl >= 0) ) {
-
-	    // store extra hits associated
-
+	    
 	    // clus -> hit associations
 	    const auto& new_clus_pxy = clus_proxy[newclus.key()];
 	    auto new_clus_hit_v = new_clus_pxy.get<recob::Hit>();
 	    for (size_t i=0; i < new_clus_hit_v.size(); i++) {
 	      out_clus_hit_assn_v[ newPl ].push_back( new_clus_hit_v[i] );
 	    }// for all hits
-
+	    std::cout << "POST @ plane " << newPl << " hits are " << out_clus_hit_assn_v[newPl].size() << std::endl;
+	    
 	    // if the old cluster is garbage, simply load the new one
 	    if (out_clus_v[ newPl ].NHits() == 0) {
 	      out_clus_v[ newPl ] = (*newclus);
 	    }
 	    else {
-	      auto start_wire   = newclus->StartWire();
-	      auto start_wireS  = newclus->SigmaStartWire();
-	      auto start_tick   = newclus->StartTick();
-	      auto start_tickS  = newclus->SigmaStartTick();
-	      auto start_charge = newclus->StartCharge();
-	      auto start_angle  = newclus->StartAngle();
-	      auto start_open   = newclus->StartOpeningAngle();
-	      auto end_wire     = out_clus_v[ newPl ].EndWire();
-	      auto end_wireS    = out_clus_v[ newPl ].SigmaEndWire();
-	      auto end_tick     = out_clus_v[ newPl ].EndTick();
-	      auto end_tickS    = out_clus_v[ newPl ].SigmaEndTick();
-	      auto end_charge   = out_clus_v[ newPl ].EndCharge();
-	      auto end_angle    = out_clus_v[ newPl ].EndAngle();
-	      auto end_open     = out_clus_v[ newPl ].EndOpeningAngle();
+	      auto start_wire   = out_clus_v[ newPl ].StartWire();
+	      auto start_wireS  = out_clus_v[ newPl ].SigmaStartWire();
+	      auto start_tick   = out_clus_v[ newPl ].StartTick();
+	      auto start_tickS  = out_clus_v[ newPl ].SigmaStartTick();
+	      auto start_charge = out_clus_v[ newPl ].StartCharge();
+	      auto start_angle  = out_clus_v[ newPl ].StartAngle();
+	      auto start_open   = out_clus_v[ newPl ].StartOpeningAngle();
+	      auto end_wire     = newclus->EndWire();
+	      auto end_wireS    = newclus->SigmaEndWire();
+	      auto end_tick     = newclus->EndTick();
+	      auto end_tickS    = newclus->SigmaEndTick();
+	      auto end_charge   = newclus->EndCharge();
+	      auto end_angle    = newclus->EndAngle();
+	      auto end_open     = newclus->EndOpeningAngle();
 	      auto integral     = newclus->Integral()  + out_clus_v[ newPl ].Integral();
 	      auto summedADC    = newclus->SummedADC() + out_clus_v[ newPl ].SummedADC();
 	      auto nhits        = newclus->NHits() + out_clus_v[ newPl ].NHits();
@@ -367,138 +475,64 @@ void ShowerMerger::produce(art::Event& e)
 						   end_wire  , end_wireS  , end_tick  , end_tickS  , end_charge  , end_angle  , end_open,
 						   integral, 0., summedADC, 0., nhits, 0., 0., 
 						   out_clus_v[ newPl ].ID(), out_clus_v[ newPl ].View(), out_clus_v[ newPl ].Plane() );
-
+	      
 	      std::cout << "New cluster has NHits " << nhits << " and " << out_clus_hit_assn_v[ newPl ].size() << " hits associated" << std::endl;
-
+	      
 	    }// if the old cluster exists and it needs to be updated
-	  }// if not out of bounds
-
-	}// for all new clusters to be merged
-      }// if we need to merge the shower-trunk
-      else {
-	vtxcandidate = ass_shr_v[0]->ShowerStart();
-      } //if this shower is not to be merged
-      
-      // now find shower branches
-      
-      std::vector<size_t> branches_pfp_idx_v;
-      FindShowerBranches(p, slice_pfp_v, branches_pfp_idx_v);
-
-      std::cout << "Shower is being merged with " << branches_pfp_idx_v.size() << " branches " << std::endl;
-      
-      if (branches_pfp_idx_v.size() >= 1) {
+	  }// if not out of bounds	      
+	}// for all clusters
 	
-	for (auto const& branch_idx : branches_pfp_idx_v) {
-	  
-	  // load new clusters to be added
-	  auto new_clus_v = slice_pfp_v[branch_idx].get<recob::Cluster>();
-	  std::cout << "Will be adding " << new_clus_v.size() << " clusters!" << std::endl;
-	  // beacuse this is the trunk of the shower, we need to modify the cluster
-	  // start/end points to match these new ones
-	  for (size_t c=0; c < new_clus_v.size(); c++) {
-	    auto newclus = new_clus_v.at(c);
-	    auto newPl = newclus->Plane().Plane;
-	    if ( (newPl < out_clus_v.size()) && (newPl >= 0) ) {
-	      
-	      // store extra hits associated
-	      
-
-	      std::cout << "PRE @ plane " << newPl << " hits are " << out_clus_hit_assn_v[newPl].size() << std::endl;
-	      // clus -> hit associations
-	      const auto& new_clus_pxy = clus_proxy[newclus.key()];
-	      auto new_clus_hit_v = new_clus_pxy.get<recob::Hit>();
-	      for (size_t i=0; i < new_clus_hit_v.size(); i++) {
-		out_clus_hit_assn_v[ newPl ].push_back( new_clus_hit_v[i] );
-	      }// for all hits
-	      std::cout << "POST @ plane " << newPl << " hits are " << out_clus_hit_assn_v[newPl].size() << std::endl;
-	      
-	      // if the old cluster is garbage, simply load the new one
-	      if (out_clus_v[ newPl ].NHits() == 0) {
-		out_clus_v[ newPl ] = (*newclus);
-	      }
-	      else {
-		auto start_wire   = out_clus_v[ newPl ].StartWire();
-		auto start_wireS  = out_clus_v[ newPl ].SigmaStartWire();
-		auto start_tick   = out_clus_v[ newPl ].StartTick();
-		auto start_tickS  = out_clus_v[ newPl ].SigmaStartTick();
-		auto start_charge = out_clus_v[ newPl ].StartCharge();
-		auto start_angle  = out_clus_v[ newPl ].StartAngle();
-		auto start_open   = out_clus_v[ newPl ].StartOpeningAngle();
-		auto end_wire     = newclus->EndWire();
-		auto end_wireS    = newclus->SigmaEndWire();
-		auto end_tick     = newclus->EndTick();
-		auto end_tickS    = newclus->SigmaEndTick();
-		auto end_charge   = newclus->EndCharge();
-		auto end_angle    = newclus->EndAngle();
-		auto end_open     = newclus->EndOpeningAngle();
-		auto integral     = newclus->Integral()  + out_clus_v[ newPl ].Integral();
-		auto summedADC    = newclus->SummedADC() + out_clus_v[ newPl ].SummedADC();
-		auto nhits        = newclus->NHits() + out_clus_v[ newPl ].NHits();
-		out_clus_v[ newPl ] = recob::Cluster(start_wire, start_wireS, start_tick, start_tickS, start_charge, start_angle, start_open,
-						     end_wire  , end_wireS  , end_tick  , end_tickS  , end_charge  , end_angle  , end_open,
-						     integral, 0., summedADC, 0., nhits, 0., 0., 
-						     out_clus_v[ newPl ].ID(), out_clus_v[ newPl ].View(), out_clus_v[ newPl ].Plane() );
-		
-		std::cout << "New cluster has NHits " << nhits << " and " << out_clus_hit_assn_v[ newPl ].size() << " hits associated" << std::endl;
-		
-	      }// if the old cluster exists and it needs to be updated
-	    }// if not out of bounds	      
-	  }// for all clusters
-	  
-	}// for all branches to be merged
-	
-      }// if there are branches to be merged
+      }// for all branches to be merged
       
-      
-      PFParticle_v->emplace_back( outshrpfp );
-      
-      // save vertex to be associated to this shower
-      xyz[0] = vtxcandidate.X();
-      xyz[1] = vtxcandidate.Y();
-      xyz[2] = vtxcandidate.Z();
-      recob::Vertex vtx(xyz);
-      Vertex_v->emplace_back(vtx);
+    }// if there are branches to be merged
+    
+    
+    PFParticle_v->emplace_back( outshrpfp );
+    
+    // save vertex to be associated to this shower
+    xyz[0] = vtxcandidate.X();
+    xyz[1] = vtxcandidate.Y();
+    xyz[2] = vtxcandidate.Z();
+    recob::Vertex vtx(xyz);
+    Vertex_v->emplace_back(vtx);
+    
+    if (largestShower == true) {
+      _Pshr_q = out_clus_v[2].Integral();
+      _Pshr_x = xyz[0];
+      _Pshr_y = xyz[1];
+      _Pshr_z = xyz[2];
+    }
+    
+    art::Ptr<recob::PFParticle> const PFParticlePtr = PFParticlePtrMaker(PFParticle_v->size()-1);
+    art::Ptr<recob::Vertex>     const VtxPtr        = VtxPtrMaker(Vertex_v->size()-1);
+    
+    // step 1 save metadata association
+    const art::Ptr<recob::PFParticle> PFPPtr(pfp_h, pfp_pxy.index() );
+    PFP_Meta_assn_v->addSingle( PFParticlePtr, pfp_pxy.get<larpandoraobj::PFParticleMetadata>()[0] );
+    
+    // step 2 save vertex association
+    PFP_Vtx_assn_v->addSingle( PFParticlePtr, VtxPtr);
+    
+    // step 3 save cluster association
+    for (size_t c=0; c < out_clus_v.size(); c++) {
+      // if the cluster is meaningful
+      if (out_clus_v[c].NHits() == 0) continue;
+      Cluster_v->emplace_back( out_clus_v[c] );
+      art::Ptr<recob::Cluster> const ClsPtr = ClsPtrMaker(Cluster_v->size()-1);
+      PFP_Cls_assn_v->addSingle( PFParticlePtr, ClsPtr);
+      // grab associated hit
+      for (size_t h=0; h < out_clus_hit_assn_v[ c ].size(); h++) 
+	Cls_Hit_assn_v->addSingle( ClsPtr, out_clus_hit_assn_v[ c ].at( h ) );
+    }// for all clusters
 
-      if (largestShower == true) {
-	_Pshr_q = out_clus_v[2].Integral();
-	_Pshr_x = xyz[0];
-	_Pshr_y = xyz[1];
-	_Pshr_z = xyz[2];
-      }
-      
-      art::Ptr<recob::PFParticle> const PFParticlePtr = PFParticlePtrMaker(PFParticle_v->size()-1);
-      art::Ptr<recob::Vertex>     const VtxPtr        = VtxPtrMaker(Vertex_v->size()-1);
-
-      // step 1 save metadata association
-      const art::Ptr<recob::PFParticle> PFPPtr(pfp_h, pfp_pxy.index() );
-      PFP_Meta_assn_v->addSingle( PFParticlePtr, pfp_pxy.get<larpandoraobj::PFParticleMetadata>()[0] );
-
-      // step 2 save vertex association
-      PFP_Vtx_assn_v->addSingle( PFParticlePtr, VtxPtr);
-
-      // step 3 save cluster association
-      for (size_t c=0; c < out_clus_v.size(); c++) {
-	// if the cluster is meaningful
-	if (out_clus_v[c].NHits() == 0) continue;
-	Cluster_v->emplace_back( out_clus_v[c] );
-	art::Ptr<recob::Cluster> const ClsPtr = ClsPtrMaker(Cluster_v->size()-1);
-	PFP_Cls_assn_v->addSingle( PFParticlePtr, ClsPtr);
-	// grab associated hit
-	for (size_t h=0; h < out_clus_hit_assn_v[ c ].size(); h++) 
-	  Cls_Hit_assn_v->addSingle( ClsPtr, out_clus_hit_assn_v[ c ].at( h ) );
-      }// for all clusters
-      
-    }// if shower-like PFP
-
-  }// for all slice PFPs
-
-  if (slice_pfp_v.size())
     _tree->Fill();
-
+    
+  }// if there is a primary shower
+  
   e.put(std::move(PFParticle_v));
   e.put(std::move(Vertex_v));
   e.put(std::move(Cluster_v));
-
+  
   e.put(std::move(PFP_Meta_assn_v));
   e.put(std::move(PFP_Vtx_assn_v));
   e.put(std::move(PFP_Cls_assn_v));
