@@ -258,7 +258,7 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
 
     fPIDproducer = pset.get<art::InputTag>("PIDproducer", "pandoraTrackcalipid");
     fCALproducer = pset.get<art::InputTag>("CALproducer", "pandoraTrackcali");
-    fCALproducerTrkFit = pset.get<art::InputTag>("CALproducer", "shrreco3dKalmanShowercali");
+    fCALproducerTrkFit = pset.get<art::InputTag>("CALproducerTrkFit", "shrreco3dKalmanShowercali");
     fHproducer = pset.get<art::InputTag>("Hproducer", "gaushit");
     fMCRproducer = pset.get<art::InputTag>("MCRproducer", "mcreco");
     fBacktrackTag = pset.get<art::InputTag>("BacktrackTag", "gaushitTruthMatch");

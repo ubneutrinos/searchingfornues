@@ -275,11 +275,11 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
               dedx4cm_med = 0.5 * (dedx4cm[dedx4cm.size() / 2] + dedx4cm[dedx4cm.size() / 2 - 1]);
           }
           if (tkcalo->PlaneID().Plane == 2) {
-            _shr_tkfit_dedx_y_v.push_back(dedx4cm_med);
+            _shr_tkfit_dedx_y_v.back(dedx4cm_med);
           } else if (tkcalo->PlaneID().Plane == 1) {
-            _shr_tkfit_dedx_v_v.push_back(dedx4cm_med);
+            _shr_tkfit_dedx_v_v.back(dedx4cm_med);
           } else if (tkcalo->PlaneID().Plane == 0) {
-            _shr_tkfit_dedx_u_v.push_back(dedx4cm_med);
+            _shr_tkfit_dedx_u_v.back(dedx4cm_med);
           }
           _shr_tkfit_dedx_nhits_v.back()[tkcalo->PlaneID().Plane] = dedx4cm.size();
         }
