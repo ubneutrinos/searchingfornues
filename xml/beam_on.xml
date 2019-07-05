@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
 <!ENTITY name "mc_nue_bnb">
-<!ENTITY project_version "v3">
+<!ENTITY project_version "v5">
 <!ENTITY release "v08_00_00_13">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "foppiani">
-<!ENTITY dataset "prodgenie_bnb_intrinsic_nue_uboone_overlay_mcc9.0_C1_reco2">
+<!ENTITY dataset "data_bnb_optfilter_C1_5e19_goodruns_mcc9.0_new_reco2">
 <!ENTITY resilient "/pnfs/uboone/resilient/users">
 <!ENTITY scratch "/pnfs/uboone/scratch/users">
 <!ENTITY data "/uboone/data/users">
 <!ENTITY fcl_dir "/uboone/app/users/foppiani/searchingfornues/srcs/ubana/ubana/searchingfornues/Selection/job/">
-<!ENTITY fcl_name "run_neutrinoselectionfilter_run1_mc.fcl">
+<!ENTITY fcl_name "run_neutrinoselectionfilter_run1_data.fcl">
 <!ENTITY folder_name "searchingornues">
 <!ENTITY tar_name "local">
 ]>
