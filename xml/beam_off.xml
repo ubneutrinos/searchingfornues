@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
-<!ENTITY name "mc_nue_bnb">
+<!ENTITY name "beam_off">
 <!ENTITY project_version "v5">
 <!ENTITY release "v08_00_00_13">
 <!ENTITY qualifier "e17:prof">
