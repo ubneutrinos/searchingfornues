@@ -256,7 +256,7 @@ microboone_eventweight: {
 
   weight_functions_genie: [
     genie_qema,
-    # genie_qevec, #Add back in future Genie 3 patch
+    # genie_qevec, #Add back in future Genie 3 patch, also not in genie_all
     genie_ncelAxial, genie_ncelEta,
     genie_ccresAxial, genie_ccresVector,
     genie_ncresAxial, genie_ncresVector,
@@ -636,19 +636,24 @@ microboone_eventweight: {
     type: Genie
     random_seed: 100
     parameter_list: [
-      "QEMA", "NCELaxial", "NCELeta", "CCResAxial", "CCResVector",
+      "QEMA", "NCELaxial", "NCELeta", "CCResAxial", "CCResVector", #No QEVec right now
       "NCResAxial", "NCResVector", "CohMA", "CohR0",
       "NonResRvp1pi", "NonResRvbarp1pi", "NonResRvp2pi", "NonResRvbarp2pi",
-      "ResDecayGamma", "ResDecayTheta", "NC",
+      "ResDecayGamma", "ResDecayEta", "ResDecayTheta", "NC", #Added ResDecayEta
       "DISAth", "DISBth", "DISCv1u", "DISCv2u", "AGKYxF", "AGKYpT",
-      "FormZone", "FermiGasModelKf",
-      "IntraNukeNmfp", "IntraNukeNcex", "IntraNukeNel", "IntraNukeNinel",
+      "FormZone", "FermiGasModelKf", "FermiGasModelSf", #Added FermiGasModelSf
+      "IntraNukeNmfp", "IntraNukeNcex",
+      #"IntraNukeNel",
+      "IntraNukeNinel",
       "IntraNukeNabs", "IntraNukeNpi", "IntraNukePImfp", "IntraNukePIcex",
-      "IntraNukePIel", "IntraNukePIinel", "IntraNukePIabs", "IntraNukePIpi"
+      #"IntraNukePIel",
+      "IntraNukePIinel",
+      #"IntraNukePIabs",
+      "IntraNukePIpi"
     ]
     parameter_sigma: [
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1#, 1
     ]
     mode: multisim
     number_of_multisims: 50 #10
