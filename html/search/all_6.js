@@ -10,8 +10,10 @@ var searchData=
   ['ffidvolzstart',['fFidvolZstart',['../classselection_1_1CC0piNpSelection.html#afe5a2b82ecad103b98362839094c47e0',1,'selection::CC0piNpSelection::fFidvolZstart()'],['../classselection_1_1NuMuSelection.html#afd0602fc9b69392ffb8dbc36c6ff3e61',1,'selection::NuMuSelection::fFidvolZstart()']]],
   ['flashcandidate',['FlashCandidate',['../classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate.html',1,'flashmatch::FlashMatchingTool']]],
   ['flashcandidate',['FlashCandidate',['../classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate.html#a2d514815c7f1cd16cec72f45781b9532',1,'flashmatch::FlashMatchingTool::FlashCandidate::FlashCandidate()'],['../classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate.html#a95fa2be25e8635d56d6768b2886fa821',1,'flashmatch::FlashMatchingTool::FlashCandidate::FlashCandidate(const art::Event &amp;event, const recob::OpFlash &amp;flash)']]],
-  ['flashmatchingtool',['FlashMatchingTool',['../classflashmatch_1_1FlashMatchingTool.html#a8c6b08ba5404a69ad5fc984eaf8a1eba',1,'flashmatch::FlashMatchingTool']]],
+  ['flashmatching',['FlashMatching',['../classanalysis_1_1FlashMatching.html',1,'analysis']]],
+  ['flashmatching',['FlashMatching',['../classanalysis_1_1FlashMatching.html#a00eb9eca115b63fe442d1a14fb205692',1,'analysis::FlashMatching']]],
   ['flashmatchingtool',['FlashMatchingTool',['../classflashmatch_1_1FlashMatchingTool.html',1,'flashmatch']]],
+  ['flashmatchingtool',['FlashMatchingTool',['../classflashmatch_1_1FlashMatchingTool.html#a8c6b08ba5404a69ad5fc984eaf8a1eba',1,'flashmatch::FlashMatchingTool']]],
   ['flashmatchingtoolbase',['FlashMatchingToolBase',['../classflashmatch_1_1FlashMatchingToolBase.html',1,'flashmatch']]],
   ['ftrkshrscore',['fTrkShrscore',['../classselection_1_1CC0piNpSelection.html#ab72eccf7dab3acafa294a0d8f3e225a0',1,'selection::CC0piNpSelection::fTrkShrscore()'],['../classselection_1_1NuMuSelection.html#ad112dbbc5a443a1ff5408c512788a154',1,'selection::NuMuSelection::fTrkShrscore()'],['../classanalysis_1_1TrackAnalysis.html#a49502213574f13be542aaab647940ffd',1,'analysis::TrackAnalysis::fTrkShrScore()']]]
 ];
