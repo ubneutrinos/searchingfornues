@@ -10,7 +10,6 @@ var searchData=
   ['_7eemptyselection',['~EmptySelection',['../classselection_1_1EmptySelection.html#a62d52a58d6da0c8ae7723a405848bd5d',1,'selection::EmptySelection']]],
   ['_7eeventweighttree',['~EventWeightTree',['../classanalysis_1_1EventWeightTree.html#ac4c13dc05b4378d910f25afdd410475b',1,'analysis::EventWeightTree']]],
   ['_7efailuremode',['~FailureMode',['../classflashmatch_1_1FlashMatchingTool_1_1FailureMode.html#ab6ee2b8304974614e71440359a068acd',1,'flashmatch::FlashMatchingTool::FailureMode']]],
-  ['_7eflashmatching',['~FlashMatching',['../classanalysis_1_1FlashMatching.html#ab2647643c3420bac36afe949ac252f20',1,'analysis::FlashMatching']]],
   ['_7enumuselection',['~NuMuSelection',['../classselection_1_1NuMuSelection.html#af2a4b263e268fc51f0fa58ea4ad74ee4',1,'selection::NuMuSelection']]],
   ['_7eobviouscosmicflashmatching',['~ObviousCosmicFlashMatching',['../classanalysis_1_1ObviousCosmicFlashMatching.html#a130b94ad72bcc4157edc74e53d26d1c6',1,'analysis::ObviousCosmicFlashMatching']]],
   ['_7epi0selection',['~Pi0Selection',['../classselection_1_1Pi0Selection.html#ad691918c955035275406f16331ba0631',1,'selection::Pi0Selection']]],
@@ -20,6 +19,7 @@ var searchData=
   ['_7eselectiontoolbase',['~SelectionToolBase',['../classselection_1_1SelectionToolBase.html#a79885af9ff5ab77d239d8484c22ac87e',1,'selection::SelectionToolBase']]],
   ['_7eshoweranalysis',['~ShowerAnalysis',['../classanalysis_1_1ShowerAnalysis.html#af16c1759f0122ba30f7839c4003c0df7',1,'analysis::ShowerAnalysis']]],
   ['_7eshowerselection',['~ShowerSelection',['../classselection_1_1ShowerSelection.html#a59328cc3ca5b6875244f1d2c6a2f3b8e',1,'selection::ShowerSelection']]],
+  ['_7eshowerstartpoint',['~ShowerStartPoint',['../classanalysis_1_1ShowerStartPoint.html#a79dfe7401b305731582274fe09244da1',1,'analysis::ShowerStartPoint']]],
   ['_7eslicepurcompl',['~SlicePurCompl',['../classanalysis_1_1SlicePurCompl.html#aba1c519efb59ad152d186ab4a1a2c6ca',1,'analysis::SlicePurCompl']]],
   ['_7etrackanalysis',['~TrackAnalysis',['../classanalysis_1_1TrackAnalysis.html#a6f96bc87ab6d9dffb6417d7d2f1a89e2',1,'analysis::TrackAnalysis']]]
 ];
