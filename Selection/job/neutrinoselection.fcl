@@ -84,6 +84,12 @@ ContainmentAnalysis: {
     FV: 10
 }
 
+FlashMatchingTool: {
+    tool_type: "FlashMatching"
+    PFPproducer: "pandora"
+    T0producer: "flashmatch"
+}
+
 shrreco3dDATA: @local::ShrReco3DPandora
 shrreco3dDATA.BacktrackTag:  ""
 shrreco3dDATA.ADCtoE:   [238.4,238.4,238.4] # e-/ADC
@@ -157,6 +163,7 @@ NuSelectionFilter:{
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
+        flashmatch:    @local::FlashMatchingTool
     }
 }
 
