@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
 <!ENTITY name "bnb_nu">
-<!ENTITY project_version "v5">
+<!ENTITY project_version "v6">
 <!ENTITY release "v08_00_00_13">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "foppiani">
-<!ENTITY dataset "prodgenie_bnb_nu_uboone_overlay_mcc9.0_run1_reco2">
+<!ENTITY dataset "prodgenie_bnb_nu_uboone_overlay_mcc9.1_run1_reco2">
 <!ENTITY resilient "/pnfs/uboone/resilient/users">
 <!ENTITY scratch "/pnfs/uboone/scratch/users">
 <!ENTITY data "/uboone/data/users">
