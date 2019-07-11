@@ -144,10 +144,43 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a007ac1f04819cff64bb54b6206966408"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a007ac1f04819cff64bb54b6206966408"></a>
 TTree *&#160;</td><td class="memItemRight" valign="bottom"><b>_weightstree</b></td></tr>
 <tr class="separator:a007ac1f04819cff64bb54b6206966408"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53ea863f60b296f796545baac7accc12"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a53ea863f60b296f796545baac7accc12"></a>
+<tr class="memitem:aef493db93e72288ef19cd155052fbce6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aef493db93e72288ef19cd155052fbce6"></a>
 std::map&lt; std::string, <br class="typebreak"/>
-std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_weights</b></td></tr>
-<tr class="separator:a53ea863f60b296f796545baac7accc12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+std::vector&lt; double &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_mapWeight</b></td></tr>
+<tr class="separator:aef493db93e72288ef19cd155052fbce6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63fcb54ac96617bfa03f1c98bc941d47"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a63fcb54ac96617bfa03f1c98bc941d47"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_vecWeightFlux</b></td></tr>
+<tr class="separator:a63fcb54ac96617bfa03f1c98bc941d47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27f4bcfa903da58796010d056b257f1c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a27f4bcfa903da58796010d056b257f1c"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_vecWeightsGenie</b></td></tr>
+<tr class="separator:a27f4bcfa903da58796010d056b257f1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2afa517c5d3c82f395cca60f6bed1e55"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2afa517c5d3c82f395cca60f6bed1e55"></a>
+std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_vecWeightsReint</b></td></tr>
+<tr class="separator:a2afa517c5d3c82f395cca60f6bed1e55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ae36b271ba94dcdfcaafd0d3d9f4550"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2ae36b271ba94dcdfcaafd0d3d9f4550"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>_createDedicatedTree</b></td></tr>
+<tr class="separator:a2ae36b271ba94dcdfcaafd0d3d9f4550"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0eeccf0e01dde3c1d0e97674dcbfbb9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac0eeccf0e01dde3c1d0e97674dcbfbb9"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>_createMapBranch</b></td></tr>
+<tr class="separator:ac0eeccf0e01dde3c1d0e97674dcbfbb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2905d3ca10c17a92cef96d00c9b65801"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2905d3ca10c17a92cef96d00c9b65801"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>_createFluxBranch</b></td></tr>
+<tr class="separator:a2905d3ca10c17a92cef96d00c9b65801"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af66736f8bc62c7b29fcca28576132c0e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af66736f8bc62c7b29fcca28576132c0e"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>_createGenieBranch</b></td></tr>
+<tr class="separator:af66736f8bc62c7b29fcca28576132c0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a30a5f48b802fcf22092caf532a1bb6f9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a30a5f48b802fcf22092caf532a1bb6f9"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>_createReintBranch</b></td></tr>
+<tr class="separator:a30a5f48b802fcf22092caf532a1bb6f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac52e040d9ffac87eeeb4222fe175338b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac52e040d9ffac87eeeb4222fe175338b"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>_run</b></td></tr>
+<tr class="separator:ac52e040d9ffac87eeeb4222fe175338b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d993a5f48707b15251e6c615f83be14"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6d993a5f48707b15251e6c615f83be14"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>_subRun</b></td></tr>
+<tr class="separator:a6d993a5f48707b15251e6c615f83be14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea12ca02fb94fe73ae1da0ef9f8682aa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aea12ca02fb94fe73ae1da0ef9f8682aa"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>_evt</b></td></tr>
+<tr class="separator:aea12ca02fb94fe73ae1da0ef9f8682aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a481af16f4e8721805bbe7fb5f0b1da2a"></a>
