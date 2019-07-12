@@ -129,6 +129,7 @@ private:
   std::vector<float> _trk_pid_chipi_v;
   std::vector<float> _trk_pid_chimu_v;
   std::vector<float> _trk_pida_v;
+  std::vector<float> _trk_mcs_muon_mom_v;
   std::vector<float> _trk_energy_proton_v;
   std::vector<float> _trk_energy_muon_v;
 
@@ -267,9 +268,11 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       _trk_pid_chika_v.push_back(pidchika);
 
       // Kinetic energy using tabulated stopping power (GeV)
+      float mcs_momentum_muon = _trkmom.GetTrackMomentum(trk->Length(), 13);
       float energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), 2212), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
-      float energy_muon = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), 13), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
+      float energy_muon = std::sqrt(std::pow(mcs_momentum_muon, 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
 
+      _trk_mcs_muon_mom_v.push_back(mcs_momentum_muon);
       _trk_energy_proton_v.push_back(energy_proton);
       _trk_energy_muon_v.push_back(energy_muon);
 
@@ -334,6 +337,8 @@ void TrackAnalysis::fillDefault()
   _trk_pid_chipi_v.push_back(std::numeric_limits<float>::lowest());
   _trk_pid_chimu_v.push_back(std::numeric_limits<float>::lowest());
   _trk_pida_v.push_back(std::numeric_limits<float>::lowest());
+
+  _trk_mcs_muon_mom_v.push_back(std::numeric_limits<float>::lowest());
   _trk_energy_proton_v.push_back(std::numeric_limits<float>::lowest());
   _trk_energy_muon_v.push_back(std::numeric_limits<float>::lowest());
 }
@@ -368,6 +373,7 @@ void TrackAnalysis::setBranches(TTree *_tree)
   _tree->Branch("trk_phi_v", "std::vector< float >", &_trk_phi_v);
 
   _tree->Branch("trk_len_v", "std::vector< float >", &_trk_len_v);
+  _tree->Branch("trk_mcs_muon_mom_v", "std::vector< float >", &_trk_mcs_muon_mom_v);
   _tree->Branch("trk_energy_proton_v", "std::vector< float >", &_trk_energy_proton_v);
   _tree->Branch("trk_energy_muon_v", "std::vector< float >", &_trk_energy_muon_v);
 }
