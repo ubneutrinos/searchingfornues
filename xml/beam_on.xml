@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
 <!ENTITY name "beam_on">
-<!ENTITY project_version "v5">
+<!ENTITY project_version "v6">
 <!ENTITY release "v08_00_00_13">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "foppiani">
-<!ENTITY dataset "data_bnb_optfilter_C1_5e19_goodruns_mcc9.0_new_reco2">
+<!ENTITY dataset "data_bnb_optfilter_C1_5e19_goodruns_mcc9.1_reco2">
 <!ENTITY resilient "/pnfs/uboone/resilient/users">
 <!ENTITY scratch "/pnfs/uboone/scratch/users">
 <!ENTITY data "/uboone/data/users">
