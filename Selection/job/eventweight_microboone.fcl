@@ -1,5 +1,7 @@
 BEGIN_PROLOG
 
+#include "eventweight_microboone_spline.fcl"
+
 microboone_eventweight: {
   module_type: "EventWeight"
  
@@ -709,6 +711,21 @@ microboone_eventweight: {
     number_of_multisims: 50 #100
   }
 }
+
+#event weighting for switching between splines
+microboone_eventweight_justSplines: {
+  module_type: "EventWeight"
+
+  min_weight: 0.0
+  max_weight: 100
+
+  genie_module_label: "generator"
+  @table::microboone_eventweight_spline
+}
+
+#just the spline weight function
+microboone_eventweight_justSplines.weight_functions: [ splines_general ]
+
 
 ##########################################################
 ## All available weight functions
