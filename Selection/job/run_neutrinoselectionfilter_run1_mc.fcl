@@ -14,6 +14,7 @@ physics.filters.nuselection.IsData: false
 
 #Force loading ubsim EventWeight calculator libraries instead of larsim default
 services.UBEventWeight: @local::microboone_eventweight_service
+services.NuRandomService: @local::microboone_seedservice #might not be necessary
 EventWeightTreeTool: {
     tool_type: "EventWeightTree"
     createDedicatedTree: false
@@ -21,15 +22,14 @@ EventWeightTreeTool: {
     createFluxBranch: false
     createGenieBranch: false
     createReintBranch: false
+    createSplineBranch: false
 }
 
 physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeightTreeTool
 
 physics.producers.eventweight:        @local::microboone_eventweight
 
-physics.producers.eventweightSplines: @local::microboone_eventweight_justSplines
-
-physics.p1: [ eventweightSplines, eventweight, @sequence::physics.p1]
+physics.p1: [ eventweight, @sequence::physics.p1]
 
 ##Run weights individually
 physics.producers.eventweight.weight_functions: [
@@ -52,3 +52,9 @@ physics.producers.eventweight.weight_functions: [
     reinteractions_all
 ]
 
+#Splines (requires v17)
+# physics.producers.eventweightSplines: @local::microboone_eventweight_justSplines
+# physics.p1: [ eventweightSplines, @sequence::physics.p1]
+
+# physics.filters.nuselection.AnalysisTools.eventweighttree.createSplineBranch: true
+# microboone_eventweight_justSplines.weight_functions: [ splines_general ]

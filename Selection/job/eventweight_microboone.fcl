@@ -723,9 +723,6 @@ microboone_eventweight_justSplines: {
   @table::microboone_eventweight_spline
 }
 
-#just the spline weight function
-microboone_eventweight_justSplines.weight_functions: [ splines_general ]
-
 
 ##########################################################
 ## All available weight functions
@@ -736,5 +733,7 @@ microboone_eventweight.weight_functions: [
   @sequence::microboone_eventweight.weight_functions_genie,
   @sequence::microboone_eventweight.weight_functions_reint
 ]
- 
+
+microboone_eventweight_justSplines.weight_functions: [ splines_general ]
+
 END_PROLOG
