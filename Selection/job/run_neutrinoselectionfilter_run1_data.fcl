@@ -66,9 +66,9 @@ physics:
 {
  producers:
  {
-        shrreco3dKalmanShower: @local::shrreco3dKalmanShower
-        shrreco3dKalmanShowercalo: @local::shrreco3dKalmanShowercalodata
-        shrreco3dKalmanShowercali: @local::shrreco3dKalmanShowercalidata
+        shrreco3dKalmanShower:            @local::shrreco3dKalmanShower
+        shrreco3dKalmanShowercalo:        @local::shrreco3dKalmanShowercalodata
+        shrreco3dKalmanShowercali:        @local::shrreco3dKalmanShowercalidata
         pandoraTrack:                     @local::microboone_pandoraTrackCreation
         pandoraTrackcalo:                 @local::microboone_calodata
         pandoraTrackpid:                  @local::particleidconfig
