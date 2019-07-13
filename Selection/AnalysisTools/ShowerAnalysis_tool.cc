@@ -111,6 +111,7 @@ private:
 
   std::vector<float> _shr_theta_v;
   std::vector<float> _shr_phi_v;
+  std::vector<float> _shr_openangle_v;
   std::vector<float> _shr_score_v;
 
   std::vector<int> _shr_tkfit_nhits_v;
@@ -231,6 +232,7 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_energy_y_v.push_back(shr->Energy()[2]);
 
       _shr_pfp_id_v.push_back(i_pfp);
+      _shr_openangle_v.push_back(shr->OpenAngle());
       _shr_phi_v.push_back(shr->Direction().Phi());
       _shr_theta_v.push_back(shr->Direction().Theta());
       _shr_start_x_v.push_back(shr->ShowerStart().X());
@@ -363,6 +365,7 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_py_v", "std::vector< float >", &_shr_py_v);
   _tree->Branch("shr_pz_v", "std::vector< float >", &_shr_pz_v);
 
+  _tree->Branch("shr_openangle_v", "std::vector< float >", &_shr_openangle_v);
   _tree->Branch("shr_theta_v", "std::vector< float >", &_shr_theta_v);
   _tree->Branch("shr_phi_v", "std::vector< float >", &_shr_phi_v);
 
@@ -407,6 +410,7 @@ void ShowerAnalysis::fillDefault()
   _shr_start_U_v.push_back(std::numeric_limits<float>::lowest());
   _shr_start_V_v.push_back(std::numeric_limits<float>::lowest());
 
+  _shr_openangle_v.push_back(std::numeric_limits<float>::lowest());
   _shr_theta_v.push_back(std::numeric_limits<float>::lowest());
   _shr_phi_v.push_back(std::numeric_limits<float>::lowest());
   _shr_dist_v.push_back(std::numeric_limits<float>::lowest());
@@ -457,6 +461,7 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
   _shr_start_U_v.clear();
   _shr_start_V_v.clear();
 
+  _shr_openangle_v.clear();
   _shr_theta_v.clear();
   _shr_phi_v.clear();
   _shr_dist_v.clear();
