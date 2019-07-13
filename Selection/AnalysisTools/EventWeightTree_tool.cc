@@ -67,11 +67,13 @@ namespace analysis
             std::vector<double> _vecWeightFlux;
             std::vector<double> _vecWeightsGenie;
             std::vector<double> _vecWeightsReint;
+            float _weightSpline;
             bool _createDedicatedTree;
             bool _createMapBranch;
             bool _createFluxBranch;
             bool _createGenieBranch;
             bool _createReintBranch;
+            bool _createSplineBranch;
             int _run;
             int _subRun;
             int _evt;
@@ -83,6 +85,7 @@ namespace analysis
         _createFluxBranch = p.get<bool>("createFluxBranch");
         _createGenieBranch = p.get<bool>("createGenieBranch");
         _createReintBranch = p.get<bool>("createReintBranch");
+        _createSplineBranch = p.get<bool>("createSplineBranch");
         
         if(_createDedicatedTree){
             art::ServiceHandle<art::TFileService> tfs;
@@ -98,48 +101,58 @@ namespace analysis
         _subRun = evt.subRun();
         _evt = evt.event();
         
+        std::vector<art::InputTag> vecTag;
         art::InputTag eventweight_tag("eventweight");
-        art::Handle<std::vector<evwgh::MCEventWeight>> eventweights_handle;
-        evt.getByLabel(eventweight_tag, eventweights_handle);
+        art::InputTag eventweight_spline_tag("eventweightSplines");
+        vecTag.push_back(eventweight_tag);
+        vecTag.push_back(eventweight_spline_tag);
         
-        std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
-        art::fill_ptr_vector(eventweights, eventweights_handle);
-        std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
-        _mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
-        
-        if(_createFluxBranch || _createGenieBranch || _createReintBranch){
-            bool isFirstVector = true;
-            
-            for(std::map<std::string, std::vector<double>>::iterator it=evtwgt_map.begin(); it!=evtwgt_map.end(); ++it){
-                std::string keyname = it->first;
+        for(auto& thisTag : vecTag){
+            art::Handle<std::vector<evwgh::MCEventWeight>> eventweights_handle;
+            evt.getByLabel(thisTag, eventweights_handle);
+            if(eventweights_handle.isValid()){
+                std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
+                art::fill_ptr_vector(eventweights, eventweights_handle);
+                std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
+                _mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
                 
-                if(keyname.find("horncurrent") != std::string::npos ||
-                   keyname.find("expskin") != std::string::npos ||
-                   keyname.find("piplus") != std::string::npos ||
-                   keyname.find("piminus") != std::string::npos ||
-                   keyname.find("kplus") != std::string::npos ||
-                   keyname.find("kzero") != std::string::npos ||
-                   keyname.find("kminus") != std::string::npos ||
-                   keyname.find("pioninexsec") != std::string::npos ||
-                   keyname.find("pionqexsec") != std::string::npos ||
-                   keyname.find("piontotxsec") != std::string::npos ||
-                   keyname.find("nucleontotxsec") != std::string::npos ||
-                   keyname.find("nucleonqexsec") != std::string::npos ||
-                   keyname.find("nucleoninexsec") != std::string::npos){
-                    if(isFirstVector){
-                        _vecWeightFlux = it->second;
-                        isFirstVector = false;
-                    }
-                    else{
-                        for(unsigned int i = 0; i < it->second.size(); ++i){
-                            _vecWeightFlux[i] *= it->second[i];
+                if(_createFluxBranch || _createGenieBranch || _createReintBranch || _createSplineBranch || _createSplineBranch){
+                    bool isFirstVector = true;
+
+                    for(std::map<std::string, std::vector<double>>::iterator it=evtwgt_map.begin(); it!=evtwgt_map.end(); ++it){
+                        std::string keyname = it->first;
+
+                        if(keyname.find("horncurrent") != std::string::npos ||
+                           keyname.find("expskin") != std::string::npos ||
+                           keyname.find("piplus") != std::string::npos ||
+                           keyname.find("piminus") != std::string::npos ||
+                           keyname.find("kplus") != std::string::npos ||
+                           keyname.find("kzero") != std::string::npos ||
+                           keyname.find("kminus") != std::string::npos ||
+                           keyname.find("pioninexsec") != std::string::npos ||
+                           keyname.find("pionqexsec") != std::string::npos ||
+                           keyname.find("piontotxsec") != std::string::npos ||
+                           keyname.find("nucleontotxsec") != std::string::npos ||
+                           keyname.find("nucleonqexsec") != std::string::npos ||
+                           keyname.find("nucleoninexsec") != std::string::npos){
+                            if(isFirstVector){
+                                _vecWeightFlux = it->second;
+                                isFirstVector = false;
+                            }
+                            else{
+                                for(unsigned int i = 0; i < it->second.size(); ++i){
+                                    _vecWeightFlux[i] *= it->second[i];
+                                }
+                            }
                         }
+                        if(keyname.find("genie_all") != std::string::npos) _vecWeightsGenie = it->second;
+                        if(keyname.find("reinteractions_all") != std::string::npos) _vecWeightsReint = it->second;
+                        if(keyname.find("spline") != std::string::npos) _weightSpline = it->second[0];
                     }
                 }
-                if(keyname.find("genie_all") != std::string::npos) _vecWeightsGenie = it->second;
-                if(keyname.find("reinteractions_all") != std::string::npos) _vecWeightsReint = it->second;
             }
         }
+
         if(_createDedicatedTree) _weightstree->Fill();
     }
     
@@ -149,14 +162,15 @@ namespace analysis
     void EventWeightTree::setBranches(TTree *_tree){
         if(_createDedicatedTree){
                 _weightstree->Branch("weights", "std::map<std::string, std::vector<double>>", &_mapWeight);
-                _weightstree->Branch("_run",&_run,"run/I");
-                _weightstree->Branch("_subRun",&_subRun,"subRun/I");
-                _weightstree->Branch("_evt",&_evt,"evt/I");
+                _weightstree->Branch("run",&_run,"run/I");
+                _weightstree->Branch("subRun",&_subRun,"subRun/I");
+                _weightstree->Branch("evt",&_evt,"evt/I");
         }
         if(_createMapBranch) _tree->Branch("weights", "std::map<std::string, std::vector<double>>", &_mapWeight);
         if(_createFluxBranch) _tree->Branch("weightsFlux", "std::vector<double>", &_vecWeightFlux);
         if(_createGenieBranch) _tree->Branch("weightsGenie", "std::vector<double>", &_vecWeightsGenie);
         if(_createReintBranch) _tree->Branch("weightsReint", "std::vector<double>", &_vecWeightsReint);
+        if(_createSplineBranch) _tree->Branch("weightSpline",&_weightSpline,"weightSpline/F");
     }
     
     void EventWeightTree::resetTTree(TTree *_tree){
@@ -164,7 +178,7 @@ namespace analysis
         _vecWeightFlux.clear();
         _vecWeightsGenie.clear();
         _vecWeightsReint.clear();
-        
+        _weightSpline = -1;
         _run = -1;
         _subRun = -1;
         _evt = -1;
