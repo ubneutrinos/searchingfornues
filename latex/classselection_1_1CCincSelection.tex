@@ -26,7 +26,9 @@ bool \hyperlink{classselection_1_1CCincSelection_ae8555674551f611dee06dc315ac298
 
 \begin{DoxyCompactList}\small\item\em reset ttree branches \end{DoxyCompactList}\item 
 bool \hyperlink{classselection_1_1CCincSelection_adf6c627aacf355e0e4c8ff4df5716fee}{is\-Fiducial} (const double x\mbox{[}3\mbox{]}) const 
-\begin{DoxyCompactList}\small\item\em Check if point is inside fiducial volume. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Check if point is inside fiducial volume. \end{DoxyCompactList}\item 
+bool \hyperlink{classselection_1_1CCincSelection_a7a4360070b68a1877605af180a27b9a8}{fill\-Electron} (const art\-::\-Ptr$<$ recob\-::\-P\-F\-Particle $>$ \&pfp, const art\-::\-Valid\-Handle$<$ std\-::vector$<$ recob\-::\-M\-C\-S\-Fit\-Result $>$$>$ \&M\-C\-S\-Mu\-\_\-handle, const art\-::\-Find\-Many\-P$<$ anab\-::\-Particle\-I\-D $>$ \&track\-P\-I\-D\-Assn)
+\begin{DoxyCompactList}\small\item\em Fill the tree for the electron candidate. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -130,6 +132,10 @@ uint \hyperlink{classselection_1_1CCincSelection_a8ad70697906b08285a218c739e8c48
 \item 
 uint \hyperlink{classselection_1_1CCincSelection_a3617f2e35ecc3cd9ceb53108b4c288cb}{m\-\_\-shr\-Tkfitnhits\-U}
 \item 
+bool \hyperlink{classselection_1_1CCincSelection_a0f08b768b994a2b2798a54a1b11cfaef}{m\-\_\-vtx\-Fiducial}
+\item 
+bool \hyperlink{classselection_1_1CCincSelection_a7f2d544a3260377cab6db80b8bf81302}{m\-\_\-track\-Fiducial}
+\item 
 uint \hyperlink{classselection_1_1CCincSelection_ac839d87e0a429876df355fee2a561e60}{m\-\_\-hits\-Outfv}
 \item 
 float \hyperlink{classselection_1_1CCincSelection_a5ac3c52c6a88691182c3b3c6594d9744}{m\-\_\-contained\-Fraction}
@@ -186,7 +192,28 @@ Reconfigure method.
 
 Arguments\-:
 
-pset -\/ Fcl parameter set. \hypertarget{classselection_1_1CCincSelection_adf6c627aacf355e0e4c8ff4df5716fee}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!is\-Fiducial@{is\-Fiducial}}
+pset -\/ Fcl parameter set. \hypertarget{classselection_1_1CCincSelection_a7a4360070b68a1877605af180a27b9a8}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!fill\-Electron@{fill\-Electron}}
+\index{fill\-Electron@{fill\-Electron}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
+\subsubsection[{fill\-Electron}]{\setlength{\rightskip}{0pt plus 5cm}bool selection\-::\-C\-Cinc\-Selection\-::fill\-Electron (
+\begin{DoxyParamCaption}
+\item[{const art\-::\-Ptr$<$ recob\-::\-P\-F\-Particle $>$ \&}]{pfp, }
+\item[{const art\-::\-Valid\-Handle$<$ std\-::vector$<$ recob\-::\-M\-C\-S\-Fit\-Result $>$$>$ \&}]{M\-C\-S\-Mu\-\_\-handle, }
+\item[{const art\-::\-Find\-Many\-P$<$ anab\-::\-Particle\-I\-D $>$ \&}]{track\-P\-I\-D\-Assn}
+\end{DoxyParamCaption}
+)}}\label{classselection_1_1CCincSelection_a7a4360070b68a1877605af180a27b9a8}
+
+
+Fill the tree for the electron candidate. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pfparticle} & ptr The Pfparticle corresponding to the daughter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+1 if succesful, 0 if failure. 
+\end{DoxyReturn}
+\hypertarget{classselection_1_1CCincSelection_adf6c627aacf355e0e4c8ff4df5716fee}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!is\-Fiducial@{is\-Fiducial}}
 \index{is\-Fiducial@{is\-Fiducial}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
 \subsubsection[{is\-Fiducial}]{\setlength{\rightskip}{0pt plus 5cm}bool selection\-::\-C\-Cinc\-Selection\-::is\-Fiducial (
 \begin{DoxyParamCaption}
@@ -402,11 +429,18 @@ Start y coordinate of the leading shower obtained with the track fitting \hypert
 Start z coordinate of the leading shower obtained with the track fitting \hypertarget{classselection_1_1CCincSelection_a9fa1d825a900a4081323091daa9b0aa7}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Tkfittheta@{m\-\_\-shr\-Tkfittheta}}
 \index{m\-\_\-shr\-Tkfittheta@{m\-\_\-shr\-Tkfittheta}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
 \subsubsection[{m\-\_\-shr\-Tkfittheta}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-Tkfittheta\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a9fa1d825a900a4081323091daa9b0aa7}
-Track angle of the leading shower obtained with the track fitting \hypertarget{classselection_1_1CCincSelection_a2c3b80516e3731ec9b4f5ccbee6864ba}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-trk\-Score@{m\-\_\-trk\-Score}}
+Track angle of the leading shower obtained with the track fitting \hypertarget{classselection_1_1CCincSelection_a7f2d544a3260377cab6db80b8bf81302}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-track\-Fiducial@{m\-\_\-track\-Fiducial}}
+\index{m\-\_\-track\-Fiducial@{m\-\_\-track\-Fiducial}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
+\subsubsection[{m\-\_\-track\-Fiducial}]{\setlength{\rightskip}{0pt plus 5cm}bool selection\-::\-C\-Cinc\-Selection\-::m\-\_\-track\-Fiducial\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a7f2d544a3260377cab6db80b8bf81302}
+Start and end points of all pfp reconstructed as trackare in the fiducial volume \hypertarget{classselection_1_1CCincSelection_a2c3b80516e3731ec9b4f5ccbee6864ba}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-trk\-Score@{m\-\_\-trk\-Score}}
 \index{m\-\_\-trk\-Score@{m\-\_\-trk\-Score}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
 \subsubsection[{m\-\_\-trk\-Score}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-Cinc\-Selection\-::m\-\_\-trk\-Score\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a2c3b80516e3731ec9b4f5ccbee6864ba}
-Threshold on the Pandora track score for electron candidate (default 0.\-9) 
+Threshold on the Pandora track score for electron candidate (default 0.\-9) \hypertarget{classselection_1_1CCincSelection_a0f08b768b994a2b2798a54a1b11cfaef}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-vtx\-Fiducial@{m\-\_\-vtx\-Fiducial}}
+\index{m\-\_\-vtx\-Fiducial@{m\-\_\-vtx\-Fiducial}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
+\subsubsection[{m\-\_\-vtx\-Fiducial}]{\setlength{\rightskip}{0pt plus 5cm}bool selection\-::\-C\-Cinc\-Selection\-::m\-\_\-vtx\-Fiducial\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a0f08b768b994a2b2798a54a1b11cfaef}
+The vertex is in the fiducial volume 
 
-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following files\-:\begin{DoxyCompactItemize}
 \item 
+/home/travis/build/ubneutrinos/searchingfornues/\-Selection/\-Selection\-Tools/C\-Cinc\-Selection\-\_\-tool.\-h\item 
 /home/travis/build/ubneutrinos/searchingfornues/\-Selection/\-Selection\-Tools/C\-Cinc\-Selection\-\_\-tool.\-cc\end{DoxyCompactItemize}

@@ -127,6 +127,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:adf6c627aacf355e0e4c8ff4df5716fee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#adf6c627aacf355e0e4c8ff4df5716fee">isFiducial</a> (const double x[3]) const </td></tr>
 <tr class="memdesc:adf6c627aacf355e0e4c8ff4df5716fee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if point is inside fiducial volume.  <a href="#adf6c627aacf355e0e4c8ff4df5716fee">More...</a><br/></td></tr>
 <tr class="separator:adf6c627aacf355e0e4c8ff4df5716fee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a4360070b68a1877605af180a27b9a8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a7a4360070b68a1877605af180a27b9a8">fillElectron</a> (const art::Ptr&lt; recob::PFParticle &gt; &amp;pfp, const art::ValidHandle&lt; std::vector&lt; recob::MCSFitResult &gt;&gt; &amp;MCSMu_handle, const art::FindManyP&lt; anab::ParticleID &gt; &amp;trackPIDAssn)</td></tr>
+<tr class="memdesc:a7a4360070b68a1877605af180a27b9a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill the tree for the electron candidate.  <a href="#a7a4360070b68a1877605af180a27b9a8">More...</a><br/></td></tr>
+<tr class="separator:a7a4360070b68a1877605af180a27b9a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classselection_1_1SelectionToolBase"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classselection_1_1SelectionToolBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classselection_1_1SelectionToolBase.html">selection::SelectionToolBase</a></td></tr>
 <tr class="memitem:a79885af9ff5ab77d239d8484c22ac87e inherit pub_methods_classselection_1_1SelectionToolBase"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a79885af9ff5ab77d239d8484c22ac87e"></a>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1SelectionToolBase.html#a79885af9ff5ab77d239d8484c22ac87e">~SelectionToolBase</a> () noexcept=default</td></tr>
@@ -242,6 +245,10 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a8ad70697906b08285a218c739e8c4815"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3617f2e35ecc3cd9ceb53108b4c288cb"><td class="memItemLeft" align="right" valign="top">uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a3617f2e35ecc3cd9ceb53108b4c288cb">m_shrTkfitnhitsU</a></td></tr>
 <tr class="separator:a3617f2e35ecc3cd9ceb53108b4c288cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f08b768b994a2b2798a54a1b11cfaef"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a0f08b768b994a2b2798a54a1b11cfaef">m_vtxFiducial</a></td></tr>
+<tr class="separator:a0f08b768b994a2b2798a54a1b11cfaef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f2d544a3260377cab6db80b8bf81302"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a7f2d544a3260377cab6db80b8bf81302">m_trackFiducial</a></td></tr>
+<tr class="separator:a7f2d544a3260377cab6db80b8bf81302"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac839d87e0a429876df355fee2a561e60"><td class="memItemLeft" align="right" valign="top">uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#ac839d87e0a429876df355fee2a561e60">m_hitsOutfv</a></td></tr>
 <tr class="separator:ac839d87e0a429876df355fee2a561e60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ac3c52c6a88691182c3b3c6594d9744"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a5ac3c52c6a88691182c3b3c6594d9744">m_containedFraction</a></td></tr>
@@ -314,6 +321,47 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>fData</b></td></tr>
 <p>Reconfigure method.</p>
 <p>Arguments:</p>
 <p>pset - Fcl parameter set. </p>
+
+</div>
+</div>
+<a class="anchor" id="a7a4360070b68a1877605af180a27b9a8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool selection::CCincSelection::fillElectron </td>
+          <td>(</td>
+          <td class="paramtype">const art::Ptr&lt; recob::PFParticle &gt; &amp;&#160;</td>
+          <td class="paramname"><em>pfp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const art::ValidHandle&lt; std::vector&lt; recob::MCSFitResult &gt;&gt; &amp;&#160;</td>
+          <td class="paramname"><em>MCSMu_handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const art::FindManyP&lt; anab::ParticleID &gt; &amp;&#160;</td>
+          <td class="paramname"><em>trackPIDAssn</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Fill the tree for the electron candidate. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pfparticle</td><td>ptr The Pfparticle corresponding to the daughter. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>1 if succesful, 0 if failure. </dd></dl>
 
 </div>
 </div>
@@ -1622,6 +1670,27 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>fData</b></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a7f2d544a3260377cab6db80b8bf81302"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool selection::CCincSelection::m_trackFiducial</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Start and end points of all pfp reconstructed as trackare in the fiducial volume </p>
+
+</div>
+</div>
 <a class="anchor" id="a2c3b80516e3731ec9b4f5ccbee6864ba"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1643,7 +1712,29 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>fData</b></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<a class="anchor" id="a0f08b768b994a2b2798a54a1b11cfaef"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool selection::CCincSelection::m_vtxFiducial</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The vertex is in the fiducial volume </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/<a class="el" href="CCincSelection__tool_8h_source.html">CCincSelection_tool.h</a></li>
 <li>/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CCincSelection_tool.cc</li>
 </ul>
 </div><!-- contents -->
