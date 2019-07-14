@@ -1,6 +1,7 @@
 var searchData=
 [
   ['cc0pinpselection',['CC0piNpSelection',['../classselection_1_1CC0piNpSelection.html',1,'selection']]],
+  ['ccincselection',['CCincSelection',['../classselection_1_1CCincSelection.html',1,'selection']]],
   ['commonopticalfilter',['CommonOpticalFilter',['../classCommonOpticalFilter.html',1,'']]],
   ['containmentanalysis',['ContainmentAnalysis',['../classanalysis_1_1ContainmentAnalysis.html',1,'analysis']]],
   ['cosmicip',['CosmicIP',['../classanalysis_1_1CosmicIP.html',1,'analysis']]],

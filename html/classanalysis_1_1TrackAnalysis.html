@@ -124,6 +124,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1TrackAnalysis.html#adde7746b5a45ec99cd67c0ab1fa19eb1">SaveTruth</a> (art::Event const &amp;e)</td></tr>
 <tr class="memdesc:adde7746b5a45ec99cd67c0ab1fa19eb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save truth info for event associated to neutrino. <br/></td></tr>
 <tr class="separator:adde7746b5a45ec99cd67c0ab1fa19eb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace1af1d0be520c1319758a9391f5bc4d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ace1af1d0be520c1319758a9391f5bc4d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1TrackAnalysis.html#ace1af1d0be520c1319758a9391f5bc4d">fillDefault</a> ()</td></tr>
+<tr class="memdesc:ace1af1d0be520c1319758a9391f5bc4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill Default info for event associated to neutrino. <br/></td></tr>
+<tr class="separator:ace1af1d0be520c1319758a9391f5bc4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae89023f1c4b11cae7bb4acb672006bb7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae89023f1c4b11cae7bb4acb672006bb7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1TrackAnalysis.html#ae89023f1c4b11cae7bb4acb672006bb7">setBranches</a> (TTree *_tree) override</td></tr>
 <tr class="memdesc:ae89023f1c4b11cae7bb4acb672006bb7"><td class="mdescLeft">&#160;</td><td class="mdescRight">set branches for TTree <br/></td></tr>
@@ -166,84 +170,84 @@ art::InputTag&#160;</td><td class="memItemRight" valign="bottom"><b>fTRKproducer
 <tr class="memitem:a965f2969aac19332af4597a364586c5d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a965f2969aac19332af4597a364586c5d"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>_n_tracks</b></td></tr>
 <tr class="separator:a965f2969aac19332af4597a364586c5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ff6b242cbf5345bc77a2a574218ccd9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6ff6b242cbf5345bc77a2a574218ccd9"></a>
-std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_pfp_id</b></td></tr>
-<tr class="separator:a6ff6b242cbf5345bc77a2a574218ccd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a204ef1a35c4346e36ffba8ced3c6ce5c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a204ef1a35c4346e36ffba8ced3c6ce5c"></a>
+std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_pfp_id_v</b></td></tr>
+<tr class="separator:a204ef1a35c4346e36ffba8ced3c6ce5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a11bbae1318c6f798d03b7cc05d802b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0a11bbae1318c6f798d03b7cc05d802b"></a>
 std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_score_v</b></td></tr>
 <tr class="separator:a0a11bbae1318c6f798d03b7cc05d802b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad49f45d20ec26dde9ea57374879c3206"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad49f45d20ec26dde9ea57374879c3206"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_start_x</b></td></tr>
-<tr class="separator:ad49f45d20ec26dde9ea57374879c3206"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abaf68aa9375b8b8fc84c619f236f73cb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abaf68aa9375b8b8fc84c619f236f73cb"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_start_y</b></td></tr>
-<tr class="separator:abaf68aa9375b8b8fc84c619f236f73cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d0a946499d3f330e3eeda4dd831510d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7d0a946499d3f330e3eeda4dd831510d"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_start_z</b></td></tr>
-<tr class="separator:a7d0a946499d3f330e3eeda4dd831510d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb7f57451eeb094b5b5d5161ed829e97"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abb7f57451eeb094b5b5d5161ed829e97"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_distance</b></td></tr>
-<tr class="separator:abb7f57451eeb094b5b5d5161ed829e97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5ab053ef7d7aa30d598d599ff789914"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab5ab053ef7d7aa30d598d599ff789914"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_theta</b></td></tr>
-<tr class="separator:ab5ab053ef7d7aa30d598d599ff789914"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6c0e92511d22e25134cba88e268245b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad6c0e92511d22e25134cba88e268245b"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_phi</b></td></tr>
-<tr class="separator:ad6c0e92511d22e25134cba88e268245b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23834d0496ab26ed9db30e4dbc70d900"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a23834d0496ab26ed9db30e4dbc70d900"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_dir_x</b></td></tr>
-<tr class="separator:a23834d0496ab26ed9db30e4dbc70d900"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6041e3ed51cae9811f60be2d6ff6e2f5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6041e3ed51cae9811f60be2d6ff6e2f5"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_dir_y</b></td></tr>
-<tr class="separator:a6041e3ed51cae9811f60be2d6ff6e2f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a391eb4b7ea5d96d0e82ea5e79ae58e6a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a391eb4b7ea5d96d0e82ea5e79ae58e6a"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_dir_z</b></td></tr>
-<tr class="separator:a391eb4b7ea5d96d0e82ea5e79ae58e6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49a6eb28c7cb10f1ae8070cb42dc9b18"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a49a6eb28c7cb10f1ae8070cb42dc9b18"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_end_x</b></td></tr>
-<tr class="separator:a49a6eb28c7cb10f1ae8070cb42dc9b18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c7fee52b3d981bd39283ce156397a74"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3c7fee52b3d981bd39283ce156397a74"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_end_y</b></td></tr>
-<tr class="separator:a3c7fee52b3d981bd39283ce156397a74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9fb411b0819f652885225a1d350f5abc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9fb411b0819f652885225a1d350f5abc"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_end_z</b></td></tr>
-<tr class="separator:a9fb411b0819f652885225a1d350f5abc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62277a4789ad11184c5b52b80340bfab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a62277a4789ad11184c5b52b80340bfab"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_length</b></td></tr>
-<tr class="separator:a62277a4789ad11184c5b52b80340bfab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d80978ff1d329dd87f0be84dc39a844"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4d80978ff1d329dd87f0be84dc39a844"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_bragg_p</b></td></tr>
-<tr class="separator:a4d80978ff1d329dd87f0be84dc39a844"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3a23c3cd1b9efaeb90fb3837157c302"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab3a23c3cd1b9efaeb90fb3837157c302"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_bragg_mu</b></td></tr>
-<tr class="separator:ab3a23c3cd1b9efaeb90fb3837157c302"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b6b35517864828bf6f16f2297542f91"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5b6b35517864828bf6f16f2297542f91"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_bragg_mip</b></td></tr>
-<tr class="separator:a5b6b35517864828bf6f16f2297542f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d1d1bcc5a103d25a9fb43d0d3d058e9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0d1d1bcc5a103d25a9fb43d0d3d058e9"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_pidchi</b></td></tr>
-<tr class="separator:a0d1d1bcc5a103d25a9fb43d0d3d058e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0020d81b4457b5bfec7ca950631ea75c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0020d81b4457b5bfec7ca950631ea75c"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_pidchipr</b></td></tr>
-<tr class="separator:a0020d81b4457b5bfec7ca950631ea75c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6caa78fafa796d4c34dd86b6c4af7762"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6caa78fafa796d4c34dd86b6c4af7762"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_pidchika</b></td></tr>
-<tr class="separator:a6caa78fafa796d4c34dd86b6c4af7762"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6153beab708b07e2e9111bdfa7ef7bf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af6153beab708b07e2e9111bdfa7ef7bf"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_pidchipi</b></td></tr>
-<tr class="separator:af6153beab708b07e2e9111bdfa7ef7bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed79c5679af1c6329feea7a34bda7e74"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aed79c5679af1c6329feea7a34bda7e74"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_pidchimu</b></td></tr>
-<tr class="separator:aed79c5679af1c6329feea7a34bda7e74"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3fb26136cae5103046d3c8c95413acaf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3fb26136cae5103046d3c8c95413acaf"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_pida</b></td></tr>
-<tr class="separator:a3fb26136cae5103046d3c8c95413acaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b140906dcfbc7971ea82bbc26ed4492"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0b140906dcfbc7971ea82bbc26ed4492"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_energy_proton</b></td></tr>
-<tr class="separator:a0b140906dcfbc7971ea82bbc26ed4492"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e410b8e3786b70fbce29c798f20d1ca"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3e410b8e3786b70fbce29c798f20d1ca"></a>
-std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_energy_muon</b></td></tr>
-<tr class="separator:a3e410b8e3786b70fbce29c798f20d1ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a221179d7babe341c075f5efd23816131"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a221179d7babe341c075f5efd23816131"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_start_x_v</b></td></tr>
+<tr class="separator:a221179d7babe341c075f5efd23816131"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22a1126cccb5cb0a17bfb1406678cf69"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a22a1126cccb5cb0a17bfb1406678cf69"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_start_y_v</b></td></tr>
+<tr class="separator:a22a1126cccb5cb0a17bfb1406678cf69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a546c29bebe8ce807b1a0abdcbb87f252"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a546c29bebe8ce807b1a0abdcbb87f252"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_start_z_v</b></td></tr>
+<tr class="separator:a546c29bebe8ce807b1a0abdcbb87f252"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d193e8d67655448962d3f3f9b5bc8dd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3d193e8d67655448962d3f3f9b5bc8dd"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_distance_v</b></td></tr>
+<tr class="separator:a3d193e8d67655448962d3f3f9b5bc8dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add6ab02f075045913b33ee4a566eb078"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="add6ab02f075045913b33ee4a566eb078"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_theta_v</b></td></tr>
+<tr class="separator:add6ab02f075045913b33ee4a566eb078"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a478f0e5341895c4d23557f6803fc5a9b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a478f0e5341895c4d23557f6803fc5a9b"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_phi_v</b></td></tr>
+<tr class="separator:a478f0e5341895c4d23557f6803fc5a9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af92fafa75f438f5d5ffc5c30e39438ad"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af92fafa75f438f5d5ffc5c30e39438ad"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_dir_x_v</b></td></tr>
+<tr class="separator:af92fafa75f438f5d5ffc5c30e39438ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41be71127f4637eb8649e49720e16554"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a41be71127f4637eb8649e49720e16554"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_dir_y_v</b></td></tr>
+<tr class="separator:a41be71127f4637eb8649e49720e16554"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af560ca963a50e03894414a8b2b04ae18"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af560ca963a50e03894414a8b2b04ae18"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_dir_z_v</b></td></tr>
+<tr class="separator:af560ca963a50e03894414a8b2b04ae18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0978b4d1abaa1216cfd627ccd88ec3e8"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0978b4d1abaa1216cfd627ccd88ec3e8"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_end_x_v</b></td></tr>
+<tr class="separator:a0978b4d1abaa1216cfd627ccd88ec3e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a395bd060dbdafb908ab4c4349e11ce94"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a395bd060dbdafb908ab4c4349e11ce94"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_end_y_v</b></td></tr>
+<tr class="separator:a395bd060dbdafb908ab4c4349e11ce94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3709728bbb087fac8b08037c5ca3f2c9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3709728bbb087fac8b08037c5ca3f2c9"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_end_z_v</b></td></tr>
+<tr class="separator:a3709728bbb087fac8b08037c5ca3f2c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68a26309363978c671172515e67213d4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a68a26309363978c671172515e67213d4"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_len_v</b></td></tr>
+<tr class="separator:a68a26309363978c671172515e67213d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cf14b10cb366548acafef0c6dcd17e1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2cf14b10cb366548acafef0c6dcd17e1"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_bragg_p_v</b></td></tr>
+<tr class="separator:a2cf14b10cb366548acafef0c6dcd17e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d00dd7a33d0ae12fcc578044e6d0fb2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7d00dd7a33d0ae12fcc578044e6d0fb2"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_bragg_mu_v</b></td></tr>
+<tr class="separator:a7d00dd7a33d0ae12fcc578044e6d0fb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0751097deea470015f65090b87982a53"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0751097deea470015f65090b87982a53"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_bragg_mip_v</b></td></tr>
+<tr class="separator:a0751097deea470015f65090b87982a53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5247cdcd8051190552b5c5d6bb961d88"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5247cdcd8051190552b5c5d6bb961d88"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_pid_chipr_v</b></td></tr>
+<tr class="separator:a5247cdcd8051190552b5c5d6bb961d88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a742a7a8da829bbe7f41a3f33892f335e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a742a7a8da829bbe7f41a3f33892f335e"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_pid_chika_v</b></td></tr>
+<tr class="separator:a742a7a8da829bbe7f41a3f33892f335e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07670855a862aeba52292bbc3944db93"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a07670855a862aeba52292bbc3944db93"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_pid_chipi_v</b></td></tr>
+<tr class="separator:a07670855a862aeba52292bbc3944db93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8dfb2ccbdd07148918b1bf6c6d925fe4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8dfb2ccbdd07148918b1bf6c6d925fe4"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_pid_chimu_v</b></td></tr>
+<tr class="separator:a8dfb2ccbdd07148918b1bf6c6d925fe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9dfa82e52fb547d96f37c8d455a59513"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9dfa82e52fb547d96f37c8d455a59513"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_pida_v</b></td></tr>
+<tr class="separator:a9dfa82e52fb547d96f37c8d455a59513"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c72ab8bf9729ad741b1fcdb1b8916b3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8c72ab8bf9729ad741b1fcdb1b8916b3"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_mcs_muon_mom_v</b></td></tr>
+<tr class="separator:a8c72ab8bf9729ad741b1fcdb1b8916b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29eb249db63679c34d8df831d6df4dcc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a29eb249db63679c34d8df831d6df4dcc"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_energy_proton_v</b></td></tr>
+<tr class="separator:a29eb249db63679c34d8df831d6df4dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a469887427d80272b004cd1aa65a2cd69"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a469887427d80272b004cd1aa65a2cd69"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_energy_muon_v</b></td></tr>
+<tr class="separator:a469887427d80272b004cd1aa65a2cd69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="aed13157ba9297149fe4e15676e6db7fc"></a>
