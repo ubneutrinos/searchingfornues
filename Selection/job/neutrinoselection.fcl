@@ -204,6 +204,8 @@ CC0PiNpSelectionTool: {
 
 }
 
+CCincSelectionTool: {
+}
 
 # run 3 neutrino selection [ w/ crt veto ]
 NuSelectionFilterRun3: @local::NuSelectionFilter
