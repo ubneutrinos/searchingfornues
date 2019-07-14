@@ -190,6 +190,7 @@ private:
   std::vector<float> _backtracked_e;            // energy of backtracked particle
   std::vector<float> _backtracked_purity;       // purity of backtracking
   std::vector<float> _backtracked_completeness; // completeness of backtracking
+  std::vector<float> _backtracked_overlay_purity; // purity of overlay
 
   std::vector<float> _backtracked_px;
   std::vector<float> _backtracked_py;
@@ -498,8 +499,8 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     {
       if (clus_pxy_v.size() != 0)
       {
-        float purity = 0., completeness = 0.;
-        int ibt = searchingfornues::getAssocBtPart(hit_v, assocMCPart, btparts_v, purity, completeness);
+        float purity = 0., completeness = 0., overlay_purity = 0.;
+        int ibt = searchingfornues::getAssocBtPart(hit_v, assocMCPart, btparts_v, purity, completeness, overlay_purity);
         if (ibt >= 0)
         {
           _mc_hits += hit_v.size();
@@ -511,6 +512,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           _backtracked_pdg.push_back(PDG);
           _backtracked_purity.push_back(purity);
           _backtracked_completeness.push_back(completeness);
+          _backtracked_overlay_purity.push_back(overlay_purity);
 
           _backtracked_px.push_back(mcp.px);
           _backtracked_py.push_back(mcp.py);
@@ -586,6 +588,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           _backtracked_pdg.push_back(0);
           _backtracked_purity.push_back(std::numeric_limits<float>::lowest());
           _backtracked_completeness.push_back(std::numeric_limits<float>::lowest());
+          _backtracked_overlay_purity.push_back(std::numeric_limits<float>::lowest());
           _overlay_hits += hit_v.size();
 
           _backtracked_px.push_back(std::numeric_limits<float>::lowest());
@@ -796,6 +799,7 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("backtracked_e", "std::vector<float>", &_backtracked_e);
   _tree->Branch("backtracked_purity", "std::vector<float>", &_backtracked_purity);
   _tree->Branch("backtracked_completeness", "std::vector<float>", &_backtracked_completeness);
+  _tree->Branch("backtracked_overlay_purity", "std::vector<float>", &_backtracked_overlay_purity);
 
   _tree->Branch("backtracked_px", "std::vector<float>", &_backtracked_px);
   _tree->Branch("backtracked_py", "std::vector<float>", &_backtracked_py);
@@ -939,6 +943,7 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _backtracked_pdg.clear();
   _backtracked_purity.clear();
   _backtracked_completeness.clear();
+  _backtracked_overlay_purity.clear();
 
   _backtracked_px.clear();
   _backtracked_py.clear();

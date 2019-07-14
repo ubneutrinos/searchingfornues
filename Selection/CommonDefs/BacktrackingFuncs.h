@@ -197,7 +197,55 @@ std::vector<BtPart> initBacktrackingParticleVec(const std::vector<sim::MCShower>
 int getAssocBtPart(const std::vector<art::Ptr<recob::Hit>> &hits,
                    const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart,
                    const std::vector<BtPart> &btpartsv,
-                   float &purity, float &completeness)
+                   float &purity,
+                   float &completeness,
+                   float &overlay_purity)
+{
+  //
+  std::vector<unsigned int> bthitsv(btpartsv.size(), 0);
+  //
+  for (unsigned int ih = 0; ih < hits.size(); ih++)
+  {
+    art::Ptr<recob::Hit> hitp = hits[ih];
+    auto assmcp = assocMCPart->at(hitp.key());
+    auto assmdt = assocMCPart->data(hitp.key());
+    for (unsigned int ia = 0; ia < assmcp.size(); ++ia)
+    {
+      auto mcp = assmcp[ia];
+      auto amd = assmdt[ia];
+      if (amd->isMaxIDE != 1)
+        continue;
+      for (unsigned int ib = 0; ib < btpartsv.size(); ++ib)
+      {
+        auto &btp = btpartsv[ib];
+        if (std::find(btp.tids.begin(), btp.tids.end(), mcp->TrackId()) != btp.tids.end())
+        {
+          bthitsv[ib]++;
+        }
+      }
+    }
+  }
+  purity = 0.;
+  completeness = 0.;
+  unsigned int maxel = (std::max_element(bthitsv.begin(), bthitsv.end()) - bthitsv.begin());
+  if (maxel == bthitsv.size())
+    return -1;
+
+  if (bthitsv[maxel] == 0)
+    return -1;
+  //
+  purity = float(bthitsv[maxel]) / float(hits.size());
+  completeness = float(bthitsv[maxel]) / float(btpartsv[maxel].nhits);
+  overlay_purity = 1. - std::accumulate(bthitsv.begin(), bthitsv.end(), 0.) / float(hits.size());
+  //
+  return maxel;
+}
+
+int getAssocBtPart(const std::vector<art::Ptr<recob::Hit>> &hits,
+                   const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart,
+                   const std::vector<BtPart> &btpartsv,
+                   float &purity,
+                   float &completeness)
 {
   //
   std::vector<unsigned int> bthitsv(btpartsv.size(), 0);
