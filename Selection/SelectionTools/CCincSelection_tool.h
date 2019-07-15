@@ -5,6 +5,7 @@
 #include "SelectionToolBase.h"
 #include "../CommonDefs/Typedefs.h"
 #include "../CommonDefs/BacktrackingFuncs.h"
+#include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "../CommonDefs/Geometry.h"
 #include "../CommonDefs/SCECorrections.h"
 #include "lardataobj/RecoBase/MCSFitResult.h"
@@ -140,6 +141,8 @@ private:
    uint m_hitsOutfv;          /**< Number of hits of PFParticles outside the fiducial volume */
    float m_containedFraction; /**< Fraction of hits of the PFParticles contained in the fiducial volume */
 
+   // Fcl parameters
+   float m_trkScore; /**< Threshold on the Pandora track score for electron candidate (default 0.9) */
    // Fields for fiducial volume
    float m_fidvolZstart;    /**< Fiducial volume distance from the start of the TPC on the z axis (default 10 cm) */
    float m_fidvolZend;      /**< Fiducial volume distance from the end of the TPC on the z axis (default 50 cm) */
@@ -148,9 +151,6 @@ private:
    float m_fidvolXstart;    /**< Fiducial volume distance from the start of the TPC on the x axis (default 10 cm) */
    float m_fidvolXend;      /**< Fiducial volume distance from the end of the TPC on the x axis (default 10 cm) */
    float m_fidVolContained; /**< Distance from the edge to be considered contained (default 10 cm) */
-
-   // Fcl parameters
-   float m_trkScore; /**< Threshold on the Pandora track score for electron candidate (default 0.9) */
 };
 
 //----------------------------------------------------------------------------

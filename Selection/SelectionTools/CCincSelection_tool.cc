@@ -16,6 +16,9 @@ bool CCincSelection::selectEvent(art::Event const &e,
 {
 
   std::cout << "[CCincSelection::selectEvent] Number of Pfp ins slice: " << pfp_pxy_v.size() << std::endl;
+  int electron_candidate_index = -1;
+  float electron_candidate_E = 0;
+
   // Loop over Pfp in slice
   for (size_t i_pfp = 0; i_pfp < pfp_pxy_v.size(); i_pfp++)
   {
@@ -29,9 +32,35 @@ bool CCincSelection::selectEvent(art::Event const &e,
     // Pfp is a daughter
     else
     {
-      // Decide which index corresponds to the electron candidate
       // Decide if the event is fiducial by looking at all daughters as tracks
+      // To Do
+
+      // Decide which index corresponds to the electron candidate
+      float trkscore = searchingfornues::GetTrackShowerScore(pfp_pxy);
+      if (trkscore < m_trkScore)
+      {
+        size_t n_shw = pfp_pxy.get<recob::Shower>().size();
+        if (n_shw == 1) // Our electron candidate needs to be reconstructed as a shower
+        {
+          auto shr = pfp_pxy.get<recob::Shower>()[0];
+          if (electron_candidate_E < shr->Energy()[2])
+          {
+            electron_candidate_E = shr->Energy()[2];
+            electron_candidate_index = i_pfp;
+          }
+        }
+      }
     }
+  }
+  if (electron_candidate_index != -1)
+  {
+    std::cout << "[CCincSelection::selectEvent] Electron candidate found! ";
+    std::cout << "pfp_id: " << electron_candidate_index;
+    std::cout << "colelction plane energy: " << electron_candidate_E / 1000 << std::endl;
+  }
+  else
+  {
+    std::cout << "[CCincSelection::selectEvent] No electron candidate found!" << std::endl;
   }
   // Fill the information of the electron candidate
 
