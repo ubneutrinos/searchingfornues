@@ -1087,22 +1087,22 @@ Resolving user defi/home/travis/build/ubneutrinos/searchingfornues/FlashMatching
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CRTApproachSelection_tool.cc:126: warning: Member _closestRandCosmicDist (variable) of class selection::CRTApproachSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:82: warning: Member fData (variable) of class selection::SelectionToolBase is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:82: warning: Member fData (variable) of class selection::SelectionToolBase is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:76: warning: Member _trkmom (variable) of class selection::NuMuSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:77: warning: Member proton (variable) of class selection::NuMuSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:78: warning: Member electron (variable) of class selection::NuMuSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:79: warning: Member muon (variable) of class selection::NuMuSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:80: warning: Member pion (variable) of class selection::NuMuSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:81: warning: Member kaon (variable) of class selection::NuMuSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:91: warning: Member fCLSproducer (variable) of class selection::NuMuSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:92: warning: Member fPIDproducer (variable) of class selection::NuMuSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:93: warning: Member fTRKproducer (variable) of class selection::NuMuSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:94: warning: Member fTRKproducerTrkFit (variable) of class selection::NuMuSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:95: warning: Member fBacktrackTag (variable) of class selection::NuMuSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:96: warning: Member fHproducer (variable) of class selection::NuMuSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:97: warning: Member fMCRproducer (variable) of class selection::NuMuSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:98: warning: Member fMCPproducer (variable) of class selection::NuMuSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:99: warning: Member fCALproducer (variable) of class selection::NuMuSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:100: warning: Member fCALproducerTrkFit (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:82: warning: Member _trkmom (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:84: warning: Member proton (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:85: warning: Member electron (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:86: warning: Member muon (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:87: warning: Member pion (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:88: warning: Member kaon (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:98: warning: Member fCLSproducer (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:99: warning: Member fPIDproducer (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:100: warning: Member fTRKproducer (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:101: warning: Member fTRKproducerTrkFit (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:102: warning: Member fBacktrackTag (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:103: warning: Member fHproducer (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:104: warning: Member fMCRproducer (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:105: warning: Member fMCPproducer (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:106: warning: Member fCALproducer (variable) of class selection::NuMuSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/NuMuSelection_tool.cc:107: warning: Member fCALproducerTrkFit (variable) of class selection::NuMuSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:82: warning: Member fData (variable) of class selection::SelectionToolBase is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:64: warning: Member TrackFitdEdx(const searchingfornues::ProxyCaloElem_t &trk, float &dedxU, float &dedxV, float &dedxY) (function) of class selection::Pi0Selection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:67: warning: Member VtxCompatibility(const TVector3 &nuvtx, const TVector3 &shrvtx, const TVector3 &shrdir) (function) of class selection::Pi0Selection is not documented.
@@ -1286,5 +1286,5 @@ Generating file index...
 Generating file member index...
 Generating example index...
 finalizing index lists...
-lookup cache used 760/65536 hits=3433 misses=784
+lookup cache used 772/65536 hits=3457 misses=796
 finished...
