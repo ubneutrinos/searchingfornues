@@ -168,7 +168,7 @@ void ShowerAnalysis::configure(fhicl::ParameterSet const &p)
 ///
 void ShowerAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
-  std::cout << "analyze event" << std::endl;
+  std::cout << "[ShowerAnalysis::analyzeEvent]" << std::endl;
 }
 
 void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)

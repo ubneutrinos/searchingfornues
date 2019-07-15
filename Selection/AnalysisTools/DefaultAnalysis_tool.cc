@@ -314,6 +314,8 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   _sub = e.subRun();
   _run = e.run();
 
+  std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: "<< _evt << std::endl;
+
   if (!fData)
   {
     art::InputTag eventweight_tag("eventweightLEE");
@@ -334,7 +336,7 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
     }
     else
     {
-      std::cout << "LEE MCEventWeight not present" << std::endl;
+      std::cout << "[DefaultAnalysis::analyzeEvent] LEE MCEventWeight not present" << std::endl;
     }
 
     // SaveTruth

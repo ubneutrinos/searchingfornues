@@ -132,7 +132,7 @@ void ShowerStartPoint::configure(fhicl::ParameterSet const &p)
 ///
 void ShowerStartPoint::analyzeEvent(art::Event const &e, bool fData)
 {
-  std::cout << "analyze event" << std::endl;
+  std::cout << "[ShowerStartPoint::analyzeEvent]" << std::endl;
 }
 
 void ShowerStartPoint::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)

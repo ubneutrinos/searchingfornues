@@ -369,11 +369,8 @@ namespace analysis
 	}//istheneutrinoslice
       }// slice-pfp assoc loop
 
-      std::cout<<"slicenoise: "<<n_slnoise_pl1<<" nslhits: "<<n_slhits_pl1<<std::endl;
-      
+      std::cout<<"[PMTNoise::analyzeSlice] slicenoise: "<<n_slnoise_pl1<<" nslhits: "<<n_slhits_pl1<<std::endl;
       frac_slnoise_pl1=(float)n_slnoise_pl1/(float)n_slhits_pl1;
-      
-      std::cout<<"SLICE NOISE FRACTION: "<<frac_slnoise_pl1<<std::endl;
       
     }// only look through TPC noise if there is one high PE pulse
     

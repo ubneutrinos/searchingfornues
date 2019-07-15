@@ -394,7 +394,7 @@ bool NeutrinoSelectionFilter::endSubRun(art::SubRun &subrun)
   {
     art::Handle<sumdata::POTSummary> potSummaryHandle;
     _pot = subrun.getByLabel(fMCTproducer, potSummaryHandle) ? static_cast<float>(potSummaryHandle->totpot) : 0.f;
-    std::cout << "[LArPandoraExternalEventBuilding::endSubRun] Storing POT info!" << std::endl;
+    std::cout << "[NeutrinoSelectionFilter::endSubRun] Storing POT info!" << std::endl;
   }
 
   _run_sr = subrun.run();

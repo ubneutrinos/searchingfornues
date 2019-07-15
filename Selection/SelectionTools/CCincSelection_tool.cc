@@ -15,7 +15,7 @@ bool CCincSelection::selectEvent(art::Event const &e,
                                  const std::vector<ProxyPfpElem_t> &pfp_pxy_v)
 {
 
-  std::cout << "[CCincSelection] Number of Pfp ins slice: " << pfp_pxy_v.size() << std::endl;
+  std::cout << "[CCincSelection::selectEvent] Number of Pfp ins slice: " << pfp_pxy_v.size() << std::endl;
   // Loop over Pfp in slice
   for (size_t i_pfp = 0; i_pfp < pfp_pxy_v.size(); i_pfp++)
   {
