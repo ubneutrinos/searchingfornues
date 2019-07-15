@@ -13,44 +13,44 @@ physics.filters.nuselection.IsData: false
 
 
 #Force loading ubsim EventWeight calculator libraries instead of larsim default
-services.UBEventWeight: @local::microboone_eventweight_service
-services.NuRandomService: @local::microboone_seedservice #might not be necessary
-EventWeightTreeTool: {
-    tool_type: "EventWeightTree"
-    createDedicatedTree: false
-    createMapBranch: false
-    createFluxBranch: false
-    createGenieBranch: false
-    createReintBranch: false
-    createSplineBranch: false
-}
+#services.UBEventWeight: @local::microboone_eventweight_service
+#services.NuRandomService: @local::microboone_seedservice #might not be necessary
+#EventWeightTreeTool: {
+#    tool_type: "EventWeightTree"
+#    createDedicatedTree: false
+#    createMapBranch: false
+#    createFluxBranch: false
+#    createGenieBranch: false
+#    createReintBranch: false
+#    createSplineBranch: false
+#}
 
-physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeightTreeTool
+#physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeightTreeTool
 
-physics.producers.eventweight:        @local::microboone_eventweight
+#physics.producers.eventweight:        @local::microboone_eventweight
 
-physics.p1: [ eventweight, @sequence::physics.p1]
+#physics.p1: [ eventweight, @sequence::physics.p1]
 
 ##Run weights individually
-physics.producers.eventweight.weight_functions: [
-    @sequence::microboone_eventweight.weight_functions_flux,
-    @sequence::microboone_eventweight.weight_functions_genie,
-    @sequence::microboone_eventweight.weight_functions_reint
-]
+#physics.producers.eventweight.weight_functions: [
+#    @sequence::microboone_eventweight.weight_functions_flux,
+#    @sequence::microboone_eventweight.weight_functions_genie,
+#    @sequence::microboone_eventweight.weight_functions_reint
+#]
 
 #Store the weight map in a dedicated tree, in the main tree or both
 # physics.filters.nuselection.AnalysisTools.eventweighttree.createDedicatedTree: true
 # physics.filters.nuselection.AnalysisTools.eventweighttree.createMapBranch: true
 
 #Run all weights of a given category simultaneously in the main tree (for flux, it is the product of individual weights) and create a branch in the main tree
-physics.filters.nuselection.AnalysisTools.eventweighttree.createFluxBranch: true
+#physics.filters.nuselection.AnalysisTools.eventweighttree.createFluxBranch: true
 # physics.filters.nuselection.AnalysisTools.eventweighttree.createGenieBranch: true
-physics.filters.nuselection.AnalysisTools.eventweighttree.createReintBranch: true
-physics.producers.eventweight.weight_functions: [
-    @sequence::microboone_eventweight.weight_functions_flux,
+#physics.filters.nuselection.AnalysisTools.eventweighttree.createReintBranch: true
+#physics.producers.eventweight.weight_functions: [
+#    @sequence::microboone_eventweight.weight_functions_flux,
     # genie_all,
-    reinteractions_all
-]
+#    reinteractions_all
+#]
 
 #Splines (requires v17)
 # physics.producers.eventweightSplines: @local::microboone_eventweight_justSplines
