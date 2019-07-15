@@ -163,7 +163,7 @@ NuSelectionFilter:{
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
-        flashmatch:    @local::FlashMatchingTool
+        #flashmatch:    @local::FlashMatchingTool
     }
 }
 
