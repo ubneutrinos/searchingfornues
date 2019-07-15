@@ -3,7 +3,7 @@
 # Title         : generateDocumentationAndDeploy.sh
 # Date created  : 2019/05/24
 # Notes         :
-__AUTHOR__="Stefano Roberto Soleti"
+__AUTHOR__="SearchingForNues"
 # Preconditions:
 # - Packages doxygen doxygen-doc doxygen-latex doxygen-gui graphviz
 #   must be installed.
@@ -51,7 +51,7 @@ cd $GH_REPO_NAME
 # Set the push default to simple i.e. push only the current branch.
 git config --global push.default simple
 # Pretend to be an user called Travis CI.
-git config user.name "Travis CI"
+git config user.name "SearchingForNues"
 git config user.email "travis@travis-ci.org"
 
 # Remove everything currently in the gh-pages branch.
