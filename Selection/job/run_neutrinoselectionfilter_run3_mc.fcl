@@ -1,5 +1,5 @@
 #include "UBCRTCosmicFilter.fcl"
-#include "run_neutrinoselectionfilter_run1_data.fcl"
+#include "run_neutrinoselectionfilter_run1_mc.fcl"
 
 physics.filters.nuselection.AnalysisTools.crtApproach:   @local::CRTApproachAnalysisTool
 physics.filters.nuselection.AnalysisTools.crtApproach.TrackAssnModuleLabel:   "crttrackmatch"
