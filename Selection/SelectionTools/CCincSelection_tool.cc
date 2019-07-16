@@ -24,6 +24,7 @@ bool CCincSelection::selectEvent(art::Event const &e,
   {
     auto const &pfp_pxy = pfp_pxy_v.at(i_pfp);
     auto PDG = fabs(pfp_pxy->PdgCode());
+
     // Pfp is the neutrino
     if (PDG == 12 || PDG == 14)
     {
@@ -56,14 +57,15 @@ bool CCincSelection::selectEvent(art::Event const &e,
   {
     std::cout << "[CCincSelection::selectEvent] Electron candidate found! ";
     std::cout << "pfp_id: " << electron_candidate_index;
-    std::cout << "colelction plane energy: " << electron_candidate_E / 1000 << std::endl;
+    std::cout << ", collection plane energy: " << electron_candidate_E / 1000 << std::endl;
+    // Fill the information of the electron candidate
+    m_shrPfpId = electron_candidate_index;
+    m_electron_candidate = FillElectronCandidate(pfp_pxy_v.at(m_shrPfpId));
   }
   else
   {
     std::cout << "[CCincSelection::selectEvent] No electron candidate found!" << std::endl;
   }
-  // Fill the information of the electron candidate
-
   return true;
 }
 
@@ -79,6 +81,11 @@ bool CCincSelection::isFiducial(const double x[3]) const
   bool is_z = x[2] > (bnd[4] + m_fidvolZstart) && x[2] < (bnd[5] - m_fidvolZend);
 
   return is_x && is_y && is_z;
+}
+
+bool CCincSelection::FillElectronCandidate(const ProxyPfpElem_t &pfp_pxy)
+{
+  return true;
 }
 
 } // namespace selection
