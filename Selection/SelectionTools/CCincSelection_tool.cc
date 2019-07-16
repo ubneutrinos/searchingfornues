@@ -15,7 +15,7 @@ bool CCincSelection::selectEvent(art::Event const &e,
                                  const std::vector<ProxyPfpElem_t> &pfp_pxy_v)
 {
 
-  std::cout << "[CCincSelection::selectEvent] Number of Pfp ins slice: " << pfp_pxy_v.size() << std::endl;
+  std::cout << "[CCincSelection::selectEvent] Number of Pfp in slice: " << pfp_pxy_v.size() << std::endl;
   int electron_candidate_index = -1;
   float electron_candidate_E = 0;
 
@@ -60,7 +60,7 @@ bool CCincSelection::selectEvent(art::Event const &e,
     std::cout << ", collection plane energy: " << electron_candidate_E / 1000 << std::endl;
     // Fill the information of the electron candidate
     m_shrPfpId = electron_candidate_index;
-    m_electron_candidate = FillElectronCandidate(pfp_pxy_v.at(m_shrPfpId));
+    m_electron_candidate = FillElectronCandidate(e, pfp_pxy_v.at(m_shrPfpId));
   }
   else
   {
@@ -83,8 +83,35 @@ bool CCincSelection::isFiducial(const double x[3]) const
   return is_x && is_y && is_z;
 }
 
-bool CCincSelection::FillElectronCandidate(const ProxyPfpElem_t &pfp_pxy)
+bool CCincSelection::FillElectronCandidate(art::Event const &e,
+                                           const ProxyPfpElem_t &pfp_pxy)
 {
+  // Get number of hits
+  ProxyClusColl_t const &clus_proxy = proxy::getCollection<std::vector<recob::Cluster>>(e, 
+                                                                                        fCLSproducer,
+                                                                                        proxy::withAssociated<recob::Hit>(fCLSproducer));
+  auto clus_pxy_v = pfp_pxy.get<recob::Cluster>();
+  for (auto ass_clus : clus_pxy_v)
+  {
+    // get cluster proxy
+    const auto &clus = clus_proxy[ass_clus.key()];
+    auto clus_hit_v = clus.get<recob::Hit>();
+    auto nhits = clus_hit_v.size();
+
+    m_shrHits+=nhits;
+    if (clus->Plane().Plane == 0)
+    {
+      m_shrHitsU += nhits;
+    }
+    else if (clus->Plane().Plane == 1)
+    {
+      m_shrHitsV += nhits;
+    }
+    else if (clus->Plane().Plane == 2)
+    {
+      m_shrHitsY += nhits;
+    }
+  }
   return true;
 }
 

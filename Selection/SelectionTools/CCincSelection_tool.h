@@ -72,17 +72,18 @@ public:
      *  @param  pfp_pxy ProxyPfpElem_t corresponding to the electron candidate.
      *  @return 1 if succesful, 0 if failure.
      */
-  bool FillElectronCandidate(const ProxyPfpElem_t &pfp_pxy);
+  bool FillElectronCandidate(art::Event const &e,
+                             const ProxyPfpElem_t &pfp_pxy);
 
 private:
   // Fields for electron candidate
   bool m_electron_candidate; /**< Is there a candidate for the electron */
   size_t m_shrPfpId;         /**< Index of the leading shower in the PFParticle vector */
-  float m_shrHits;           /**< Number of hits of the candidate electron shower */
-  float m_shrHitsU;          /**< Number of hits of the candidate electron shower, U plane */
-  float m_shrHitsV;          /**< Number of hits of the candidate electron shower, V plane */
-  float m_shrHitsY;          /**< Number of hits of the candidate electron shower, Y plane */
-  float m_shrSps;            /**< Number of spacepoints of the candidate electron shower */
+  size_t m_shrHits;          /**< Number of hits of the candidate electron shower */
+  size_t m_shrHitsU;         /**< Number of hits of the candidate electron shower, U plane */
+  size_t m_shrHitsV;         /**< Number of hits of the candidate electron shower, V plane */
+  size_t m_shrHitsY;         /**< Number of hits of the candidate electron shower, Y plane */
+  size_t m_shrSps;           /**< Number of spacepoints of the candidate electron shower */
 
   float m_shrEnergy;     /**< Energy of the candidate electron shower (in GeV) */
   float m_shrEnergyCali; /**< Energy of the calibrated candidate electron shower (in GeV) */
@@ -150,6 +151,8 @@ private:
   float m_fidvolXstart;    /**< Fiducial volume distance from the start of the TPC on the x axis (default 10 cm) */
   float m_fidvolXend;      /**< Fiducial volume distance from the end of the TPC on the x axis (default 10 cm) */
   float m_fidVolContained; /**< Distance from the edge to be considered contained (default 10 cm) */
+
+  art::InputTag fCLSproducer;
 };
 
 //----------------------------------------------------------------------------
@@ -174,8 +177,9 @@ CCincSelection::CCincSelection(const fhicl::ParameterSet &pset)
 void CCincSelection::configure(fhicl::ParameterSet const &pset)
 {
   m_trkScore = pset.get<float>("ElectronMaxTrackScore", 0.9);
-  /*
+
   fCLSproducer = pset.get<art::InputTag>("CLSproducer", "pandora");
+  /*
   fTRKproducer = pset.get<art::InputTag>("TRKproducer", "pandoraTrack");
   fTRKproducerTrkFit = pset.get<art::InputTag>("TRKproducerTrkFit", "shrreco3dKalmanShower");
 
@@ -200,12 +204,22 @@ void CCincSelection::resetTTree(TTree *_tree)
 {
   m_electron_candidate = false;
   m_shrPfpId = 0;
+
+  m_shrHits = 0;
+  m_shrHitsU = 0;
+  m_shrHitsV = 0;
+  m_shrHitsY = 0;
 }
 
 void CCincSelection::setBranches(TTree *_tree)
 {
   _tree->Branch("electron_candidate", &m_electron_candidate, "electron_candidate/O");
   _tree->Branch("electron_candidate_id", &m_shrPfpId, "electron_candidate_id/i");
+
+  _tree->Branch("e_hits_total", &m_shrHits, "e_hits_total/i");
+  _tree->Branch("e_hits_u", &m_shrHitsU, "e_hits_u/i");
+  _tree->Branch("e_hits_v", &m_shrHitsV, "e_hits_v/i");
+  _tree->Branch("e_hits_y", &m_shrHitsY, "e_hits_y/i");
 }
 
 DEFINE_ART_CLASS_TOOL(CCincSelection)
