@@ -87,12 +87,12 @@ FlashMatchingTool: {
 
 shrreco3dDATA: @local::ShrReco3DPandora
 shrreco3dDATA.BacktrackTag:  ""
-shrreco3dDATA.ADCtoE:   [238.4,238.4,238.4] # e-/ADC
+shrreco3dDATA.ADCtoE:   [232.0,249.0,243.7] # e-/ADC
 shrreco3dDATA.NeutrinoEvent: false
 
 shrreco3dMC: @local::ShrReco3DPandora
 shrreco3dMC.BacktrackTag:  ""
-shrreco3dMC.ADCtoE:   [248.2,248.2,248.2] # e-/ADC
+shrreco3dMC.ADCtoE:   [245.0,252.0,237.6] # e-/ADC
 shrreco3dMC.NeutrinoEvent: false
 
 shrreco3dKalmanShower:                                       @local::trackproducerfrompfparticle
@@ -112,12 +112,12 @@ shrreco3dKalmanShower.trackMaker.fitter.negDistTolerance:    -0.01
 shrreco3dKalmanShower.trackMaker.fitter.pickBestHitOnWire:   true
 
 shrreco3dKalmanShowercalodata: @local::microboone_calodata
-shrreco3dKalmanShowercalodata.CaloAlg.CalAreaConstants: [4.31e-3, 4.02e-3, 4.26e-3]
+shrreco3dKalmanShowercalodata.CaloAlg.CalAreaConstants: [4.31e-3, 4.02e-3, 4.10e-3]
 shrreco3dKalmanShowercalodata.TrackModuleLabel:         "shrreco3dKalmanShower"
 shrreco3dKalmanShowercalodata.SpacePointModuleLabel:    "shrreco3dKalmanShower"
 
 shrreco3dKalmanShowercalomc: @local::microboone_calomc
-shrreco3dKalmanShowercalomc.CaloAlg.CalAreaConstants: [4.08e-3,3.97e-3,4.08e-3]
+shrreco3dKalmanShowercalomc.CaloAlg.CalAreaConstants: [4.08e-3,3.97e-3,4.21e-3]
 shrreco3dKalmanShowercalomc.TrackModuleLabel:         "shrreco3dKalmanShower"
 shrreco3dKalmanShowercalomc.SpacePointModuleLabel:    "shrreco3dKalmanShower"
 
@@ -165,10 +165,10 @@ NuSelectionFilter:{
 NuSelectionFilterEmpty: @local::NuSelectionFilter
 NuSelectionFilterEmpty.SelectionTool: { tool_type: "EmptySelection" }
 
-Pi0Selection: @local::NuSelectionFilter
-Pi0Selection.SelectionTool: {
+Pi0SelectionTool: {
     tool_type: "Pi0Selection"
     onlyshower: false
+    trkshrscore: 0.8
     dotmin: 0.5
     dmin: 2.
     TRKproducer: "shrreco3dKalmanShower"     # "pandoraKalmanShower"     #remove or leave empty of there are no track fits of the shower
