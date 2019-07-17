@@ -127,6 +127,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:adf6c627aacf355e0e4c8ff4df5716fee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#adf6c627aacf355e0e4c8ff4df5716fee">isFiducial</a> (const double x[3]) const </td></tr>
 <tr class="memdesc:adf6c627aacf355e0e4c8ff4df5716fee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if point is inside fiducial volume.  <a href="#adf6c627aacf355e0e4c8ff4df5716fee">More...</a><br/></td></tr>
 <tr class="separator:adf6c627aacf355e0e4c8ff4df5716fee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f7e17ebcdfcb9813b6c3f12bd8eb59d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0f7e17ebcdfcb9813b6c3f12bd8eb59d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isContained</b> (const double x[3], float tolerance) const </td></tr>
+<tr class="separator:a0f7e17ebcdfcb9813b6c3f12bd8eb59d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a479124737f56d702e4394b83e9d80ccc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a479124737f56d702e4394b83e9d80ccc">FillElectronCandidate</a> (art::Event const &amp;e, const ProxyPfpElem_t &amp;pfp_pxy)</td></tr>
 <tr class="memdesc:a479124737f56d702e4394b83e9d80ccc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fill the tree for the electron candidate.  <a href="#a479124737f56d702e4394b83e9d80ccc">More...</a><br/></td></tr>
 <tr class="separator:a479124737f56d702e4394b83e9d80ccc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,6 +152,8 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a61b7a5e571eac85c8171a3dbd6ab57c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad792c1259135d226df875d1150776ce9"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#ad792c1259135d226df875d1150776ce9">m_shrPfpId</a></td></tr>
 <tr class="separator:ad792c1259135d226df875d1150776ce9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae496cb17c72b3ed96b13484a1ff9e3fb"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#ae496cb17c72b3ed96b13484a1ff9e3fb">m_shrDistance</a></td></tr>
+<tr class="separator:ae496cb17c72b3ed96b13484a1ff9e3fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade863b5fa6560fed9dada486fa3469d6"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#ade863b5fa6560fed9dada486fa3469d6">m_shrHits</a></td></tr>
 <tr class="separator:ade863b5fa6560fed9dada486fa3469d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a48423013d7f54f8b67c194534507f643"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a48423013d7f54f8b67c194534507f643">m_shrHitsU</a></td></tr>
@@ -181,8 +186,6 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a9c1276e1f839f39c0c36ca5359631863"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd57a8d6290e142e526636a4ec851801"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#abd57a8d6290e142e526636a4ec851801">m_shrDedxUCali</a></td></tr>
 <tr class="separator:abd57a8d6290e142e526636a4ec851801"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae496cb17c72b3ed96b13484a1ff9e3fb"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#ae496cb17c72b3ed96b13484a1ff9e3fb">m_shrDistance</a></td></tr>
-<tr class="separator:ae496cb17c72b3ed96b13484a1ff9e3fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4674f9b827098184a3daba78da7048a9"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a4674f9b827098184a3daba78da7048a9">m_shrScore</a></td></tr>
 <tr class="separator:a4674f9b827098184a3daba78da7048a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ebf39e7e51249166d11066766c86b3f"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a1ebf39e7e51249166d11066766c86b3f">m_shrTheta</a></td></tr>
@@ -213,10 +216,14 @@ Private Attributes</h2></td></tr>
 <tr class="separator:abe0da2d66394a9583d9540f83a114901"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0d588b58345d52cc13a398bb3f6ff2fd"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a0d588b58345d52cc13a398bb3f6ff2fd">m_shrBragg_mip</a></td></tr>
 <tr class="separator:a0d588b58345d52cc13a398bb3f6ff2fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb3ad1e13e9e94fb9096d40f8c576a6a"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#aeb3ad1e13e9e94fb9096d40f8c576a6a">m_shrBragg_pion</a></td></tr>
-<tr class="separator:aeb3ad1e13e9e94fb9096d40f8c576a6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44d88e3b197705450db2becfae327827"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a44d88e3b197705450db2becfae327827">m_shrBragg_kaon</a></td></tr>
-<tr class="separator:a44d88e3b197705450db2becfae327827"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09db29c4170084b4c366defeb3330de8"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a09db29c4170084b4c366defeb3330de8">m_shrTrkLength</a></td></tr>
+<tr class="separator:a09db29c4170084b4c366defeb3330de8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5cde5d5c0d798594d11f082dadaf52bc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a5cde5d5c0d798594d11f082dadaf52bc">m_shrTrkContained</a></td></tr>
+<tr class="separator:a5cde5d5c0d798594d11f082dadaf52bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5dff6f4a03bc26649697adbd38241be3"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a5dff6f4a03bc26649697adbd38241be3">m_shrRangeMomMuon</a></td></tr>
+<tr class="separator:a5dff6f4a03bc26649697adbd38241be3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a752b664543c799d4afd1ee195091ff1c"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a752b664543c799d4afd1ee195091ff1c">m_shrMCSMomMuon</a></td></tr>
+<tr class="separator:a752b664543c799d4afd1ee195091ff1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95079e8ae0cb7d55594d64812d24327c"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#a95079e8ae0cb7d55594d64812d24327c">m_shrBktPurity</a></td></tr>
 <tr class="separator:a95079e8ae0cb7d55594d64812d24327c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae50845633aef1725ac8c894101041f54"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CCincSelection.html#ae50845633aef1725ac8c894101041f54">m_shrBktCompleteness</a></td></tr>
@@ -274,6 +281,18 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:aa068a963cfe008cf151aaf36ac1be0cb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa068a963cfe008cf151aaf36ac1be0cb"></a>
 art::InputTag&#160;</td><td class="memItemRight" valign="bottom"><b>fCLSproducer</b></td></tr>
 <tr class="separator:aa068a963cfe008cf151aaf36ac1be0cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9ccce4bb19f88858234cb039c52c6dc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af9ccce4bb19f88858234cb039c52c6dc"></a>
+art::InputTag&#160;</td><td class="memItemRight" valign="bottom"><b>fTRKproducer</b></td></tr>
+<tr class="separator:af9ccce4bb19f88858234cb039c52c6dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae77679a16fbec7daf64fefd018e861c1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae77679a16fbec7daf64fefd018e861c1"></a>
+art::InputTag&#160;</td><td class="memItemRight" valign="bottom"><b>fTRKproducerTrkFit</b></td></tr>
+<tr class="separator:ae77679a16fbec7daf64fefd018e861c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9af6fd755922720651347cd830b5d333"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9af6fd755922720651347cd830b5d333"></a>
+art::InputTag&#160;</td><td class="memItemRight" valign="bottom"><b>fPIDproducer</b></td></tr>
+<tr class="separator:a9af6fd755922720651347cd830b5d333"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd0ab9f2368a33b9ba341ce8040a9df4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abd0ab9f2368a33b9ba341ce8040a9df4"></a>
+trkf::TrackMomentumCalculator&#160;</td><td class="memItemRight" valign="bottom"><b>m_trkmom</b></td></tr>
+<tr class="separator:abd0ab9f2368a33b9ba341ce8040a9df4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -724,27 +743,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>fData</b></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a44d88e3b197705450db2becfae327827"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float selection::CCincSelection::m_shrBragg_kaon</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Kaon Bragg likelihood for the leading shower (with the shower reconstructed as track) </p>
-
-</div>
-</div>
 <a class="anchor" id="a0d588b58345d52cc13a398bb3f6ff2fd"></a>
 <div class="memitem">
 <div class="memproto">
@@ -805,27 +803,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>fData</b></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Proton Bragg likelihood score for the leading shower (with the shower reconstructed as track) </p>
-
-</div>
-</div>
-<a class="anchor" id="aeb3ad1e13e9e94fb9096d40f8c576a6a"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">float selection::CCincSelection::m_shrBragg_pion</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Pion Bragg likelihood for the leading shower (with the shower reconstructed as track) </p>
 
 </div>
 </div>
@@ -1102,6 +1079,27 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>fData</b></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a752b664543c799d4afd1ee195091ff1c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float selection::CCincSelection::m_shrMCSMomMuon</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Muon momentum from MCS (with the shower reconstructed as track) </p>
+
+</div>
+</div>
 <a class="anchor" id="ab64b76c5254ccd50d06ffed8ec5e9eeb"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1330,6 +1328,27 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>fData</b></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Z component of the reconstructed momentum of the leading shower (in GeV/c) </p>
+
+</div>
+</div>
+<a class="anchor" id="a5dff6f4a03bc26649697adbd38241be3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float selection::CCincSelection::m_shrRangeMomMuon</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Muon momentum from range (with the shower reconstructed as track) </p>
 
 </div>
 </div>
@@ -1687,6 +1706,48 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>fData</b></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Track angle of the leading shower obtained with the track fitting </p>
+
+</div>
+</div>
+<a class="anchor" id="a5cde5d5c0d798594d11f082dadaf52bc"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool selection::CCincSelection::m_shrTrkContained</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>End point is contained (with the shower reconstructed as track) </p>
+
+</div>
+</div>
+<a class="anchor" id="a09db29c4170084b4c366defeb3330de8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float selection::CCincSelection::m_shrTrkLength</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Length (with the shower reconstructed as track) </p>
 
 </div>
 </div>

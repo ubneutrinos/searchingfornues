@@ -100,7 +100,7 @@ Parsing file /home/travis/build/ubneu/home/travis/build/ubneutrinos/searchingfor
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/PMTNoise_tool.cc:37: warning: Compound analysis::PMTNoise is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerStartPoint_tool.cc:36: warning: Compound analysis::ShowerStartPoint is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ShowerMerger_module.cc:36: warning: Compound ShowerMerger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CCincSelection_tool.h:28: warning: Compound selection::CCincSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CCincSelection_tool.h:33: warning: Compound selection::CCincSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:38: warning: Compound ProtonHitPurity is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:34: warning: Compound analysis::Pi0TruthAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/CosmicRejection_module.cc:46: warning: Compound CosmicRejection is not documented.
@@ -1028,9 +1028,14 @@ Resolving user defi/home/travis/build/ubneutrinos/searchingfornues/FlashMatching
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:106: warning: Member fCALproducer (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:107: warning: Member fCALproducerTrkFit (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:82: warning: Member fData (variable) of class selection::SelectionToolBase is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CCincSelection_tool.h:155: warning: Member fCLSproducer (variable) of class selection::CCincSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CCincSelection_tool.h:73: warning: Member isContained(const double x[3], float tolerance) const  (function) of class selection::CCincSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CCincSelection_tool.h:161: warning: Member fCLSproducer (variable) of class selection::CCincSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CCincSelection_tool.h:162: warning: Member fTRKproducer (variable) of class selection::CCincSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CCincSelection_tool.h:163: warning: Member fTRKproducerTrkFit (variable) of class selection::CCincSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CCincSelection_tool.h:164: warning: Member fPIDproducer (variable) of class selection::CCincSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CCincSelection_tool.h:166: warning: Member m_trkmom (variable) of class selection::CCincSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:82: warning: Member fData (variable) of class selection::SelectionToolBase is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CCincSelection_tool.h:70: warning: The following parameters of selection::CCincSelection::FillElectronCandidate(art::Event const &e, const ProxyPfpElem_t &pfp_pxy) are not documented:
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CCincSelection_tool.h:76: warning: The following parameters of selection::CCincSelection::FillElectronCandidate(art::Event const &e, const ProxyPfpElem_t &pfp_pxy) are not documented:
   parameter 'e'
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CRTApproachSelection_tool.cc:79: warning: Member Point2PointDistance(const TVector3 &nuvtx, TVector3 &taggedTrackSpt) (function) of class selection::CRTApproachSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CRTApproachSelection_tool.cc:80: warning: Member Reset() (function) of class selection::CRTApproachSelection is not documented.
@@ -1284,5 +1289,5 @@ Generating file index...
 Generating file member index...
 Generating example index...
 finalizing index lists...
-lookup cache used 781/65536 hits=3550 misses=805
+lookup cache used 820/65536 hits=3704 misses=844
 finished...

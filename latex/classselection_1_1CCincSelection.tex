@@ -27,6 +27,9 @@ bool \hyperlink{classselection_1_1CCincSelection_ae8555674551f611dee06dc315ac298
 \begin{DoxyCompactList}\small\item\em reset ttree branches \end{DoxyCompactList}\item 
 bool \hyperlink{classselection_1_1CCincSelection_adf6c627aacf355e0e4c8ff4df5716fee}{is\-Fiducial} (const double x\mbox{[}3\mbox{]}) const 
 \begin{DoxyCompactList}\small\item\em Check if point is inside fiducial volume. \end{DoxyCompactList}\item 
+\hypertarget{classselection_1_1CCincSelection_a0f7e17ebcdfcb9813b6c3f12bd8eb59d}{bool {\bfseries is\-Contained} (const double x\mbox{[}3\mbox{]}, float tolerance) const }\label{classselection_1_1CCincSelection_a0f7e17ebcdfcb9813b6c3f12bd8eb59d}
+
+\item 
 bool \hyperlink{classselection_1_1CCincSelection_a479124737f56d702e4394b83e9d80ccc}{Fill\-Electron\-Candidate} (art\-::\-Event const \&e, const Proxy\-Pfp\-Elem\-\_\-t \&pfp\-\_\-pxy)
 \begin{DoxyCompactList}\small\item\em Fill the tree for the electron candidate. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Private Attributes}
@@ -35,6 +38,8 @@ bool \hyperlink{classselection_1_1CCincSelection_a479124737f56d702e4394b83e9d80c
 bool \hyperlink{classselection_1_1CCincSelection_a61b7a5e571eac85c8171a3dbd6ab57c6}{m\-\_\-electron\-\_\-candidate}
 \item 
 size\-\_\-t \hyperlink{classselection_1_1CCincSelection_ad792c1259135d226df875d1150776ce9}{m\-\_\-shr\-Pfp\-Id}
+\item 
+float \hyperlink{classselection_1_1CCincSelection_ae496cb17c72b3ed96b13484a1ff9e3fb}{m\-\_\-shr\-Distance}
 \item 
 size\-\_\-t \hyperlink{classselection_1_1CCincSelection_ade863b5fa6560fed9dada486fa3469d6}{m\-\_\-shr\-Hits}
 \item 
@@ -68,8 +73,6 @@ float \hyperlink{classselection_1_1CCincSelection_a9c1276e1f839f39c0c36ca5359631
 \item 
 float \hyperlink{classselection_1_1CCincSelection_abd57a8d6290e142e526636a4ec851801}{m\-\_\-shr\-Dedx\-U\-Cali}
 \item 
-float \hyperlink{classselection_1_1CCincSelection_ae496cb17c72b3ed96b13484a1ff9e3fb}{m\-\_\-shr\-Distance}
-\item 
 float \hyperlink{classselection_1_1CCincSelection_a4674f9b827098184a3daba78da7048a9}{m\-\_\-shr\-Score}
 \item 
 float \hyperlink{classselection_1_1CCincSelection_a1ebf39e7e51249166d11066766c86b3f}{m\-\_\-shr\-Theta}
@@ -100,9 +103,13 @@ float \hyperlink{classselection_1_1CCincSelection_abe0da2d66394a9583d9540f83a114
 \item 
 float \hyperlink{classselection_1_1CCincSelection_a0d588b58345d52cc13a398bb3f6ff2fd}{m\-\_\-shr\-Bragg\-\_\-mip}
 \item 
-float \hyperlink{classselection_1_1CCincSelection_aeb3ad1e13e9e94fb9096d40f8c576a6a}{m\-\_\-shr\-Bragg\-\_\-pion}
+float \hyperlink{classselection_1_1CCincSelection_a09db29c4170084b4c366defeb3330de8}{m\-\_\-shr\-Trk\-Length}
 \item 
-float \hyperlink{classselection_1_1CCincSelection_a44d88e3b197705450db2becfae327827}{m\-\_\-shr\-Bragg\-\_\-kaon}
+bool \hyperlink{classselection_1_1CCincSelection_a5cde5d5c0d798594d11f082dadaf52bc}{m\-\_\-shr\-Trk\-Contained}
+\item 
+float \hyperlink{classselection_1_1CCincSelection_a5dff6f4a03bc26649697adbd38241be3}{m\-\_\-shr\-Range\-Mom\-Muon}
+\item 
+float \hyperlink{classselection_1_1CCincSelection_a752b664543c799d4afd1ee195091ff1c}{m\-\_\-shr\-M\-C\-S\-Mom\-Muon}
 \item 
 float \hyperlink{classselection_1_1CCincSelection_a95079e8ae0cb7d55594d64812d24327c}{m\-\_\-shr\-Bkt\-Purity}
 \item 
@@ -159,6 +166,18 @@ float \hyperlink{classselection_1_1CCincSelection_ae4bab4cf8ea55e54fcdaa66d2fe44
 float \hyperlink{classselection_1_1CCincSelection_a3412d86b03a97a65fed3d5d8a41ed2c0}{m\-\_\-fid\-Vol\-Contained}
 \item 
 \hypertarget{classselection_1_1CCincSelection_aa068a963cfe008cf151aaf36ac1be0cb}{art\-::\-Input\-Tag {\bfseries f\-C\-L\-Sproducer}}\label{classselection_1_1CCincSelection_aa068a963cfe008cf151aaf36ac1be0cb}
+
+\item 
+\hypertarget{classselection_1_1CCincSelection_af9ccce4bb19f88858234cb039c52c6dc}{art\-::\-Input\-Tag {\bfseries f\-T\-R\-Kproducer}}\label{classselection_1_1CCincSelection_af9ccce4bb19f88858234cb039c52c6dc}
+
+\item 
+\hypertarget{classselection_1_1CCincSelection_ae77679a16fbec7daf64fefd018e861c1}{art\-::\-Input\-Tag {\bfseries f\-T\-R\-Kproducer\-Trk\-Fit}}\label{classselection_1_1CCincSelection_ae77679a16fbec7daf64fefd018e861c1}
+
+\item 
+\hypertarget{classselection_1_1CCincSelection_a9af6fd755922720651347cd830b5d333}{art\-::\-Input\-Tag {\bfseries f\-P\-I\-Dproducer}}\label{classselection_1_1CCincSelection_a9af6fd755922720651347cd830b5d333}
+
+\item 
+\hypertarget{classselection_1_1CCincSelection_abd0ab9f2368a33b9ba341ce8040a9df4}{trkf\-::\-Track\-Momentum\-Calculator {\bfseries m\-\_\-trkmom}}\label{classselection_1_1CCincSelection_abd0ab9f2368a33b9ba341ce8040a9df4}
 
 \end{DoxyCompactItemize}
 \subsection*{Additional Inherited Members}
@@ -298,10 +317,7 @@ Energy of the M\-C\-Particle matched to the leading shower \hypertarget{classsel
 P\-D\-G code of the M\-C\-Particle matched to the leading shower \hypertarget{classselection_1_1CCincSelection_a95079e8ae0cb7d55594d64812d24327c}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Bkt\-Purity@{m\-\_\-shr\-Bkt\-Purity}}
 \index{m\-\_\-shr\-Bkt\-Purity@{m\-\_\-shr\-Bkt\-Purity}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
 \subsubsection[{m\-\_\-shr\-Bkt\-Purity}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-Bkt\-Purity\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a95079e8ae0cb7d55594d64812d24327c}
-Purity of the leading shower \hypertarget{classselection_1_1CCincSelection_a44d88e3b197705450db2becfae327827}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Bragg\-\_\-kaon@{m\-\_\-shr\-Bragg\-\_\-kaon}}
-\index{m\-\_\-shr\-Bragg\-\_\-kaon@{m\-\_\-shr\-Bragg\-\_\-kaon}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
-\subsubsection[{m\-\_\-shr\-Bragg\-\_\-kaon}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-Bragg\-\_\-kaon\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a44d88e3b197705450db2becfae327827}
-Kaon Bragg likelihood for the leading shower (with the shower reconstructed as track) \hypertarget{classselection_1_1CCincSelection_a0d588b58345d52cc13a398bb3f6ff2fd}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Bragg\-\_\-mip@{m\-\_\-shr\-Bragg\-\_\-mip}}
+Purity of the leading shower \hypertarget{classselection_1_1CCincSelection_a0d588b58345d52cc13a398bb3f6ff2fd}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Bragg\-\_\-mip@{m\-\_\-shr\-Bragg\-\_\-mip}}
 \index{m\-\_\-shr\-Bragg\-\_\-mip@{m\-\_\-shr\-Bragg\-\_\-mip}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
 \subsubsection[{m\-\_\-shr\-Bragg\-\_\-mip}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-Bragg\-\_\-mip\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a0d588b58345d52cc13a398bb3f6ff2fd}
 M\-I\-P Bragg likelihood score for the leading shower (with the shower reconstructed as track) \hypertarget{classselection_1_1CCincSelection_abe0da2d66394a9583d9540f83a114901}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Bragg\-\_\-mu@{m\-\_\-shr\-Bragg\-\_\-mu}}
@@ -310,10 +326,7 @@ M\-I\-P Bragg likelihood score for the leading shower (with the shower reconstru
 Muon Bragg likelihood score for the leading shower (with the shower reconstructed as track) \hypertarget{classselection_1_1CCincSelection_a9c533f6915b180797d90b4ad789ffb39}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Bragg\-\_\-p@{m\-\_\-shr\-Bragg\-\_\-p}}
 \index{m\-\_\-shr\-Bragg\-\_\-p@{m\-\_\-shr\-Bragg\-\_\-p}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
 \subsubsection[{m\-\_\-shr\-Bragg\-\_\-p}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-Bragg\-\_\-p\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a9c533f6915b180797d90b4ad789ffb39}
-Proton Bragg likelihood score for the leading shower (with the shower reconstructed as track) \hypertarget{classselection_1_1CCincSelection_aeb3ad1e13e9e94fb9096d40f8c576a6a}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Bragg\-\_\-pion@{m\-\_\-shr\-Bragg\-\_\-pion}}
-\index{m\-\_\-shr\-Bragg\-\_\-pion@{m\-\_\-shr\-Bragg\-\_\-pion}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
-\subsubsection[{m\-\_\-shr\-Bragg\-\_\-pion}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-Bragg\-\_\-pion\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_aeb3ad1e13e9e94fb9096d40f8c576a6a}
-Pion Bragg likelihood for the leading shower (with the shower reconstructed as track) \hypertarget{classselection_1_1CCincSelection_a8874fb100e151832807ab459419e69d3}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Dedx\-U@{m\-\_\-shr\-Dedx\-U}}
+Proton Bragg likelihood score for the leading shower (with the shower reconstructed as track) \hypertarget{classselection_1_1CCincSelection_a8874fb100e151832807ab459419e69d3}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Dedx\-U@{m\-\_\-shr\-Dedx\-U}}
 \index{m\-\_\-shr\-Dedx\-U@{m\-\_\-shr\-Dedx\-U}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
 \subsubsection[{m\-\_\-shr\-Dedx\-U}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-Dedx\-U\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a8874fb100e151832807ab459419e69d3}
 d\-E/dx of the leading shower on the U plane with the 1x4 cm box method \hypertarget{classselection_1_1CCincSelection_abd57a8d6290e142e526636a4ec851801}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Dedx\-U\-Cali@{m\-\_\-shr\-Dedx\-U\-Cali}}
@@ -352,7 +365,10 @@ Number of hits of the candidate electron shower, U plane \hypertarget{classselec
 Number of hits of the candidate electron shower, V plane \hypertarget{classselection_1_1CCincSelection_aebe42543b0965cce015eb2a8412c33d4}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Hits\-Y@{m\-\_\-shr\-Hits\-Y}}
 \index{m\-\_\-shr\-Hits\-Y@{m\-\_\-shr\-Hits\-Y}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
 \subsubsection[{m\-\_\-shr\-Hits\-Y}]{\setlength{\rightskip}{0pt plus 5cm}size\-\_\-t selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-Hits\-Y\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_aebe42543b0965cce015eb2a8412c33d4}
-Number of hits of the candidate electron shower, Y plane \hypertarget{classselection_1_1CCincSelection_ab64b76c5254ccd50d06ffed8ec5e9eeb}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Openangle@{m\-\_\-shr\-Openangle}}
+Number of hits of the candidate electron shower, Y plane \hypertarget{classselection_1_1CCincSelection_a752b664543c799d4afd1ee195091ff1c}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-M\-C\-S\-Mom\-Muon@{m\-\_\-shr\-M\-C\-S\-Mom\-Muon}}
+\index{m\-\_\-shr\-M\-C\-S\-Mom\-Muon@{m\-\_\-shr\-M\-C\-S\-Mom\-Muon}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
+\subsubsection[{m\-\_\-shr\-M\-C\-S\-Mom\-Muon}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-M\-C\-S\-Mom\-Muon\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a752b664543c799d4afd1ee195091ff1c}
+Muon momentum from M\-C\-S (with the shower reconstructed as track) \hypertarget{classselection_1_1CCincSelection_ab64b76c5254ccd50d06ffed8ec5e9eeb}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Openangle@{m\-\_\-shr\-Openangle}}
 \index{m\-\_\-shr\-Openangle@{m\-\_\-shr\-Openangle}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
 \subsubsection[{m\-\_\-shr\-Openangle}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-Openangle\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_ab64b76c5254ccd50d06ffed8ec5e9eeb}
 Opening angle of the shower \hypertarget{classselection_1_1CCincSelection_a219fd1d882087e6c3b2913f92ef1fa5c}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Pca0@{m\-\_\-shr\-Pca0}}
@@ -385,7 +401,10 @@ X component of the reconstructed momentum of the leading shower (in Ge\-V/c) \hy
 Y component of the reconstructed momentum of the leading shower (in Ge\-V/c) \hypertarget{classselection_1_1CCincSelection_a8379b0c7d0b8a8d0b62ff0b353505146}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Pz@{m\-\_\-shr\-Pz}}
 \index{m\-\_\-shr\-Pz@{m\-\_\-shr\-Pz}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
 \subsubsection[{m\-\_\-shr\-Pz}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-Pz\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a8379b0c7d0b8a8d0b62ff0b353505146}
-Z component of the reconstructed momentum of the leading shower (in Ge\-V/c) \hypertarget{classselection_1_1CCincSelection_a4674f9b827098184a3daba78da7048a9}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Score@{m\-\_\-shr\-Score}}
+Z component of the reconstructed momentum of the leading shower (in Ge\-V/c) \hypertarget{classselection_1_1CCincSelection_a5dff6f4a03bc26649697adbd38241be3}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Range\-Mom\-Muon@{m\-\_\-shr\-Range\-Mom\-Muon}}
+\index{m\-\_\-shr\-Range\-Mom\-Muon@{m\-\_\-shr\-Range\-Mom\-Muon}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
+\subsubsection[{m\-\_\-shr\-Range\-Mom\-Muon}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-Range\-Mom\-Muon\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a5dff6f4a03bc26649697adbd38241be3}
+Muon momentum from range (with the shower reconstructed as track) \hypertarget{classselection_1_1CCincSelection_a4674f9b827098184a3daba78da7048a9}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Score@{m\-\_\-shr\-Score}}
 \index{m\-\_\-shr\-Score@{m\-\_\-shr\-Score}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
 \subsubsection[{m\-\_\-shr\-Score}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-Score\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a4674f9b827098184a3daba78da7048a9}
 Pandora track score for the leading shower \hypertarget{classselection_1_1CCincSelection_a4694bec595cce8e01abc186d9c34e079}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Sps@{m\-\_\-shr\-Sps}}
@@ -436,7 +455,13 @@ Start y coordinate of the leading shower obtained with the track fitting \hypert
 Start z coordinate of the leading shower obtained with the track fitting \hypertarget{classselection_1_1CCincSelection_a9fa1d825a900a4081323091daa9b0aa7}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Tkfittheta@{m\-\_\-shr\-Tkfittheta}}
 \index{m\-\_\-shr\-Tkfittheta@{m\-\_\-shr\-Tkfittheta}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
 \subsubsection[{m\-\_\-shr\-Tkfittheta}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-Tkfittheta\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a9fa1d825a900a4081323091daa9b0aa7}
-Track angle of the leading shower obtained with the track fitting \hypertarget{classselection_1_1CCincSelection_a7f2d544a3260377cab6db80b8bf81302}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-track\-Fiducial@{m\-\_\-track\-Fiducial}}
+Track angle of the leading shower obtained with the track fitting \hypertarget{classselection_1_1CCincSelection_a5cde5d5c0d798594d11f082dadaf52bc}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Trk\-Contained@{m\-\_\-shr\-Trk\-Contained}}
+\index{m\-\_\-shr\-Trk\-Contained@{m\-\_\-shr\-Trk\-Contained}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
+\subsubsection[{m\-\_\-shr\-Trk\-Contained}]{\setlength{\rightskip}{0pt plus 5cm}bool selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-Trk\-Contained\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a5cde5d5c0d798594d11f082dadaf52bc}
+End point is contained (with the shower reconstructed as track) \hypertarget{classselection_1_1CCincSelection_a09db29c4170084b4c366defeb3330de8}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-shr\-Trk\-Length@{m\-\_\-shr\-Trk\-Length}}
+\index{m\-\_\-shr\-Trk\-Length@{m\-\_\-shr\-Trk\-Length}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
+\subsubsection[{m\-\_\-shr\-Trk\-Length}]{\setlength{\rightskip}{0pt plus 5cm}float selection\-::\-C\-Cinc\-Selection\-::m\-\_\-shr\-Trk\-Length\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a09db29c4170084b4c366defeb3330de8}
+Length (with the shower reconstructed as track) \hypertarget{classselection_1_1CCincSelection_a7f2d544a3260377cab6db80b8bf81302}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-track\-Fiducial@{m\-\_\-track\-Fiducial}}
 \index{m\-\_\-track\-Fiducial@{m\-\_\-track\-Fiducial}!selection::CCincSelection@{selection\-::\-C\-Cinc\-Selection}}
 \subsubsection[{m\-\_\-track\-Fiducial}]{\setlength{\rightskip}{0pt plus 5cm}bool selection\-::\-C\-Cinc\-Selection\-::m\-\_\-track\-Fiducial\hspace{0.3cm}{\ttfamily [private]}}}\label{classselection_1_1CCincSelection_a7f2d544a3260377cab6db80b8bf81302}
 Start and end points of all pfp reconstructed as trackare in the fiducial volume \hypertarget{classselection_1_1CCincSelection_a2c3b80516e3731ec9b4f5ccbee6864ba}{\index{selection\-::\-C\-Cinc\-Selection@{selection\-::\-C\-Cinc\-Selection}!m\-\_\-trk\-Score@{m\-\_\-trk\-Score}}
