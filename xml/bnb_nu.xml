@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
 <!ENTITY name "bnb_nu">
-<!ENTITY project_version "v7">
-<!ENTITY release "v08_00_00_16">
+<!ENTITY project_version "v8">
+<!ENTITY release "v08_00_00_17">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "foppiani">
 <!ENTITY dataset "prodgenie_bnb_nu_uboone_overlay_mcc9.1_run1_reco2">
 <!ENTITY resilient "/pnfs/uboone/resilient/users">
 <!ENTITY scratch "/pnfs/uboone/scratch/users">
 <!ENTITY data "/uboone/data/users">
-<!ENTITY fcl_dir "/uboone/app/users/foppiani/searchingfornues/srcs/ubana/ubana/searchingfornues/Selection/job/">
+<!-- <!ENTITY fcl_dir "/uboone/app/users/foppiani/searchingfornues/srcs/ubana/ubana/searchingfornues/Selection/job/"> -->
 <!ENTITY fcl_name "run_neutrinoselectionfilter_run1_mc.fcl">
 <!ENTITY folder_name "searchingornues">
 <!ENTITY tar_name "local">
@@ -36,7 +36,7 @@
     <tag>&release;</tag>
     <qual>&qualifier;</qual>
     <local>&resilient;/&user;/&folder_name;/&project_version;/&tar_name;.tar</local>
-    <fcldir>&fcl_dir;</fcldir>
+    <!-- <fcldir>&fcl_dir;</fcldir> -->
   </larsoft>
 
   <!-- Project stages -->
