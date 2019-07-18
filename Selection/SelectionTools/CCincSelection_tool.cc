@@ -207,8 +207,8 @@ bool CCincSelection::FillElectronCandidate(art::Event const &e,
                              searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 2));
 
     m_shrBragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
-    m_shrPidchipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 0);
-    m_shrPidchimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 13, 0);
+    m_shrPidchipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 2);
+    m_shrPidchimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 13, 2);
 
     m_shrTrkLength = trk->Length();
     m_shrRangeMomMuon = m_trkmom.GetTrackMomentum(m_shrTrkLength, 13);
