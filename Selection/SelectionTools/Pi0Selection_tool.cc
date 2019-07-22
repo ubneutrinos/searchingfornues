@@ -95,6 +95,10 @@ cioe'     * @brief set branches for TTree
     int _nshower;
     int _ntrack;
     int _ngamma;
+    float _vx1, _vy1, _vz1; // momentum of first shower
+    float _px1, _py1, _pz1; // direction of first shower
+    float _vx2, _vy2, _vz2; // momentum of second shower
+    float _px2, _py2, _pz2; // direction of second shower
     float _radlen1, _radlen2;
     float _dot1, _dot2;
     float _energy1_Y, _energy2_Y;
@@ -315,6 +319,12 @@ cioe'     * @brief set branches for TTree
     _dedx1_V    = shr1->dEdx()[1];
     _energy1_U  = shr1->Energy()[0];
     _dedx1_U    = shr1->dEdx()[0];
+    _vx1        = shr1->ShowerStart()[0];
+    _vy1        = shr1->ShowerStart()[1];
+    _vz1        = shr1->ShowerStart()[2];
+    _px1        = shr1->Direction()[0];
+    _py1        = shr1->Direction()[1];
+    _pz1        = shr1->Direction()[2];
     
     auto vtxcompat2 = VtxCompatibility(nuvtx, shr2->ShowerStart(), shr2->Direction());
 
@@ -335,6 +345,12 @@ cioe'     * @brief set branches for TTree
     _dedx2_V   = shr2->dEdx()[1];
     _energy2_U = shr2->Energy()[0];
     _dedx2_U   = shr2->dEdx()[0];
+    _vx2        = shr2->ShowerStart()[0];
+    _vy2        = shr2->ShowerStart()[1];
+    _vz2        = shr2->ShowerStart()[2];
+    _px2        = shr2->Direction()[0];
+    _py2        = shr2->Direction()[1];
+    _pz2        = shr2->Direction()[2];
     
     _gammadot = shr1->Direction().Dot(shr2->Direction());
     _mass_Y = sqrt( 2 * _energy1_Y * _energy2_Y * (1 - _gammadot ) );
@@ -420,6 +436,18 @@ cioe'     * @brief set branches for TTree
     _tree->Branch("rc_vtx_x",&_rc_vtx_x,"rc_vtx_x/F");
     _tree->Branch("rc_vtx_y",&_rc_vtx_y,"rc_vtx_y/F");
     _tree->Branch("rc_vtx_z",&_rc_vtx_z,"rc_vtx_z/F");
+    _tree->Branch("vx1",&_vx1,"vx1/F");
+    _tree->Branch("vy1",&_vy1,"vy1/F");
+    _tree->Branch("vz1",&_vz1,"vz1/F");
+    _tree->Branch("px1",&_px1,"px1/F");
+    _tree->Branch("py1",&_py1,"py1/F");
+    _tree->Branch("pz1",&_pz1,"pz1/F");
+    _tree->Branch("vx2",&_vx2,"vx2/F");
+    _tree->Branch("vy2",&_vy2,"vy2/F");
+    _tree->Branch("vz2",&_vz2,"vz2/F");
+    _tree->Branch("px2",&_px2,"px2/F");
+    _tree->Branch("py2",&_py2,"py2/F");
+    _tree->Branch("pz2",&_pz2,"pz2/F");
 
     return;
   }
@@ -558,7 +586,8 @@ cioe'     * @brief set branches for TTree
       std::vector<float> dedx4cm;
       for (size_t ic=0; ic<tkcalo->ResidualRange().size(); ++ic) {
 	if ( (tkcalo->ResidualRange().back()-tkcalo->ResidualRange()[ic]) < 4.) {
-	  dedx4cm.push_back( tkcalo->dEdx()[ic] );
+	  //dedx4cm.push_back( tkcalo->dEdx()[ic] );
+	  dedx4cm.push_back( tkcalo->dQdx()[ic] * 240. * (23.6/1e6) / 0.60 );
 	}
       }
       float dedx4cm_med = -1.;
@@ -642,6 +671,9 @@ cioe'     * @brief set branches for TTree
     _mass_Y = -1;
     _mass_V = -1;
     _mass_U = -1;
+
+    _vx1 = _vx2 = _vy1 = _vy2 = _vz1 = _vz2 = 0;
+    _px1 = _px2 = _py1 = _py2 = _pz1 = _pz2 = 0;
     
     return;
   }// end of reset function
