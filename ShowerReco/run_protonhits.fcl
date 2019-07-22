@@ -62,7 +62,7 @@ physics:
             Clusterproducer: "pandora"
             Pfpproducer: "pandora"
             Sliceproducer: "pandora"
-            MinHitCharge: 180.
+            MinHitCharge: 200.
             }
 
         proximity: @local::ProximityClustering
@@ -95,8 +95,8 @@ physics:
     
     #end_paths is a keyword and contains the paths that do not modify the art::Event, 
     #ie analyzers and output streams.  these all run simultaneously
-    #end_paths:     [stream1,ana]
-    end_paths:     [ana]
+    end_paths:     [stream1,ana]
+    #end_paths:     [ana]
     }
 
 #entry in the output stream you want those to go to, where XXX is the label of the filter module(s)
