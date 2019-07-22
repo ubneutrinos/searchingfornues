@@ -106,7 +106,7 @@ Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/Selectio
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/ShowerSelection_tool.cc:26: warning: Compound selection::ShowerSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:43: warning: Compound NeutrinoSelectionFilter is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ObviousCosmicFlashMatching_tool.cc:37: warning: Compound analysis::ObviousCosmicFlashMatching is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:39: warning: Compound SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:38: warning: Compound SecondShowerPurity is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/BacktrackingFuncs.h:84: warning: Compound searchingfornues::BtPart is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:37: warning: Compound selection::SelectionToolBase is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:33: warning: Compound CommonOpticalFilter is not documented.
@@ -373,11 +373,9 @@ Ge/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMat
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:51: warning: Member analyze(art::Event const &e) override (function) of class ProtonHitPurity is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:54: warning: Member beginJob() override (function) of class ProtonHitPurity is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:55: warning: Member endJob() override (function) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:109: warning: Member ResetTTree() (function) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:111: warning: Member getGaussHits(const std::vector< art::Ptr< recob::Hit >> &hits, const art::ValidHandle< std::vector< recob::Hit > > gaushit_h) (function) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:114: warning: Member IsProtonIsolated(const std::vector< art::Ptr< recob::Hit >> &hits, const art::ValidHandle< std::vector< recob::Hit > > gaushit_h) (function) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:117: warning: Member ProtonDot(const float &protonWire, const float &protonTime, const int &pl, const TVector3 &showerVtx, const TVector3 &showerDir, float &dot, float &d2d) (function) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:121: warning: Member IoU(const int &idx, const float &time_min, const float &time_max, const int &pl, const std::map< size_t, std::pair< float, float > > &protonIdx2TimeSpanMap, const std::map< size_t, int > &protonIdx2PlaneMap, const std::map< size_t, float > &protonIdx2ChargeMap, size_t &matchedidx) (function) of class ProtonHitPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:97: warning: Member getGaussHits(const std::vector< art::Ptr< recob::Hit >> &hits, const art::ValidHandle< std::vector< recob::Hit > > gaushit_h) (function) of class ProtonHitPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:100: warning: Member IsProtonIsolated(const std::vector< art::Ptr< recob::Hit >> &hits, const art::ValidHandle< std::vector< recob::Hit > > gaushit_h) (function) of class ProtonHitPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:103: warning: Member ProtonDot(const float &protonWire, const float &protonTime, const int &pl, const TVector3 &showerVtx, const TVector3 &showerDir, float &dot, float &d2d) (function) of class ProtonHitPurity is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:60: warning: Member fClusterproducer (variable) of class ProtonHitPurity is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:60: warning: Member fHTproducer (variable) of class ProtonHitPurity is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:60: warning: Member fHitproducer (variable) of class ProtonHitPurity is not documented.
@@ -388,37 +386,14 @@ Ge/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMat
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:84: warning: Member _wire2cm (variable) of class ProtonHitPurity is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:84: warning: Member _time2cm (variable) of class ProtonHitPurity is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:87: warning: Member _tree (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:88: warning: Member _evt (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:88: warning: Member _sub (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:88: warning: Member _run (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:89: warning: Member _nhit (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:90: warning: Member _plane (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:91: warning: Member _kemin (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:91: warning: Member _kemax (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:92: warning: Member _charge (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:93: warning: Member _purity (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:94: warning: Member _protonenergy (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:95: warning: Member _shrdot (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:96: warning: Member _shrdist (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:97: warning: Member _shrenergy (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:98: warning: Member _nshr (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:99: warning: Member _ntrk (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:100: warning: Member _trkshrdist (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:101: warning: Member _trkshrdot (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:102: warning: Member _nclose (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:103: warning: Member _clus_tmin (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:103: warning: Member _clus_tmax (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:104: warning: Member _shr_dir_x (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:104: warning: Member _shr_dir_y (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:104: warning: Member _shr_dir_z (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:105: warning: Member _shr_vtx_x (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:105: warning: Member _shr_vtx_y (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:105: warning: Member _shr_vtx_z (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:106: warning: Member _trk_vtx_x (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:106: warning: Member _trk_vtx_y (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:106: warning: Member _trk_vtx_z (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:107: warning: Member _qmatched (variable) of class ProtonHitPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:107: warning: Member _iou (variable) of class ProtonHitPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:88: warning: Member _nhit (variable) of class ProtonHitPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:89: warning: Member _plane (variable) of class ProtonHitPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:90: warning: Member _charge (variable) of class ProtonHitPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:91: warning: Member _purity (variable) of class ProtonHitPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:92: warning: Member _shrdot (variable) of class ProtonHitPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:93: warning: Member _shrdist (variable) of class ProtonHitPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:94: warning: Member _shrenergy (variable) of class ProtonHitPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:95: warning: Member _nshr (variable) of class ProtonHitPurity is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:73: warning: Found unknown command `\input'
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:74: warning: Found unknown command `\input'
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:75: warning: Found unknown command `\input'
@@ -438,58 +413,39 @@ Ge/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMat
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SaveSliceHits_module.cc:60: warning: Member fPfpproducer (variable) of class SaveSliceHits is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SaveSliceHits_module.cc:60: warning: Member fSliceproducer (variable) of class SaveSliceHits is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SaveSliceHits_module.cc:61: warning: Member fMinHitCharge (variable) of class SaveSliceHits is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:41: warning: Member SecondShowerPurity(fhicl::ParameterSet const &p) (function) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:46: warning: Member SecondShowerPurity(SecondShowerPurity const &)=delete (function) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:47: warning: Member SecondShowerPurity(SecondShowerPurity &&)=delete (function) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:48: warning: Member operator=(SecondShowerPurity const &)=delete (function) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:49: warning: Member operator=(SecondShowerPurity &&)=delete (function) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:52: warning: Member analyze(art::Event const &e) override (function) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:55: warning: Member beginJob() override (function) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:56: warning: Member endJob() override (function) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:109: warning: Member ResetTTree() (function) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:111: warning: Member getGaussHits(const std::vector< art::Ptr< recob::Hit >> &hits, const art::ValidHandle< std::vector< recob::Hit > > gaushit_h) (function) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:114: warning: Member IsProtonIsolated(const std::vector< art::Ptr< recob::Hit >> &hits, const art::ValidHandle< std::vector< recob::Hit > > gaushit_h) (function) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:117: warning: Member GammaDot(const float &gammaWire, const float &gammaTime, const int &pl, const TVector3 &showerVtx, const TVector3 &showerDir, float &dot, float &d2d) (function) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:121: warning: Member PCA(const std::vector< art::Ptr< recob::Hit >> &hits, TVectorD &eigenVal, TMatrixD &eigenVec) (function) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:123: warning: Member EigenDot(const int &pl, const TVector3 &ShowerDir, const float &gammaWireDir, const float &gammaTimeDir) (function) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:61: warning: Member fClusterproducer (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:61: warning: Member fHTproducer (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:61: warning: Member fHitproducer (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:61: warning: Member fPFPproducer (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:61: warning: Member fSHRproducer (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:61: warning: Member fMCSproducer (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:71: warning: Member _pfpmap (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:85: warning: Member _wire2cm (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:85: warning: Member _time2cm (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:88: warning: Member _tree (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:89: warning: Member _evt (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:89: warning: Member _sub (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:89: warning: Member _run (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:90: warning: Member _nhit (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:91: warning: Member _plane (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:92: warning: Member _charge (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:93: warning: Member _purity (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:93: warning: Member _shrpurity (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:94: warning: Member _shrdot (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:95: warning: Member _shrdist (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:96: warning: Member _shrenergy1 (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:97: warning: Member _shrenergy2 (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:98: warning: Member _elecenergy (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:99: warning: Member _btpdg (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:99: warning: Member _btshrpdg (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:100: warning: Member _btmom (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:100: warning: Member _btshrmom (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:101: warning: Member _nshr (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:102: warning: Member _clus_tmin (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:102: warning: Member _clus_tmax (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:103: warning: Member _twoshrdot (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:104: warning: Member _eigenratio (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:104: warning: Member _eigendot (variable) of class SecondShowerPurity is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:105: warning: Member _gammaemin (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:40: warning: Member SecondShowerPurity(fhicl::ParameterSet const &p) (function) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:45: warning: Member SecondShowerPurity(SecondShowerPurity const &)=delete (function) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:46: warning: Member SecondShowerPurity(SecondShowerPurity &&)=delete (function) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:47: warning: Member operator=(SecondShowerPurity const &)=delete (function) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:48: warning: Member operator=(SecondShowerPurity &&)=delete (function) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:51: warning: Member analyze(art::Event const &e) override (function) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:54: warning: Member beginJob() override (function) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:55: warning: Member endJob() override (function) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:97: warning: Member getGaussHits(const std::vector< art::Ptr< recob::Hit >> &hits, const art::ValidHandle< std::vector< recob::Hit > > gaushit_h) (function) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:100: warning: Member IsProtonIsolated(const std::vector< art::Ptr< recob::Hit >> &hits, const art::ValidHandle< std::vector< recob::Hit > > gaushit_h) (function) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:103: warning: Member GammaDot(const float &gammaWire, const float &gammaTime, const int &pl, const TVector3 &showerVtx, const TVector3 &showerDir, float &dot, float &d2d) (function) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:60: warning: Member fClusterproducer (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:60: warning: Member fHTproducer (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:60: warning: Member fHitproducer (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:60: warning: Member fPFPproducer (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:60: warning: Member fSHRproducer (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:60: warning: Member fMCSproducer (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:70: warning: Member _pfpmap (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:84: warning: Member _wire2cm (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:84: warning: Member _time2cm (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:87: warning: Member _tree (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:88: warning: Member _nhit (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:89: warning: Member _plane (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:90: warning: Member _charge (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:91: warning: Member _purity (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:92: warning: Member _shrdot (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:93: warning: Member _shrdist (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:94: warning: Member _shrenergy (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:95: warning: Member _nshr (variable) of class SecondShowerPurity is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:73: warning: Found unknown command `\input'
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:74: warning: Found unknown command `\input'
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:75: warning: Found unknown command `\input'
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:76: warning: Found unknown command `\input'
-/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:64: warning: Found unknown command `\input'
+/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:63: warning: Found unknown command `\input'
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ShowerMerger_module.cc:38: warning: Member ShowerMerger(fhicl::ParameterSet const &p) (function) of class ShowerMerger is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ShowerMerger_module.cc:43: warning: Member ShowerMerger(ShowerMerger const &)=delete (function) of class ShowerMerger is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ShowerMerger_module.cc:44: warning: Member ShowerMerger(ShowerMerger &&)=delete (function) of class ShowerMerger is not documented.
@@ -1102,43 +1058,55 @@ Ge/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMat
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:95: warning: Member _nshower (variable) of class selection::Pi0Selection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:96: warning: Member _ntrack (variable) of class selection::Pi0Selection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:97: warning: Member _ngamma (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:98: warning: Member _radlen1 (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:98: warning: Member _radlen2 (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:99: warning: Member _dot1 (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:99: warning: Member _dot2 (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:100: warning: Member _energy1_Y (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:100: warning: Member _energy2_Y (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:101: warning: Member _dedx1_Y (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:101: warning: Member _dedx2_Y (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:102: warning: Member _dedx1_fit_Y (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:102: warning: Member _dedx2_fit_Y (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:103: warning: Member _energy1_V (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:103: warning: Member _energy2_V (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:104: warning: Member _dedx1_V (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:104: warning: Member _dedx2_V (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:105: warning: Member _dedx1_fit_V (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:105: warning: Member _dedx2_fit_V (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:106: warning: Member _energy1_U (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:106: warning: Member _energy2_U (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:107: warning: Member _dedx1_U (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:107: warning: Member _dedx2_U (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:108: warning: Member _dedx1_fit_U (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:108: warning: Member _dedx2_fit_U (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:109: warning: Member _shrscore1 (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:109: warning: Member _shrscore2 (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:110: warning: Member _gammadot (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:111: warning: Member _mass_Y (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:111: warning: Member _mass_V (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:111: warning: Member _mass_U (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:112: warning: Member _rc_vtx_x (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:112: warning: Member _rc_vtx_y (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:112: warning: Member _rc_vtx_z (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:116: warning: Member _onlyshower (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:117: warning: Member _dmin (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:118: warning: Member _dotmin (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:119: warning: Member _trkshrscore (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:121: warning: Member fTRKproducer (variable) of class selection::Pi0Selection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:122: warning: Member fCALproducer (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:98: warning: Member _vx1 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:98: warning: Member _vy1 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:98: warning: Member _vz1 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:99: warning: Member _px1 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:99: warning: Member _py1 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:99: warning: Member _pz1 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:100: warning: Member _vx2 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:100: warning: Member _vy2 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:100: warning: Member _vz2 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:101: warning: Member _px2 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:101: warning: Member _py2 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:101: warning: Member _pz2 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:102: warning: Member _radlen1 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:102: warning: Member _radlen2 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:103: warning: Member _dot1 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:103: warning: Member _dot2 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:104: warning: Member _energy1_Y (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:104: warning: Member _energy2_Y (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:105: warning: Member _dedx1_Y (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:105: warning: Member _dedx2_Y (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:106: warning: Member _dedx1_fit_Y (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:106: warning: Member _dedx2_fit_Y (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:107: warning: Member _energy1_V (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:107: warning: Member _energy2_V (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:108: warning: Member _dedx1_V (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:108: warning: Member _dedx2_V (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:109: warning: Member _dedx1_fit_V (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:109: warning: Member _dedx2_fit_V (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:110: warning: Member _energy1_U (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:110: warning: Member _energy2_U (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:111: warning: Member _dedx1_U (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:111: warning: Member _dedx2_U (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:112: warning: Member _dedx1_fit_U (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:112: warning: Member _dedx2_fit_U (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:113: warning: Member _shrscore1 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:113: warning: Member _shrscore2 (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:114: warning: Member _gammadot (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:115: warning: Member _mass_Y (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:115: warning: Member _mass_V (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:115: warning: Member _mass_U (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:116: warning: Member _rc_vtx_x (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:116: warning: Member _rc_vtx_y (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:116: warning: Member _rc_vtx_z (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:120: warning: Member _onlyshower (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:121: warning: Member _dmin (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:122: warning: Member _dotmin (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:123: warning: Member _trkshrscore (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:125: warning: Member fTRKproducer (variable) of class selection::Pi0Selection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:126: warning: Member fCALproducer (variable) of class selection::Pi0Selection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:82: warning: Member fData (variable) of class selection::SelectionToolBase is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionExample_tool.cc:62: warning: Member _multiplicity (variable) of class selection::SelectionExample is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:82: warning: Member fData (variable) of class selection::SelectionToolBase is not documented.
@@ -1244,5 +1212,5 @@ Generating file index...
 Generating file member index...
 Generating example index...
 finalizing index lists...
-lookup cache used 678/65536 hits=3012 misses=701
+lookup cache used 678/65536 hits=3002 misses=701
 finished...
