@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
 <!ENTITY name "bnb_dirt">
-<!ENTITY project_version "v8">
+<!ENTITY project_version "v9">
 <!ENTITY release "v08_00_00_17">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "foppiani">
