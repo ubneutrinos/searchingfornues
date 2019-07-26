@@ -1,7 +1,6 @@
-\hypertarget{classflashmatch_1_1FlashMatchingTool}{\section{flashmatch\-:\-:Flash\-Matching\-Tool Class Reference}
-\label{classflashmatch_1_1FlashMatchingTool}\index{flashmatch\-::\-Flash\-Matching\-Tool@{flashmatch\-::\-Flash\-Matching\-Tool}}
-}
-Inheritance diagram for flashmatch\-:\-:Flash\-Matching\-Tool\-:\begin{figure}[H]
+\hypertarget{classflashmatch_1_1FlashMatchingTool}{}\section{flashmatch\+:\+:Flash\+Matching\+Tool Class Reference}
+\label{classflashmatch_1_1FlashMatchingTool}\index{flashmatch\+::\+Flash\+Matching\+Tool@{flashmatch\+::\+Flash\+Matching\+Tool}}
+Inheritance diagram for flashmatch\+:\+:Flash\+Matching\+Tool\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[height=2.000000cm]{classflashmatch_1_1FlashMatchingTool}
@@ -10,186 +9,184 @@ Inheritance diagram for flashmatch\-:\-:Flash\-Matching\-Tool\-:\begin{figure}[H
 \subsection*{Classes}
 \begin{DoxyCompactItemize}
 \item 
-class \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FailureMode}{Failure\-Mode}
-\begin{DoxyCompactList}\small\item\em A description of the reason the tool couldn't find a neutrino candidate. \end{DoxyCompactList}\item 
-class \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate}{Flash\-Candidate}
+class \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FailureMode}{Failure\+Mode}
+\begin{DoxyCompactList}\small\item\em A description of the reason the tool couldn\textquotesingle{}t find a neutrino candidate. \end{DoxyCompactList}\item 
+class \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate}{Flash\+Candidate}
 \begin{DoxyCompactList}\small\item\em A candidate for the beam flash. \end{DoxyCompactList}\item 
-class \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1OutputEvent}{Output\-Event}
+class \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1OutputEvent}{Output\+Event}
 \begin{DoxyCompactList}\small\item\em Class to hold information about the event for monitoring. \end{DoxyCompactList}\item 
-class \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate}{Slice\-Candidate}
+class \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate}{Slice\+Candidate}
 \begin{DoxyCompactList}\small\item\em A candidate for the target slice. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hyperlink{classflashmatch_1_1FlashMatchingTool_a8c6b08ba5404a69ad5fc984eaf8a1eba}{Flash\-Matching\-Tool} (const fhicl\-::\-Parameter\-Set \&pset)
+\hyperlink{classflashmatch_1_1FlashMatchingTool_a8c6b08ba5404a69ad5fc984eaf8a1eba}{Flash\+Matching\+Tool} (const fhicl\+::\+Parameter\+Set \&pset)
 \begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a58e2b1ea201c0b8429e1111380b0a108}{void {\bfseries configure} (const fhicl\-::\-Parameter\-Set \&pset)}\label{classflashmatch_1_1FlashMatchingTool_a58e2b1ea201c0b8429e1111380b0a108}
+void {\bfseries configure} (const fhicl\+::\+Parameter\+Set \&pset)\hypertarget{classflashmatch_1_1FlashMatchingTool_a58e2b1ea201c0b8429e1111380b0a108}{}\label{classflashmatch_1_1FlashMatchingTool_a58e2b1ea201c0b8429e1111380b0a108}
 
 \item 
-float \hyperlink{classflashmatch_1_1FlashMatchingTool_aed79e484b39c5d02e84714b45c68bf7f}{Classify\-Slice} (const art\-::\-Event \&evt, const std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-P\-F\-Particle $>$ $>$ \&pfp\-\_\-v, const std\-::vector$<$ std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Space\-Point $>$ $>$ $>$ \&spacepoint\-\_\-v\-\_\-v, const std\-::vector$<$ std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Hit $>$ $>$ $>$ \&hit\-\_\-v\-\_\-v, std\-::vector$<$ float $>$ \&recospectrum, std\-::vector$<$ float $>$ \&hypospectrum)
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_aed79e484b39c5d02e84714b45c68bf7f}{Classify\+Slice} (const art\+::\+Event \&evt, const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+P\+F\+Particle $>$ $>$ \&pfp\+\_\+v, const std\+::vector$<$ std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Space\+Point $>$ $>$ $>$ \&spacepoint\+\_\+v\+\_\+v, const std\+::vector$<$ std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$ $>$ $>$ \&hit\+\_\+v\+\_\+v, std\+::vector$<$ float $>$ \&recospectrum, std\+::vector$<$ float $>$ \&hypospectrum)
 \begin{DoxyCompactList}\small\item\em Classify slices as neutrino or cosmic. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a576990a409d28ed7526963195df7e55a}{float {\bfseries Classify\-Track} (const art\-::\-Event \&evt, const std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Space\-Point $>$ $>$ \&spacepoint\-\_\-v, const std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Hit $>$ $>$ \&hit\-\_\-v, std\-::vector$<$ float $>$ \&recospectrum, std\-::vector$<$ float $>$ \&hypospectrum)}\label{classflashmatch_1_1FlashMatchingTool_a576990a409d28ed7526963195df7e55a}
+float {\bfseries Classify\+Track} (const art\+::\+Event \&evt, const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Space\+Point $>$ $>$ \&spacepoint\+\_\+v, const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$ $>$ \&hit\+\_\+v, std\+::vector$<$ float $>$ \&recospectrum, std\+::vector$<$ float $>$ \&hypospectrum)\hypertarget{classflashmatch_1_1FlashMatchingTool_a576990a409d28ed7526963195df7e55a}{}\label{classflashmatch_1_1FlashMatchingTool_a576990a409d28ed7526963195df7e55a}
 
 \end{DoxyCompactItemize}
 \subsection*{Private Types}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a6a9ab4e3315550624ddc72103c2d260c}{typedef std\-::vector\\*
-$<$ \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate}{Slice\-Candidate} $>$ {\bfseries Slice\-Candidate\-Vector}}\label{classflashmatch_1_1FlashMatchingTool_a6a9ab4e3315550624ddc72103c2d260c}
+typedef std\+::vector$<$ \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate}{Slice\+Candidate} $>$ {\bfseries Slice\+Candidate\+Vector}\hypertarget{classflashmatch_1_1FlashMatchingTool_a6a9ab4e3315550624ddc72103c2d260c}{}\label{classflashmatch_1_1FlashMatchingTool_a6a9ab4e3315550624ddc72103c2d260c}
 
 \item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_ae4ca02d264c29ff19c6d32627c4bf852}{typedef std\-::vector\\*
-$<$ \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate}{Flash\-Candidate} $>$ {\bfseries Flash\-Candidate\-Vector}}\label{classflashmatch_1_1FlashMatchingTool_ae4ca02d264c29ff19c6d32627c4bf852}
+typedef std\+::vector$<$ \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate}{Flash\+Candidate} $>$ {\bfseries Flash\+Candidate\+Vector}\hypertarget{classflashmatch_1_1FlashMatchingTool_ae4ca02d264c29ff19c6d32627c4bf852}{}\label{classflashmatch_1_1FlashMatchingTool_ae4ca02d264c29ff19c6d32627c4bf852}
 
 \end{DoxyCompactItemize}
 \subsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-void \hyperlink{classflashmatch_1_1FlashMatchingTool_a68229bfc94d94e91513fefe60a3b43d6}{Get\-Flash\-Candidates} (const art\-::\-Event \&event, Flash\-Candidate\-Vector \&flash\-Candidates)
+void \hyperlink{classflashmatch_1_1FlashMatchingTool_a68229bfc94d94e91513fefe60a3b43d6}{Get\+Flash\+Candidates} (const art\+::\+Event \&event, Flash\+Candidate\+Vector \&flash\+Candidates)
 \begin{DoxyCompactList}\small\item\em Get the candidate flashes in the event. \end{DoxyCompactList}\item 
-\hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate}{Flash\-Candidate} \& \hyperlink{classflashmatch_1_1FlashMatchingTool_a55eb0441a37240344fc893857aabda28}{Get\-Beam\-Flash} (Flash\-Candidate\-Vector \&flash\-Candidates)
+\hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate}{Flash\+Candidate} \& \hyperlink{classflashmatch_1_1FlashMatchingTool_a55eb0441a37240344fc893857aabda28}{Get\+Beam\+Flash} (Flash\+Candidate\+Vector \&flash\+Candidates)
 \item 
-float \hyperlink{classflashmatch_1_1FlashMatchingTool_a64dcefa0f3f8e95d51dcb0aadbc711c8}{Get\-Slice\-Score} (\hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate}{Flash\-Candidate} \&beam\-Flash, \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate}{Slice\-Candidate} \&slice)
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_a64dcefa0f3f8e95d51dcb0aadbc711c8}{Get\+Slice\+Score} (\hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate}{Flash\+Candidate} \&beam\+Flash, \hyperlink{classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate}{Slice\+Candidate} \&slice)
 \begin{DoxyCompactList}\small\item\em get the score \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a1d8717c68408b4b6bcada1d833f52b85}{std\-::string \hyperlink{classflashmatch_1_1FlashMatchingTool_a1d8717c68408b4b6bcada1d833f52b85}{m\-\_\-flash\-Label}}\label{classflashmatch_1_1FlashMatchingTool_a1d8717c68408b4b6bcada1d833f52b85}
+std\+::string \hyperlink{classflashmatch_1_1FlashMatchingTool_a1d8717c68408b4b6bcada1d833f52b85}{m\+\_\+flash\+Label}\hypertarget{classflashmatch_1_1FlashMatchingTool_a1d8717c68408b4b6bcada1d833f52b85}{}\label{classflashmatch_1_1FlashMatchingTool_a1d8717c68408b4b6bcada1d833f52b85}
 
 \begin{DoxyCompactList}\small\item\em The label of the flash producer. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a268e4c99f49178112c76b0fd4f5dc83e}{std\-::string \hyperlink{classflashmatch_1_1FlashMatchingTool_a268e4c99f49178112c76b0fd4f5dc83e}{m\-\_\-pandora\-Label}}\label{classflashmatch_1_1FlashMatchingTool_a268e4c99f49178112c76b0fd4f5dc83e}
+std\+::string \hyperlink{classflashmatch_1_1FlashMatchingTool_a268e4c99f49178112c76b0fd4f5dc83e}{m\+\_\+pandora\+Label}\hypertarget{classflashmatch_1_1FlashMatchingTool_a268e4c99f49178112c76b0fd4f5dc83e}{}\label{classflashmatch_1_1FlashMatchingTool_a268e4c99f49178112c76b0fd4f5dc83e}
 
-\begin{DoxyCompactList}\small\item\em The label of the all\-Outcomes pandora producer. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a33272b2692b9eee1ee1f5af82696e558}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_a33272b2692b9eee1ee1f5af82696e558}{m\-\_\-beam\-Window\-Start}}\label{classflashmatch_1_1FlashMatchingTool_a33272b2692b9eee1ee1f5af82696e558}
+\begin{DoxyCompactList}\small\item\em The label of the all\+Outcomes pandora producer. \end{DoxyCompactList}\item 
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_a33272b2692b9eee1ee1f5af82696e558}{m\+\_\+beam\+Window\+Start}\hypertarget{classflashmatch_1_1FlashMatchingTool_a33272b2692b9eee1ee1f5af82696e558}{}\label{classflashmatch_1_1FlashMatchingTool_a33272b2692b9eee1ee1f5af82696e558}
 
 \begin{DoxyCompactList}\small\item\em The start time of the beam window. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a8a7cc0d75c962df7d5bf20cc1edccde2}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_a8a7cc0d75c962df7d5bf20cc1edccde2}{m\-\_\-beam\-Window\-End}}\label{classflashmatch_1_1FlashMatchingTool_a8a7cc0d75c962df7d5bf20cc1edccde2}
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_a8a7cc0d75c962df7d5bf20cc1edccde2}{m\+\_\+beam\+Window\+End}\hypertarget{classflashmatch_1_1FlashMatchingTool_a8a7cc0d75c962df7d5bf20cc1edccde2}{}\label{classflashmatch_1_1FlashMatchingTool_a8a7cc0d75c962df7d5bf20cc1edccde2}
 
 \begin{DoxyCompactList}\small\item\em The end time of the beam window. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_ab6bfd0f0b1d32f1d647d978963ffcfea}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_ab6bfd0f0b1d32f1d647d978963ffcfea}{m\-\_\-min\-Beam\-Flash\-P\-E}}\label{classflashmatch_1_1FlashMatchingTool_ab6bfd0f0b1d32f1d647d978963ffcfea}
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_ab6bfd0f0b1d32f1d647d978963ffcfea}{m\+\_\+min\+Beam\+Flash\+PE}\hypertarget{classflashmatch_1_1FlashMatchingTool_ab6bfd0f0b1d32f1d647d978963ffcfea}{}\label{classflashmatch_1_1FlashMatchingTool_ab6bfd0f0b1d32f1d647d978963ffcfea}
 
 \begin{DoxyCompactList}\small\item\em The minimum number of photoelectrons required to consider a flash as the beam flash. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_ad4ea54d8957415c895afdd3575dda380}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_ad4ea54d8957415c895afdd3575dda380}{m\-\_\-xcl\-Coef}}\label{classflashmatch_1_1FlashMatchingTool_ad4ea54d8957415c895afdd3575dda380}
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_ad4ea54d8957415c895afdd3575dda380}{m\+\_\+xcl\+Coef}\hypertarget{classflashmatch_1_1FlashMatchingTool_ad4ea54d8957415c895afdd3575dda380}{}\label{classflashmatch_1_1FlashMatchingTool_ad4ea54d8957415c895afdd3575dda380}
 
-\begin{DoxyCompactList}\small\item\em m\-\_\-xcl\-Coef$\ast$log10(charge\-To\-Light\-Ratio)-\/ center\-X \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a859f9d3405d8f5bae13b3927e193ab91}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_a859f9d3405d8f5bae13b3927e193ab91}{m\-\_\-max\-Delta\-Y}}\label{classflashmatch_1_1FlashMatchingTool_a859f9d3405d8f5bae13b3927e193ab91}
+\begin{DoxyCompactList}\small\item\em m\+\_\+xcl\+Coef$\ast$log10(charge\+To\+Light\+Ratio)-\/ centerX \end{DoxyCompactList}\item 
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_a859f9d3405d8f5bae13b3927e193ab91}{m\+\_\+max\+DeltaY}\hypertarget{classflashmatch_1_1FlashMatchingTool_a859f9d3405d8f5bae13b3927e193ab91}{}\label{classflashmatch_1_1FlashMatchingTool_a859f9d3405d8f5bae13b3927e193ab91}
 
 \begin{DoxyCompactList}\small\item\em The maximum difference in Y between the beam flash center and the weighted charge center. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a8b66b2458157a6216b83200359b6bb17}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_a8b66b2458157a6216b83200359b6bb17}{m\-\_\-max\-Delta\-Z}}\label{classflashmatch_1_1FlashMatchingTool_a8b66b2458157a6216b83200359b6bb17}
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_a8b66b2458157a6216b83200359b6bb17}{m\+\_\+max\+DeltaZ}\hypertarget{classflashmatch_1_1FlashMatchingTool_a8b66b2458157a6216b83200359b6bb17}{}\label{classflashmatch_1_1FlashMatchingTool_a8b66b2458157a6216b83200359b6bb17}
 
 \begin{DoxyCompactList}\small\item\em The maximum difference in Z between the beam flash center and the weighted charge center. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a255b27c95bb3d2954482e3fdc8cf3e79}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_a255b27c95bb3d2954482e3fdc8cf3e79}{m\-\_\-max\-Delta\-Y\-Sigma}}\label{classflashmatch_1_1FlashMatchingTool_a255b27c95bb3d2954482e3fdc8cf3e79}
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_a255b27c95bb3d2954482e3fdc8cf3e79}{m\+\_\+max\+Delta\+Y\+Sigma}\hypertarget{classflashmatch_1_1FlashMatchingTool_a255b27c95bb3d2954482e3fdc8cf3e79}{}\label{classflashmatch_1_1FlashMatchingTool_a255b27c95bb3d2954482e3fdc8cf3e79}
 
-\begin{DoxyCompactList}\small\item\em As for max\-Delta\-Y, but measured in units of the flash width in Y. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_aa5460134c0dbb87c67ca199a0ddb67ac}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_aa5460134c0dbb87c67ca199a0ddb67ac}{m\-\_\-max\-Delta\-Z\-Sigma}}\label{classflashmatch_1_1FlashMatchingTool_aa5460134c0dbb87c67ca199a0ddb67ac}
+\begin{DoxyCompactList}\small\item\em As for max\+DeltaY, but measured in units of the flash width in Y. \end{DoxyCompactList}\item 
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_aa5460134c0dbb87c67ca199a0ddb67ac}{m\+\_\+max\+Delta\+Z\+Sigma}\hypertarget{classflashmatch_1_1FlashMatchingTool_aa5460134c0dbb87c67ca199a0ddb67ac}{}\label{classflashmatch_1_1FlashMatchingTool_aa5460134c0dbb87c67ca199a0ddb67ac}
 
-\begin{DoxyCompactList}\small\item\em As for max\-Delta\-Z, but measured in units of the flash width in Z. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_ab4b223f8fca98bb3e6372762228b3065}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_ab4b223f8fca98bb3e6372762228b3065}{m\-\_\-min\-Charge\-To\-Light\-Ratio}}\label{classflashmatch_1_1FlashMatchingTool_ab4b223f8fca98bb3e6372762228b3065}
+\begin{DoxyCompactList}\small\item\em As for max\+DeltaZ, but measured in units of the flash width in Z. \end{DoxyCompactList}\item 
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_ab4b223f8fca98bb3e6372762228b3065}{m\+\_\+min\+Charge\+To\+Light\+Ratio}\hypertarget{classflashmatch_1_1FlashMatchingTool_ab4b223f8fca98bb3e6372762228b3065}{}\label{classflashmatch_1_1FlashMatchingTool_ab4b223f8fca98bb3e6372762228b3065}
 
-\begin{DoxyCompactList}\small\item\em The minimum ratio between the total charge and the total P\-E. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a2f5ba137ceabb7e78a992db8f66ff0ad}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_a2f5ba137ceabb7e78a992db8f66ff0ad}{m\-\_\-max\-Charge\-To\-Light\-Ratio}}\label{classflashmatch_1_1FlashMatchingTool_a2f5ba137ceabb7e78a992db8f66ff0ad}
+\begin{DoxyCompactList}\small\item\em The minimum ratio between the total charge and the total PE. \end{DoxyCompactList}\item 
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_a2f5ba137ceabb7e78a992db8f66ff0ad}{m\+\_\+max\+Charge\+To\+Light\+Ratio}\hypertarget{classflashmatch_1_1FlashMatchingTool_a2f5ba137ceabb7e78a992db8f66ff0ad}{}\label{classflashmatch_1_1FlashMatchingTool_a2f5ba137ceabb7e78a992db8f66ff0ad}
 
-\begin{DoxyCompactList}\small\item\em The maximum ratio between the total charge and the total P\-E. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a89d4a6c3dae8a3a8aa0db8c0c9a0cb21}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_a89d4a6c3dae8a3a8aa0db8c0c9a0cb21}{m\-\_\-charge\-To\-N\-Photons\-Track}}\label{classflashmatch_1_1FlashMatchingTool_a89d4a6c3dae8a3a8aa0db8c0c9a0cb21}
+\begin{DoxyCompactList}\small\item\em The maximum ratio between the total charge and the total PE. \end{DoxyCompactList}\item 
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_a89d4a6c3dae8a3a8aa0db8c0c9a0cb21}{m\+\_\+charge\+To\+N\+Photons\+Track}\hypertarget{classflashmatch_1_1FlashMatchingTool_a89d4a6c3dae8a3a8aa0db8c0c9a0cb21}{}\label{classflashmatch_1_1FlashMatchingTool_a89d4a6c3dae8a3a8aa0db8c0c9a0cb21}
 
 \begin{DoxyCompactList}\small\item\em The conversion factor between charge and number of photons for tracks. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_ab914c01e557cee0b0dd0c461759e7135}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_ab914c01e557cee0b0dd0c461759e7135}{m\-\_\-charge\-To\-N\-Photons\-Shower}}\label{classflashmatch_1_1FlashMatchingTool_ab914c01e557cee0b0dd0c461759e7135}
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_ab914c01e557cee0b0dd0c461759e7135}{m\+\_\+charge\+To\+N\+Photons\+Shower}\hypertarget{classflashmatch_1_1FlashMatchingTool_ab914c01e557cee0b0dd0c461759e7135}{}\label{classflashmatch_1_1FlashMatchingTool_ab914c01e557cee0b0dd0c461759e7135}
 
 \begin{DoxyCompactList}\small\item\em The conversion factor between charge and number of photons for showers. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a11b980eee1a9ecbe15663af51885846d}{flashana\-::\-Flash\-Match\-Manager \hyperlink{classflashmatch_1_1FlashMatchingTool_a11b980eee1a9ecbe15663af51885846d}{m\-\_\-flash\-Match\-Manager}}\label{classflashmatch_1_1FlashMatchingTool_a11b980eee1a9ecbe15663af51885846d}
+flashana\+::\+Flash\+Match\+Manager \hyperlink{classflashmatch_1_1FlashMatchingTool_a11b980eee1a9ecbe15663af51885846d}{m\+\_\+flash\+Match\+Manager}\hypertarget{classflashmatch_1_1FlashMatchingTool_a11b980eee1a9ecbe15663af51885846d}{}\label{classflashmatch_1_1FlashMatchingTool_a11b980eee1a9ecbe15663af51885846d}
 
 \begin{DoxyCompactList}\small\item\em The flash match manager. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a4463e9c421fa26d464b037b125e0a11d}{bool \hyperlink{classflashmatch_1_1FlashMatchingTool_a4463e9c421fa26d464b037b125e0a11d}{m\-\_\-should\-Write\-To\-File}}\label{classflashmatch_1_1FlashMatchingTool_a4463e9c421fa26d464b037b125e0a11d}
+bool \hyperlink{classflashmatch_1_1FlashMatchingTool_a4463e9c421fa26d464b037b125e0a11d}{m\+\_\+should\+Write\+To\+File}\hypertarget{classflashmatch_1_1FlashMatchingTool_a4463e9c421fa26d464b037b125e0a11d}{}\label{classflashmatch_1_1FlashMatchingTool_a4463e9c421fa26d464b037b125e0a11d}
 
 \begin{DoxyCompactList}\small\item\em If we should write interesting information to a root file. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a6a48a0c7ba51c6383080aec264c41ea0}{bool \hyperlink{classflashmatch_1_1FlashMatchingTool_a6a48a0c7ba51c6383080aec264c41ea0}{m\-\_\-has\-M\-C\-Neutrino}}\label{classflashmatch_1_1FlashMatchingTool_a6a48a0c7ba51c6383080aec264c41ea0}
+bool \hyperlink{classflashmatch_1_1FlashMatchingTool_a6a48a0c7ba51c6383080aec264c41ea0}{m\+\_\+has\+M\+C\+Neutrino}\hypertarget{classflashmatch_1_1FlashMatchingTool_a6a48a0c7ba51c6383080aec264c41ea0}{}\label{classflashmatch_1_1FlashMatchingTool_a6a48a0c7ba51c6383080aec264c41ea0}
 
-\begin{DoxyCompactList}\small\item\em If there is an M\-C neutrino we can use to get truth information. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_af55fe95515811281eaabe0b127b73e10}{int \hyperlink{classflashmatch_1_1FlashMatchingTool_af55fe95515811281eaabe0b127b73e10}{m\-\_\-nu\-Interaction\-Type}}\label{classflashmatch_1_1FlashMatchingTool_af55fe95515811281eaabe0b127b73e10}
+\begin{DoxyCompactList}\small\item\em If there is an MC neutrino we can use to get truth information. \end{DoxyCompactList}\item 
+int \hyperlink{classflashmatch_1_1FlashMatchingTool_af55fe95515811281eaabe0b127b73e10}{m\+\_\+nu\+Interaction\+Type}\hypertarget{classflashmatch_1_1FlashMatchingTool_af55fe95515811281eaabe0b127b73e10}{}\label{classflashmatch_1_1FlashMatchingTool_af55fe95515811281eaabe0b127b73e10}
 
-\begin{DoxyCompactList}\small\item\em The interaction type code from M\-C\-Truth. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_af149140ded5d54d8a16d57bcb7bcef9f}{int \hyperlink{classflashmatch_1_1FlashMatchingTool_af149140ded5d54d8a16d57bcb7bcef9f}{m\-\_\-nu\-C\-C\-N\-C}}\label{classflashmatch_1_1FlashMatchingTool_af149140ded5d54d8a16d57bcb7bcef9f}
+\begin{DoxyCompactList}\small\item\em The interaction type code from M\+C\+Truth. \end{DoxyCompactList}\item 
+int \hyperlink{classflashmatch_1_1FlashMatchingTool_af149140ded5d54d8a16d57bcb7bcef9f}{m\+\_\+nu\+C\+C\+NC}\hypertarget{classflashmatch_1_1FlashMatchingTool_af149140ded5d54d8a16d57bcb7bcef9f}{}\label{classflashmatch_1_1FlashMatchingTool_af149140ded5d54d8a16d57bcb7bcef9f}
 
 \begin{DoxyCompactList}\small\item\em Charged current or neutral current? \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a8fd18741587d821f70572d0accc70def}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_a8fd18741587d821f70572d0accc70def}{m\-\_\-nu\-Energy}}\label{classflashmatch_1_1FlashMatchingTool_a8fd18741587d821f70572d0accc70def}
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_a8fd18741587d821f70572d0accc70def}{m\+\_\+nu\+Energy}\hypertarget{classflashmatch_1_1FlashMatchingTool_a8fd18741587d821f70572d0accc70def}{}\label{classflashmatch_1_1FlashMatchingTool_a8fd18741587d821f70572d0accc70def}
 
 \begin{DoxyCompactList}\small\item\em The true neutrino energy. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a9b34756c62ad017bee3da0c5d19330d9}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_a9b34756c62ad017bee3da0c5d19330d9}{m\-\_\-lepton\-Energy}}\label{classflashmatch_1_1FlashMatchingTool_a9b34756c62ad017bee3da0c5d19330d9}
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_a9b34756c62ad017bee3da0c5d19330d9}{m\+\_\+lepton\+Energy}\hypertarget{classflashmatch_1_1FlashMatchingTool_a9b34756c62ad017bee3da0c5d19330d9}{}\label{classflashmatch_1_1FlashMatchingTool_a9b34756c62ad017bee3da0c5d19330d9}
 
-\begin{DoxyCompactList}\small\item\em The true energy of the lepton coming from the C\-C interaction. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_abb21852617cec0a27cda3462a0a11bff}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_abb21852617cec0a27cda3462a0a11bff}{m\-\_\-nu\-Vertex\-X}}\label{classflashmatch_1_1FlashMatchingTool_abb21852617cec0a27cda3462a0a11bff}
+\begin{DoxyCompactList}\small\item\em The true energy of the lepton coming from the CC interaction. \end{DoxyCompactList}\item 
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_abb21852617cec0a27cda3462a0a11bff}{m\+\_\+nu\+VertexX}\hypertarget{classflashmatch_1_1FlashMatchingTool_abb21852617cec0a27cda3462a0a11bff}{}\label{classflashmatch_1_1FlashMatchingTool_abb21852617cec0a27cda3462a0a11bff}
 
 \begin{DoxyCompactList}\small\item\em The true neutrino vertex X position. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a356775f0a1f6304ac89ed0d53d671f51}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_a356775f0a1f6304ac89ed0d53d671f51}{m\-\_\-nu\-Vertex\-Y}}\label{classflashmatch_1_1FlashMatchingTool_a356775f0a1f6304ac89ed0d53d671f51}
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_a356775f0a1f6304ac89ed0d53d671f51}{m\+\_\+nu\+VertexY}\hypertarget{classflashmatch_1_1FlashMatchingTool_a356775f0a1f6304ac89ed0d53d671f51}{}\label{classflashmatch_1_1FlashMatchingTool_a356775f0a1f6304ac89ed0d53d671f51}
 
 \begin{DoxyCompactList}\small\item\em The true neutrino vertex Y position. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a085ef14efb0bbfd5d6a2daa902f79c64}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_a085ef14efb0bbfd5d6a2daa902f79c64}{m\-\_\-nu\-Vertex\-Z}}\label{classflashmatch_1_1FlashMatchingTool_a085ef14efb0bbfd5d6a2daa902f79c64}
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_a085ef14efb0bbfd5d6a2daa902f79c64}{m\+\_\+nu\+VertexZ}\hypertarget{classflashmatch_1_1FlashMatchingTool_a085ef14efb0bbfd5d6a2daa902f79c64}{}\label{classflashmatch_1_1FlashMatchingTool_a085ef14efb0bbfd5d6a2daa902f79c64}
 
 \begin{DoxyCompactList}\small\item\em The true neutrino vertex Z position. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a6ea1d944847273ae6ce6f0ef5fd82497}{float \hyperlink{classflashmatch_1_1FlashMatchingTool_a6ea1d944847273ae6ce6f0ef5fd82497}{m\-\_\-nu\-Time}}\label{classflashmatch_1_1FlashMatchingTool_a6ea1d944847273ae6ce6f0ef5fd82497}
+float \hyperlink{classflashmatch_1_1FlashMatchingTool_a6ea1d944847273ae6ce6f0ef5fd82497}{m\+\_\+nu\+Time}\hypertarget{classflashmatch_1_1FlashMatchingTool_a6ea1d944847273ae6ce6f0ef5fd82497}{}\label{classflashmatch_1_1FlashMatchingTool_a6ea1d944847273ae6ce6f0ef5fd82497}
 
 \begin{DoxyCompactList}\small\item\em The time of the true neutrino interaction. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_abeeea00e4d39a887fb13874b788288c5}{int \hyperlink{classflashmatch_1_1FlashMatchingTool_abeeea00e4d39a887fb13874b788288c5}{m\-\_\-nu\-Pdg\-Code}}\label{classflashmatch_1_1FlashMatchingTool_abeeea00e4d39a887fb13874b788288c5}
+int \hyperlink{classflashmatch_1_1FlashMatchingTool_abeeea00e4d39a887fb13874b788288c5}{m\+\_\+nu\+Pdg\+Code}\hypertarget{classflashmatch_1_1FlashMatchingTool_abeeea00e4d39a887fb13874b788288c5}{}\label{classflashmatch_1_1FlashMatchingTool_abeeea00e4d39a887fb13874b788288c5}
 
 \begin{DoxyCompactList}\small\item\em The true neutrino pdg code. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a7ecd3035c9f9871021e0eed80db108e7}{std\-::string \hyperlink{classflashmatch_1_1FlashMatchingTool_a7ecd3035c9f9871021e0eed80db108e7}{m\-\_\-truth\-Label}}\label{classflashmatch_1_1FlashMatchingTool_a7ecd3035c9f9871021e0eed80db108e7}
+std\+::string \hyperlink{classflashmatch_1_1FlashMatchingTool_a7ecd3035c9f9871021e0eed80db108e7}{m\+\_\+truth\+Label}\hypertarget{classflashmatch_1_1FlashMatchingTool_a7ecd3035c9f9871021e0eed80db108e7}{}\label{classflashmatch_1_1FlashMatchingTool_a7ecd3035c9f9871021e0eed80db108e7}
 
-\begin{DoxyCompactList}\small\item\em The M\-C\-Truth producer label. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_ab68ae36a24edb32725cc8f6b5884cc93}{std\-::string \hyperlink{classflashmatch_1_1FlashMatchingTool_ab68ae36a24edb32725cc8f6b5884cc93}{m\-\_\-mc\-Particle\-Label}}\label{classflashmatch_1_1FlashMatchingTool_ab68ae36a24edb32725cc8f6b5884cc93}
+\begin{DoxyCompactList}\small\item\em The M\+C\+Truth producer label. \end{DoxyCompactList}\item 
+std\+::string \hyperlink{classflashmatch_1_1FlashMatchingTool_ab68ae36a24edb32725cc8f6b5884cc93}{m\+\_\+mc\+Particle\+Label}\hypertarget{classflashmatch_1_1FlashMatchingTool_ab68ae36a24edb32725cc8f6b5884cc93}{}\label{classflashmatch_1_1FlashMatchingTool_ab68ae36a24edb32725cc8f6b5884cc93}
 
-\begin{DoxyCompactList}\small\item\em The M\-C\-Particle producer label. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a8dff6789389dc7519c006616d1dc80ea}{std\-::string \hyperlink{classflashmatch_1_1FlashMatchingTool_a8dff6789389dc7519c006616d1dc80ea}{m\-\_\-hit\-Label}}\label{classflashmatch_1_1FlashMatchingTool_a8dff6789389dc7519c006616d1dc80ea}
+\begin{DoxyCompactList}\small\item\em The M\+C\+Particle producer label. \end{DoxyCompactList}\item 
+std\+::string \hyperlink{classflashmatch_1_1FlashMatchingTool_a8dff6789389dc7519c006616d1dc80ea}{m\+\_\+hit\+Label}\hypertarget{classflashmatch_1_1FlashMatchingTool_a8dff6789389dc7519c006616d1dc80ea}{}\label{classflashmatch_1_1FlashMatchingTool_a8dff6789389dc7519c006616d1dc80ea}
 
 \begin{DoxyCompactList}\small\item\em The Hit producer label. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_aab819e6949faa62cc05cc990f062db9b}{std\-::string \hyperlink{classflashmatch_1_1FlashMatchingTool_aab819e6949faa62cc05cc990f062db9b}{m\-\_\-backtrack\-Label}}\label{classflashmatch_1_1FlashMatchingTool_aab819e6949faa62cc05cc990f062db9b}
+std\+::string \hyperlink{classflashmatch_1_1FlashMatchingTool_aab819e6949faa62cc05cc990f062db9b}{m\+\_\+backtrack\+Label}\hypertarget{classflashmatch_1_1FlashMatchingTool_aab819e6949faa62cc05cc990f062db9b}{}\label{classflashmatch_1_1FlashMatchingTool_aab819e6949faa62cc05cc990f062db9b}
 
-\begin{DoxyCompactList}\small\item\em The Hit -\/$>$ M\-C\-Particle producer label. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a17f8d293d8a8a47a3a18782c1975cca5}{\hyperlink{classflashmatch_1_1FlashMatchingTool_1_1OutputEvent}{Output\-Event} \hyperlink{classflashmatch_1_1FlashMatchingTool_a17f8d293d8a8a47a3a18782c1975cca5}{m\-\_\-output\-Event}}\label{classflashmatch_1_1FlashMatchingTool_a17f8d293d8a8a47a3a18782c1975cca5}
+\begin{DoxyCompactList}\small\item\em The Hit -\/$>$ M\+C\+Particle producer label. \end{DoxyCompactList}\item 
+\hyperlink{classflashmatch_1_1FlashMatchingTool_1_1OutputEvent}{Output\+Event} \hyperlink{classflashmatch_1_1FlashMatchingTool_a17f8d293d8a8a47a3a18782c1975cca5}{m\+\_\+output\+Event}\hypertarget{classflashmatch_1_1FlashMatchingTool_a17f8d293d8a8a47a3a18782c1975cca5}{}\label{classflashmatch_1_1FlashMatchingTool_a17f8d293d8a8a47a3a18782c1975cca5}
 
 \begin{DoxyCompactList}\small\item\em The output event whose address is used by the output branch. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a5143114bf5396507981d5beb51cd19ff}{\hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate}{Flash\-Candidate} \hyperlink{classflashmatch_1_1FlashMatchingTool_a5143114bf5396507981d5beb51cd19ff}{m\-\_\-output\-Flash}}\label{classflashmatch_1_1FlashMatchingTool_a5143114bf5396507981d5beb51cd19ff}
+\hyperlink{classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate}{Flash\+Candidate} \hyperlink{classflashmatch_1_1FlashMatchingTool_a5143114bf5396507981d5beb51cd19ff}{m\+\_\+output\+Flash}\hypertarget{classflashmatch_1_1FlashMatchingTool_a5143114bf5396507981d5beb51cd19ff}{}\label{classflashmatch_1_1FlashMatchingTool_a5143114bf5396507981d5beb51cd19ff}
 
 \begin{DoxyCompactList}\small\item\em The output flash whose address is used by the output branch. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a1cfed4e60733015c5db55b7683f83fc7}{\hyperlink{classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate}{Slice\-Candidate} \hyperlink{classflashmatch_1_1FlashMatchingTool_a1cfed4e60733015c5db55b7683f83fc7}{m\-\_\-output\-Slice}}\label{classflashmatch_1_1FlashMatchingTool_a1cfed4e60733015c5db55b7683f83fc7}
+\hyperlink{classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate}{Slice\+Candidate} \hyperlink{classflashmatch_1_1FlashMatchingTool_a1cfed4e60733015c5db55b7683f83fc7}{m\+\_\+output\+Slice}\hypertarget{classflashmatch_1_1FlashMatchingTool_a1cfed4e60733015c5db55b7683f83fc7}{}\label{classflashmatch_1_1FlashMatchingTool_a1cfed4e60733015c5db55b7683f83fc7}
 
 \begin{DoxyCompactList}\small\item\em The output slice whose address is used by the output branch. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a34a8387456b15a105daac14517040d4d}{T\-Tree $\ast$ \hyperlink{classflashmatch_1_1FlashMatchingTool_a34a8387456b15a105daac14517040d4d}{m\-\_\-p\-Flash\-Tree}}\label{classflashmatch_1_1FlashMatchingTool_a34a8387456b15a105daac14517040d4d}
+T\+Tree $\ast$ \hyperlink{classflashmatch_1_1FlashMatchingTool_a34a8387456b15a105daac14517040d4d}{m\+\_\+p\+Flash\+Tree}\hypertarget{classflashmatch_1_1FlashMatchingTool_a34a8387456b15a105daac14517040d4d}{}\label{classflashmatch_1_1FlashMatchingTool_a34a8387456b15a105daac14517040d4d}
 
 \begin{DoxyCompactList}\small\item\em The flash tree. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Constructor \& Destructor Documentation}
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a8c6b08ba5404a69ad5fc984eaf8a1eba}{\index{flashmatch\-::\-Flash\-Matching\-Tool@{flashmatch\-::\-Flash\-Matching\-Tool}!Flash\-Matching\-Tool@{Flash\-Matching\-Tool}}
-\index{Flash\-Matching\-Tool@{Flash\-Matching\-Tool}!flashmatch::FlashMatchingTool@{flashmatch\-::\-Flash\-Matching\-Tool}}
-\subsubsection[{Flash\-Matching\-Tool}]{\setlength{\rightskip}{0pt plus 5cm}flashmatch\-::\-Flash\-Matching\-Tool\-::\-Flash\-Matching\-Tool (
+\index{flashmatch\+::\+Flash\+Matching\+Tool@{flashmatch\+::\+Flash\+Matching\+Tool}!Flash\+Matching\+Tool@{Flash\+Matching\+Tool}}
+\index{Flash\+Matching\+Tool@{Flash\+Matching\+Tool}!flashmatch\+::\+Flash\+Matching\+Tool@{flashmatch\+::\+Flash\+Matching\+Tool}}
+\subsubsection[{\texorpdfstring{Flash\+Matching\+Tool(const fhicl\+::\+Parameter\+Set \&pset)}{FlashMatchingTool(const fhicl::ParameterSet &pset)}}]{\setlength{\rightskip}{0pt plus 5cm}flashmatch\+::\+Flash\+Matching\+Tool\+::\+Flash\+Matching\+Tool (
 \begin{DoxyParamCaption}
-\item[{const fhicl\-::\-Parameter\-Set \&}]{pset}
+\item[{const fhicl\+::\+Parameter\+Set \&}]{pset}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}}\label{classflashmatch_1_1FlashMatchingTool_a8c6b08ba5404a69ad5fc984eaf8a1eba}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}\hypertarget{classflashmatch_1_1FlashMatchingTool_a8c6b08ba5404a69ad5fc984eaf8a1eba}{}\label{classflashmatch_1_1FlashMatchingTool_a8c6b08ba5404a69ad5fc984eaf8a1eba}
 
 
 Default constructor. 
 
 
 \begin{DoxyParams}{Parameters}
-{\em pset} & F\-Hi\-C\-L parameter set \\
+{\em pset} & F\+Hi\+CL parameter set \\
 \hline
 \end{DoxyParams}
 
 
 \subsection{Member Function Documentation}
-\hypertarget{classflashmatch_1_1FlashMatchingTool_aed79e484b39c5d02e84714b45c68bf7f}{\index{flashmatch\-::\-Flash\-Matching\-Tool@{flashmatch\-::\-Flash\-Matching\-Tool}!Classify\-Slice@{Classify\-Slice}}
-\index{Classify\-Slice@{Classify\-Slice}!flashmatch::FlashMatchingTool@{flashmatch\-::\-Flash\-Matching\-Tool}}
-\subsubsection[{Classify\-Slice}]{\setlength{\rightskip}{0pt plus 5cm}float flashmatch\-::\-Flash\-Matching\-Tool\-::\-Classify\-Slice (
+\index{flashmatch\+::\+Flash\+Matching\+Tool@{flashmatch\+::\+Flash\+Matching\+Tool}!Classify\+Slice@{Classify\+Slice}}
+\index{Classify\+Slice@{Classify\+Slice}!flashmatch\+::\+Flash\+Matching\+Tool@{flashmatch\+::\+Flash\+Matching\+Tool}}
+\subsubsection[{\texorpdfstring{Classify\+Slice(const art\+::\+Event \&evt, const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+P\+F\+Particle $>$ $>$ \&pfp\+\_\+v, const std\+::vector$<$ std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Space\+Point $>$ $>$ $>$ \&spacepoint\+\_\+v\+\_\+v, const std\+::vector$<$ std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$ $>$ $>$ \&hit\+\_\+v\+\_\+v, std\+::vector$<$ float $>$ \&recospectrum, std\+::vector$<$ float $>$ \&hypospectrum)}{ClassifySlice(const art::Event &evt, const std::vector< art::Ptr< recob::PFParticle > > &pfp_v, const std::vector< std::vector< art::Ptr< recob::SpacePoint > > > &spacepoint_v_v, const std::vector< std::vector< art::Ptr< recob::Hit > > > &hit_v_v, std::vector< float > &recospectrum, std::vector< float > &hypospectrum)}}]{\setlength{\rightskip}{0pt plus 5cm}float flashmatch\+::\+Flash\+Matching\+Tool\+::\+Classify\+Slice (
 \begin{DoxyParamCaption}
-\item[{const art\-::\-Event \&}]{evt, }
-\item[{const std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-P\-F\-Particle $>$ $>$ \&}]{pfp\-\_\-v, }
-\item[{const std\-::vector$<$ std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Space\-Point $>$ $>$ $>$ \&}]{spacepoint\-\_\-v\-\_\-v, }
-\item[{const std\-::vector$<$ std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Hit $>$ $>$ $>$ \&}]{hit\-\_\-v\-\_\-v, }
-\item[{std\-::vector$<$ float $>$ \&}]{recospectrum, }
-\item[{std\-::vector$<$ float $>$ \&}]{hypospectrum}
+\item[{const art\+::\+Event \&}]{evt, }
+\item[{const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+P\+F\+Particle $>$ $>$ \&}]{pfp\+\_\+v, }
+\item[{const std\+::vector$<$ std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Space\+Point $>$ $>$ $>$ \&}]{spacepoint\+\_\+v\+\_\+v, }
+\item[{const std\+::vector$<$ std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$ $>$ $>$ \&}]{hit\+\_\+v\+\_\+v, }
+\item[{std\+::vector$<$ float $>$ \&}]{recospectrum, }
+\item[{std\+::vector$<$ float $>$ \&}]{hypospectrum}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [virtual]}}}\label{classflashmatch_1_1FlashMatchingTool_aed79e484b39c5d02e84714b45c68bf7f}
+)\hspace{0.3cm}{\ttfamily [virtual]}}\hypertarget{classflashmatch_1_1FlashMatchingTool_aed79e484b39c5d02e84714b45c68bf7f}{}\label{classflashmatch_1_1FlashMatchingTool_aed79e484b39c5d02e84714b45c68bf7f}
 
 
 Classify slices as neutrino or cosmic. 
@@ -203,33 +200,33 @@ Classify slices as neutrino or cosmic.
 \end{DoxyParams}
 
 
-Implements \hyperlink{classflashmatch_1_1FlashMatchingToolBase_a79d9ba4fe96a0b887631c8ae62f7cbcd}{flashmatch\-::\-Flash\-Matching\-Tool\-Base}.
+Implements \hyperlink{classflashmatch_1_1FlashMatchingToolBase_a79d9ba4fe96a0b887631c8ae62f7cbcd}{flashmatch\+::\+Flash\+Matching\+Tool\+Base}.
 
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a55eb0441a37240344fc893857aabda28}{\index{flashmatch\-::\-Flash\-Matching\-Tool@{flashmatch\-::\-Flash\-Matching\-Tool}!Get\-Beam\-Flash@{Get\-Beam\-Flash}}
-\index{Get\-Beam\-Flash@{Get\-Beam\-Flash}!flashmatch::FlashMatchingTool@{flashmatch\-::\-Flash\-Matching\-Tool}}
-\subsubsection[{Get\-Beam\-Flash}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Flash\-Candidate}\& flashmatch\-::\-Flash\-Matching\-Tool\-::\-Get\-Beam\-Flash (
+\index{flashmatch\+::\+Flash\+Matching\+Tool@{flashmatch\+::\+Flash\+Matching\+Tool}!Get\+Beam\+Flash@{Get\+Beam\+Flash}}
+\index{Get\+Beam\+Flash@{Get\+Beam\+Flash}!flashmatch\+::\+Flash\+Matching\+Tool@{flashmatch\+::\+Flash\+Matching\+Tool}}
+\subsubsection[{\texorpdfstring{Get\+Beam\+Flash(\+Flash\+Candidate\+Vector \&flash\+Candidates)}{GetBeamFlash(FlashCandidateVector &flashCandidates)}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Flash\+Candidate}\& flashmatch\+::\+Flash\+Matching\+Tool\+::\+Get\+Beam\+Flash (
 \begin{DoxyParamCaption}
-\item[{Flash\-Candidate\-Vector \&}]{flash\-Candidates}
+\item[{Flash\+Candidate\+Vector \&}]{flash\+Candidates}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}}\label{classflashmatch_1_1FlashMatchingTool_a55eb0441a37240344fc893857aabda28}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}\hypertarget{classflashmatch_1_1FlashMatchingTool_a55eb0441a37240344fc893857aabda28}{}\label{classflashmatch_1_1FlashMatchingTool_a55eb0441a37240344fc893857aabda28}
 Try to find the brightest flash with sufficent photoelectons that is in time with the beam
 
 
 \begin{DoxyParams}{Parameters}
-{\em flash\-Candidates} & the input vector of slice candidates\\
+{\em flash\+Candidates} & the input vector of slice candidates\\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 the beam flash 
 \end{DoxyReturn}
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a68229bfc94d94e91513fefe60a3b43d6}{\index{flashmatch\-::\-Flash\-Matching\-Tool@{flashmatch\-::\-Flash\-Matching\-Tool}!Get\-Flash\-Candidates@{Get\-Flash\-Candidates}}
-\index{Get\-Flash\-Candidates@{Get\-Flash\-Candidates}!flashmatch::FlashMatchingTool@{flashmatch\-::\-Flash\-Matching\-Tool}}
-\subsubsection[{Get\-Flash\-Candidates}]{\setlength{\rightskip}{0pt plus 5cm}void flashmatch\-::\-Flash\-Matching\-Tool\-::\-Get\-Flash\-Candidates (
+\index{flashmatch\+::\+Flash\+Matching\+Tool@{flashmatch\+::\+Flash\+Matching\+Tool}!Get\+Flash\+Candidates@{Get\+Flash\+Candidates}}
+\index{Get\+Flash\+Candidates@{Get\+Flash\+Candidates}!flashmatch\+::\+Flash\+Matching\+Tool@{flashmatch\+::\+Flash\+Matching\+Tool}}
+\subsubsection[{\texorpdfstring{Get\+Flash\+Candidates(const art\+::\+Event \&event, Flash\+Candidate\+Vector \&flash\+Candidates)}{GetFlashCandidates(const art::Event &event, FlashCandidateVector &flashCandidates)}}]{\setlength{\rightskip}{0pt plus 5cm}void flashmatch\+::\+Flash\+Matching\+Tool\+::\+Get\+Flash\+Candidates (
 \begin{DoxyParamCaption}
-\item[{const art\-::\-Event \&}]{event, }
-\item[{Flash\-Candidate\-Vector \&}]{flash\-Candidates}
+\item[{const art\+::\+Event \&}]{event, }
+\item[{Flash\+Candidate\+Vector \&}]{flash\+Candidates}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}}\label{classflashmatch_1_1FlashMatchingTool_a68229bfc94d94e91513fefe60a3b43d6}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}\hypertarget{classflashmatch_1_1FlashMatchingTool_a68229bfc94d94e91513fefe60a3b43d6}{}\label{classflashmatch_1_1FlashMatchingTool_a68229bfc94d94e91513fefe60a3b43d6}
 
 
 Get the candidate flashes in the event. 
@@ -238,30 +235,30 @@ Get the candidate flashes in the event.
 \begin{DoxyParams}{Parameters}
 {\em event} & the art event \\
 \hline
-{\em flash\-Candidates} & the output vector of flash candidates \\
+{\em flash\+Candidates} & the output vector of flash candidates \\
 \hline
 \end{DoxyParams}
-\hypertarget{classflashmatch_1_1FlashMatchingTool_a64dcefa0f3f8e95d51dcb0aadbc711c8}{\index{flashmatch\-::\-Flash\-Matching\-Tool@{flashmatch\-::\-Flash\-Matching\-Tool}!Get\-Slice\-Score@{Get\-Slice\-Score}}
-\index{Get\-Slice\-Score@{Get\-Slice\-Score}!flashmatch::FlashMatchingTool@{flashmatch\-::\-Flash\-Matching\-Tool}}
-\subsubsection[{Get\-Slice\-Score}]{\setlength{\rightskip}{0pt plus 5cm}float flashmatch\-::\-Flash\-Matching\-Tool\-::\-Get\-Slice\-Score (
+\index{flashmatch\+::\+Flash\+Matching\+Tool@{flashmatch\+::\+Flash\+Matching\+Tool}!Get\+Slice\+Score@{Get\+Slice\+Score}}
+\index{Get\+Slice\+Score@{Get\+Slice\+Score}!flashmatch\+::\+Flash\+Matching\+Tool@{flashmatch\+::\+Flash\+Matching\+Tool}}
+\subsubsection[{\texorpdfstring{Get\+Slice\+Score(\+Flash\+Candidate \&beam\+Flash, Slice\+Candidate \&slice)}{GetSliceScore(FlashCandidate &beamFlash, SliceCandidate &slice)}}]{\setlength{\rightskip}{0pt plus 5cm}float flashmatch\+::\+Flash\+Matching\+Tool\+::\+Get\+Slice\+Score (
 \begin{DoxyParamCaption}
-\item[{{\bf Flash\-Candidate} \&}]{beam\-Flash, }
-\item[{{\bf Slice\-Candidate} \&}]{slice}
+\item[{{\bf Flash\+Candidate} \&}]{beam\+Flash, }
+\item[{{\bf Slice\+Candidate} \&}]{slice}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}}\label{classflashmatch_1_1FlashMatchingTool_a64dcefa0f3f8e95d51dcb0aadbc711c8}
+)\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [private]}}\hypertarget{classflashmatch_1_1FlashMatchingTool_a64dcefa0f3f8e95d51dcb0aadbc711c8}{}\label{classflashmatch_1_1FlashMatchingTool_a64dcefa0f3f8e95d51dcb0aadbc711c8}
 
 
 get the score 
 
 
 \begin{DoxyParams}{Parameters}
-{\em beam\-Flash} & the beam flash \\
+{\em beam\+Flash} & the beam flash \\
 \hline
-{\em slice\-Candidates} & the neutrino slice candidates \\
+{\em slice\+Candidates} & the neutrino slice candidates \\
 \hline
 \end{DoxyParams}
 
 
-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-/home/travis/build/ubneutrinos/searchingfornues/\-Flash\-Matching/Flash\-Matching\-Tool\-\_\-tool.\-cc\end{DoxyCompactItemize}
+/home/travis/build/ubneutrinos/searchingfornues/\+Flash\+Matching/Flash\+Matching\+Tool\+\_\+tool.\+cc\end{DoxyCompactItemize}

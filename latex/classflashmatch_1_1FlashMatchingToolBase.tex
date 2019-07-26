@@ -1,16 +1,15 @@
-\hypertarget{classflashmatch_1_1FlashMatchingToolBase}{\section{flashmatch\-:\-:Flash\-Matching\-Tool\-Base Class Reference}
-\label{classflashmatch_1_1FlashMatchingToolBase}\index{flashmatch\-::\-Flash\-Matching\-Tool\-Base@{flashmatch\-::\-Flash\-Matching\-Tool\-Base}}
-}
+\hypertarget{classflashmatch_1_1FlashMatchingToolBase}{}\section{flashmatch\+:\+:Flash\+Matching\+Tool\+Base Class Reference}
+\label{classflashmatch_1_1FlashMatchingToolBase}\index{flashmatch\+::\+Flash\+Matching\+Tool\+Base@{flashmatch\+::\+Flash\+Matching\+Tool\+Base}}
 
 
-Neutrino I\-D tool that selects the most likely neutrino slice using P\-M\-T information.  
+Neutrino ID tool that selects the most likely neutrino slice using P\+MT information.  
 
 
 
 
-{\ttfamily \#include $<$Flash\-Matching\-Tool\-Base\-\_\-tool.\-h$>$}
+{\ttfamily \#include $<$Flash\+Matching\+Tool\+Base\+\_\+tool.\+h$>$}
 
-Inheritance diagram for flashmatch\-:\-:Flash\-Matching\-Tool\-Base\-:\begin{figure}[H]
+Inheritance diagram for flashmatch\+:\+:Flash\+Matching\+Tool\+Base\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
 \includegraphics[height=2.000000cm]{classflashmatch_1_1FlashMatchingToolBase}
@@ -19,32 +18,32 @@ Inheritance diagram for flashmatch\-:\-:Flash\-Matching\-Tool\-Base\-:\begin{fig
 \subsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\hypertarget{classflashmatch_1_1FlashMatchingToolBase_a8133f8cf2289dd17d0a05ba2a3c02da4}{float {\bfseries Classify\-Slice} ()}\label{classflashmatch_1_1FlashMatchingToolBase_a8133f8cf2289dd17d0a05ba2a3c02da4}
+float {\bfseries Classify\+Slice} ()\hypertarget{classflashmatch_1_1FlashMatchingToolBase_a8133f8cf2289dd17d0a05ba2a3c02da4}{}\label{classflashmatch_1_1FlashMatchingToolBase_a8133f8cf2289dd17d0a05ba2a3c02da4}
 
 \item 
-virtual float \hyperlink{classflashmatch_1_1FlashMatchingToolBase_a79d9ba4fe96a0b887631c8ae62f7cbcd}{Classify\-Slice} (const art\-::\-Event \&evt, const std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-P\-F\-Particle $>$ $>$ \&pfp\-\_\-v, const std\-::vector$<$ std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Space\-Point $>$ $>$ $>$ \&spacepoint\-\_\-v\-\_\-v, const std\-::vector$<$ std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Hit $>$ $>$ $>$ \&hit\-\_\-v\-\_\-v, std\-::vector$<$ float $>$ \&recospectrum, std\-::vector$<$ float $>$ \&hypospectrum)=0
+virtual float \hyperlink{classflashmatch_1_1FlashMatchingToolBase_a79d9ba4fe96a0b887631c8ae62f7cbcd}{Classify\+Slice} (const art\+::\+Event \&evt, const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+P\+F\+Particle $>$ $>$ \&pfp\+\_\+v, const std\+::vector$<$ std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Space\+Point $>$ $>$ $>$ \&spacepoint\+\_\+v\+\_\+v, const std\+::vector$<$ std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$ $>$ $>$ \&hit\+\_\+v\+\_\+v, std\+::vector$<$ float $>$ \&recospectrum, std\+::vector$<$ float $>$ \&hypospectrum)=0
 \begin{DoxyCompactList}\small\item\em Classify slices as neutrino or cosmic. \end{DoxyCompactList}\item 
-\hypertarget{classflashmatch_1_1FlashMatchingToolBase_a3fc65b46bbcebf7d47ead748ef6f5b01}{virtual float {\bfseries Classify\-Track} (const art\-::\-Event \&evt, const std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Space\-Point $>$ $>$ \&spacepoint\-\_\-v, const std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Hit $>$ $>$ \&hit\-\_\-v, std\-::vector$<$ float $>$ \&recospectrum, std\-::vector$<$ float $>$ \&hypospectrum)=0}\label{classflashmatch_1_1FlashMatchingToolBase_a3fc65b46bbcebf7d47ead748ef6f5b01}
+virtual float {\bfseries Classify\+Track} (const art\+::\+Event \&evt, const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Space\+Point $>$ $>$ \&spacepoint\+\_\+v, const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$ $>$ \&hit\+\_\+v, std\+::vector$<$ float $>$ \&recospectrum, std\+::vector$<$ float $>$ \&hypospectrum)=0\hypertarget{classflashmatch_1_1FlashMatchingToolBase_a3fc65b46bbcebf7d47ead748ef6f5b01}{}\label{classflashmatch_1_1FlashMatchingToolBase_a3fc65b46bbcebf7d47ead748ef6f5b01}
 
 \end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
-Neutrino I\-D tool that selects the most likely neutrino slice using P\-M\-T information. 
+Neutrino ID tool that selects the most likely neutrino slice using P\+MT information. 
 
 \subsection{Member Function Documentation}
-\hypertarget{classflashmatch_1_1FlashMatchingToolBase_a79d9ba4fe96a0b887631c8ae62f7cbcd}{\index{flashmatch\-::\-Flash\-Matching\-Tool\-Base@{flashmatch\-::\-Flash\-Matching\-Tool\-Base}!Classify\-Slice@{Classify\-Slice}}
-\index{Classify\-Slice@{Classify\-Slice}!flashmatch::FlashMatchingToolBase@{flashmatch\-::\-Flash\-Matching\-Tool\-Base}}
-\subsubsection[{Classify\-Slice}]{\setlength{\rightskip}{0pt plus 5cm}virtual float flashmatch\-::\-Flash\-Matching\-Tool\-Base\-::\-Classify\-Slice (
+\index{flashmatch\+::\+Flash\+Matching\+Tool\+Base@{flashmatch\+::\+Flash\+Matching\+Tool\+Base}!Classify\+Slice@{Classify\+Slice}}
+\index{Classify\+Slice@{Classify\+Slice}!flashmatch\+::\+Flash\+Matching\+Tool\+Base@{flashmatch\+::\+Flash\+Matching\+Tool\+Base}}
+\subsubsection[{\texorpdfstring{Classify\+Slice(const art\+::\+Event \&evt, const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+P\+F\+Particle $>$ $>$ \&pfp\+\_\+v, const std\+::vector$<$ std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Space\+Point $>$ $>$ $>$ \&spacepoint\+\_\+v\+\_\+v, const std\+::vector$<$ std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$ $>$ $>$ \&hit\+\_\+v\+\_\+v, std\+::vector$<$ float $>$ \&recospectrum, std\+::vector$<$ float $>$ \&hypospectrum)=0}{ClassifySlice(const art::Event &evt, const std::vector< art::Ptr< recob::PFParticle > > &pfp_v, const std::vector< std::vector< art::Ptr< recob::SpacePoint > > > &spacepoint_v_v, const std::vector< std::vector< art::Ptr< recob::Hit > > > &hit_v_v, std::vector< float > &recospectrum, std::vector< float > &hypospectrum)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual float flashmatch\+::\+Flash\+Matching\+Tool\+Base\+::\+Classify\+Slice (
 \begin{DoxyParamCaption}
-\item[{const art\-::\-Event \&}]{evt, }
-\item[{const std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-P\-F\-Particle $>$ $>$ \&}]{pfp\-\_\-v, }
-\item[{const std\-::vector$<$ std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Space\-Point $>$ $>$ $>$ \&}]{spacepoint\-\_\-v\-\_\-v, }
-\item[{const std\-::vector$<$ std\-::vector$<$ art\-::\-Ptr$<$ recob\-::\-Hit $>$ $>$ $>$ \&}]{hit\-\_\-v\-\_\-v, }
-\item[{std\-::vector$<$ float $>$ \&}]{recospectrum, }
-\item[{std\-::vector$<$ float $>$ \&}]{hypospectrum}
+\item[{const art\+::\+Event \&}]{evt, }
+\item[{const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+P\+F\+Particle $>$ $>$ \&}]{pfp\+\_\+v, }
+\item[{const std\+::vector$<$ std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Space\+Point $>$ $>$ $>$ \&}]{spacepoint\+\_\+v\+\_\+v, }
+\item[{const std\+::vector$<$ std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$ $>$ $>$ \&}]{hit\+\_\+v\+\_\+v, }
+\item[{std\+::vector$<$ float $>$ \&}]{recospectrum, }
+\item[{std\+::vector$<$ float $>$ \&}]{hypospectrum}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [pure virtual]}}}\label{classflashmatch_1_1FlashMatchingToolBase_a79d9ba4fe96a0b887631c8ae62f7cbcd}
+)\hspace{0.3cm}{\ttfamily [pure virtual]}}\hypertarget{classflashmatch_1_1FlashMatchingToolBase_a79d9ba4fe96a0b887631c8ae62f7cbcd}{}\label{classflashmatch_1_1FlashMatchingToolBase_a79d9ba4fe96a0b887631c8ae62f7cbcd}
 
 
 Classify slices as neutrino or cosmic. 
@@ -58,10 +57,10 @@ Classify slices as neutrino or cosmic.
 \end{DoxyParams}
 
 
-Implemented in \hyperlink{classflashmatch_1_1FlashMatchingTool_aed79e484b39c5d02e84714b45c68bf7f}{flashmatch\-::\-Flash\-Matching\-Tool}.
+Implemented in \hyperlink{classflashmatch_1_1FlashMatchingTool_aed79e484b39c5d02e84714b45c68bf7f}{flashmatch\+::\+Flash\+Matching\+Tool}.
 
 
 
-The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-/home/travis/build/ubneutrinos/searchingfornues/\-Flash\-Matching/Flash\-Matching\-Tool\-Base\-\_\-tool.\-h\end{DoxyCompactItemize}
+/home/travis/build/ubneutrinos/searchingfornues/\+Flash\+Matching/Flash\+Matching\+Tool\+Base\+\_\+tool.\+h\end{DoxyCompactItemize}
