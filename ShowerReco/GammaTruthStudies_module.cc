@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
-// Class:       ProtonHitPurity
+// Class:       ProtonTruthStudies
 // Plugin Type: analyzer (art v3_01_02)
-// File:        ProtonHitPurity_module.cc
+// File:        ProtonTruthStudies_module.cc
 //
 // Generated at Sun Jun 23 07:31:37 2019 by David Caratelli using cetskelgen
 // from cetlib version v3_05_01.
@@ -32,20 +32,20 @@
 #include "art/Framework/Services/Optional/TFileService.h"
 #include "TTree.h"
 
-class ProtonHitPurity;
+class ProtonTruthStudies;
 
 
-class ProtonHitPurity : public art::EDAnalyzer {
+class ProtonTruthStudies : public art::EDAnalyzer {
 public:
-  explicit ProtonHitPurity(fhicl::ParameterSet const& p);
+  explicit ProtonTruthStudies(fhicl::ParameterSet const& p);
   // The compiler-generated destructor is fine for non-base
   // classes without bare pointers or other resource use.
 
   // Plugins should not be copied or assigned.
-  ProtonHitPurity(ProtonHitPurity const&) = delete;
-  ProtonHitPurity(ProtonHitPurity&&) = delete;
-  ProtonHitPurity& operator=(ProtonHitPurity const&) = delete;
-  ProtonHitPurity& operator=(ProtonHitPurity&&) = delete;
+  ProtonTruthStudies(ProtonTruthStudies const&) = delete;
+  ProtonTruthStudies(ProtonTruthStudies&&) = delete;
+  ProtonTruthStudies& operator=(ProtonTruthStudies const&) = delete;
+  ProtonTruthStudies& operator=(ProtonTruthStudies&&) = delete;
 
   // Required functions.
   void analyze(art::Event const& e) override;
@@ -57,7 +57,7 @@ public:
 private:
 
   // Declare member data here.
-  art::InputTag fClusterproducer, fHTproducer, fHitproducer, fMCPproducer, fPFPproducer, fSHRproducer;
+  art::InputTag fClusterproducer, fHTproducer, fHitproducer, fMCSproducer, fPFPproducer, fSHRproducer;
 
   /**
    * @brief function to builf a map linking PFParticle index to Self() attribute
@@ -86,25 +86,9 @@ private:
   // TTree
   TTree* _tree;
   int _evt, _sub, _run;
-  int _nhit;
-  int _plane;
-  float _kemin, _kemax;
-  float _charge;
-  float _purity;
-  float _protonenergy;
-  float _shrdot;
-  float _shrdist;
-  float _shrenergy;
-  int _nshr;
-  int _ntrk;
-  float _trkshrdist;
-  float _trkshrdot;
-  int _nclose;
-  float _clus_tmin, _clus_tmax;
-  float _shr_dir_x, _shr_dir_y, _shr_dir_z;
-  float _shr_vtx_x, _shr_vtx_y, _shr_vtx_z;
-  float _trk_vtx_x, _trk_vtx_y, _trk_vtx_z;
-  float _qmatched, _iou;
+  float _energy1, _energy2; // proton KE [MeV]
+  float _pfppur1, _clspur1, _pfppur2, _clspur2;
+  int _hitpfp1, _hitpfp2, _hitcls1, _hitcls2;
 
   void ResetTTree();
 
@@ -127,26 +111,20 @@ private:
   
 };
 
-void ProtonHitPurity::ResetTTree() {
+void ProtonTruthStudies::ResetTTree() {
 
-  _nhit = 0;
-  _nshr = 0;
-  _ntrk = 0;
-  _plane = -1;
-  _charge = 0;
-  _purity = -1;
-  _shrdot = -1;
-  _shrdist = -1;
-  _shrenergy = 0;
-  _protonenergy = 0;
-  _nclose = 0;
-  _iou = 999;
-  _qmatched = -1;
+  _evt = 0;
+  _sub = 0;
+  _run = 0;
+  _energy1 = _energy2 = 0;
+  _clspur1 = _clspur2 = 0;
+  _hitpfp1 = _hitpfp2 = 0;
+  _pfppur1 = _pfppur2 = 0;
 
 }
 
 
-ProtonHitPurity::ProtonHitPurity(fhicl::ParameterSet const& p)
+ProtonTruthStudies::ProtonTruthStudies(fhicl::ParameterSet const& p)
   : EDAnalyzer{p}  // ,
   // More initializers here.
 {
@@ -154,7 +132,7 @@ ProtonHitPurity::ProtonHitPurity(fhicl::ParameterSet const& p)
   fClusterproducer = p.get< art::InputTag > ("Clusterproducer"  );
   fHTproducer      = p.get< art::InputTag > ("HTproducer","gaushitTruthMatch");
   fHitproducer     = p.get< art::InputTag > ("Hitproducer");
-  fMCPproducer     = p.get< art::InputTag > ("MCPproducer");
+  fMCSproducer     = p.get< art::InputTag > ("MCSproducer");
   fPFPproducer     = p.get< art::InputTag > ("PFPproducer");
   fSHRproducer     = p.get< art::InputTag > ("SHRproducer");
 
@@ -163,25 +141,16 @@ ProtonHitPurity::ProtonHitPurity(fhicl::ParameterSet const& p)
   _tree->Branch("evt",&_evt,"evt/I");
   _tree->Branch("sub",&_sub,"sub/I");
   _tree->Branch("run",&_run,"run/I");
-  _tree->Branch("nhit",&_nhit,"nhit/I");
-  _tree->Branch("nshr",&_nshr,"nshr/I");
-  _tree->Branch("ntrk",&_ntrk,"ntrk/I");
-  _tree->Branch("kemin",&_kemin,"kemin");
-  _tree->Branch("kemax",&_kemax,"kemax");
-  _tree->Branch("nclose",&_nclose,"nclose/I");
-  _tree->Branch("plane",&_plane,"plane/I");
-  _tree->Branch("charge",&_charge,"charge/F");
-  _tree->Branch("purity",&_purity,"purity/F");
-  _tree->Branch("shrdot",&_shrdot,"shrdot/F");
-  _tree->Branch("shrdist",&_shrdist,"shrdist/F");
-  _tree->Branch("trkshrdist",&_trkshrdist,"trkshrdist/F");
-  _tree->Branch("trkshrdot" ,&_trkshrdot ,"trkshrdot/F" );
-  _tree->Branch("protonenergy",&_protonenergy,"protonenergy/F");
-  _tree->Branch("shrenergy",&_shrenergy,"shrenergy/F");
-  _tree->Branch("clus_tmin",&_clus_tmin,"clus_tmin/F");
-  _tree->Branch("clus_tmax",&_clus_tmax,"clus_tmax/F");
-  _tree->Branch("iou",&_iou,"iou/F");
-  _tree->Branch("qmatched",&_qmatched,"qmatched/F");
+  _tree->Branch("energy1",&_energy1,"energy1/F");
+  _tree->Branch("pfppur1",&_pfppur1,"pfppur1/F");
+  _tree->Branch("clspur1",&_clspur1,"clspur1/F");
+  _tree->Branch("hitpfp1",&_hitpfp1,"hitpfp1/I");
+  _tree->Branch("hitcls1",&_hitcls1,"hitcls1/I");
+  _tree->Branch("energy2",&_energy2,"energy2/F");
+  _tree->Branch("pfppur2",&_pfppur2,"pfppur2/F");
+  _tree->Branch("clspur2",&_clspur2,"clspur2/F");
+  _tree->Branch("hitpfp2",&_hitpfp2,"hitpfp2/I");
+  _tree->Branch("hitcls2",&_hitcls2,"hitcls2/I");
 
   // get detector specific properties
   auto const* geom = ::lar::providerFrom<geo::Geometry>();
@@ -192,12 +161,12 @@ ProtonHitPurity::ProtonHitPurity(fhicl::ParameterSet const& p)
   // Call appropriate consumes<>() for any products to be retrieved by this module.
 }
   
-void ProtonHitPurity::analyze(art::Event const& e)
+void ProtonTruthStudies::analyze(art::Event const& e)
 {
 
   ResetTTree();
 
-  auto const* detp = lar::providerFrom<detinfo::DetectorPropertiesService>();
+  //auto const* detp = lar::providerFrom<detinfo::DetectorPropertiesService>();
   
   _evt = e.event();
   _sub = e.subRun();
@@ -213,9 +182,8 @@ void ProtonHitPurity::analyze(art::Event const& e)
   // load hits <-> truth associations
   auto const& assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData> >(new art::FindManyP<simb::MCParticle,anab::BackTrackerHitMatchingData>(hit_h, e, fHTproducer));
   
-  // load MCTruth
-  auto const& mcparticle_h = e.getValidHandle<std::vector<simb::MCParticle> >(fMCPproducer);
-  
+  // load MCShower
+  auto const& mcshower_h   = e.getValidHandle<std::vector<sim::MCShower> >(fMCSproducer);
 
   // grab PFParticles in event
   searchingfornues::ProxyPfpColl_t const& pfp_proxy = proxy::getCollection<std::vector<recob::PFParticle> >(e,fPFPproducer,
@@ -227,154 +195,145 @@ void ProtonHitPurity::analyze(art::Event const& e)
 													    proxy::withAssociated<recob::PCAxis>(fPFPproducer),
 													    proxy::withAssociated<recob::Shower>(fSHRproducer));
   
+  searchingfornues::ProxyClusColl_t const& clus_proxy = proxy::getCollection<std::vector<recob::Cluster> >(e, fPFPproducer, proxy::withAssociated<recob::Hit>(fPFPproducer));
+  
   // build PFParticle map  for this event
   BuildPFPMap(pfp_proxy);
 
-  // collect PFParticle hierarchy originating from this neutrino candidate
-  std::vector<searchingfornues::ProxyPfpElem_t> slice_pfp_v;
+  // loop through MCParticles and identify protons
+  // fill a map for each MCParticle proton to the backtracked PFParticle or Cluster [value indicates <KE, purity> ]
+  std::map<unsigned int, std::pair<float, float> > Gamma2PFPMap;
+  std::map<unsigned int, int > Gamma2PFPMapNHit;
+  std::map<unsigned int, std::pair<float, float> > Gamma2CLSMap;
+  std::map<unsigned int, int > Gamma2CLSMapNHit;
+  // map linking MCParticle TrackId to index
+  std::map<unsigned int, unsigned int> MCParticleTID2IDXMap;
 
-  // grab candidate electron direction
-  for (const searchingfornues::ProxyPfpElem_t& pfp_pxy : pfp_proxy) {
-    //  find neutrino candidate
-    if (pfp_pxy->IsPrimary() == false) continue;
-    
-    auto PDG = fabs(pfp_pxy->PdgCode());
-    
-    if (PDG != 12) continue;
-
-    AddDaughters(pfp_pxy, pfp_proxy, slice_pfp_v);
-    
-  }// for all proxys
-  
-  TVector3 ShowerVtx, ShowerDir;
-  _shrenergy = 0;
-  
-  // go through slice and find shower-like particles
-  for (size_t p=0; p < slice_pfp_v.size(); p++) {
-    
-    auto pfp_pxy = slice_pfp_v[p];
-    
-    auto ass_shr_v = pfp_pxy.get<recob::Shower>();
-    
-    if (ass_shr_v.size() != 1) continue;
-    
-    auto trkshrscore = searchingfornues::GetTrackShowerScore(pfp_pxy);
-    
-    if (trkshrscore > 0.5) continue;
-    
-    auto shr = ass_shr_v[0];
-    
-    if (shr->Energy()[2] < _shrenergy) continue;
-    
-    _shrenergy = shr->Energy()[2];
-    
-    ShowerVtx = shr->ShowerStart();
-    ShowerDir = shr->Direction();
-    
-  }// for all proxys in slice
-
-  // if no shower nue candidate -> skip event
-  if (_shrenergy == 0)
-    return;
-
-  _shr_vtx_x = ShowerVtx.X();
-  _shr_vtx_y = ShowerVtx.Y();
-  _shr_vtx_z = ShowerVtx.Z();
-
-  _shr_dir_x = ShowerDir.X();
-  _shr_dir_y = ShowerDir.Y();
-  _shr_dir_z = ShowerDir.Z();
-
-  _ntrk = 0;
-
-  // go through slice and find shower-like particles
-  for (size_t p=0; p < slice_pfp_v.size(); p++) {
-    
-    auto pfp_pxy = slice_pfp_v[p];
-    
-    auto ass_trk_v = pfp_pxy.get<recob::Track>();
-    
-    if (ass_trk_v.size() != 1) continue;
-
-    _ntrk += 1;
-    
-    auto trk = ass_trk_v[0];
-
-    TVector3 TrkVtx( trk->Vertex().X(), trk->Vertex().Y(), trk->Vertex().Z() );
-
-    TVector3 TrkShrVec = TrkVtx - ShowerVtx;
-    float TrkShrDist = TrkShrVec.Mag();
-    float TrkShrDot  = TrkShrVec.Dot( ShowerDir );
-    TrkShrDot /= TrkShrVec.Mag();
-    TrkShrDot /= ShowerDir.Mag();
-
-    if (TrkShrDist < 5.) continue;
-
-    _trk_vtx_x = TrkVtx.X();
-    _trk_vtx_y = TrkVtx.Y();
-    _trk_vtx_z = TrkVtx.Z();
-
-    _trkshrdist = TrkShrDist;
-    _trkshrdot  = TrkShrDot;
-
-  }// for all proxys in slice
+  int gamma1IDX = -1;
+  int gamma2IDX = -1;
+  float gamma1E = 0;
+  float gamma2E = 0;
 
   // vector of BtPart for backtracking
-  std::vector<searchingfornues::BtPart> Proton_v;
+  std::vector<searchingfornues::BtPart> Gamma_v;
+  
+  // loop through MCParticles and identify gammas
+  for ( unsigned int im=0; im< mcshower_h->size(); ++im ) {
 
-  // load MCTruth
-  _kemin = 1e6;
-  _kemax = 0;
-  auto const &mct_h = e.getValidHandle<std::vector<simb::MCTruth>>("generator");
-  auto mct = mct_h->at(0);
-  size_t npart = mct.NParticles();
-  for (size_t i = 0; i < npart; i++) {
-    auto const &part = mct.GetParticle(i);
-    if (part.StatusCode() != 1) continue;
-    if (part.PdgCode() == 2212) {
-      float KE = part.Momentum(0).E() - 0.938;
-      if (KE < _kemin) { _kemin = KE; }
-      if (KE > _kemax) { _kemax = KE; }
-    }// if proton
-  }// for all mcparticles
-
-
-  // loop through MCParticles and identify protons
-  for ( unsigned int im=0; im< mcparticle_h->size(); ++im ) {
-    const auto& mcp = mcparticle_h->at(im);
-    if (mcp.PdgCode() == 2212) 
+    const auto& mcs = mcshower_h->at(im);
+    
+    if ( ( (mcs.PdgCode() == 22) && (mcs.MotherPdgCode() == 111) && (mcs.Process() == "Decay") && (mcs.MotherProcess() == "primary") ) || (fabs(mcs.PdgCode()) == 11) ) {
       
-      Proton_v.push_back( searchingfornues::BtPart(mcp.PdgCode(),
-						   mcp.Momentum(0).Px() * 0.001,
-						   mcp.Momentum(0).Py() * 0.001,
-						   mcp.Momentum(0).Pz() * 0.001,
-						   mcp.Momentum(0).E() * 0.001, 
-						   mcp.TrackId()) );
+      Gamma_v.push_back( searchingfornues::BtPart(mcs.PdgCode(),
+						  mcs.Start().Momentum().Px(),
+						  mcs.Start().Momentum().Py(),
+						  mcs.Start().Momentum().Pz(),
+						  mcs.DetProfile().E(), 
+						  mcs.DaughterTrackID()) );
+
+      float gammaE = mcs.DetProfile().E();
+
+      std::cout << "gamma with energy " << gammaE << " has idx " << im << std::endl;
+
+      std::cout << "IDX " << im << " assigned energy " << gammaE << std::endl;
+      
+      Gamma2PFPMap[im] = std::make_pair(gammaE,0.);
+      Gamma2CLSMap[im] = std::make_pair(gammaE,0.);
+
+      Gamma2PFPMapNHit[im] = 0;
+      Gamma2CLSMapNHit[im] = 0;
+
+      if (gammaE > gamma2E) {
+	std::cout << "\t update gamma2" << std::endl;
+	gamma2E = gammaE;
+	gamma2IDX = im;
+      }
+
+      if (gammaE > gamma1E) {
+	std::cout << "\t update gamma1 & gamma2" << std::endl;
+	gamma2E = gamma1E;
+	gamma2IDX = gamma1IDX;
+	gamma1E = gammaE;
+	gamma1IDX = im;
+      }
+
+      MCParticleTID2IDXMap[mcs.DaughterTrackID().at(0)] = im;
+      
+      std::cout << "MCS Energy : " << gammaE << ", E1 : " << gamma1E << " & idx " << gamma1IDX << ". E2 : " << gamma2E << " & idx " << gamma2IDX << std::endl;
+      
+    }// if pi0 gamma
     
   }// for all MCParticles
-  
-  std::cout << "PROTON there are " << Proton_v.size() << " protons in the event" << std::endl;
 
-  // get wire-time-plane coordinates for each proton cluster
-  std::map< size_t, std::pair<float,float> > protonIdx2TimeSpanMap;
-  std::map< size_t, int > protonIdx2PlaneMap;
-  std::map< size_t, float > protonIdx2ChargeMap;
-  for (size_t c=0; c < cluster_h->size(); c++) {
+  std::cout << "Found " << Gamma2PFPMap.size() << " truth gammas" << std::endl;
 
-    auto clus = cluster_h->at(c);
+  // found neutrinos?
+  bool recoslice = false;
 
-    auto plane  = clus.View();
-    auto charge = clus.Integral();
-    auto tmin = clus.StartTick() * _time2cm;
-    auto tmax = clus.EndTick()   * _time2cm;
+  // loop through reconstructed PFParticles
+  for (const searchingfornues::ProxyPfpElem_t& pfp_pxy : pfp_proxy) {
+
+    auto PDG = fabs(pfp_pxy->PdgCode());
+
+    if ( (PDG == 12) || (PDG == 14) ) {
+      recoslice = true;
+      continue;
+    }
     
-    protonIdx2PlaneMap[ c ] = plane;
-    protonIdx2ChargeMap[ c ] = charge;
-    protonIdx2TimeSpanMap[ c ] = std::make_pair(tmin, tmax);
+    // get hits associated to this PFParticle through the clusters
+    std::vector<art::Ptr<recob::Hit> > hit_v;
+    auto clus_pxy_v = pfp_pxy.get<recob::Cluster>();
+    if (clus_pxy_v.size() != 0) {
+      for (auto ass_clus : clus_pxy_v) {
+	// get cluster proxy
+	const auto& clus = clus_proxy[ass_clus.key()];
+	auto clus_hit_v = clus.get<recob::Hit>();
+	for (const auto& hit : clus_hit_v)
+	  hit_v.push_back(hit);
+      }// for all clusters associated to PFP
+      
+    }// if there are associated clusters
     
-  }// for all cluster. Registering cluster info
-  
-  // loop through clusters
+
+    // are there associated hits?
+    if (hit_v.size() == 0) continue;
+    
+
+    float purity = 0.;
+    float completeness = 0.;
+
+    auto btpart = getAssocBtPart(hit_v,assocMCPart,Gamma_v,purity,completeness);
+
+    purity *= hit_v.size();
+
+    if (btpart >= 0) {
+      
+      auto backtrackedPart = Gamma_v.at(btpart);
+      
+      if (backtrackedPart.tids.size() > 0) {
+	
+	auto tid = backtrackedPart.tids.at(0);
+
+	// is purity for this proton improved? if so update backtracked pfparticle
+	if ( Gamma2PFPMap[ MCParticleTID2IDXMap[ tid ] ].second < purity ) {
+	  
+	  Gamma2PFPMap[ MCParticleTID2IDXMap[ tid ] ] = std::make_pair( backtrackedPart.e , purity );
+
+	  Gamma2PFPMapNHit[ MCParticleTID2IDXMap[ tid ] ] = hit_v.size();
+
+	  //std::cout << "Matched proton with PFP : TrackID " << tid << " and purity " << purity << " and completeness " << completeness << std::endl;
+
+	}
+	
+      }// if there is at least one TrackID associated to this MCParticle
+      
+    }// if we backtracked to something
+   
+  }// for all PFPs 
+
+  if (recoslice == false) return;
+
+  // loop through tagged clusters in slice
   for (size_t c=0; c < cluster_h->size(); c++) {
     
     auto clus = cluster_h->at(c);
@@ -382,70 +341,106 @@ void ProtonHitPurity::analyze(art::Event const& e)
     // get associated hits
     auto clus_hit_v = clus_hit_assn_v.at( c );
     
-    float completeness = 0;
-    
-    // is the proton isolated?
-    _nclose = IsProtonIsolated(clus_hit_v,hit_h);
-
     // create vector of gaushits corresponding to new proton hits
     auto gaushit_hit_v = getGaussHits(clus_hit_v, hit_h);
 
-    _clus_tmin = clus.StartTick() * _time2cm;
-    _clus_tmax = clus.EndTick()   * _time2cm;
-    
-    _plane = (gaushit_hit_v.at(0))->WireID().Plane;
-    _nhit  = gaushit_hit_v.size();
-    _charge = 0.;
-    _purity = 0.;
+    float purity = 0;
+    float completeness = 0;
 
-    // get IoU
-    size_t cmatchidx = 999;
-    _iou = IoU(c, _clus_tmin, _clus_tmax, _plane, protonIdx2TimeSpanMap, protonIdx2PlaneMap, protonIdx2ChargeMap, cmatchidx);
-    _qmatched = protonIdx2ChargeMap[  cmatchidx ];
-    
-    _shrdot = 1e6;
-    _shrdist = 1e6;
-    
-    float protonWire = 0;
-    float protonTime = 0;
+    auto btpart = getAssocBtPart(gaushit_hit_v,assocMCPart,Gamma_v,purity,completeness);
 
-    for (size_t hi=0; hi < gaushit_hit_v.size(); hi++) {
-      auto hit = gaushit_hit_v.at(hi);
-      protonWire += hit->WireID().Wire * _wire2cm * hit->Integral();
-      protonTime += (hit->PeakTime() - detp->TriggerOffset())  * _time2cm * hit->Integral();
-      _charge += hit->Integral();
-    }
-    protonWire /= _charge;
-    protonTime /= _charge;
+    purity *= gaushit_hit_v.size();
 
-    ProtonDot(protonWire, protonTime, _plane, ShowerVtx, ShowerDir, _shrdot, _shrdist);
-    
-    auto btpart = getAssocBtPart(gaushit_hit_v,assocMCPart,Proton_v,_purity,completeness);
-    _protonenergy = 0;
-    if (btpart >= 0)
-      _protonenergy = Proton_v.at(btpart).e;
-    
-    _tree->Fill();
-    
-    std::cout << "PROTON Found " << gaushit_hit_v.size() << " matching original " << clus_hit_v.size() << " proton hits" << std::endl;
-    std::cout << "PROTON This cluster has " << gaushit_hit_v.size() << " hits and a purity/completenss of [ "
-	      << _purity << ", " << completeness << " ]" << std::endl;
-    std::cout << "PROTON" << std::endl;
-    
-  }// for all clusters
+    if (btpart >= 0) {
+      
+      auto backtrackedPart = Gamma_v.at(btpart);
+      
+      if (backtrackedPart.tids.size() > 0) {
+	
+	auto tid = backtrackedPart.tids.at(0);
 
+	// is purity for this proton improved? if so update backtracked cluster
+	if ( Gamma2CLSMap[ MCParticleTID2IDXMap[ tid ] ].second < purity ) {
+	  
+	  Gamma2CLSMap[ MCParticleTID2IDXMap[ tid ] ] = std::make_pair( backtrackedPart.e , purity );
+
+	  Gamma2CLSMapNHit[ MCParticleTID2IDXMap[ tid ] ] = gaushit_hit_v.size();
+	  
+	  //std::cout << "Matched proton with CLUSTER : TrackID " << tid << " and purity " << purity << " and completeness " << completeness << std::endl;
+
+	}
+	
+      }// if there is at least one TrackID associated to this MCParticle
+      
+    }// if we backtracked to something
+
+  }// loop through all clusters in slice
+
+  /*
+  std::cout << "gamma1IDX is " << gamma1IDX << " and gamma2IDX is " << gamma2IDX << std::endl;
+
+  std::cout << "e pfp map element 0 : " << Gamma2PFPMap[0].first << std::endl;
+  std::cout << "e cls map element 0 : " << Gamma2CLSMap[0].first << std::endl;
+  std::cout << "e pfp map element 1 : " << Gamma2PFPMap[1].first << std::endl;
+  std::cout << "e cls map element 1 : " << Gamma2CLSMap[1].first << std::endl;
+  */
+
+  if (gamma1IDX >= 0) {
+    
+    // get PFP idx , pur pair
+    auto PFPmatch1 = Gamma2PFPMap[gamma1IDX];
+    // get CLS idx, pur pair
+    auto CLSmatch1 = Gamma2CLSMap[gamma1IDX];
+    
+    std::cout << "Gamma with energy " << PFPmatch1.first
+	      << " has PFP purity of " << PFPmatch1.second
+	      << " and CLS purity of " << CLSmatch1.second << std::endl;
+    
+    _energy1 = PFPmatch1.first;
+    _hitpfp1 = Gamma2PFPMapNHit[gamma1IDX];
+    _hitcls1 = Gamma2CLSMapNHit[gamma1IDX];
+    _pfppur1 = _clspur1 = 0;
+    if (_hitpfp1 > 0)
+      _pfppur1 = PFPmatch1.second / _hitpfp1;
+    if (_hitcls1 > 0)
+      _clspur1 = CLSmatch1.second / _hitcls1;
+
+  }
+
+  if (gamma2IDX >= 0) {
+    
+    // get PFP idx , pur pair
+    auto PFPmatch2 = Gamma2PFPMap[gamma2IDX];
+    // get CLS idx, pur pair
+    auto CLSmatch2 = Gamma2CLSMap[gamma2IDX];
+    
+    std::cout << "Gamma with energy " << PFPmatch2.first
+	      << " has PFP purity of " << PFPmatch2.second
+	      << " and CLS purity of " << CLSmatch2.second << std::endl;
+    
+    _energy2 = PFPmatch2.first;
+    _hitpfp2 = Gamma2PFPMapNHit[gamma2IDX];
+    _hitcls2 = Gamma2CLSMapNHit[gamma2IDX];
+    _pfppur2 = _clspur2 = 0;
+    if (_hitpfp2 > 0)
+      _pfppur2 = PFPmatch2.second / _hitpfp2;
+    if (_hitcls2 > 0)
+      _clspur2 = CLSmatch2.second / _hitcls2;
+
+  }
+
+  
   _tree->Fill();
-  
-  return;
+
+return;
 }
-  
-  
-void ProtonHitPurity::ProtonDot(const float& protonWire, const float& protonTime,const int& pl,
-				const TVector3& showerVtx, const TVector3& showerDir,
-				float &dot, float& d2d) {
+
+void ProtonTruthStudies::ProtonDot(const float& protonWire, const float& protonTime,const int& pl,
+				   const TVector3& showerVtx, const TVector3& showerDir,
+				   float &dot, float& d2d) {
   
   auto const* geom = ::lar::providerFrom<geo::Geometry>();
-
+  
   std::cout << "3D shower dir : [ " << showerDir[0] << ", " << showerDir[1] << ", " << showerDir[2] << " ]" << std::endl;
   std::cout << "3D shower vtx : [ " << showerVtx[0] << ", " << showerVtx[1] << ", " << showerVtx[2] << " ]" << std::endl;
   
@@ -475,7 +470,7 @@ void ProtonHitPurity::ProtonDot(const float& protonWire, const float& protonTime
   return;
 }
 
-float ProtonHitPurity::IoU(const int& idx, const float& time_min, const float& time_max, const int& pl,
+float ProtonTruthStudies::IoU(const int& idx, const float& time_min, const float& time_max, const int& pl,
 			   const std::map< size_t, std::pair<float,float> >& protonIdx2TimeSpanMap,
 			   const std::map< size_t, int >& protonIdx2PlaneMap,
 			   const std::map< size_t, float >& protonIdx2ChargeMap,
@@ -506,7 +501,7 @@ float ProtonHitPurity::IoU(const int& idx, const float& time_min, const float& t
   return ioumin;
 }// IoU
 
-std::vector<art::Ptr<recob::Hit>> ProtonHitPurity::getGaussHits(const std::vector<art::Ptr<recob::Hit>> &hits,
+std::vector<art::Ptr<recob::Hit>> ProtonTruthStudies::getGaussHits(const std::vector<art::Ptr<recob::Hit>> &hits,
 								const art::ValidHandle<std::vector<recob::Hit> > gaushit_h) {
   
   std::vector<art::Ptr<recob::Hit> > gaushit_v;
@@ -533,7 +528,7 @@ std::vector<art::Ptr<recob::Hit>> ProtonHitPurity::getGaussHits(const std::vecto
   return gaushit_v;
 } 
 
-int ProtonHitPurity::IsProtonIsolated(const std::vector<art::Ptr<recob::Hit>> &hits,
+int ProtonTruthStudies::IsProtonIsolated(const std::vector<art::Ptr<recob::Hit>> &hits,
 				      const art::ValidHandle<std::vector<recob::Hit> > gaushit_h) {
   
   float TimeMin = 1e6;
@@ -596,7 +591,7 @@ int ProtonHitPurity::IsProtonIsolated(const std::vector<art::Ptr<recob::Hit>> &h
   return nclose;
 }
 
- void ProtonHitPurity::BuildPFPMap(const searchingfornues::ProxyPfpColl_t& pfp_pxy_col) {
+ void ProtonTruthStudies::BuildPFPMap(const searchingfornues::ProxyPfpColl_t& pfp_pxy_col) {
    
    _pfpmap.clear();
    
@@ -609,7 +604,7 @@ int ProtonHitPurity::IsProtonIsolated(const std::vector<art::Ptr<recob::Hit>> &h
    return;
  }// BuildPFPMap
  
- void ProtonHitPurity::AddDaughters(const searchingfornues::ProxyPfpElem_t& pfp_pxy,
+ void ProtonTruthStudies::AddDaughters(const searchingfornues::ProxyPfpElem_t& pfp_pxy,
 				    const searchingfornues::ProxyPfpColl_t& pfp_pxy_col,
 				    std::vector<searchingfornues::ProxyPfpElem_t>& slice_v) {
    
@@ -637,14 +632,14 @@ int ProtonHitPurity::IsProtonIsolated(const std::vector<art::Ptr<recob::Hit>> &h
  }// AddDaughters
  
 
-void ProtonHitPurity::beginJob()
+void ProtonTruthStudies::beginJob()
 {
   // Implementation of optional member function here.
 }
 
-void ProtonHitPurity::endJob()
+void ProtonTruthStudies::endJob()
 {
   // Implementation of optional member function here.
 }
 
-DEFINE_ART_MODULE(ProtonHitPurity)
+DEFINE_ART_MODULE(ProtonTruthStudies)
