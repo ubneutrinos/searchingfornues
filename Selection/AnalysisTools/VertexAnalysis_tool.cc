@@ -6,8 +6,6 @@
 
 #include "../CommonDefs/Typedefs.h"
 
-#include "art/Framework/Core/EDAnalyzer.h"
-
 #include "larreco/RecoAlg/Geometric3DVertexFitter.h"
 
 namespace analysis
@@ -65,7 +63,6 @@ public:
      *  @param  pset
      */
   VertexAnalysis(const fhicl::ParameterSet &pset);
-  // explicit VertexAnalysis(Parameters const & p);
 
   /**
      *  @brief  Destructor
@@ -105,13 +102,13 @@ private:
   trkf::Geometric3DVertexFitter *fitter;
 
   int _n_tracks_pandora;
-  bool _vtx_fit_pandora_is_valid;
+  int _vtx_fit_pandora_is_valid;
   float _vtx_fit_pandora_x;
   float _vtx_fit_pandora_y;
   float _vtx_fit_pandora_z;
 
   int _n_tracks_tkfit;
-  bool _vtx_fit_tkfit_is_valid;
+  int _vtx_fit_tkfit_is_valid;
   float _vtx_fit_tkfit_x;
   float _vtx_fit_tkfit_y;
   float _vtx_fit_tkfit_z;
@@ -126,7 +123,8 @@ private:
 ///
 VertexAnalysis::VertexAnalysis(const fhicl::ParameterSet &p)
 {
-  art::EDAnalyzer::Table<Config> const & pset = p;
+  // art::EDAnalyzer::Table<Config> const & pset = p;
+  fhicl::Table<analysis::VertexAnalysis::Config> const & pset(p);
   fTRKFITproducer = pset().inputs().inputPFLabel();
   fitter = new trkf::Geometric3DVertexFitter(pset().options, pset().propagator);
 }
@@ -225,13 +223,13 @@ void VertexAnalysis::fillDefault()
 void VertexAnalysis::setBranches(TTree *_tree)
 {
   _tree->Branch("n_tracks_pandora", &_n_tracks_pandora, "n_tracks_pandora/i");
-  _tree->Branch("vtx_fit_pandora_is_valid", &_vtx_fit_pandora_is_valid, "vtx_fit_pandora_is_valid/o");
+  _tree->Branch("vtx_fit_pandora_is_valid", &_vtx_fit_pandora_is_valid, "vtx_fit_pandora_is_valid/i");
   _tree->Branch("vtx_fit_pandora_x", &_vtx_fit_pandora_x, "vtx_fit_pandora_x/f");
   _tree->Branch("vtx_fit_pandora_y", &_vtx_fit_pandora_y, "vtx_fit_pandora_y/f");
   _tree->Branch("vtx_fit_pandora_z", &_vtx_fit_pandora_z, "vtx_fit_pandora_z/f");
 
   _tree->Branch("n_tracks_tkfit", &_n_tracks_tkfit, "n_tracks_tkfit/i");
-  _tree->Branch("vtx_fit_tkfit_is_valid", &_vtx_fit_tkfit_is_valid, "vtx_fit_tkfit_is_valid/o");
+  _tree->Branch("vtx_fit_tkfit_is_valid", &_vtx_fit_tkfit_is_valid, "vtx_fit_tkfit_is_valid/i");
   _tree->Branch("vtx_fit_tkfit_x", &_vtx_fit_tkfit_x, "vtx_fit_tkfit_x/f");
   _tree->Branch("vtx_fit_tkfit_y", &_vtx_fit_tkfit_y, "vtx_fit_tkfit_y/f");
   _tree->Branch("vtx_fit_tkfit_z", &_vtx_fit_tkfit_z, "vtx_fit_tkfit_z/f");

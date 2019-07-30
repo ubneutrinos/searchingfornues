@@ -181,7 +181,7 @@ NuSelectionFilter:{
         shower:        @local::ShowerAnalysisTool
         showerstart:        @local::ShowerStartPointTool
         track:         @local::TrackAnalysisTool
-        vertex:         @local::VertexAnalysisTool
+        #vertex:         @local::VertexAnalysisTool
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
