@@ -10,7 +10,6 @@
 
 // backtracking tools
 #include "../CommonDefs/BacktrackingFuncs.h"
-#include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "../CommonDefs/Geometry.h"
 
 namespace analysis
@@ -82,9 +81,6 @@ public:
 private:
   art::InputTag fTRKproducer;
   art::InputTag fCALproducer;
-  float fTrkShrScore; /**< Threshold on the Pandora track score (default 0.5) */
-
-  unsigned int _n_showers;
 
   std::vector<float> _shr_energy_u_v;
   std::vector<float> _shr_energy_v_v;
@@ -112,7 +108,6 @@ private:
   std::vector<float> _shr_theta_v;
   std::vector<float> _shr_phi_v;
   std::vector<float> _shr_openangle_v;
-  std::vector<float> _shr_score_v;
 
   std::vector<int> _shr_tkfit_nhits_v;
   std::vector<float> _shr_tkfit_start_x_v;
@@ -145,7 +140,6 @@ ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
 {
   fTRKproducer = p.get<art::InputTag>("TRKproducer", "");
   fCALproducer = p.get<art::InputTag>("CALproducer", "");
-  fTrkShrScore = p.get<float>("TrkShrScore", 0.5);
 }
 
 //----------------------------------------------------------------------------
@@ -241,13 +235,6 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 
       _shr_start_U_v.push_back(searchingfornues::YZtoPlanecoordinate(shr->ShowerStart().Y(), shr->ShowerStart().Z(), 0));
       _shr_start_V_v.push_back(searchingfornues::YZtoPlanecoordinate(shr->ShowerStart().Y(), shr->ShowerStart().Z(), 1));
-
-      float trkshr_score = searchingfornues::GetTrackShowerScore(slice_pfp_v[i_pfp]);
-      if (trkshr_score < fTrkShrScore)
-      {
-        _n_showers++;
-      }
-      _shr_score_v.push_back(trkshr_score);
 
       //fill dummy track fit values, overwrite them later
       _shr_tkfit_nhits_v.push_back(std::numeric_limits<int>::lowest());
@@ -369,10 +356,6 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_theta_v", "std::vector< float >", &_shr_theta_v);
   _tree->Branch("shr_phi_v", "std::vector< float >", &_shr_phi_v);
 
-  _tree->Branch("shr_score_v", "std::vector< float >", &_shr_score_v);
-
-  _tree->Branch("n_showers", &_n_showers, "n_showers/i");
-
   _tree->Branch("shr_tkfit_nhits_v", "std::vector< int >", &_shr_tkfit_nhits_v);
   _tree->Branch("shr_tkfit_start_x_v", "std::vector< float >", &_shr_tkfit_start_x_v);
   _tree->Branch("shr_tkfit_start_y_v", "std::vector< float >", &_shr_tkfit_start_y_v);
@@ -418,8 +401,6 @@ void ShowerAnalysis::fillDefault()
   _shr_px_v.push_back(std::numeric_limits<float>::lowest());
   _shr_py_v.push_back(std::numeric_limits<float>::lowest());
   _shr_pz_v.push_back(std::numeric_limits<float>::lowest());
-
-  _shr_score_v.push_back(std::numeric_limits<float>::lowest());
 
   _shr_tkfit_nhits_v.push_back(std::numeric_limits<int>::lowest());
   _shr_tkfit_start_x_v.push_back(std::numeric_limits<float>::lowest());
@@ -469,9 +450,6 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
   _shr_px_v.clear();
   _shr_py_v.clear();
   _shr_pz_v.clear();
-
-  _n_showers = 0;
-  _shr_score_v.clear();
 
   _shr_tkfit_nhits_v.clear();
   _shr_tkfit_start_x_v.clear();

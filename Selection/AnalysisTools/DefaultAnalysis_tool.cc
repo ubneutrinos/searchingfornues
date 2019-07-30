@@ -15,6 +15,7 @@
 #include "../CommonDefs/BacktrackingFuncs.h"
 #include "../CommonDefs/Geometry.h"
 #include "../CommonDefs/SCECorrections.h"
+#include "../CommonDefs/TrackShowerScoreFuncs.h"
 
 namespace analysis
 {
@@ -110,6 +111,8 @@ private:
   art::InputTag fHproducer;
   art::InputTag fMCRproducer;
   art::InputTag fSLCproducer; // slice associated to PFP
+  float fTrkShrScore; /**< Threshold on the Pandora track score (default 0.5) */
+
 
   float fFidvolXstart;
   float fFidvolXend;
@@ -142,6 +145,11 @@ private:
   float _nu_vtx_x, _nu_vtx_y, _nu_vtx_z;
   // neutrino vertex SCE position corrections (reco)
   float _nu_sce_x, _nu_sce_y, _nu_sce_z;
+
+  float _true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z;
+  float _true_nu_vtx_sce_x, _true_nu_vtx_sce_y, _true_nu_vtx_sce_z;
+  float _reco_nu_vtx_x, _reco_nu_vtx_y, _reco_nu_vtx_z;
+  float _reco_nu_vtx_sce_x, _reco_nu_vtx_sce_y, _reco_nu_vtx_sce_z;
 
   int _run, _sub, _evt; // event info
   // neutrino information
@@ -224,7 +232,11 @@ private:
   std::vector<int> pfnplanehits_V; // number of hits in pfp plane V
   std::vector<int> pfnplanehits_Y; // number of hits in pfp plane Y
 
-  unsigned int n_pfps;
+  unsigned int _n_pfps;
+  std::vector<float> _trk_score_v;
+  unsigned int _n_tracks;
+  unsigned int _n_showers;
+
   unsigned int _hits_u;
   unsigned int _hits_v;
   unsigned int _hits_y;
@@ -274,6 +286,7 @@ DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
   fHproducer = p.get<art::InputTag>("Hproducer");
   fMCRproducer = p.get<art::InputTag>("MCRproducer");
   fSLCproducer = p.get<art::InputTag>("SLCproducer");
+  fTrkShrScore = p.get<float>("TrkShrScore", 0.5);
   // kinematic thresholds for defining signal
   fProtonThreshold = p.get<float>("ProtonThreshold", 0.04);
   fMuonThreshold = p.get<float>("MuonThreshold", 0.02);
@@ -397,10 +410,9 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
   }
 
   size_t pfpidx = 0;
-  n_pfps = 0;
+  _n_pfps = 0;
   for (auto pfp : slice_pfp_v)
   {
-
     if (pfp->IsPrimary())
     {
       slpdg = pfp->PdgCode();
@@ -427,21 +439,12 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           } // if PFP metadata exists!
         }
       }
-    }
-
-    if ((pfp->PdgCode() == electron_neutrino->PdgCode()) || (pfp->PdgCode() == muon_neutrino->PdgCode()))
-    {
 
       // grab vertex
       double xyz[3] = {};
 
       auto vtx = pfp.get<recob::Vertex>();
-      if (vtx.size() != 1)
-      {
-        std::cout << "ERROR. Found neutrino PFP w/ != 1 associated vertices..." << std::endl;
-      }
-
-      else
+      if (vtx.size() == 1)
       {
         // save vertex to array
         vtx.at(0)->XYZ(xyz);
@@ -450,15 +453,41 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         _nu_vtx_x = nuvtx.X();
         _nu_vtx_y = nuvtx.Y();
         _nu_vtx_z = nuvtx.Z();
-
         ApplySCECorrection(_nu_vtx_x, _nu_vtx_y, _nu_vtx_z, _nu_sce_x, _nu_sce_y, _nu_sce_z);
+
+        _reco_nu_vtx_x = nuvtx.X();
+        _reco_nu_vtx_y = nuvtx.Y();
+        _reco_nu_vtx_z = nuvtx.Z();
+
+        float _reco_nu_vtx_sce[3];
+        searchingfornues::ApplySCECorrectionXYZ(_reco_nu_vtx_x, _reco_nu_vtx_y, _reco_nu_vtx_z, _reco_nu_vtx_sce);
+        _reco_nu_vtx_sce_x = _reco_nu_vtx_sce[0];
+        _reco_nu_vtx_sce_y = _reco_nu_vtx_sce[1];
+        _reco_nu_vtx_sce_z = _reco_nu_vtx_sce[2];
+      }
+      else
+      {
+        std::cout << "ERROR. Found neutrino PFP w/ != 1 associated vertices..." << std::endl;
       }
       continue;
     } // if neutrino PFParticle
 
-    n_pfps ++;
+    _n_pfps ++;
     _pfp_slice_idx.push_back(pfpidx++);
     pfpdg.push_back(pfp->PdgCode());
+
+    // store track score
+    float trkscore = searchingfornues::GetTrackShowerScore(pfp);
+    if ((trkscore >= 0) && (trkscore >= fTrkShrScore))
+    {
+      _n_tracks++;
+    }
+    else if ((trkscore >= 0) && (trkscore < fTrkShrScore))
+    {
+      _n_showers++;
+    }
+    _trk_score_v.push_back(trkscore);
+
     // get hits associated to this PFParticle through the clusters
     std::vector<art::Ptr<recob::Hit>> hit_v;
     auto clus_pxy_v = pfp.get<recob::Cluster>();
@@ -747,6 +776,21 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("vtx_z", &_vtx_z, "vtx_z/F");
   _tree->Branch("isVtxInActive", &_isVtxInActive, "isVtxInActive/O");
   _tree->Branch("isVtxInFiducial", &_isVtxInFiducial, "isVtxInFiducial/O");
+
+  _tree->Branch("true_nu_vtx_t", &_true_nu_vtx_t, "true_nu_vtx_t/F");
+  _tree->Branch("true_nu_vtx_x", &_true_nu_vtx_x, "true_nu_vtx_x/F");
+  _tree->Branch("true_nu_vtx_y", &_true_nu_vtx_y, "true_nu_vtx_y/F");
+  _tree->Branch("true_nu_vtx_z", &_true_nu_vtx_z, "true_nu_vtx_z/F");
+  _tree->Branch("true_nu_vtx_sce_x", &_true_nu_vtx_sce_x, "true_nu_vtx_sce_x/F");
+  _tree->Branch("true_nu_vtx_sce_y", &_true_nu_vtx_sce_y, "true_nu_vtx_sce_y/F");
+  _tree->Branch("true_nu_vtx_sce_z", &_true_nu_vtx_sce_z, "true_nu_vtx_sce_z/F");
+  _tree->Branch("reco_nu_vtx_x", &_reco_nu_vtx_x, "reco_nu_vtx_x/F");
+  _tree->Branch("reco_nu_vtx_y", &_reco_nu_vtx_y, "reco_nu_vtx_y/F");
+  _tree->Branch("reco_nu_vtx_z", &_reco_nu_vtx_z, "reco_nu_vtx_z/F");
+  _tree->Branch("reco_nu_vtx_sce_x", &_reco_nu_vtx_sce_x, "reco_nu_vtx_sce_x/F");
+  _tree->Branch("reco_nu_vtx_sce_y", &_reco_nu_vtx_sce_y, "reco_nu_vtx_sce_y/F");
+  _tree->Branch("reco_nu_vtx_sce_z", &_reco_nu_vtx_sce_z, "reco_nu_vtx_sce_z/F");
+
   // individual particles in the neutrino slice
   // legend:
   // _e -> energy of particle in GeV
@@ -836,7 +880,11 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("evnhits", &evnhits, "evnhits/I");
   _tree->Branch("slpdg", &slpdg, "slpdg/I");
   _tree->Branch("slnhits", &slnhits, "slnhits/I");
-  _tree->Branch("n_pfps", &n_pfps, "n_pfps/I");
+  _tree->Branch("n_pfps", &_n_pfps, "n_pfps/I");
+  _tree->Branch("n_tracks", &_n_tracks, "n_tracks/I");
+  _tree->Branch("n_showers", &_n_showers, "n_showers/I");
+  _tree->Branch("trk_score_v", "std::vector< float >", &_trk_score_v);
+
   _tree->Branch("pfpdg", "std::vector<int>", &pfpdg);
   _tree->Branch("pfnhits", "std::vector<int>", &pfnhits);
   _tree->Branch("pfnplanehits_U", "std::vector<int>", &pfnplanehits_U);
@@ -897,6 +945,21 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _nu_sce_x = std::numeric_limits<float>::lowest();
   _nu_sce_y = std::numeric_limits<float>::lowest();
   _nu_sce_z = std::numeric_limits<float>::lowest();
+
+  _true_nu_vtx_t = std::numeric_limits<float>::lowest();
+  _true_nu_vtx_x = std::numeric_limits<float>::lowest();
+  _true_nu_vtx_y = std::numeric_limits<float>::lowest();
+  _true_nu_vtx_z = std::numeric_limits<float>::lowest();
+  _true_nu_vtx_sce_x = std::numeric_limits<float>::lowest();
+  _true_nu_vtx_sce_y = std::numeric_limits<float>::lowest();
+  _true_nu_vtx_sce_z = std::numeric_limits<float>::lowest();
+  _reco_nu_vtx_x = std::numeric_limits<float>::lowest();
+  _reco_nu_vtx_y = std::numeric_limits<float>::lowest();
+  _reco_nu_vtx_z = std::numeric_limits<float>::lowest();
+  _reco_nu_vtx_sce_x = std::numeric_limits<float>::lowest();
+  _reco_nu_vtx_sce_y = std::numeric_limits<float>::lowest();
+  _reco_nu_vtx_sce_z = std::numeric_limits<float>::lowest();
+
   _overlay_hits = 0;
   _mc_hits = 0;
   _isVtxInActive = false;
@@ -938,7 +1001,10 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _endmuonprocess = "";
   _endmuonmichel = 0;
 
-  n_pfps = 0;
+  _n_pfps = 0;
+  _n_tracks = 0;
+  _n_showers = 0;
+  _trk_score_v.clear();
   // _backtracked_idx.clear();
   // _backtracked_tid.clear();
   _backtracked_e.clear();
@@ -1026,6 +1092,19 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _vtx_y = nu.EndY();
   _vtx_z = nu.EndZ();
   _vtx_t = nu.T();
+
+  _true_nu_vtx_t = nu.T();
+  _true_nu_vtx_x = nu.Vx();
+  _true_nu_vtx_y = nu.Vy();
+  _true_nu_vtx_z = nu.Vz();
+
+  float _true_nu_vtx_sce[3];
+  searchingfornues::True2RecoMappingXYZ(_true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z, _true_nu_vtx_sce);
+
+  _true_nu_vtx_sce_x = _true_nu_vtx_sce[0];
+  _true_nu_vtx_sce_y = _true_nu_vtx_sce[1];
+  _true_nu_vtx_sce_z = _true_nu_vtx_sce[2];
+
   _theta = neutrino.Theta();
   _nu_pt = neutrino.Pt();
 
@@ -1272,7 +1351,6 @@ void DefaultAnalysis::ApplySCECorrection(const float &vtx_x, const float &vtx_y,
     sce_x = offset.X();
     sce_y = offset.Y();
     sce_z = offset.Z();
-
   } // if spatial offset calibrations are enabled
 
   return;

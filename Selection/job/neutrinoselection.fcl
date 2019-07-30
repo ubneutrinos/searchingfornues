@@ -8,6 +8,27 @@
 #include "services_microboone.fcl"
 #include "flashmatchsetup.fcl"
 
+VertexAnalysisTool: {
+    tool_type: "VertexAnalysis"
+
+    inputs: {
+      TRKFITproducer: "shrreco3dKalmanShower"
+    }
+    options: {
+      debugLevel: 0
+      sipCut: 3.0
+    }
+    propagator: {
+      minStep: 1.0
+      maxElossFrac: 0.1
+      maxNit: 10
+      tcut: 10.
+      wrongDirDistTolerance: 0.01
+      propPinvErr: false
+    }
+}
+
+
 ShowerStartPointTool: {
     tool_type: "ShowerStartPoint"
     CLSproducer: "pandora"
@@ -160,6 +181,7 @@ NuSelectionFilter:{
         shower:        @local::ShowerAnalysisTool
         showerstart:        @local::ShowerStartPointTool
         track:         @local::TrackAnalysisTool
+        vertex:         @local::VertexAnalysisTool
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
