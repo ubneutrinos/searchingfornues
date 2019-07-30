@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mucsflashmatch',['MuCSFlashMatch',['../classMuCSFlashMatch.html',1,'']]]
+  ['inputs',['Inputs',['../structanalysis_1_1VertexAnalysis_1_1Inputs.html',1,'analysis::VertexAnalysis']]]
 ];

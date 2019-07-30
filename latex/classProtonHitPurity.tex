@@ -40,19 +40,13 @@ void \hyperlink{classProtonHitPurity_adfed832259669bb323f5a6a4eae7107e}{Build\+P
 \begin{DoxyCompactList}\small\item\em function to builf a map linking P\+F\+Particle index to Self() attribute \end{DoxyCompactList}\item 
 void \hyperlink{classProtonHitPurity_a7e468a256d51c80933e9bb9b6be77b94}{Add\+Daughters} (const searchingfornues\+::\+Proxy\+Pfp\+Elem\+\_\+t \&pfp\+\_\+pxy, const searchingfornues\+::\+Proxy\+Pfp\+Coll\+\_\+t \&pfp\+\_\+pxy\+\_\+col, std\+::vector$<$ searchingfornues\+::\+Proxy\+Pfp\+Elem\+\_\+t $>$ \&slice\+\_\+v)
 \begin{DoxyCompactList}\small\item\em build P\+F\+Particle hierarchy (i.\+e. slice) from parent \mbox{[}recursive function\mbox{]} \end{DoxyCompactList}\item 
-void {\bfseries Reset\+T\+Tree} ()\hypertarget{classProtonHitPurity_a516f5e25d7f5889fb24fb81fc3ed4697}{}\label{classProtonHitPurity_a516f5e25d7f5889fb24fb81fc3ed4697}
-
-\item 
 std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$ $>$ {\bfseries get\+Gauss\+Hits} (const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$$>$ \&hits, const art\+::\+Valid\+Handle$<$ std\+::vector$<$ recob\+::\+Hit $>$ $>$ gaushit\+\_\+h)\hypertarget{classProtonHitPurity_af073c27c1dd243faec1019466e52dfdd}{}\label{classProtonHitPurity_af073c27c1dd243faec1019466e52dfdd}
 
 \item 
-int {\bfseries Is\+Proton\+Isolated} (const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$$>$ \&hits, const art\+::\+Valid\+Handle$<$ std\+::vector$<$ recob\+::\+Hit $>$ $>$ gaushit\+\_\+h)\hypertarget{classProtonHitPurity_a7e9943415393cbdd5fbea2362e3a76e2}{}\label{classProtonHitPurity_a7e9943415393cbdd5fbea2362e3a76e2}
+bool {\bfseries Is\+Proton\+Isolated} (const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$$>$ \&hits, const art\+::\+Valid\+Handle$<$ std\+::vector$<$ recob\+::\+Hit $>$ $>$ gaushit\+\_\+h)\hypertarget{classProtonHitPurity_a8738628194b94c23f7666d3c85170a27}{}\label{classProtonHitPurity_a8738628194b94c23f7666d3c85170a27}
 
 \item 
 void {\bfseries Proton\+Dot} (const float \&proton\+Wire, const float \&proton\+Time, const int \&pl, const T\+Vector3 \&shower\+Vtx, const T\+Vector3 \&shower\+Dir, float \&dot, float \&d2d)\hypertarget{classProtonHitPurity_a4b71c7c7e85e49f74bc98960166d1fcc}{}\label{classProtonHitPurity_a4b71c7c7e85e49f74bc98960166d1fcc}
-
-\item 
-float {\bfseries IoU} (const int \&idx, const float \&time\+\_\+min, const float \&time\+\_\+max, const int \&pl, const std\+::map$<$ size\+\_\+t, std\+::pair$<$ float, float $>$ $>$ \&proton\+Idx2\+Time\+Span\+Map, const std\+::map$<$ size\+\_\+t, int $>$ \&proton\+Idx2\+Plane\+Map, const std\+::map$<$ size\+\_\+t, float $>$ \&proton\+Idx2\+Charge\+Map, size\+\_\+t \&matchedidx)\hypertarget{classProtonHitPurity_a947d6c3c40631fdfb260eee9aea4f439}{}\label{classProtonHitPurity_a947d6c3c40631fdfb260eee9aea4f439}
 
 \end{DoxyCompactItemize}
 \subsection*{Private Attributes}
@@ -88,34 +82,16 @@ float {\bfseries \+\_\+time2cm}\hypertarget{classProtonHitPurity_a8c08fb55f794ad
 T\+Tree $\ast$ {\bfseries \+\_\+tree}\hypertarget{classProtonHitPurity_a099b95a1f761865698b3518566f161d7}{}\label{classProtonHitPurity_a099b95a1f761865698b3518566f161d7}
 
 \item 
-int {\bfseries \+\_\+evt}\hypertarget{classProtonHitPurity_a37a631fb25bb249070d20bfaa4e8aadf}{}\label{classProtonHitPurity_a37a631fb25bb249070d20bfaa4e8aadf}
-
-\item 
-int {\bfseries \+\_\+sub}\hypertarget{classProtonHitPurity_a23b34d59adfc96d618c409b0bc74b6cf}{}\label{classProtonHitPurity_a23b34d59adfc96d618c409b0bc74b6cf}
-
-\item 
-int {\bfseries \+\_\+run}\hypertarget{classProtonHitPurity_aeea7db4a84e5cb8acdba83f5da4e6387}{}\label{classProtonHitPurity_aeea7db4a84e5cb8acdba83f5da4e6387}
-
-\item 
 int {\bfseries \+\_\+nhit}\hypertarget{classProtonHitPurity_a6844c4cad1d4dde899d327788ffb1fbe}{}\label{classProtonHitPurity_a6844c4cad1d4dde899d327788ffb1fbe}
 
 \item 
 int {\bfseries \+\_\+plane}\hypertarget{classProtonHitPurity_aaa0874bba49cd73ac89fe3453f5e64d1}{}\label{classProtonHitPurity_aaa0874bba49cd73ac89fe3453f5e64d1}
 
 \item 
-float {\bfseries \+\_\+kemin}\hypertarget{classProtonHitPurity_a770dd55f079a6ab114cf68c620e9caed}{}\label{classProtonHitPurity_a770dd55f079a6ab114cf68c620e9caed}
-
-\item 
-float {\bfseries \+\_\+kemax}\hypertarget{classProtonHitPurity_ac3969fd768acbb2d3433af22ed2dd468}{}\label{classProtonHitPurity_ac3969fd768acbb2d3433af22ed2dd468}
-
-\item 
 float {\bfseries \+\_\+charge}\hypertarget{classProtonHitPurity_a517cc8f0dfc9a9a0ad5d9fc93df7c20d}{}\label{classProtonHitPurity_a517cc8f0dfc9a9a0ad5d9fc93df7c20d}
 
 \item 
 float {\bfseries \+\_\+purity}\hypertarget{classProtonHitPurity_a189e155a01fe3e39248465acddc04a8c}{}\label{classProtonHitPurity_a189e155a01fe3e39248465acddc04a8c}
-
-\item 
-float {\bfseries \+\_\+protonenergy}\hypertarget{classProtonHitPurity_ab3933d09354d711f4c1b4511574c694c}{}\label{classProtonHitPurity_ab3933d09354d711f4c1b4511574c694c}
 
 \item 
 float {\bfseries \+\_\+shrdot}\hypertarget{classProtonHitPurity_af81a5c842b98e216cc147e6df4b89946}{}\label{classProtonHitPurity_af81a5c842b98e216cc147e6df4b89946}
@@ -128,57 +104,6 @@ float {\bfseries \+\_\+shrenergy}\hypertarget{classProtonHitPurity_a4a83bd7758de
 
 \item 
 int {\bfseries \+\_\+nshr}\hypertarget{classProtonHitPurity_aee140d918772b3317099286660d08f1e}{}\label{classProtonHitPurity_aee140d918772b3317099286660d08f1e}
-
-\item 
-int {\bfseries \+\_\+ntrk}\hypertarget{classProtonHitPurity_a760f5e05281e99a0ca6cfe4e73466a84}{}\label{classProtonHitPurity_a760f5e05281e99a0ca6cfe4e73466a84}
-
-\item 
-float {\bfseries \+\_\+trkshrdist}\hypertarget{classProtonHitPurity_a2b30be85b887f55d30013555391222d0}{}\label{classProtonHitPurity_a2b30be85b887f55d30013555391222d0}
-
-\item 
-float {\bfseries \+\_\+trkshrdot}\hypertarget{classProtonHitPurity_a2c38d10235b97e3dc18d529dba5bc412}{}\label{classProtonHitPurity_a2c38d10235b97e3dc18d529dba5bc412}
-
-\item 
-int {\bfseries \+\_\+nclose}\hypertarget{classProtonHitPurity_ad343c45a4552101e2762cfc788555c26}{}\label{classProtonHitPurity_ad343c45a4552101e2762cfc788555c26}
-
-\item 
-float {\bfseries \+\_\+clus\+\_\+tmin}\hypertarget{classProtonHitPurity_ad9d2fef6e06a9c8e5765fd6b636a45e1}{}\label{classProtonHitPurity_ad9d2fef6e06a9c8e5765fd6b636a45e1}
-
-\item 
-float {\bfseries \+\_\+clus\+\_\+tmax}\hypertarget{classProtonHitPurity_ab19303cf30e054c8ad903b0d4eca93c7}{}\label{classProtonHitPurity_ab19303cf30e054c8ad903b0d4eca93c7}
-
-\item 
-float {\bfseries \+\_\+shr\+\_\+dir\+\_\+x}\hypertarget{classProtonHitPurity_a7c5500a5e9af9b3173bede98b0cfca38}{}\label{classProtonHitPurity_a7c5500a5e9af9b3173bede98b0cfca38}
-
-\item 
-float {\bfseries \+\_\+shr\+\_\+dir\+\_\+y}\hypertarget{classProtonHitPurity_a409c42e39f4ac0bce821fb9f5c981a41}{}\label{classProtonHitPurity_a409c42e39f4ac0bce821fb9f5c981a41}
-
-\item 
-float {\bfseries \+\_\+shr\+\_\+dir\+\_\+z}\hypertarget{classProtonHitPurity_a6e642a00bf9be13e17d80238772b3210}{}\label{classProtonHitPurity_a6e642a00bf9be13e17d80238772b3210}
-
-\item 
-float {\bfseries \+\_\+shr\+\_\+vtx\+\_\+x}\hypertarget{classProtonHitPurity_a7d850a1990f317b27a4a0e86c1998959}{}\label{classProtonHitPurity_a7d850a1990f317b27a4a0e86c1998959}
-
-\item 
-float {\bfseries \+\_\+shr\+\_\+vtx\+\_\+y}\hypertarget{classProtonHitPurity_a40c1fdf1f8d8dfe57ad18cecce59ad2b}{}\label{classProtonHitPurity_a40c1fdf1f8d8dfe57ad18cecce59ad2b}
-
-\item 
-float {\bfseries \+\_\+shr\+\_\+vtx\+\_\+z}\hypertarget{classProtonHitPurity_a552a1f12d46233e922fccd94d908ed77}{}\label{classProtonHitPurity_a552a1f12d46233e922fccd94d908ed77}
-
-\item 
-float {\bfseries \+\_\+trk\+\_\+vtx\+\_\+x}\hypertarget{classProtonHitPurity_a643cb668b740a800ddec8063a11105a0}{}\label{classProtonHitPurity_a643cb668b740a800ddec8063a11105a0}
-
-\item 
-float {\bfseries \+\_\+trk\+\_\+vtx\+\_\+y}\hypertarget{classProtonHitPurity_a993e979801f08351c11cfa3d535b6ac2}{}\label{classProtonHitPurity_a993e979801f08351c11cfa3d535b6ac2}
-
-\item 
-float {\bfseries \+\_\+trk\+\_\+vtx\+\_\+z}\hypertarget{classProtonHitPurity_a90b269ab34bbd24ecbadb145e2dbfbc7}{}\label{classProtonHitPurity_a90b269ab34bbd24ecbadb145e2dbfbc7}
-
-\item 
-float {\bfseries \+\_\+qmatched}\hypertarget{classProtonHitPurity_a51752394ea2503baf8c177a566b1fc08}{}\label{classProtonHitPurity_a51752394ea2503baf8c177a566b1fc08}
-
-\item 
-float {\bfseries \+\_\+iou}\hypertarget{classProtonHitPurity_aa98aa48309886ce803ca6f0e558007a0}{}\label{classProtonHitPurity_aa98aa48309886ce803ca6f0e558007a0}
 
 \end{DoxyCompactItemize}
 
