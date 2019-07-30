@@ -58,7 +58,8 @@ private:
   std::map<unsigned int, unsigned int> _pfpmap;
 
   art::InputTag fHitproducer, fClusterproducer, fPfpproducer, fSliceproducer;
-  float fMinHitCharge; // ADC, Hit->Integral()
+  float fMinHitCharge;    // ADC, Hit->Integral()
+  bool fSaveAllSliceHits; // save all hits in the slice? True -> yes. False -> Save only 2D hits not in recob::PFParticle
 
   void addDaughter(const recob::PFParticle pfp,
 		   art::ValidHandle<std::vector<recob::PFParticle> > pfp_h,
@@ -74,11 +75,12 @@ SaveSliceHits::SaveSliceHits(fhicl::ParameterSet const& p)
   // More initializers here.
 {
 
-  fHitproducer     = p.get< art::InputTag > ("Hitproducer"    );
-  fClusterproducer = p.get< art::InputTag > ("Clusterproducer");
-  fPfpproducer     = p.get< art::InputTag > ("Pfpproducer"    );
-  fSliceproducer   = p.get< art::InputTag > ("Sliceproducer"  );
-  fMinHitCharge    = p.get< float         >("MinHitCharge", 0.); // ADC for Hit.Integral()
+  fHitproducer      = p.get< art::InputTag > ("Hitproducer"    );
+  fClusterproducer  = p.get< art::InputTag > ("Clusterproducer");
+  fPfpproducer      = p.get< art::InputTag > ("Pfpproducer"    );
+  fSliceproducer    = p.get< art::InputTag > ("Sliceproducer"  );
+  fMinHitCharge     = p.get< float         >("MinHitCharge", 0.); // ADC for Hit.Integral()
+  fSaveAllSliceHits = p.get< bool          >("SaveAllSliceHits",false); // save all hits in the slice? True -> yes. False -> Save only 2D hits not in recob::PFParticle
 
   produces<std::vector<recob::Hit> >();
 }
@@ -178,7 +180,7 @@ void SaveSliceHits::produce(art::Event& e)
 	break;
       }// if matched to PFP hit index
     }// for all PFP hit indices
-    if (matchedtopfp == false) {
+    if ( (matchedtopfp == false) || (fSaveAllSliceHits == true) ) {
       if (hit_h->at(hitidx).Integral() > fMinHitCharge)
 	Hit_v->emplace_back(hit_h->at(hitidx));
     }// if not matched
