@@ -140,7 +140,7 @@ Parsing file /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHi
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SaveSliceHits_module.cc...
 Parsin/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingToolBase_tool.h:2: warning: the name `larpandora/LArPandoraEventBuilding/SliceIdTools/FlashNeutrinoId_tool.h' supplied as the second argument in the \file statement is not an input file
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:38: warning: Compound analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:31: warning: Compound analysis::VertexAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:29: warning: Compound analysis::VertexAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:26: warning: Compound analysis::EventWeightTree is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/PMTNoise_tool.cc:37: warning: Compound analysis::PMTNoise is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerStartPoint_tool.cc:36: warning: Compound analysis::ShowerStartPoint is not documented.
@@ -148,13 +148,13 @@ Parsin/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchin
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CCincSelection_tool.h:33: warning: Compound selection::CCincSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:38: warning: Compound ProtonHitPurity is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:34: warning: Compound analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:46: warning: Compound analysis::VertexAnalysis::Config is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:44: warning: Compound analysis::VertexAnalysis::Config is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/CosmicRejection_module.cc:46: warning: Compound CosmicRejection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:33: warning: Compound analysis::ShowerAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SaveSliceHits_module.cc:36: warning: Compound SaveSliceHits is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/ShowerSelection_tool.cc:26: warning: Compound selection::ShowerSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:43: warning: Compound NeutrinoSelectionFilter is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:35: warning: Compound analysis::VertexAnalysis::Inputs is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:33: warning: Compound analysis::VertexAnalysis::Inputs is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ObviousCosmicFlashMatching_tool.cc:37: warning: Compound analysis::ObviousCosmicFlashMatching is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc:38: warning: Compound SecondShowerPurity is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/BacktrackingFuncs.h:85: warning: Compound searchingfornues::BtPart is not documented.
@@ -993,29 +993,29 @@ Gener/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Ana
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:158: warning: argument 'pset' of command @param is not found in the argument list of analysis::TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p)
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:46: warning: The following parameters of analysis::TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:76: warning: Member configure(fhicl::ParameterSet const &pset) (function) of class analysis::VertexAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:104: warning: Member fTRKFITproducer (variable) of class analysis::VertexAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:105: warning: Member fitter (variable) of class analysis::VertexAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:107: warning: Member _n_tracks_pandora (variable) of class analysis::VertexAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:108: warning: Member _vtx_fit_pandora_is_valid (variable) of class analysis::VertexAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:109: warning: Member _vtx_fit_pandora_x (variable) of class analysis::VertexAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:110: warning: Member _vtx_fit_pandora_y (variable) of class analysis::VertexAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:111: warning: Member _vtx_fit_pandora_z (variable) of class analysis::VertexAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:113: warning: Member _n_tracks_tkfit (variable) of class analysis::VertexAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:114: warning: Member _vtx_fit_tkfit_is_valid (variable) of class analysis::VertexAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:115: warning: Member _vtx_fit_tkfit_x (variable) of class analysis::VertexAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:116: warning: Member _vtx_fit_tkfit_y (variable) of class analysis::VertexAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:117: warning: Member _vtx_fit_tkfit_z (variable) of class analysis::VertexAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:121: warning: argument 'pset' of command @param is not found in the argument list of analysis::VertexAnalysis::VertexAnalysis(const fhicl::ParameterSet &p)
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:67: warning: The following parameters of analysis::VertexAnalysis::VertexAnalysis(const fhicl::ParameterSet &p) are not documented:
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:73: warning: Member configure(fhicl::ParameterSet const &pset) (function) of class analysis::VertexAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:101: warning: Member fTRKFITproducer (variable) of class analysis::VertexAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:102: warning: Member fitter (variable) of class analysis::VertexAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:104: warning: Member _n_tracks_pandora (variable) of class analysis::VertexAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:105: warning: Member _vtx_fit_pandora_is_valid (variable) of class analysis::VertexAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:106: warning: Member _vtx_fit_pandora_x (variable) of class analysis::VertexAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:107: warning: Member _vtx_fit_pandora_y (variable) of class analysis::VertexAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:108: warning: Member _vtx_fit_pandora_z (variable) of class analysis::VertexAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:110: warning: Member _n_tracks_tkfit (variable) of class analysis::VertexAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:111: warning: Member _vtx_fit_tkfit_is_valid (variable) of class analysis::VertexAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:112: warning: Member _vtx_fit_tkfit_x (variable) of class analysis::VertexAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:113: warning: Member _vtx_fit_tkfit_y (variable) of class analysis::VertexAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:114: warning: Member _vtx_fit_tkfit_z (variable) of class analysis::VertexAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:118: warning: argument 'pset' of command @param is not found in the argument list of analysis::VertexAnalysis::VertexAnalysis(const fhicl::ParameterSet &p)
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:65: warning: The following parameters of analysis::VertexAnalysis::VertexAnalysis(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:47: warning: Member Name (typedef) of class analysis::VertexAnalysis::Config is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:48: warning: Member inputs (variable) of class analysis::VertexAnalysis::Config is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:52: warning: Member options (variable) of class analysis::VertexAnalysis::Config is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:56: warning: Member propagator (variable) of class analysis::VertexAnalysis::Config is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:36: warning: Member Name (typedef) of class analysis::VertexAnalysis::Inputs is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:37: warning: Member Comment (typedef) of class analysis::VertexAnalysis::Inputs is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:38: warning: Member inputPFLabel (variable) of class analysis::VertexAnalysis::Inputs is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:45: warning: Member Name (typedef) of class analysis::VertexAnalysis::Config is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:46: warning: Member inputs (variable) of class analysis::VertexAnalysis::Config is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:50: warning: Member options (variable) of class analysis::VertexAnalysis::Config is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:54: warning: Member propagator (variable) of class analysis::VertexAnalysis::Config is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:34: warning: Member Name (typedef) of class analysis::VertexAnalysis::Inputs is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:35: warning: Member Comment (typedef) of class analysis::VertexAnalysis::Inputs is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:36: warning: Member inputPFLabel (variable) of class analysis::VertexAnalysis::Inputs is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:35: warning: Member configure(const fhicl::ParameterSet &pset) (function) of class flashmatch::FlashMatchingTool is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:51: warning: Member ClassifyTrack(const art::Event &evt, const std::vector< art::Ptr< recob::SpacePoint > > &spacepoint_v, const std::vector< art::Ptr< recob::Hit > > &hit_v, std::vector< float > &recospectrum, std::vector< float > &hypospectrum) (function) of class flashmatch::FlashMatchingTool is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingToolBase_tool.h:45: warning: Member ClassifySlice() (function) of class flashmatch::FlashMatchingToolBase is not documented.
