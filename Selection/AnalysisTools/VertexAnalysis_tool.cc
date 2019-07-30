@@ -58,20 +58,22 @@ public:
       Name("propagator")
     };
   };
-  using Parameters = art::EDAnalyzer::Table<Config>;
 
   /**
      *  @brief  Constructor
      *
      *  @param  pset
      */
-  // VertexAnalysis(const fhicl::ParameterSet &pset);
-  explicit VertexAnalysis(Parameters const & p);
+  VertexAnalysis(const fhicl::ParameterSet &pset);
+  // explicit VertexAnalysis(Parameters const & p);
 
   /**
      *  @brief  Destructor
      */
   ~VertexAnalysis(){};
+
+  // provide for initialization
+  void configure(fhicl::ParameterSet const &pset);
 
   /**
      * @brief Analysis function
@@ -100,7 +102,7 @@ public:
 
 private:
   art::InputTag fTRKFITproducer;
-  trkf::Geometric3DVertexFitter fitter;
+  trkf::Geometric3DVertexFitter *fitter;
 
   int _n_tracks_pandora;
   bool _vtx_fit_pandora_is_valid;
@@ -122,11 +124,16 @@ private:
 ///
 /// pset - Fcl parameters.
 ///
-VertexAnalysis::VertexAnalysis(Parameters const & p)
-  :
-  fTRKFITproducer(p().inputs().inputPFLabel()),
-  fitter(p().options, p().propagator)
-{}
+VertexAnalysis::VertexAnalysis(const fhicl::ParameterSet &p)
+{
+  art::EDAnalyzer::Table<Config> const & pset = p;
+  fTRKFITproducer = pset().inputs().inputPFLabel();
+  fitter = new trkf::Geometric3DVertexFitter(pset().options, pset().propagator);
+}
+
+void VertexAnalysis::configure(fhicl::ParameterSet const &p)
+{
+}
 
 void VertexAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
@@ -178,7 +185,7 @@ void VertexAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 
   if (_n_tracks_pandora > 1)
   {
-    trkf::VertexWrapper track_vtx = fitter.fitTracks(pandora_tracks);
+    trkf::VertexWrapper track_vtx = fitter->fitTracks(pandora_tracks);
     _vtx_fit_pandora_is_valid = track_vtx.isValid();
     if (_vtx_fit_pandora_is_valid)
     {
@@ -189,7 +196,7 @@ void VertexAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
   }
   if (_n_tracks_tkfit > 1)
   {
-    trkf::VertexWrapper trackfit_vtx = fitter.fitTracks(fitted_tracks);
+    trkf::VertexWrapper trackfit_vtx = fitter->fitTracks(fitted_tracks);
     _vtx_fit_tkfit_is_valid = trackfit_vtx.isValid();
     if (_vtx_fit_tkfit_is_valid)
     {
