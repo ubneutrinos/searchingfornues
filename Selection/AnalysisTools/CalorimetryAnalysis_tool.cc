@@ -453,7 +453,7 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
         {
           _dqdx_u.push_back((float)dqdx[n]);
           _dedx_u.push_back((float)dedx[n]);
-          _dedx_u.push_back((float)rr[n]);
+          _rr_u.push_back((float)rr[n]);
           _pitch_u.push_back((float)pitch[n]);
         }
       }
@@ -463,7 +463,7 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
         {
           _dqdx_v.push_back((float)dqdx[n]);
           _dedx_v.push_back((float)dedx[n]);
-          _dedx_v.push_back((float)rr[n]);
+          _rr_v.push_back((float)rr[n]);
           _pitch_v.push_back((float)pitch[n]);
         }
       }
@@ -473,7 +473,7 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
         {
           _dqdx_y.push_back((float)dqdx[n]);
           _dedx_y.push_back((float)dedx[n]);
-          _dedx_y.push_back((float)rr[n]);
+          _rr_y.push_back((float)rr[n]);
           _pitch_y.push_back((float)pitch[n]);
         }
       }
