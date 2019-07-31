@@ -29,34 +29,6 @@ class VertexAnalysis : public AnalysisToolBase
 {
 
 public:
-  struct Inputs
-  {
-    using Name = fhicl::Name;
-    using Comment = fhicl::Comment;
-    fhicl::Atom<art::InputTag> inputPFLabel
-    {
-      Name("TRKFITproducer"),
-      Comment("Label of recob::Track Collection produced by the track fit on the showers")
-    };
-  };
-
-  struct Config
-  {
-    using Name = fhicl::Name;
-    fhicl::Table<VertexAnalysis::Inputs> inputs
-    {
-      Name("inputs"),
-    };
-    fhicl::Table<trkf::Geometric3DVertexFitter::Config> options
-    {
-      Name("options")
-    };
-    fhicl::Table<trkf::TrackStatePropagator::Config> propagator
-    {
-      Name("propagator")
-    };
-  };
-
   /**
      *  @brief  Constructor
      *
@@ -82,10 +54,6 @@ public:
      */
   void analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected) override;
 
-  /**
-     * @brief Fill Default info for event associated to neutrino
-     */
-  void fillDefault();
 
   /**
      * @brief set branches for TTree
@@ -102,13 +70,13 @@ private:
   trkf::Geometric3DVertexFitter *fitter;
 
   int _n_tracks_pandora;
-  int _vtx_fit_pandora_is_valid;
+  bool _vtx_fit_pandora_is_valid;
   float _vtx_fit_pandora_x;
   float _vtx_fit_pandora_y;
   float _vtx_fit_pandora_z;
 
   int _n_tracks_tkfit;
-  int _vtx_fit_tkfit_is_valid;
+  bool _vtx_fit_tkfit_is_valid;
   float _vtx_fit_tkfit_x;
   float _vtx_fit_tkfit_y;
   float _vtx_fit_tkfit_z;
@@ -121,13 +89,15 @@ private:
 ///
 /// pset - Fcl parameters.
 ///
+
 VertexAnalysis::VertexAnalysis(const fhicl::ParameterSet &p)
 {
-  // art::EDAnalyzer::Table<Config> const & pset = p;
-  fhicl::Table<analysis::VertexAnalysis::Config> const & pset(p);
-  fTRKFITproducer = pset().inputs().inputPFLabel();
-  fitter = new trkf::Geometric3DVertexFitter(pset().options, pset().propagator);
+  fTRKFITproducer = p.get<art::InputTag>("TRKFITproducer");
+  fhicl::Table<trkf::Geometric3DVertexFitter::Config> options(p.get<fhicl::ParameterSet>("options"));
+  fhicl::Table<trkf::TrackStatePropagator::Config> propagator(p.get<fhicl::ParameterSet>("propagator"));
+  fitter = new trkf::Geometric3DVertexFitter(options, propagator);
 }
+
 
 void VertexAnalysis::configure(fhicl::ParameterSet const &p)
 {
@@ -139,25 +109,28 @@ void VertexAnalysis::analyzeEvent(art::Event const &e, bool fData)
 
 void VertexAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
 {
-  auto trk_fit_h = e.getValidHandle<std::vector<art::Ptr<recob::Track>>>(fTRKFITproducer);
+  auto trk_fit_h = e.getValidHandle<std::vector<recob::Track>>(fTRKFITproducer);
+  std::vector<art::Ptr<recob::Track> > trk_fit_v;
+  art::fill_ptr_vector(trk_fit_v, trk_fit_h);
 
   std::vector< art::Ptr<recob::Track> > pandora_tracks;
   std::vector< art::Ptr<recob::Track> > fitted_tracks;
 
   // look for the neutrino
-  std::vector< size_t > daughter_lists;
+  size_t primary_index = 100000;
   for (auto pfp : slice_pfp_v)
   {
     if (pfp->IsPrimary())
     {
-      daughter_lists = pfp->Daughters();
+      primary_index = pfp->Self();
     }
   }
+  std::cout << "[VERTEX ANALYZER] primary index " << primary_index << std::endl;
 
   // loop on the daughters of the neutrino
   for (auto pfp : slice_pfp_v)
   {
-    if (std::find(daughter_lists.begin(), daughter_lists.end(), pfp->Self()) != daughter_lists.end())
+    if (pfp->Parent() != primary_index)
       continue;
 
     // fill pandora
@@ -169,7 +142,7 @@ void VertexAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
     }
 
     // fill trk fit
-    for (const auto tk: *trk_fit_h)
+    for (const auto tk: trk_fit_v)
     {
       if (tk->ID() == int(pfp.index()))
       {
@@ -205,31 +178,16 @@ void VertexAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
   }
 }
 
-void VertexAnalysis::fillDefault()
-{
-  _n_tracks_pandora = -1;
-  _vtx_fit_pandora_is_valid = false;
-  _vtx_fit_pandora_x = -10000;
-  _vtx_fit_pandora_y = -10000;
-  _vtx_fit_pandora_z = -10000;
-
-  _n_tracks_tkfit = false;
-  _vtx_fit_tkfit_is_valid = -1;
-  _vtx_fit_tkfit_x = -10000;
-  _vtx_fit_tkfit_y = -10000;
-  _vtx_fit_tkfit_z = -10000;
-}
-
 void VertexAnalysis::setBranches(TTree *_tree)
 {
   _tree->Branch("n_tracks_pandora", &_n_tracks_pandora, "n_tracks_pandora/i");
-  _tree->Branch("vtx_fit_pandora_is_valid", &_vtx_fit_pandora_is_valid, "vtx_fit_pandora_is_valid/i");
+  _tree->Branch("vtx_fit_pandora_is_valid", &_vtx_fit_pandora_is_valid, "vtx_fit_pandora_is_valid/O");
   _tree->Branch("vtx_fit_pandora_x", &_vtx_fit_pandora_x, "vtx_fit_pandora_x/f");
   _tree->Branch("vtx_fit_pandora_y", &_vtx_fit_pandora_y, "vtx_fit_pandora_y/f");
   _tree->Branch("vtx_fit_pandora_z", &_vtx_fit_pandora_z, "vtx_fit_pandora_z/f");
 
   _tree->Branch("n_tracks_tkfit", &_n_tracks_tkfit, "n_tracks_tkfit/i");
-  _tree->Branch("vtx_fit_tkfit_is_valid", &_vtx_fit_tkfit_is_valid, "vtx_fit_tkfit_is_valid/i");
+  _tree->Branch("vtx_fit_tkfit_is_valid", &_vtx_fit_tkfit_is_valid, "vtx_fit_tkfit_is_valid/O");
   _tree->Branch("vtx_fit_tkfit_x", &_vtx_fit_tkfit_x, "vtx_fit_tkfit_x/f");
   _tree->Branch("vtx_fit_tkfit_y", &_vtx_fit_tkfit_y, "vtx_fit_tkfit_y/f");
   _tree->Branch("vtx_fit_tkfit_z", &_vtx_fit_tkfit_z, "vtx_fit_tkfit_z/f");
@@ -237,6 +195,17 @@ void VertexAnalysis::setBranches(TTree *_tree)
 
 void VertexAnalysis::resetTTree(TTree *_tree)
 {
+  _n_tracks_pandora = -1;
+  _vtx_fit_pandora_is_valid = false;
+  _vtx_fit_pandora_x = -10000;
+  _vtx_fit_pandora_y = -10000;
+  _vtx_fit_pandora_z = -10000;
+
+  _n_tracks_tkfit = -1;
+  _vtx_fit_tkfit_is_valid = false;
+  _vtx_fit_tkfit_x = -10000;
+  _vtx_fit_tkfit_y = -10000;
+  _vtx_fit_tkfit_z = -10000;
 }
 
 DEFINE_ART_CLASS_TOOL(VertexAnalysis)

@@ -23,9 +23,10 @@ CalorimetryAnalysisTool: {
 VertexAnalysisTool: {
     tool_type: "VertexAnalysis"
 
-    inputs: {
-      TRKFITproducer: "shrreco3dKalmanShower"
-    }
+    #inputs: {
+    #  TRKFITproducer: "shrreco3dKalmanShower"
+    #}
+    TRKFITproducer: "shrreco3dKalmanShower"
     options: {
       debugLevel: 0
       sipCut: 3.0
@@ -192,8 +193,8 @@ NuSelectionFilter:{
         shower:        @local::ShowerAnalysisTool
         showerstart:        @local::ShowerStartPointTool
         track:         @local::TrackAnalysisTool
-        #vertex:         @local::VertexAnalysisTool
-        calorimetry:   @local::CalorimetryAnalysisTool
+        vertex:         @local::VertexAnalysisTool
+        #calorimetry:   @local::CalorimetryAnalysisTool
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
