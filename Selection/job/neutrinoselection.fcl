@@ -8,6 +8,18 @@
 #include "services_microboone.fcl"
 #include "flashmatchsetup.fcl"
 
+CalorimetryAnalysisTool: {
+    tool_type: "CalorimetryAnalysis"
+    TRKproducer: "pandoraTrack"
+    CALOproducer: "pandoraTrackcali"
+    PIDproducer: "pandoraTrackcalipid"
+
+    CLSproducer: "pandora"
+    Hproducer: "gaushit"
+    BacktrackTag: "gaushitTruthMatch"
+    MCRproducer: "mcreco"
+}
+
 VertexAnalysisTool: {
     tool_type: "VertexAnalysis"
 
@@ -27,7 +39,6 @@ VertexAnalysisTool: {
       propPinvErr: false
     }
 }
-
 
 ShowerStartPointTool: {
     tool_type: "ShowerStartPoint"
@@ -182,6 +193,7 @@ NuSelectionFilter:{
         showerstart:        @local::ShowerStartPointTool
         track:         @local::TrackAnalysisTool
         #vertex:         @local::VertexAnalysisTool
+        calorimetry:   @local::CalorimetryAnalysisTool
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool

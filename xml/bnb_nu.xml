@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
 <!ENTITY name "bnb_nu">
-<!ENTITY project_version "v9">
+<!ENTITY project_version "v10">
 <!ENTITY release "v08_00_00_17">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "foppiani">
@@ -52,8 +52,10 @@
 
     <memory>2000</memory>
     <disk>10GB</disk>
-    <numjobs>957</numjobs>
-    <maxfilesperjob>25</maxfilesperjob>
+    <numjobs>300</numjobs>
+    <maxfilesperjob>15</maxfilesperjob>
+    <!-- <numjobs>957</numjobs>
+    <maxfilesperjob>25</maxfilesperjob> -->
     <schema>root</schema>
     <jobsub>--expected-lifetime=12h -q --generate-email-summary --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub>
     <jobsub_start>--append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>

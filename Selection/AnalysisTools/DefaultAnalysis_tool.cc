@@ -390,7 +390,6 @@ bool DefaultAnalysis::isFiducial(const double x[3]) const
 
 void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
 {
-
   ProxyClusColl_t const &clus_proxy = proxy::getCollection<std::vector<recob::Cluster>>(e, fCLSproducer,
                                                                                         proxy::withAssociated<recob::Hit>(fCLSproducer));
   // somehow proxies don't work for the slice-hit association, so go back to old assns

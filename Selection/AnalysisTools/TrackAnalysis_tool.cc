@@ -93,13 +93,8 @@ private:
   art::InputTag fCALOproducer;
   art::InputTag fPIDproducer;
   art::InputTag fTRKproducer;
-  float fTrkShrScore; /**< Threshold on the Pandora track score (default 0.5) */
-
-  unsigned int _n_tracks;
 
   std::vector<size_t> _trk_pfp_id_v;
-
-  std::vector<float> _trk_score_v;
 
   std::vector<float> _trk_start_x_v;
   std::vector<float> _trk_start_y_v;
@@ -167,7 +162,6 @@ TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p)
   fCALOproducer = p.get< art::InputTag > ("CALOproducer");
   fPIDproducer  = p.get< art::InputTag > ("PIDproducer" );
   fTRKproducer  = p.get< art::InputTag > ("TRKproducer" );
-  fTrkShrScore  = p.get<float>("TrkShrScore", 0.5);
 
 }
 
@@ -196,12 +190,12 @@ void TrackAnalysis::analyzeEvent(art::Event const &e, bool fData)
 void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
 {
   searchingfornues::ProxyCaloColl_t const& calo_proxy = proxy::getCollection<std::vector<recob::Track> >(e, fTRKproducer,
-													 proxy::withAssociated<anab::Calorimetry>(fCALOproducer));
+                           proxy::withAssociated<anab::Calorimetry>(fCALOproducer));
 
   searchingfornues::ProxyPIDColl_t const& pid_proxy = proxy::getCollection<std::vector<recob::Track> >(e, fTRKproducer,
-													 proxy::withAssociated<anab::ParticleID>(fPIDproducer));
+                           proxy::withAssociated<anab::ParticleID>(fPIDproducer));
 
-	TVector3 nuvtx;
+  TVector3 nuvtx;
   for (auto pfp : slice_pfp_v)
   {
     if (pfp->IsPrimary())
@@ -357,7 +351,6 @@ void TrackAnalysis::fillDefault()
 {
   _trk_pfp_id_v.push_back(std::numeric_limits<int>::lowest());
 
-  _trk_score_v.push_back(std::numeric_limits<float>::lowest());
 
   _trk_start_x_v.push_back(std::numeric_limits<float>::lowest());
   _trk_start_y_v.push_back(std::numeric_limits<float>::lowest());
@@ -412,8 +405,6 @@ void TrackAnalysis::fillDefault()
 
 void TrackAnalysis::setBranches(TTree *_tree)
 {
-  _tree->Branch("n_tracks", &_n_tracks, "n_tracks/i");
-  _tree->Branch("trk_score_v", "std::vector<float>",  &_trk_score_v);
 
   _tree->Branch("trk_bragg_p_v", "std::vector< float >", &_trk_bragg_p_v);
   _tree->Branch("trk_bragg_mu_v", "std::vector< float >", &_trk_bragg_mu_v);
@@ -467,9 +458,7 @@ void TrackAnalysis::setBranches(TTree *_tree)
 
 void TrackAnalysis::resetTTree(TTree *_tree)
 {
-  _n_tracks = 0;
 
-  _trk_score_v.clear();
 
   _trk_bragg_p_v.clear();
   _trk_bragg_mu_v.clear();
