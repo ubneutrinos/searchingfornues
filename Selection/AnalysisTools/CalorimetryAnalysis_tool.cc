@@ -440,42 +440,26 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
     for (auto const& calo : calo_v)
     {
       auto const& plane = calo->PlaneID().Plane;
-
-      // grab point-by-point information
-      auto const& dqdx = calo->dQdx();
-      auto const& dedx = calo->dEdx();
-      auto const& rr = calo->ResidualRange();
-      auto const& pitch = calo->TrkPitchVec();
-
       if (plane == 0)
       {
-        for (size_t n=0; n < dqdx.size(); n++)
-        {
-          _dqdx_u.push_back((float)dqdx[n]);
-          _dedx_u.push_back((float)dedx[n]);
-          _rr_u.push_back((float)rr[n]);
-          _pitch_u.push_back((float)pitch[n]);
-        }
+        _dqdx_u = calo->dQdx();
+        _dedx_u = calo->dEdx();
+	_rr_u = calo->ResidualRange();
+	_pitch_u = calo->TrkPitchVec();
       }
       else if (plane == 1)
       {
-        for (size_t n=0; n < dqdx.size(); n++)
-        {
-          _dqdx_v.push_back((float)dqdx[n]);
-          _dedx_v.push_back((float)dedx[n]);
-          _rr_v.push_back((float)rr[n]);
-          _pitch_v.push_back((float)pitch[n]);
-        }
+	_dqdx_v = calo->dQdx();
+        _dedx_v = calo->dEdx();
+	_rr_v = calo->ResidualRange();
+	_pitch_v = calo->TrkPitchVec();
       }
       else if (plane == 2) //collection
       {
-        for (size_t n=0; n < dqdx.size(); n++)
-        {
-          _dqdx_y.push_back((float)dqdx[n]);
-          _dedx_y.push_back((float)dedx[n]);
-          _rr_y.push_back((float)rr[n]);
-          _pitch_y.push_back((float)pitch[n]);
-        }
+	_dqdx_y = calo->dQdx();
+        _dedx_y = calo->dEdx();
+	_rr_y = calo->ResidualRange();
+	_pitch_y = calo->TrkPitchVec();
       }
     }
     _calo_tree->Fill();
