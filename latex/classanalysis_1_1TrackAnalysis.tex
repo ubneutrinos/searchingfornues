@@ -24,6 +24,9 @@ void \hyperlink{classanalysis_1_1TrackAnalysis_a00e51059eed5a6486c9eb2f2f16017de
 void \hyperlink{classanalysis_1_1TrackAnalysis_adde7746b5a45ec99cd67c0ab1fa19eb1}{Save\+Truth} (art\+::\+Event const \&e)\hypertarget{classanalysis_1_1TrackAnalysis_adde7746b5a45ec99cd67c0ab1fa19eb1}{}\label{classanalysis_1_1TrackAnalysis_adde7746b5a45ec99cd67c0ab1fa19eb1}
 
 \begin{DoxyCompactList}\small\item\em Save truth info for event associated to neutrino. \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1TrackAnalysis_ace1af1d0be520c1319758a9391f5bc4d}{fill\+Default} ()\hypertarget{classanalysis_1_1TrackAnalysis_ace1af1d0be520c1319758a9391f5bc4d}{}\label{classanalysis_1_1TrackAnalysis_ace1af1d0be520c1319758a9391f5bc4d}
+
+\begin{DoxyCompactList}\small\item\em Fill Default info for event associated to neutrino. \end{DoxyCompactList}\item 
 void \hyperlink{classanalysis_1_1TrackAnalysis_ae89023f1c4b11cae7bb4acb672006bb7}{set\+Branches} (T\+Tree $\ast$\+\_\+tree) override\hypertarget{classanalysis_1_1TrackAnalysis_ae89023f1c4b11cae7bb4acb672006bb7}{}\label{classanalysis_1_1TrackAnalysis_ae89023f1c4b11cae7bb4acb672006bb7}
 
 \begin{DoxyCompactList}\small\item\em set branches for T\+Tree \end{DoxyCompactList}\item 
@@ -51,87 +54,127 @@ art\+::\+Input\+Tag {\bfseries f\+P\+I\+Dproducer}\hypertarget{classanalysis_1_1
 art\+::\+Input\+Tag {\bfseries f\+T\+R\+Kproducer}\hypertarget{classanalysis_1_1TrackAnalysis_a45abdcf3140e68a2ce90501e33a00eb3}{}\label{classanalysis_1_1TrackAnalysis_a45abdcf3140e68a2ce90501e33a00eb3}
 
 \item 
-float \hyperlink{classanalysis_1_1TrackAnalysis_a49502213574f13be542aaab647940ffd}{f\+Trk\+Shr\+Score}
-\item 
-unsigned int {\bfseries \+\_\+n\+\_\+tracks}\hypertarget{classanalysis_1_1TrackAnalysis_a965f2969aac19332af4597a364586c5d}{}\label{classanalysis_1_1TrackAnalysis_a965f2969aac19332af4597a364586c5d}
+std\+::vector$<$ size\+\_\+t $>$ {\bfseries \+\_\+trk\+\_\+pfp\+\_\+id\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a204ef1a35c4346e36ffba8ced3c6ce5c}{}\label{classanalysis_1_1TrackAnalysis_a204ef1a35c4346e36ffba8ced3c6ce5c}
 
 \item 
-std\+::vector$<$ size\+\_\+t $>$ {\bfseries \+\_\+trk\+\_\+pfp\+\_\+id}\hypertarget{classanalysis_1_1TrackAnalysis_a6ff6b242cbf5345bc77a2a574218ccd9}{}\label{classanalysis_1_1TrackAnalysis_a6ff6b242cbf5345bc77a2a574218ccd9}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+start\+\_\+x\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a221179d7babe341c075f5efd23816131}{}\label{classanalysis_1_1TrackAnalysis_a221179d7babe341c075f5efd23816131}
 
 \item 
-std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+score\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a0a11bbae1318c6f798d03b7cc05d802b}{}\label{classanalysis_1_1TrackAnalysis_a0a11bbae1318c6f798d03b7cc05d802b}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+start\+\_\+y\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a22a1126cccb5cb0a17bfb1406678cf69}{}\label{classanalysis_1_1TrackAnalysis_a22a1126cccb5cb0a17bfb1406678cf69}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+start\+\_\+x}\hypertarget{classanalysis_1_1TrackAnalysis_ad49f45d20ec26dde9ea57374879c3206}{}\label{classanalysis_1_1TrackAnalysis_ad49f45d20ec26dde9ea57374879c3206}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+start\+\_\+z\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a546c29bebe8ce807b1a0abdcbb87f252}{}\label{classanalysis_1_1TrackAnalysis_a546c29bebe8ce807b1a0abdcbb87f252}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+start\+\_\+y}\hypertarget{classanalysis_1_1TrackAnalysis_abaf68aa9375b8b8fc84c619f236f73cb}{}\label{classanalysis_1_1TrackAnalysis_abaf68aa9375b8b8fc84c619f236f73cb}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+distance\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a3d193e8d67655448962d3f3f9b5bc8dd}{}\label{classanalysis_1_1TrackAnalysis_a3d193e8d67655448962d3f3f9b5bc8dd}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+start\+\_\+z}\hypertarget{classanalysis_1_1TrackAnalysis_a7d0a946499d3f330e3eeda4dd831510d}{}\label{classanalysis_1_1TrackAnalysis_a7d0a946499d3f330e3eeda4dd831510d}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+theta\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_add6ab02f075045913b33ee4a566eb078}{}\label{classanalysis_1_1TrackAnalysis_add6ab02f075045913b33ee4a566eb078}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+distance}\hypertarget{classanalysis_1_1TrackAnalysis_abb7f57451eeb094b5b5d5161ed829e97}{}\label{classanalysis_1_1TrackAnalysis_abb7f57451eeb094b5b5d5161ed829e97}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+phi\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a478f0e5341895c4d23557f6803fc5a9b}{}\label{classanalysis_1_1TrackAnalysis_a478f0e5341895c4d23557f6803fc5a9b}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+theta}\hypertarget{classanalysis_1_1TrackAnalysis_ab5ab053ef7d7aa30d598d599ff789914}{}\label{classanalysis_1_1TrackAnalysis_ab5ab053ef7d7aa30d598d599ff789914}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+dir\+\_\+x\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_af92fafa75f438f5d5ffc5c30e39438ad}{}\label{classanalysis_1_1TrackAnalysis_af92fafa75f438f5d5ffc5c30e39438ad}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+phi}\hypertarget{classanalysis_1_1TrackAnalysis_ad6c0e92511d22e25134cba88e268245b}{}\label{classanalysis_1_1TrackAnalysis_ad6c0e92511d22e25134cba88e268245b}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+dir\+\_\+y\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a41be71127f4637eb8649e49720e16554}{}\label{classanalysis_1_1TrackAnalysis_a41be71127f4637eb8649e49720e16554}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+dir\+\_\+x}\hypertarget{classanalysis_1_1TrackAnalysis_a23834d0496ab26ed9db30e4dbc70d900}{}\label{classanalysis_1_1TrackAnalysis_a23834d0496ab26ed9db30e4dbc70d900}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+dir\+\_\+z\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_af560ca963a50e03894414a8b2b04ae18}{}\label{classanalysis_1_1TrackAnalysis_af560ca963a50e03894414a8b2b04ae18}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+dir\+\_\+y}\hypertarget{classanalysis_1_1TrackAnalysis_a6041e3ed51cae9811f60be2d6ff6e2f5}{}\label{classanalysis_1_1TrackAnalysis_a6041e3ed51cae9811f60be2d6ff6e2f5}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+end\+\_\+x\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a0978b4d1abaa1216cfd627ccd88ec3e8}{}\label{classanalysis_1_1TrackAnalysis_a0978b4d1abaa1216cfd627ccd88ec3e8}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+dir\+\_\+z}\hypertarget{classanalysis_1_1TrackAnalysis_a391eb4b7ea5d96d0e82ea5e79ae58e6a}{}\label{classanalysis_1_1TrackAnalysis_a391eb4b7ea5d96d0e82ea5e79ae58e6a}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+end\+\_\+y\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a395bd060dbdafb908ab4c4349e11ce94}{}\label{classanalysis_1_1TrackAnalysis_a395bd060dbdafb908ab4c4349e11ce94}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+end\+\_\+x}\hypertarget{classanalysis_1_1TrackAnalysis_a49a6eb28c7cb10f1ae8070cb42dc9b18}{}\label{classanalysis_1_1TrackAnalysis_a49a6eb28c7cb10f1ae8070cb42dc9b18}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+end\+\_\+z\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a3709728bbb087fac8b08037c5ca3f2c9}{}\label{classanalysis_1_1TrackAnalysis_a3709728bbb087fac8b08037c5ca3f2c9}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+end\+\_\+y}\hypertarget{classanalysis_1_1TrackAnalysis_a3c7fee52b3d981bd39283ce156397a74}{}\label{classanalysis_1_1TrackAnalysis_a3c7fee52b3d981bd39283ce156397a74}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+len\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a68a26309363978c671172515e67213d4}{}\label{classanalysis_1_1TrackAnalysis_a68a26309363978c671172515e67213d4}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+end\+\_\+z}\hypertarget{classanalysis_1_1TrackAnalysis_a9fb411b0819f652885225a1d350f5abc}{}\label{classanalysis_1_1TrackAnalysis_a9fb411b0819f652885225a1d350f5abc}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+bragg\+\_\+p\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a2cf14b10cb366548acafef0c6dcd17e1}{}\label{classanalysis_1_1TrackAnalysis_a2cf14b10cb366548acafef0c6dcd17e1}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+length}\hypertarget{classanalysis_1_1TrackAnalysis_a62277a4789ad11184c5b52b80340bfab}{}\label{classanalysis_1_1TrackAnalysis_a62277a4789ad11184c5b52b80340bfab}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+bragg\+\_\+mu\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a7d00dd7a33d0ae12fcc578044e6d0fb2}{}\label{classanalysis_1_1TrackAnalysis_a7d00dd7a33d0ae12fcc578044e6d0fb2}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+bragg\+\_\+p}\hypertarget{classanalysis_1_1TrackAnalysis_a4d80978ff1d329dd87f0be84dc39a844}{}\label{classanalysis_1_1TrackAnalysis_a4d80978ff1d329dd87f0be84dc39a844}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+bragg\+\_\+mip\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a0751097deea470015f65090b87982a53}{}\label{classanalysis_1_1TrackAnalysis_a0751097deea470015f65090b87982a53}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+bragg\+\_\+mu}\hypertarget{classanalysis_1_1TrackAnalysis_ab3a23c3cd1b9efaeb90fb3837157c302}{}\label{classanalysis_1_1TrackAnalysis_ab3a23c3cd1b9efaeb90fb3837157c302}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+pid\+\_\+chipr\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a5247cdcd8051190552b5c5d6bb961d88}{}\label{classanalysis_1_1TrackAnalysis_a5247cdcd8051190552b5c5d6bb961d88}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+bragg\+\_\+mip}\hypertarget{classanalysis_1_1TrackAnalysis_a5b6b35517864828bf6f16f2297542f91}{}\label{classanalysis_1_1TrackAnalysis_a5b6b35517864828bf6f16f2297542f91}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+pid\+\_\+chika\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a742a7a8da829bbe7f41a3f33892f335e}{}\label{classanalysis_1_1TrackAnalysis_a742a7a8da829bbe7f41a3f33892f335e}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+pidchi}\hypertarget{classanalysis_1_1TrackAnalysis_a0d1d1bcc5a103d25a9fb43d0d3d058e9}{}\label{classanalysis_1_1TrackAnalysis_a0d1d1bcc5a103d25a9fb43d0d3d058e9}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+pid\+\_\+chipi\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a07670855a862aeba52292bbc3944db93}{}\label{classanalysis_1_1TrackAnalysis_a07670855a862aeba52292bbc3944db93}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+pidchipr}\hypertarget{classanalysis_1_1TrackAnalysis_a0020d81b4457b5bfec7ca950631ea75c}{}\label{classanalysis_1_1TrackAnalysis_a0020d81b4457b5bfec7ca950631ea75c}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+pid\+\_\+chimu\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a8dfb2ccbdd07148918b1bf6c6d925fe4}{}\label{classanalysis_1_1TrackAnalysis_a8dfb2ccbdd07148918b1bf6c6d925fe4}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+pidchika}\hypertarget{classanalysis_1_1TrackAnalysis_a6caa78fafa796d4c34dd86b6c4af7762}{}\label{classanalysis_1_1TrackAnalysis_a6caa78fafa796d4c34dd86b6c4af7762}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+pida\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a9dfa82e52fb547d96f37c8d455a59513}{}\label{classanalysis_1_1TrackAnalysis_a9dfa82e52fb547d96f37c8d455a59513}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+pidchipi}\hypertarget{classanalysis_1_1TrackAnalysis_af6153beab708b07e2e9111bdfa7ef7bf}{}\label{classanalysis_1_1TrackAnalysis_af6153beab708b07e2e9111bdfa7ef7bf}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+bragg\+\_\+p\+\_\+u\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_afecbb76cec79c3d045a1c4b8bff8e026}{}\label{classanalysis_1_1TrackAnalysis_afecbb76cec79c3d045a1c4b8bff8e026}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+pidchimu}\hypertarget{classanalysis_1_1TrackAnalysis_aed79c5679af1c6329feea7a34bda7e74}{}\label{classanalysis_1_1TrackAnalysis_aed79c5679af1c6329feea7a34bda7e74}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+bragg\+\_\+mu\+\_\+u\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a53b36d6f0590050152217fdbc82a5e8d}{}\label{classanalysis_1_1TrackAnalysis_a53b36d6f0590050152217fdbc82a5e8d}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+pida}\hypertarget{classanalysis_1_1TrackAnalysis_a3fb26136cae5103046d3c8c95413acaf}{}\label{classanalysis_1_1TrackAnalysis_a3fb26136cae5103046d3c8c95413acaf}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+bragg\+\_\+mip\+\_\+u\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_aba661ce5da2f32c002faff6e4b4e2216}{}\label{classanalysis_1_1TrackAnalysis_aba661ce5da2f32c002faff6e4b4e2216}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+energy\+\_\+proton}\hypertarget{classanalysis_1_1TrackAnalysis_a0b140906dcfbc7971ea82bbc26ed4492}{}\label{classanalysis_1_1TrackAnalysis_a0b140906dcfbc7971ea82bbc26ed4492}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+pid\+\_\+chipr\+\_\+u\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a38615a6aa84f07a3c498983a39c4c86c}{}\label{classanalysis_1_1TrackAnalysis_a38615a6aa84f07a3c498983a39c4c86c}
 
 \item 
-std\+::vector$<$ double $>$ {\bfseries \+\_\+trk\+\_\+energy\+\_\+muon}\hypertarget{classanalysis_1_1TrackAnalysis_a3e410b8e3786b70fbce29c798f20d1ca}{}\label{classanalysis_1_1TrackAnalysis_a3e410b8e3786b70fbce29c798f20d1ca}
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+pid\+\_\+chika\+\_\+u\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_add0fa48d340723d17fb6f09fa6e21dfe}{}\label{classanalysis_1_1TrackAnalysis_add0fa48d340723d17fb6f09fa6e21dfe}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+pid\+\_\+chipi\+\_\+u\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a098bf3b8c3d0b725de0d5cfbad2da2e5}{}\label{classanalysis_1_1TrackAnalysis_a098bf3b8c3d0b725de0d5cfbad2da2e5}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+pid\+\_\+chimu\+\_\+u\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a67fb98382d8800148d6d51f8f3c52ea3}{}\label{classanalysis_1_1TrackAnalysis_a67fb98382d8800148d6d51f8f3c52ea3}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+pida\+\_\+u\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_aff67733ca883a53c06b59507db15023d}{}\label{classanalysis_1_1TrackAnalysis_aff67733ca883a53c06b59507db15023d}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+bragg\+\_\+p\+\_\+v\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_abd40ec8623083c3c20c647be143a4a10}{}\label{classanalysis_1_1TrackAnalysis_abd40ec8623083c3c20c647be143a4a10}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+bragg\+\_\+mu\+\_\+v\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a46e62b7872b4e3be2e7b62c610bc3b31}{}\label{classanalysis_1_1TrackAnalysis_a46e62b7872b4e3be2e7b62c610bc3b31}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+bragg\+\_\+mip\+\_\+v\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a8963aa9ae16303f2b9efa9d27cc7646b}{}\label{classanalysis_1_1TrackAnalysis_a8963aa9ae16303f2b9efa9d27cc7646b}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+pid\+\_\+chipr\+\_\+v\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a503dbb230f9ae40d7a331319c1810277}{}\label{classanalysis_1_1TrackAnalysis_a503dbb230f9ae40d7a331319c1810277}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+pid\+\_\+chika\+\_\+v\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a0fba7bcf97e6aa6c92ed9d307799b8c1}{}\label{classanalysis_1_1TrackAnalysis_a0fba7bcf97e6aa6c92ed9d307799b8c1}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+pid\+\_\+chipi\+\_\+v\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_aed9b726c1a60087c9de3116220538c7b}{}\label{classanalysis_1_1TrackAnalysis_aed9b726c1a60087c9de3116220538c7b}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+pid\+\_\+chimu\+\_\+v\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a2efb1d1f7ac135d1f0cd5550c34779c2}{}\label{classanalysis_1_1TrackAnalysis_a2efb1d1f7ac135d1f0cd5550c34779c2}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+pida\+\_\+v\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a6dcd84b8b676b91767dc0336a548fde6}{}\label{classanalysis_1_1TrackAnalysis_a6dcd84b8b676b91767dc0336a548fde6}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+mcs\+\_\+muon\+\_\+mom\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a8c72ab8bf9729ad741b1fcdb1b8916b3}{}\label{classanalysis_1_1TrackAnalysis_a8c72ab8bf9729ad741b1fcdb1b8916b3}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+energy\+\_\+proton\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a29eb249db63679c34d8df831d6df4dcc}{}\label{classanalysis_1_1TrackAnalysis_a29eb249db63679c34d8df831d6df4dcc}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+trk\+\_\+energy\+\_\+muon\+\_\+v}\hypertarget{classanalysis_1_1TrackAnalysis_a469887427d80272b004cd1aa65a2cd69}{}\label{classanalysis_1_1TrackAnalysis_a469887427d80272b004cd1aa65a2cd69}
 
 \end{DoxyCompactItemize}
 
@@ -190,12 +233,6 @@ Reconfigure method.
 Arguments\+:
 
 pset -\/ Fcl parameter set. 
-
-\subsection{Member Data Documentation}
-\index{analysis\+::\+Track\+Analysis@{analysis\+::\+Track\+Analysis}!f\+Trk\+Shr\+Score@{f\+Trk\+Shr\+Score}}
-\index{f\+Trk\+Shr\+Score@{f\+Trk\+Shr\+Score}!analysis\+::\+Track\+Analysis@{analysis\+::\+Track\+Analysis}}
-\subsubsection[{\texorpdfstring{f\+Trk\+Shr\+Score}{fTrkShrScore}}]{\setlength{\rightskip}{0pt plus 5cm}float analysis\+::\+Track\+Analysis\+::f\+Trk\+Shr\+Score\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classanalysis_1_1TrackAnalysis_a49502213574f13be542aaab647940ffd}{}\label{classanalysis_1_1TrackAnalysis_a49502213574f13be542aaab647940ffd}
-Threshold on the Pandora track score (default 0.\+5) 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
