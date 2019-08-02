@@ -40,6 +40,9 @@ void \hyperlink{classSecondShowerPurity_a740e87a9a228f255bca15d2f04505aa9}{Build
 \begin{DoxyCompactList}\small\item\em function to builf a map linking P\+F\+Particle index to Self() attribute \end{DoxyCompactList}\item 
 void \hyperlink{classSecondShowerPurity_a91a362195490bc158713e4ed84ed0fa2}{Add\+Daughters} (const searchingfornues\+::\+Proxy\+Pfp\+Elem\+\_\+t \&pfp\+\_\+pxy, const searchingfornues\+::\+Proxy\+Pfp\+Coll\+\_\+t \&pfp\+\_\+pxy\+\_\+col, std\+::vector$<$ searchingfornues\+::\+Proxy\+Pfp\+Elem\+\_\+t $>$ \&slice\+\_\+v)
 \begin{DoxyCompactList}\small\item\em build P\+F\+Particle hierarchy (i.\+e. slice) from parent \mbox{[}recursive function\mbox{]} \end{DoxyCompactList}\item 
+void {\bfseries Reset\+T\+Tree} ()\hypertarget{classSecondShowerPurity_af58098493a2cd9014e1e962b366008e3}{}\label{classSecondShowerPurity_af58098493a2cd9014e1e962b366008e3}
+
+\item 
 std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$ $>$ {\bfseries get\+Gauss\+Hits} (const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$$>$ \&hits, const art\+::\+Valid\+Handle$<$ std\+::vector$<$ recob\+::\+Hit $>$ $>$ gaushit\+\_\+h)\hypertarget{classSecondShowerPurity_ad2c997fc6ccdea277c14cfcad5c83243}{}\label{classSecondShowerPurity_ad2c997fc6ccdea277c14cfcad5c83243}
 
 \item 
@@ -47,6 +50,12 @@ bool {\bfseries Is\+Proton\+Isolated} (const std\+::vector$<$ art\+::\+Ptr$<$ re
 
 \item 
 void {\bfseries Gamma\+Dot} (const float \&gamma\+Wire, const float \&gamma\+Time, const int \&pl, const T\+Vector3 \&shower\+Vtx, const T\+Vector3 \&shower\+Dir, float \&dot, float \&d2d)\hypertarget{classSecondShowerPurity_ac3aa736b52623968b984814ac75d6510}{}\label{classSecondShowerPurity_ac3aa736b52623968b984814ac75d6510}
+
+\item 
+void {\bfseries P\+CA} (const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$$>$ \&hits, T\+VectorD \&eigen\+Val, T\+MatrixD \&eigen\+Vec)\hypertarget{classSecondShowerPurity_a57fd30974ec2f17538f54fbeaeb6f8ef}{}\label{classSecondShowerPurity_a57fd30974ec2f17538f54fbeaeb6f8ef}
+
+\item 
+float {\bfseries Eigen\+Dot} (const int \&pl, const T\+Vector3 \&Shower\+Dir, const float \&gamma\+Wire\+Dir, const float \&gamma\+Time\+Dir)\hypertarget{classSecondShowerPurity_a7b112eddad9439ca96b2d25ce2e432b2}{}\label{classSecondShowerPurity_a7b112eddad9439ca96b2d25ce2e432b2}
 
 \end{DoxyCompactItemize}
 \subsection*{Private Attributes}
@@ -82,6 +91,15 @@ float {\bfseries \+\_\+time2cm}\hypertarget{classSecondShowerPurity_ac3c7bec25a1
 T\+Tree $\ast$ {\bfseries \+\_\+tree}\hypertarget{classSecondShowerPurity_acc6a1cb74b439825c0c3e116e7e79990}{}\label{classSecondShowerPurity_acc6a1cb74b439825c0c3e116e7e79990}
 
 \item 
+int {\bfseries \+\_\+evt}\hypertarget{classSecondShowerPurity_a66bab37a53c798be4b5bbb2fc3a83ef8}{}\label{classSecondShowerPurity_a66bab37a53c798be4b5bbb2fc3a83ef8}
+
+\item 
+int {\bfseries \+\_\+sub}\hypertarget{classSecondShowerPurity_ad88c2adccbe580a2b957745851b964f2}{}\label{classSecondShowerPurity_ad88c2adccbe580a2b957745851b964f2}
+
+\item 
+int {\bfseries \+\_\+run}\hypertarget{classSecondShowerPurity_a50687a80fe0034dc68f142e0e3e4d2e7}{}\label{classSecondShowerPurity_a50687a80fe0034dc68f142e0e3e4d2e7}
+
+\item 
 int {\bfseries \+\_\+nhit}\hypertarget{classSecondShowerPurity_a4b4ced7189ab5da87a01efbf5efab94f}{}\label{classSecondShowerPurity_a4b4ced7189ab5da87a01efbf5efab94f}
 
 \item 
@@ -94,16 +112,55 @@ float {\bfseries \+\_\+charge}\hypertarget{classSecondShowerPurity_a5bfedf045c3c
 float {\bfseries \+\_\+purity}\hypertarget{classSecondShowerPurity_a96749b5f8597709f571d396df397c09e}{}\label{classSecondShowerPurity_a96749b5f8597709f571d396df397c09e}
 
 \item 
+float {\bfseries \+\_\+shrpurity}\hypertarget{classSecondShowerPurity_ae0a9cfb0ee82ebce26388ad7178daf9f}{}\label{classSecondShowerPurity_ae0a9cfb0ee82ebce26388ad7178daf9f}
+
+\item 
 float {\bfseries \+\_\+shrdot}\hypertarget{classSecondShowerPurity_ac760b87c66bded961e5af29ea7cc3b64}{}\label{classSecondShowerPurity_ac760b87c66bded961e5af29ea7cc3b64}
 
 \item 
 float {\bfseries \+\_\+shrdist}\hypertarget{classSecondShowerPurity_a5191904da66cd252ac24707a5bfdba35}{}\label{classSecondShowerPurity_a5191904da66cd252ac24707a5bfdba35}
 
 \item 
-float {\bfseries \+\_\+shrenergy}\hypertarget{classSecondShowerPurity_a7247d04b7d470db3a7f0c65084187976}{}\label{classSecondShowerPurity_a7247d04b7d470db3a7f0c65084187976}
+float {\bfseries \+\_\+shrenergy1}\hypertarget{classSecondShowerPurity_ae3810da69d504451c1b672f28bac844d}{}\label{classSecondShowerPurity_ae3810da69d504451c1b672f28bac844d}
+
+\item 
+float {\bfseries \+\_\+shrenergy2}\hypertarget{classSecondShowerPurity_ac8bbe37eaab32aa01e3cc45a9e4c832f}{}\label{classSecondShowerPurity_ac8bbe37eaab32aa01e3cc45a9e4c832f}
+
+\item 
+float {\bfseries \+\_\+elecenergy}\hypertarget{classSecondShowerPurity_ac0bbff3715b04519f7db91a629ef7c35}{}\label{classSecondShowerPurity_ac0bbff3715b04519f7db91a629ef7c35}
+
+\item 
+int {\bfseries \+\_\+btpdg}\hypertarget{classSecondShowerPurity_a29675be4a26901ae658f9ffbd6889ae6}{}\label{classSecondShowerPurity_a29675be4a26901ae658f9ffbd6889ae6}
+
+\item 
+int {\bfseries \+\_\+btshrpdg}\hypertarget{classSecondShowerPurity_a8d015e44e5d31083168e8c05b52a4efb}{}\label{classSecondShowerPurity_a8d015e44e5d31083168e8c05b52a4efb}
+
+\item 
+float {\bfseries \+\_\+btmom}\hypertarget{classSecondShowerPurity_a2bffd624cb6a4b222e2814fefa402dee}{}\label{classSecondShowerPurity_a2bffd624cb6a4b222e2814fefa402dee}
+
+\item 
+float {\bfseries \+\_\+btshrmom}\hypertarget{classSecondShowerPurity_aac1a23423e956381fbc91668b6581f8f}{}\label{classSecondShowerPurity_aac1a23423e956381fbc91668b6581f8f}
 
 \item 
 int {\bfseries \+\_\+nshr}\hypertarget{classSecondShowerPurity_a0031191dddf516922b44958d3b32d54c}{}\label{classSecondShowerPurity_a0031191dddf516922b44958d3b32d54c}
+
+\item 
+float {\bfseries \+\_\+clus\+\_\+tmin}\hypertarget{classSecondShowerPurity_afba07fb9b16751cef928d2d0073b4cb6}{}\label{classSecondShowerPurity_afba07fb9b16751cef928d2d0073b4cb6}
+
+\item 
+float {\bfseries \+\_\+clus\+\_\+tmax}\hypertarget{classSecondShowerPurity_a112db666388cf84b52bd6631f7d48ab7}{}\label{classSecondShowerPurity_a112db666388cf84b52bd6631f7d48ab7}
+
+\item 
+float {\bfseries \+\_\+twoshrdot}\hypertarget{classSecondShowerPurity_ab3955e8709105007782b28b724532a1a}{}\label{classSecondShowerPurity_ab3955e8709105007782b28b724532a1a}
+
+\item 
+float {\bfseries \+\_\+eigenratio}\hypertarget{classSecondShowerPurity_a1bfb77f818b351085cb7515077d24c6b}{}\label{classSecondShowerPurity_a1bfb77f818b351085cb7515077d24c6b}
+
+\item 
+float {\bfseries \+\_\+eigendot}\hypertarget{classSecondShowerPurity_a9dde548cb4088f572c339ed1fef58c30}{}\label{classSecondShowerPurity_a9dde548cb4088f572c339ed1fef58c30}
+
+\item 
+float {\bfseries \+\_\+gammaemin}\hypertarget{classSecondShowerPurity_a97588e6b26578179932a8f6023728dde}{}\label{classSecondShowerPurity_a97588e6b26578179932a8f6023728dde}
 
 \end{DoxyCompactItemize}
 
