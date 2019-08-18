@@ -111,12 +111,14 @@ void CommonOpticalFilter::analyze(art::Event const& e)
   auto mct      = mct_h->at(0);
   auto neutrino = mct.GetNeutrino();
   auto nu       = neutrino.Nu();
+  auto lep      = neutrino.Lepton();
 
-  _nu_e  = nu.Trajectory().E(0);
-  _vtx_x = nu.EndX();
-  _vtx_y = nu.EndY();
-  _vtx_z = nu.EndZ();
-  _vtx_t = nu.T();
+  _nu_e   = nu.Trajectory().E(0);
+  _elec_e = lep.Trajectory().E(0);
+  _vtx_x  = nu.EndX();
+  _vtx_y  = nu.EndY();
+  _vtx_z  = nu.EndZ();
+  _vtx_t  = nu.T();
 
   auto const& mcs_h = e.getValidHandle<std::vector<sim::MCShower> >("mcreco");
 
