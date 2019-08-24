@@ -11,6 +11,7 @@
 // backtracking tools
 #include "../CommonDefs/BacktrackingFuncs.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
+#include "../CommonDefs/ParticleSegments.h"
 
 namespace analysis
 {
