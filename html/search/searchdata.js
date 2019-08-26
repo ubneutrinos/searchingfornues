@@ -4,7 +4,8 @@ var indexSectionsWithContent =
   1: "abcdefmnopst",
   2: "abcdefginoprst~",
   3: "_efmps",
-  4: "e"
+  4: "c",
+  5: "e"
 };
 
 var indexSectionNames =
@@ -13,7 +14,8 @@ var indexSectionNames =
   1: "classes",
   2: "functions",
   3: "variables",
-  4: "pages"
+  4: "groups",
+  5: "pages"
 };
 
 var indexSectionLabels =
@@ -22,6 +24,7 @@ var indexSectionLabels =
   1: "Classes",
   2: "Functions",
   3: "Variables",
-  4: "Pages"
+  4: "Modules",
+  5: "Pages"
 };
 
