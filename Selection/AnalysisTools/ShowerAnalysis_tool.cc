@@ -105,8 +105,6 @@ private:
   std::vector<int>    _shr_nclus_v;
   std::vector<float> _shr_clushitfrac_v;
 
-  std::vector<float> _shr_dist_v;
-
   std::vector<float> _shr_px_v;
   std::vector<float> _shr_py_v;
   std::vector<float> _shr_pz_v;

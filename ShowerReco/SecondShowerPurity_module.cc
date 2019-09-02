@@ -236,7 +236,8 @@ void SecondShowerPurity::analyze(art::Event const& e)
                               proxy::withAssociated<recob::Track>(fPFPproducer),
                               proxy::withAssociated<recob::Vertex>(fPFPproducer),
                               proxy::withAssociated<recob::PCAxis>(fPFPproducer),
-                              proxy::withAssociated<recob::Shower>(fSHRproducer));
+                              proxy::withAssociated<recob::Shower>(fSHRproducer),
+                              proxy::withAssociated<recob::SpacePoint>(fSHRproducer));
 
   // grab cluster proxy for PFParticles
   searchingfornues::ProxyClusColl_t const& clus_proxy = proxy::getCollection<std::vector<recob::Cluster> >(e, fPFPproducer, proxy::withAssociated<recob::Hit>(fPFPproducer));
