@@ -1047,27 +1047,27 @@ Generating code for file /home//home/travis/build/ubneutrinos/searchingfornues/F
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:103: warning: Member _shr_dist_v (variable) of class analysis::ShowerAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:105: warning: Member _shr_nclus_v (variable) of class analysis::ShowerAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:106: warning: Member _shr_clushitfrac_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:110: warning: Member _shr_px_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:111: warning: Member _shr_py_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:112: warning: Member _shr_pz_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:114: warning: Member _shr_theta_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:115: warning: Member _shr_phi_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:116: warning: Member _shr_openangle_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:118: warning: Member _shr_tkfit_nhits_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:119: warning: Member _shr_tkfit_start_x_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:120: warning: Member _shr_tkfit_start_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:121: warning: Member _shr_tkfit_start_z_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:123: warning: Member _shr_tkfit_start_U_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:124: warning: Member _shr_tkfit_start_V_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:126: warning: Member _shr_tkfit_theta_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:127: warning: Member _shr_tkfit_phi_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:129: warning: Member _shr_tkfit_dedx_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:130: warning: Member _shr_tkfit_dedx_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:131: warning: Member _shr_tkfit_dedx_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:133: warning: Member _shr_tkfit_dedx_nhits_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:134: warning: Member _shr_tkfit_dedx_nhits_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:135: warning: Member _shr_tkfit_dedx_nhits_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:139: warning: argument 'pset' of command @param is not found in the argument list of analysis::ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:108: warning: Member _shr_px_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:109: warning: Member _shr_py_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:110: warning: Member _shr_pz_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:112: warning: Member _shr_theta_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:113: warning: Member _shr_phi_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:114: warning: Member _shr_openangle_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:116: warning: Member _shr_tkfit_nhits_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:117: warning: Member _shr_tkfit_start_x_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:118: warning: Member _shr_tkfit_start_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:119: warning: Member _shr_tkfit_start_z_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:121: warning: Member _shr_tkfit_start_U_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:122: warning: Member _shr_tkfit_start_V_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:124: warning: Member _shr_tkfit_theta_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:125: warning: Member _shr_tkfit_phi_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:127: warning: Member _shr_tkfit_dedx_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:128: warning: Member _shr_tkfit_dedx_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:129: warning: Member _shr_tkfit_dedx_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:131: warning: Member _shr_tkfit_dedx_nhits_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:132: warning: Member _shr_tkfit_dedx_nhits_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:133: warning: Member _shr_tkfit_dedx_nhits_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:137: warning: argument 'pset' of command @param is not found in the argument list of analysis::ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:43: warning: The following parameters of analysis::ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerStartPoint_tool.cc:80: warning: Member _shr_spacepoint_start_x_v (variable) of class analysis::ShowerStartPoint is not documented.
@@ -1534,5 +1534,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 845/65536 hits=4258 misses=870
+lookup cache used 845/65536 hits=4257 misses=870
 finished...
