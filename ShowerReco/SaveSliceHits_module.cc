@@ -58,7 +58,8 @@ private:
   std::map<unsigned int, unsigned int> _pfpmap;
 
   art::InputTag fHitproducer, fClusterproducer, fPfpproducer, fSliceproducer;
-  float fMinHitCharge; // ADC, Hit->Integral()
+  float fMinHitCharge;    // ADC, Hit->Integral()
+  bool fSaveAllSliceHits; // save all hits in the slice? True -> yes. False -> Save only 2D hits not in recob::PFParticle
 
   void addDaughter(const recob::PFParticle pfp,
 		   art::ValidHandle<std::vector<recob::PFParticle> > pfp_h,
@@ -74,11 +75,12 @@ SaveSliceHits::SaveSliceHits(fhicl::ParameterSet const& p)
   // More initializers here.
 {
 
-  fHitproducer     = p.get< art::InputTag > ("Hitproducer"    );
-  fClusterproducer = p.get< art::InputTag > ("Clusterproducer");
-  fPfpproducer     = p.get< art::InputTag > ("Pfpproducer"    );
-  fSliceproducer   = p.get< art::InputTag > ("Sliceproducer"  );
-  fMinHitCharge    = p.get< float         >("MinHitCharge", 0.); // ADC for Hit.Integral()
+  fHitproducer      = p.get< art::InputTag > ("Hitproducer"    );
+  fClusterproducer  = p.get< art::InputTag > ("Clusterproducer");
+  fPfpproducer      = p.get< art::InputTag > ("Pfpproducer"    );
+  fSliceproducer    = p.get< art::InputTag > ("Sliceproducer"  );
+  fMinHitCharge     = p.get< float         >("MinHitCharge", 0.); // ADC for Hit.Integral()
+  fSaveAllSliceHits = p.get< bool          >("SaveAllSliceHits",false); // save all hits in the slice? True -> yes. False -> Save only 2D hits not in recob::PFParticle
 
   produces<std::vector<recob::Hit> >();
 }
@@ -87,6 +89,7 @@ void SaveSliceHits::produce(art::Event& e)
 {
 
   std::cout << "****************** NEW EVNT ****************************8" << std::endl;
+
 
   // produce output Hits
   std::unique_ptr< std::vector<recob::Hit> > Hit_v(new std::vector<recob::Hit> );  
@@ -157,8 +160,6 @@ void SaveSliceHits::produce(art::Event& e)
     return;
   }
 
-  std::cout << "Found " << neutrinos << " neutrino slices" << std::endl;
-  
   // grab slice -> hit ass vector
   auto slice_hit_ass = slice_hit_assn_v.at(slicekey);
   // loop through slice hits and add to display
@@ -169,8 +170,6 @@ void SaveSliceHits::produce(art::Event& e)
     
   }// for all slice-hits
 
-  std::cout << "Slice has " << SliceHitIdx_v.size() << " hits" << std::endl;
-  std::cout << "There are " << PfpHitIdx_v.size() << " hits associated to PFParticles" << std::endl;
   
   // loop through hits and save those that are not associated to a PFParticle
   for (unsigned int hitidx : SliceHitIdx_v) {
@@ -181,8 +180,7 @@ void SaveSliceHits::produce(art::Event& e)
 	break;
       }// if matched to PFP hit index
     }// for all PFP hit indices
-    if (matchedtopfp == false) {
-      //std::cout << " \t adding hit with key " << hitidx << std::endl;
+    if ( (matchedtopfp == false) || (fSaveAllSliceHits == true) ) {
       if (hit_h->at(hitidx).Integral() > fMinHitCharge)
 	Hit_v->emplace_back(hit_h->at(hitidx));
     }// if not matched

@@ -71,8 +71,8 @@ physics:
     analyzers:
         { 
 
-        protonpurity: {
-            module_type:     "ProtonHitPurity"
+        protontruth: {
+            module_type:     "ProtonTruthStudies"
             Clusterproducer: "proximity"
             Hitproducer:     "gaushit"
             MCPproducer:     "largeant"
@@ -84,7 +84,7 @@ physics:
     
     #reco: [ rns, ophit, opflash, simpleFlash, opflashfilter ]
     reco: [ rns, nuslice, proximity ]
-     ana: [ protonpurity ]
+     ana: [ protontruth ]
     
     #define the output stream, there could be more than one if using filters 
     stream1:  [ out1 ]
@@ -95,8 +95,8 @@ physics:
     
     #end_paths is a keyword and contains the paths that do not modify the art::Event, 
     #ie analyzers and output streams.  these all run simultaneously
-    end_paths:     [stream1,ana]
-    #end_paths:     [ana]
+    #end_paths:     [stream1,ana]
+    end_paths:     [ana]
     }
 
 #entry in the output stream you want those to go to, where XXX is the label of the filter module(s)

@@ -32,6 +32,7 @@ art_make( TOOL_LIBRARIES lardataobj_RecoBase
                          ${ROOT_BASIC_LIB_LIST}
                          ${ROOT_EG}
                          ${ROOT_MINUIT}
+                         ubreco_ShowerReco_ProximityClustering_Algorithms
         )
 
 install_headers()

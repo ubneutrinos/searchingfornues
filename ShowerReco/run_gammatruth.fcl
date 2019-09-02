@@ -2,13 +2,13 @@
 #include "triggeralgo_service.fcl"
 #include "proximityclustering.fcl"
 
-process_name: ShrMerger
+process_name: GammaTruth
 
 services:
 {
   scheduler:               { defaultExceptions: false }    # Make all uncaught exceptions fatal.
   # Load the service that manages root files for histograms.
-  TFileService:            { fileName: "showerreco3d_ana.root" }
+  TFileService:            { fileName: "gammahits_ana.root" }
   TimeTracker:             {}
   ExptGeoHelperInterface:         @local::microboone_geometry_helper
   Geometry:                       @local::microboone_geo
@@ -62,7 +62,7 @@ physics:
             Clusterproducer: "pandora"
             Pfpproducer: "pandora"
             Sliceproducer: "pandora"
-            MinHitCharge: 200.
+            MinHitCharge: -1.0
             }
 
         proximity: @local::ProximityClustering
@@ -71,11 +71,11 @@ physics:
     analyzers:
         { 
 
-        protonpurity: {
-            module_type:     "ProtonHitPurity"
+        gammatruth: {
+            module_type:     "GammaTruthStudies"
             Clusterproducer: "proximity"
             Hitproducer:     "gaushit"
-            MCPproducer:     "largeant"
+            MCSproducer:     "mcreco"
             PFPproducer:     "pandora"
             SHRproducer:     "shrreco3d"
         }
@@ -84,7 +84,7 @@ physics:
     
     #reco: [ rns, ophit, opflash, simpleFlash, opflashfilter ]
     reco: [ rns, nuslice, proximity ]
-     ana: [ protonpurity ]
+     ana: [ gammatruth ]
     
     #define the output stream, there could be more than one if using filters 
     stream1:  [ out1 ]
