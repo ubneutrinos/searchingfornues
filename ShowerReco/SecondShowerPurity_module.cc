@@ -31,6 +31,7 @@
 
 #include "art/Framework/Services/Optional/TFileService.h"
 #include "TTree.h"
+#include "TMatrixDSymEigen.h"
 
 class SecondShowerPurity;
 
@@ -85,14 +86,27 @@ private:
 
   // TTree
   TTree* _tree;
+  int _evt, _sub, _run;
   int _nhit;
   int _plane;
   float _charge;
-  float _purity;
+  float _purity, _shrpurity;
   float _shrdot;
   float _shrdist;
-  float _shrenergy;
+  float _shrenergy1;
+  float _shrenergy2;
+  float _elecenergy;
+  int _btpdg, _btshrpdg; // PDG of backtracked particle
+  float _btmom, _btshrmom;
   int _nshr;
+  float _clus_tmin, _clus_tmax;
+  float _twoshrdot;
+  float _eigenratio, _eigendot;
+  float _gammaemin;
+
+  // event TTree
+
+  void ResetTTree();
 
   std::vector<art::Ptr<recob::Hit>> getGaussHits(const std::vector<art::Ptr<recob::Hit>> &hits,
              const art::ValidHandle<std::vector<recob::Hit> > gaushit_h);
@@ -103,6 +117,10 @@ private:
   void GammaDot(const float& gammaWire, const float& gammaTime,const int& pl,
     const TVector3& showerVtx, const TVector3& showerDir,
     float &dot, float& d2d);
+
+  void  PCA(const std::vector<art::Ptr<recob::Hit>> &hits, TVectorD& eigenVal, TMatrixD& eigenVec);
+
+  float EigenDot(const int& pl,const TVector3& ShowerDir,const float& gammaWireDir,const float& gammaTimeDir);
 
 };
 
@@ -120,15 +138,38 @@ SecondShowerPurity::SecondShowerPurity(fhicl::ParameterSet const& p)
   fSHRproducer     = p.get< art::InputTag > ("SHRproducer");
 
   art::ServiceHandle<art::TFileService> tfs;
+
   _tree = tfs->make<TTree>("_tree", "Second Shower Tagging");
+  _tree->Branch("evt",&_evt,"evt/I");
+  _tree->Branch("sub",&_sub,"sub/I");
+  _tree->Branch("run",&_run,"run/I");
   _tree->Branch("nhit",&_nhit,"nhit/I");
   _tree->Branch("nshr",&_nshr,"nshr/I");
+  _tree->Branch("btpdg",&_btpdg,"btpdg/I");
+  _tree->Branch("btmom",&_btmom,"btmom/F");
+  _tree->Branch("btshrpdg",&_btshrpdg,"btshrpdg/I");
+  _tree->Branch("btshrmom",&_btshrmom,"btshrmom/F");
   _tree->Branch("plane",&_plane,"plane/I");
   _tree->Branch("charge",&_charge,"charge/F");
   _tree->Branch("purity",&_purity,"purity/F");
+  _tree->Branch("shrpurity",&_shrpurity,"shrpurity/F");
   _tree->Branch("shrdot",&_shrdot,"shrdot/F");
+  _tree->Branch("twoshrdot",&_twoshrdot,"twoshrdot/F");
   _tree->Branch("shrdist",&_shrdist,"shrdist/F");
-  _tree->Branch("shrenergy",&_shrenergy,"shrenergy/F");
+  _tree->Branch("shrenergy1",&_shrenergy1,"shrenergy1/F");
+  _tree->Branch("shrenergy2",&_shrenergy2,"shrenergy2/F");
+  _tree->Branch("elecenergy",&_elecenergy,"elecenergy/F");
+  _tree->Branch("clus_tmin",&_clus_tmin,"clus_tmin/F");
+  _tree->Branch("clus_tmax",&_clus_tmax,"clus_tmax/F");
+  _tree->Branch("eigenratio",&_eigenratio,"eigenratio/F");
+  _tree->Branch("eigendot",&_eigendot,"eigendot/F");
+  _tree->Branch("gammaemin",&_gammaemin,"gammaemin/F");
+
+  /*
+  _evt_tree = tfs->make<TTree>("_event_tree", "Second Shower Tagging Event Tree");
+  _evt_tree->Branch("shrenergy",&_shrenergy,"shrenergy/F");
+  _evt_tree->Branch("elecenergy",&_elecenergy,"elecenergy/F");
+  */
 
   // get detector specific properties
   auto const* geom = ::lar::providerFrom<geo::Geometry>();
@@ -139,8 +180,38 @@ SecondShowerPurity::SecondShowerPurity(fhicl::ParameterSet const& p)
   // Call appropriate consumes<>() for any products to be retrieved by this module.
 }
 
+void SecondShowerPurity::ResetTTree() {
+
+  _nhit = 0;
+  _nshr = 0;
+  _btpdg  = 0;
+  _btmom = 0;
+  _plane = -1;
+  _charge = 0;
+  _purity = -1;
+  _shrdot = -1;
+  _shrdist = -1;
+  _shrenergy1 = 0;
+  _shrenergy2 = 0;
+  _elecenergy = 0;
+  _btshrpdg = 0;
+  _btshrmom = 0;
+  _shrpurity = -1;
+  _twoshrdot = 0;
+  _eigenratio = _eigendot = 0;
+
+}
+
 void SecondShowerPurity::analyze(art::Event const& e)
 {
+
+  ResetTTree();
+
+  auto const* detp = lar::providerFrom<detinfo::DetectorPropertiesService>();
+
+  _evt = e.event();
+  _sub = e.subRun();
+  _run = e.run();
 
   // grab clusters themselves
   auto const& cluster_h = e.getValidHandle<std::vector<recob::Cluster> >(fClusterproducer);
@@ -165,11 +236,41 @@ void SecondShowerPurity::analyze(art::Event const& e)
                               proxy::withAssociated<recob::Track>(fPFPproducer),
                               proxy::withAssociated<recob::Vertex>(fPFPproducer),
                               proxy::withAssociated<recob::PCAxis>(fPFPproducer),
-                              proxy::withAssociated<recob::Shower>(fSHRproducer),
-                              proxy::withAssociated<recob::SpacePoint>(fPFPproducer));
+                              proxy::withAssociated<recob::Shower>(fSHRproducer));
+
+  // grab cluster proxy for PFParticles
+  searchingfornues::ProxyClusColl_t const& clus_proxy = proxy::getCollection<std::vector<recob::Cluster> >(e, fPFPproducer, proxy::withAssociated<recob::Hit>(fPFPproducer));
 
   // build PFParticle map  for this event
   BuildPFPMap(pfp_proxy);
+
+
+  // vector of BtPart for backtracking
+  std::vector<searchingfornues::BtPart> Gamma_v;
+
+  // loop through MCParticles and identify gammas
+  float _gammaemin = 1e6;
+  for ( unsigned int im=0; im< mcshower_h->size(); ++im ) {
+
+    const auto& mcs = mcshower_h->at(im);
+
+    if ( ( (mcs.PdgCode() == 22) && (mcs.MotherPdgCode() == 111) && (mcs.Process() == "Decay") && (mcs.MotherProcess() == "primary") ) || (fabs(mcs.PdgCode()) == 11) )
+
+      Gamma_v.push_back( searchingfornues::BtPart(mcs.PdgCode(),
+              mcs.Start().Momentum().Px() * 0.001,
+              mcs.Start().Momentum().Py() * 0.001,
+              mcs.Start().Momentum().Pz() * 0.001,
+              mcs.Start().Momentum().E() * 0.001,
+              mcs.DaughterTrackID()) );
+
+    if (mcs.PdgCode() == 11) { _elecenergy = mcs.Start().Momentum().E(); }
+
+    if (mcs.PdgCode() == 22 && (mcs.MotherPdgCode() == 111 && mcs.Process() == "Decay" && mcs.MotherProcess() == "primary") )   {
+      if (mcs.DetProfile().E() < _gammaemin) { _gammaemin = mcs.DetProfile().E(); }
+    }// if pi0 gamma
+
+  }// for all MCParticles
+
 
   // collect PFParticle hierarchy originating from this neutrino candidate
   std::vector<searchingfornues::ProxyPfpElem_t> slice_pfp_v;
@@ -187,8 +288,10 @@ void SecondShowerPurity::analyze(art::Event const& e)
 
   }// for all proxys
 
-  TVector3 ShowerVtx, ShowerDir;
-  _shrenergy = 0;
+  TVector3 ShowerVtx1, ShowerDir1;
+  TVector3 ShowerVtx2, ShowerDir2;
+  _shrenergy1 = 0;
+  _shrenergy2 = 0;
 
   // go through slice and find shower-like particles
   for (size_t p=0; p < slice_pfp_v.size(); p++) {
@@ -205,43 +308,63 @@ void SecondShowerPurity::analyze(art::Event const& e)
 
     auto shr = ass_shr_v[0];
 
-    if (shr->Energy()[2] < _shrenergy) continue;
+    if (shr->Energy()[2] > _shrenergy1) {
+    _shrenergy1 = shr->Energy()[2];
+    ShowerVtx1 = shr->ShowerStart();
+    ShowerDir1 = shr->Direction();
+    }
 
-    _shrenergy = shr->Energy()[2];
+    else if (shr->Energy()[2] > _shrenergy2) {
+    _shrenergy2 = shr->Energy()[2];
+    ShowerVtx2 = shr->ShowerStart();
+    ShowerDir2 = shr->Direction();
+    }
 
-    ShowerVtx = shr->ShowerStart();
-    ShowerDir = shr->Direction();
+    // backtrack this shower candidate
+    // get hits associated to this PFParticle through the clusters
+    std::vector<art::Ptr<recob::Hit> > pfp_hit_v;
+    auto clus_pxy_v = pfp_pxy.get<recob::Cluster>();
+    if (clus_pxy_v.size() != 0) {
+      for (auto ass_clus : clus_pxy_v) {
+  // get cluster proxy
+  const auto& clus = clus_proxy[ass_clus.key()];
+  auto clus_hit_v = clus.get<recob::Hit>();
+  for (const auto& hit : clus_hit_v)
+    pfp_hit_v.push_back(hit);
+      }// for all clusters associated to PFP
+    }
+    float completeness = 0;
+    _btshrpdg = 0;
+    _btshrmom = 0;
+    _shrpurity = 0;
+    auto btpartidx = getAssocBtPart(pfp_hit_v,assocMCPart,Gamma_v,_shrpurity,completeness);
+    if (btpartidx > 0) {
+      _btshrpdg = Gamma_v.at(btpartidx).pdg;
+      _btshrmom = Gamma_v.at(btpartidx).e;
+    }
 
   }// for all proxys in slice
 
-  // vector of BtPart for backtracking
-  std::vector<searchingfornues::BtPart> Gamma_v;
+  _twoshrdot = ShowerDir1.Dot(ShowerDir2);
+  _twoshrdot /= ShowerDir1.Mag();
+  _twoshrdot /= ShowerDir2.Mag();
 
-  // loop through MCParticles and identify gammas
-  for ( unsigned int im=0; im< mcshower_h->size(); ++im ) {
-    const auto& mcs = mcshower_h->at(im);
-    if (mcs.PdgCode() == 22)
+  // if no shower nue candidate -> skip event
+  if (_shrenergy1 == 0)
+    return;
 
-      Gamma_v.push_back( searchingfornues::BtPart(mcs.PdgCode(),
-              mcs.Start().Momentum().Px() * 0.001,
-              mcs.Start().Momentum().Py() * 0.001,
-              mcs.Start().Momentum().Pz() * 0.001,
-              mcs.Start().Momentum().E() * 0.001,
-              mcs.DaughterTrackID()) );
-
-  }// for all MCParticles
-
-  std::cout << "GAMMA there are " << Gamma_v.size() << " protons in the event" << std::endl;
+  size_t nclusters = 0;
 
   // loop through clusters
   for (size_t c=0; c < cluster_h->size(); c++) {
-
     auto clus = cluster_h->at(c);
 
     // get associated hits
     auto clus_hit_v = clus_hit_assn_v.at( c );
 
     if (clus_hit_v.size() < 10) continue;
+
+    nclusters += 1;
 
     float completeness = 0;
 
@@ -251,7 +374,8 @@ void SecondShowerPurity::analyze(art::Event const& e)
     // create vector of gaushits corresponding to new proton hits
     auto gaushit_hit_v = getGaussHits(clus_hit_v, hit_h);
 
-    //if ((gaushit_hit_v.at(0))->WireID().Plane != 2) continue;
+    _clus_tmin = clus.StartTick() * _time2cm;
+    _clus_tmax = clus.EndTick()   * _time2cm;
 
     _plane = (gaushit_hit_v.at(0))->WireID().Plane;
     _nhit  = gaushit_hit_v.size();
@@ -267,16 +391,34 @@ void SecondShowerPurity::analyze(art::Event const& e)
     for (size_t hi=0; hi < gaushit_hit_v.size(); hi++) {
       auto hit = gaushit_hit_v.at(hi);
       gammaWire += hit->WireID().Wire * _wire2cm * hit->Integral();
-      gammaTime += hit->PeakTime()    * _time2cm * hit->Integral();
+      gammaTime += (hit->PeakTime() - detp->TriggerOffset())  * _time2cm * hit->Integral();
       _charge += hit->Integral();
     }
-    gammaWire /= (gaushit_hit_v.size() * _charge);
-    gammaTime /= (gaushit_hit_v.size() * _charge);
+    gammaWire /= _charge;
+    gammaTime /= _charge;
 
-    //if (_shrenergy > 0)
-    GammaDot(gammaWire, gammaTime, _plane, ShowerVtx, ShowerDir, _shrdot, _shrdist);
+    std::cout << "Gamma [wire,time] -> [ " << gammaWire << ", " << gammaTime << " ]"  << std::endl;
 
-    getAssocBtPart(gaushit_hit_v,assocMCPart,Gamma_v,_purity,completeness);
+    GammaDot(gammaWire, gammaTime, _plane, ShowerVtx1, ShowerDir1, _shrdot, _shrdist);
+
+    TVectorD eigenVal(2);
+    TMatrixD eigenVec(2,2);
+    PCA(clus_hit_v, eigenVal, eigenVec);
+
+    _eigenratio = eigenVal(0) / eigenVal(1);
+
+    // get dot-product between principal eigenvector and shower direction
+    _eigendot = EigenDot(_plane, ShowerDir1, eigenVec(0,0), eigenVec(0,1));
+
+    auto btpartidx = getAssocBtPart(gaushit_hit_v,assocMCPart,Gamma_v,_purity,completeness);
+    if (btpartidx < 0) {
+      _btpdg = 0;
+      _btmom = 0;
+    }
+    else {
+      _btpdg = Gamma_v.at(btpartidx).pdg;
+      _btmom = Gamma_v.at(btpartidx).e;
+    }
 
     _tree->Fill();
 
@@ -285,7 +427,9 @@ void SecondShowerPurity::analyze(art::Event const& e)
         << _purity << ", " << completeness << " ]" << std::endl;
     std::cout << "GAMMA" << std::endl;
 
-  }// for all MCparticles
+  }// for all clusters
+
+  if (nclusters == 0) { _tree->Fill(); }
 
   return;
 }
@@ -303,6 +447,14 @@ void SecondShowerPurity::GammaDot(const float& gammaWire, const float& gammaTime
   auto Dirwire = geom->WireCoordinate(showerDir[1],showerDir[2],geo::PlaneID(0,0,pl)) * _wire2cm;
   auto Dirtime = showerDir[0];
 
+  std::cout << "Shower Dir [x,y,z] -> [ " << showerDir[0] << ", " << showerDir[1] << ", " << showerDir[2] << " ]"  << std::endl;
+  std::cout << "Shower Vtx [x,y,z] -> [ " << showerVtx[0] << ", " << showerVtx[1] << ", " << showerVtx[2] << " ]"  << std::endl;
+
+  std::cout << "Shower Dir [wire,time] -> [ " << Dirwire << ", " << Dirtime << " ]"  << std::endl;
+  std::cout << "Shower Vtx [wire,time] -> [ " << Vtxwire << ", " << Vtxtime << " ]"  << std::endl;
+
+
+
   TVector3 showerDir2D(Dirwire,Dirtime,0.);
   TVector3 gammaDir2D(gammaWire-Vtxwire,gammaTime-Vtxtime,0.);
 
@@ -313,11 +465,28 @@ void SecondShowerPurity::GammaDot(const float& gammaWire, const float& gammaTime
   dot /= showerDir2D.Mag();
   dot /= gammaDir2D.Mag();
 
+  std::cout << "dot product : " << dot << std::endl;
+  std::cout << std::endl;
+
   return;
 }
 
+float SecondShowerPurity::EigenDot(const int& pl,const TVector3& ShowerDir,const float& gammaWireDir,const float& gammaTimeDir) {
+
+  auto const* geom = ::lar::providerFrom<geo::Geometry>();
+
+  auto Dirwire = geom->WireCoordinate(ShowerDir[1],ShowerDir[2],geo::PlaneID(0,0,pl)) * _wire2cm;
+  auto Dirtime = ShowerDir[0];
+
+  float dot = Dirwire * gammaWireDir + Dirtime * gammaTimeDir;
+  dot /= sqrt( Dirwire * Dirwire + Dirtime * Dirtime);
+  dot /= sqrt( gammaWireDir * gammaWireDir + gammaTimeDir * gammaTimeDir);
+
+  return dot;
+}
+
 std::vector<art::Ptr<recob::Hit>> SecondShowerPurity::getGaussHits(const std::vector<art::Ptr<recob::Hit>> &hits,
-                const art::ValidHandle<std::vector<recob::Hit> > gaushit_h) {
+                   const art::ValidHandle<std::vector<recob::Hit> > gaushit_h) {
 
   std::vector<art::Ptr<recob::Hit> > gaushit_v;
 
@@ -341,6 +510,63 @@ std::vector<art::Ptr<recob::Hit>> SecondShowerPurity::getGaussHits(const std::ve
   }// for proton cluster's hits
 
   return gaushit_v;
+}
+
+void  SecondShowerPurity::PCA(const std::vector<art::Ptr<recob::Hit>> &hits, TVectorD& eigenVal, TMatrixD& eigenVec) {
+
+  auto const* detp = lar::providerFrom<detinfo::DetectorPropertiesService>();
+
+  // x -> wire
+  // y -> time
+
+  // find average w,t
+  float wavg = 0;
+  float tavg = 0;
+  for (size_t h=0; h < hits.size(); h++) {
+
+    auto hit = hits.at(h);
+    auto wire = hit->WireID().Wire * _wire2cm;
+    auto time = ( hit->PeakTime() - detp->TriggerOffset() )   * _time2cm;
+
+    wavg += wire;
+    tavg += time;
+
+  }// for all his
+
+  wavg /= hits.size();
+  tavg /= hits.size();
+
+  float norm = 1. / hits.size();
+
+  // build matrix
+  TMatrixDSym HitMatrix(2);
+
+  for (size_t h=0; h < hits.size(); h++) {
+
+    auto hit = hits.at(h);
+    auto wire = hit->WireID().Wire * _wire2cm;
+    auto time = ( hit->PeakTime() - detp->TriggerOffset() )   * _time2cm;
+
+    double x = wire - wavg;
+    double y = time - tavg;
+
+    HitMatrix(0,0) += x*x*norm;
+    HitMatrix(0,1) += x*y*norm;
+    HitMatrix(1,0) += x*y*norm;
+    HitMatrix(1,1) += y*y*norm;
+
+  }// for all hits
+
+  const TMatrixDSymEigen me(HitMatrix);
+  eigenVal = me.GetEigenValues();
+  eigenVec = me.GetEigenVectors();
+
+  std::cout << "Matrix contents : [ " << HitMatrix(0,0) << ", " << HitMatrix(1,0) << " ], [ "<< HitMatrix(0,1) << ", " << HitMatrix(1,1) << " ] " << std::endl;
+
+  for (int i=0; i<2; ++i)
+    std::cout << "\t eigenvalue " << eigenVal(i) << " has eigenvector [" << eigenVec(0, i) << "," << eigenVec(1, i) << " ]" << std::endl;
+
+  return;
 }
 
 bool SecondShowerPurity::IsProtonIsolated(const std::vector<art::Ptr<recob::Hit>> &hits,

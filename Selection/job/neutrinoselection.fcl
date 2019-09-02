@@ -6,7 +6,6 @@
 #include "calibration_microboone.fcl"
 #include "config_particle_identification.fcl"
 #include "services_microboone.fcl"
-#include "flashmatchsetup.fcl"
 
 CalorimetryAnalysisTool: {
     tool_type: "CalorimetryAnalysis"
@@ -86,13 +85,6 @@ Pi0TruthAnalysisTool: {
 CRTApproachAnalysisTool: {
     tool_type: "CRTApproachAnalysis"
     TrackAssnModuleLabel:"trackmatch"
-}
-
-ObviousCosmicFlashMatching: {
-    tool_type: "ObviousCosmicFlashMatching"
-    PFPproducer: "pandora"
-    SpacePointproducer: "pandora"
-    SliceTool: @local::SliceToolNeutrinoMC
 }
 
 SlicePurComplTool: {
@@ -184,7 +176,6 @@ NuSelectionFilter:{
     AnalysisTools: {
         default: @local::DefaultAnalysisTool
         # you can add more analysis tools here
-        #obviouscosmic: @local::ObviousCosmicFlashMatching
         slicepurcompl: @local::SlicePurComplTool
         containment:   @local::ContainmentAnalysis
         shower:        @local::ShowerAnalysisTool
