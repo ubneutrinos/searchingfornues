@@ -191,7 +191,7 @@ NuSelectionFilter:{
         showerstart:        @local::ShowerStartPointTool
         track:         @local::TrackAnalysisTool
         vertex:         @local::VertexAnalysisTool
-        calorimetry:   @local::CalorimetryAnalysisTool
+        #calorimetry:   @local::CalorimetryAnalysisTool
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
