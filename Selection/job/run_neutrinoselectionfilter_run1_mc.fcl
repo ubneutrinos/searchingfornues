@@ -27,16 +27,16 @@ EventWeightTreeTool: {
 
 physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeightTreeTool
 
-#physics.producers.eventweight:        @local::microboone_eventweight
+physics.producers.eventweight:        @local::microboone_eventweight
 
-#physics.p1: [ eventweight, @sequence::physics.p1]
+physics.p1: [ eventweight, @sequence::physics.p1]
 
 ##Run weights individually
-#physics.producers.eventweight.weight_functions: [
-#    @sequence::microboone_eventweight.weight_functions_flux,
-#    @sequence::microboone_eventweight.weight_functions_genie,
-#    @sequence::microboone_eventweight.weight_functions_reint
-#]
+physics.producers.eventweight.weight_functions: [
+    @sequence::microboone_eventweight.weight_functions_flux,
+    @sequence::microboone_eventweight.weight_functions_genie,
+    @sequence::microboone_eventweight.weight_functions_reint
+]
 
 #Store the weight map in a dedicated tree, in the main tree or both
 # physics.filters.nuselection.AnalysisTools.eventweighttree.createDedicatedTree: true
