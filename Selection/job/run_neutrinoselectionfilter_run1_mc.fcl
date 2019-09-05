@@ -43,14 +43,14 @@ physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeigh
 # physics.filters.nuselection.AnalysisTools.eventweighttree.createMapBranch: true
 
 #Run all weights of a given category simultaneously in the main tree (for flux, it is the product of individual weights) and create a branch in the main tree
-#physics.filters.nuselection.AnalysisTools.eventweighttree.createFluxBranch: true
+physics.filters.nuselection.AnalysisTools.eventweighttree.createFluxBranch: true
 # physics.filters.nuselection.AnalysisTools.eventweighttree.createGenieBranch: true
-#physics.filters.nuselection.AnalysisTools.eventweighttree.createReintBranch: true
-#physics.producers.eventweight.weight_functions: [
-#    @sequence::microboone_eventweight.weight_functions_flux,
+physics.filters.nuselection.AnalysisTools.eventweighttree.createReintBranch: true
+physics.producers.eventweight.weight_functions: [
+    @sequence::microboone_eventweight.weight_functions_flux,
     # genie_all,
-    #reinteractions_all
-#]
+    reinteractions_all
+]
 
 #Splines (requires v17)
 physics.producers.eventweightSplines: @local::microboone_eventweight_justSplines
