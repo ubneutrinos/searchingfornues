@@ -444,22 +444,22 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
       {
         _dqdx_u = calo->dQdx();
         _dedx_u = calo->dEdx();
-	_rr_u = calo->ResidualRange();
-	_pitch_u = calo->TrkPitchVec();
+        _rr_u = calo->ResidualRange();
+        _pitch_u = calo->TrkPitchVec();
       }
       else if (plane == 1)
       {
-	_dqdx_v = calo->dQdx();
+        _dqdx_v = calo->dQdx();
         _dedx_v = calo->dEdx();
-	_rr_v = calo->ResidualRange();
-	_pitch_v = calo->TrkPitchVec();
+        _rr_v = calo->ResidualRange();
+        _pitch_v = calo->TrkPitchVec();
       }
       else if (plane == 2) //collection
       {
-	_dqdx_y = calo->dQdx();
+        _dqdx_y = calo->dQdx();
         _dedx_y = calo->dEdx();
-	_rr_y = calo->ResidualRange();
-	_pitch_y = calo->TrkPitchVec();
+        _rr_y = calo->ResidualRange();
+        _pitch_y = calo->TrkPitchVec();
       }
     }
     _calo_tree->Fill();
