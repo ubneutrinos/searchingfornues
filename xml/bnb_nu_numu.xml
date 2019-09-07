@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
-<!ENTITY name "beam_on">
+<!ENTITY name "bnb_nu_numu">
 <!ENTITY project_version "v14">
 <!ENTITY release "v08_00_00_17">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "foppiani">
-<!ENTITY dataset "data_bnb_optfilter_C1_5e19_goodruns_mcc9.1_reco2">
+<!ENTITY dataset "prodgenie_bnb_nu_uboone_overlay_mcc9.1_run1_reco2">
 <!ENTITY resilient "/pnfs/uboone/resilient/users">
 <!ENTITY scratch "/pnfs/uboone/scratch/users">
 <!ENTITY data "/uboone/data/users">
-<!ENTITY fcl_name "run_neutrinoselectionfilter_run1_data.fcl">
+<!ENTITY fcl_name "run_neutrinoselectionfilter_run1_mc_numu.fcl">
 <!ENTITY folder_name "searchingornues">
 <!ENTITY tar_name "local">
 ]>
@@ -50,9 +50,10 @@
 
     <memory>2000</memory>
     <disk>10GB</disk>
-    <numjobs>100</numjobs>
-    <!-- <numjobs>478</numjobs> -->
-    <maxfilesperjob>25</maxfilesperjob>
+    <numjobs>50</numjobs>
+    <maxfilesperjob>15</maxfilesperjob>
+    <!-- <numjobs>957</numjobs>
+    <maxfilesperjob>25</maxfilesperjob> -->
     <schema>root</schema>
     <jobsub>--expected-lifetime=12h -q --generate-email-summary --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub>
     <jobsub_start>--append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
-<!ENTITY name "beam_on">
+<!ENTITY name "beam_on_cc0pinp">
 <!ENTITY project_version "v14">
 <!ENTITY release "v08_00_00_17">
 <!ENTITY qualifier "e17:prof">
@@ -9,7 +9,7 @@
 <!ENTITY resilient "/pnfs/uboone/resilient/users">
 <!ENTITY scratch "/pnfs/uboone/scratch/users">
 <!ENTITY data "/uboone/data/users">
-<!ENTITY fcl_name "run_neutrinoselectionfilter_run1_data.fcl">
+<!ENTITY fcl_name "run_neutrinoselectionfilter_run1_data_cc0pinp.fcl">
 <!ENTITY folder_name "searchingornues">
 <!ENTITY tar_name "local">
 ]>
