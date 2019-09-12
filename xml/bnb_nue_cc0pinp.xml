@@ -50,8 +50,8 @@
 
     <memory>2000</memory>
     <disk>10GB</disk>
-    <numjobs>50</numjobs>
-    <!-- <numjobs>200</numjobs> -->
+    <!-- <numjobs>50</numjobs> -->
+    <numjobs>200</numjobs>
     <maxfilesperjob>25</maxfilesperjob>
     <schema>root</schema>
     <jobsub>--expected-lifetime=12h -q --generate-email-summary --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub>
