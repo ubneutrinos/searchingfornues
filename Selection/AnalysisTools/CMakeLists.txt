@@ -33,6 +33,7 @@ art_make( TOOL_LIBRARIES lardataobj_RecoBase
                          ${ROOT_EG}
                          ${ROOT_MINUIT}
                          ubreco_ShowerReco_ProximityClustering_Algorithms
+                         uboonecode_uboone_XGBoost
         )
 
 install_headers()

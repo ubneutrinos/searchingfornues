@@ -107,6 +107,10 @@ PMTNoiseTool: {
     tool_type: "PMTNoise"
 }
 
+BDTTool: {
+    tool_type: "BDT"
+}
+
 ContainmentAnalysis: {
     tool_type: "ContainmentAnalysis"
     FV: 10
@@ -167,6 +171,8 @@ NuSelectionFilter:{
     Verbose: false
     IsData: false
     Filter: true
+    BDT_branch: "bdt_global"
+    BDT_cut: 0.9
     PFPproducer: "pandora"
     SHRproducer: "shrreco3d" #"pandora" #if you change this, remember to change also the inputs to ShowerAnalysisTool!
     HITproducer: "pandora"
@@ -193,6 +199,7 @@ NuSelectionFilter:{
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
         flashmatch:    @local::FlashMatchingTool
+        zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
     }
 }
 

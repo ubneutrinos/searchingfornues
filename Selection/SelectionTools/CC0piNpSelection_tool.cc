@@ -751,9 +751,9 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     _extra_energy_y -= (_trk_energy_hits_tot + _shr_energy_tot);
     _pt = total_p.Perp();
     _p = total_p.Mag();
-    _hits_ratio = (float)_shr_hits_tot / (_trk_hits_tot + _shr_hits_tot);
+    if (_trk_hits_tot + _shr_hits_tot>0) _hits_ratio = (float)_shr_hits_tot / (_trk_hits_tot + _shr_hits_tot);
     _tksh_distance = (trk_vtx - shr_vtx).Mag();
-    _tksh_angle = trk_p.Dot(shr_p) / (trk_p.Mag() * shr_p.Mag());
+    if (trk_p.Mag() * shr_p.Mag()>0) _tksh_angle = trk_p.Dot(shr_p) / (trk_p.Mag() * shr_p.Mag());
 
     _contained_fraction = ((float)(_trk_hits_tot + _shr_hits_tot)) / (_trk_hits_tot + _shr_hits_tot + _hits_outfv);
 

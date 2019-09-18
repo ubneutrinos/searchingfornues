@@ -75,6 +75,8 @@ private:
   bool fVerbose;
   bool fData;
   bool fFilter;
+  std::string fBDT_branch;
+  float fBDT_cut;
 
   // TTree
   TTree *_tree;
@@ -157,6 +159,8 @@ NeutrinoSelectionFilter::NeutrinoSelectionFilter(fhicl::ParameterSet const &p)
   fVerbose = p.get<bool>("Verbose");
   fData = p.get<bool>("IsData");
   fFilter = p.get<bool>("Filter", false);
+  fBDT_branch = p.get<std::string>("BDT_branch", "");
+  fBDT_cut = p.get<float>("BDT_cut", -1);
 
   art::ServiceHandle<art::TFileService> tfs;
   _tree = tfs->make<TTree>("NeutrinoSelectionFilter", "Neutrino Selection TTree");
@@ -220,12 +224,12 @@ bool NeutrinoSelectionFilter::filter(art::Event &e)
   {
     _analysisToolsVec[i]->analyzeEvent(e, fData); //fixme add more arguments, make other functions down the line...
   }
-  // loop through PFParticles
-  size_t p = 0;
+
   // Should you keep this event? Yes, but only if there's a neutrino.
   // On the other hand, you can fill the tree even if you discart the event
   bool keepEvent = false;
 
+  // loop through PFParticles
   for (const ProxyPfpElem_t &pfp_pxy : pfp_proxy)
   {
 
@@ -291,10 +295,15 @@ bool NeutrinoSelectionFilter::filter(art::Event &e)
       }
 
     } // if a neutrino PFParticle
-    p++;
   } // for all PFParticles
 
   _tree->Fill();
+
+  if (fBDT_branch!="" && fBDT_cut>0 && fBDT_cut<1) {
+    float* bdtscore = (float*) _tree->GetBranch(fBDT_branch.c_str())->GetAddress();
+    std::cout << "bdtscore=" << *bdtscore << std::endl;
+    keepEvent = keepEvent && ( (*bdtscore)<fBDT_cut );
+  }
 
   if (fFilter == true)
     return keepEvent;
