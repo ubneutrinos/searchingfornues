@@ -4,5 +4,6 @@ var searchData=
   ['pi0truthanalysis',['Pi0TruthAnalysis',['../classanalysis_1_1Pi0TruthAnalysis.html',1,'analysis']]],
   ['pmtnoise',['PMTNoise',['../classanalysis_1_1PMTNoise.html',1,'analysis']]],
   ['protonhitpurity',['ProtonHitPurity',['../classProtonHitPurity.html',1,'']]],
-  ['protontruthstudies',['ProtonTruthStudies',['../classProtonTruthStudies.html',1,'']]]
+  ['protontruthstudies',['ProtonTruthStudies',['../classProtonTruthStudies.html',1,'']]],
+  ['proximityclustering',['ProximityClustering',['../classProximityClustering.html',1,'']]]
 ];
