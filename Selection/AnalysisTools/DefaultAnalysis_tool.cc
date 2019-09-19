@@ -17,6 +17,8 @@
 #include "../CommonDefs/SCECorrections.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 
+#include "canvas/Persistency/Common/TriggerResults.h"
+
 namespace analysis
 {
 ////////////////////////////////////////////////////////////////////////
@@ -152,6 +154,8 @@ private:
   float _reco_nu_vtx_sce_x, _reco_nu_vtx_sce_y, _reco_nu_vtx_sce_z;
 
   int _run, _sub, _evt; // event info
+  // has the swtrigger fired?
+  int _swtrig;
   // neutrino information
   float _nu_e;  /**< neutrino energy [GeV] */
   float _nu_pt; /**< transverse momentum of interaction [GeV/c] */
@@ -328,6 +332,17 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   _run = e.run();
 
   std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: "<< _evt << std::endl;
+
+  // storing trigger result output for software trigger
+  art::InputTag swtrig_tag("TriggerResults","","DataOverlayOptical");
+  art::Handle<art::TriggerResults> swtrig_handle;
+  e.getByLabel(swtrig_tag, swtrig_handle);
+  if (swtrig_handle.isValid()) {
+    if (swtrig_handle->accept() == true)
+      _swtrig = 1;
+    else
+      _swtrig = 0;
+  }// if software trigger run by this producer
 
   if (!fData)
   {
@@ -871,6 +886,8 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("sub", &_sub, "sub/I");
   _tree->Branch("evt", &_evt, "evt/I");
 
+  _tree->Branch("swtrig",&_swtrig,"swtrig/I");
+
   _tree->Branch("xtimeoffset", &_xtimeoffset, "xtimeoffset/F");
   _tree->Branch("xsceoffset", &_xsceoffset, "xsceoffset/F");
   _tree->Branch("ysceoffset", &_ysceoffset, "ysceoffset/F");
@@ -926,6 +943,8 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _nu_e = std::numeric_limits<float>::lowest();
   _theta = std::numeric_limits<float>::lowest();
   _nu_pt = std::numeric_limits<float>::lowest();
+
+  _swtrig = std::numeric_limits<int>::lowest();
 
   _nu_pdg = std::numeric_limits<int>::lowest();
   _ccnc = std::numeric_limits<int>::lowest();
