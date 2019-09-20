@@ -1,3 +1,5 @@
+#include "beamdata_microboone.fcl"
+#include "beamdataquality.fcl"
 #include "pandoramodules_microboone.fcl"
 #include "shrreco3d.fcl"
 #include "trackproducerfrompfparticle.fcl"
