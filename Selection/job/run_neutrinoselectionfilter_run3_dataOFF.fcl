@@ -6,6 +6,6 @@ physics.filters.crtveto.useAsFilter: false
 physics.filters.crtveto.CRTHitProducer: "merger"
 
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "" #"gaushitTruthMatch"
-physics.filters.nuselection.IsData: false
+physics.filters.nuselection.IsData: true
 
-physics.filters.nuselection.AnalysisTools.crtApproach.TrackAssnModuleLabel: "AAA"
+physics.filters.nuselection.AnalysisTools.crtApproach.TrackAssnModuleLabel: "crttrackmatch"
