@@ -9,6 +9,7 @@
 #include "TParticlePDG.h"
 #include "../CommonDefs/Typedefs.h"
 #include "../CommonDefs/PIDFuncs.h"
+#include "../CommonDefs/TrackFitterFunctions.h"
 #include "../CommonDefs/CalibrationFuncs.h"
 
 #include "larcore/Geometry/Geometry.h"
@@ -94,6 +95,9 @@ private:
     float fFidvolYend; /**< Fiducial volume distance from the top of the TPC on the y axis (default 15 cm) */
     float fFidvolXstart; /**< Fiducial volume distance from the start of the TPC on the x axis (default 10 cm) */
     float fFidvolXend; /**< Fiducial volume distance from the end of the TPC on the x axis (default 10 cm) */
+
+  float fdEdxcmSkip, fdEdxcmLen; // cm from vtx to skip for dE/dx and dE/dx segment length, respectively
+  bool fLocaldEdx; // use local dE/dx from calorimetry (true) or globally convert Q -> MeV (false)
 
     art::InputTag fCLSproducer;
     art::InputTag fPIDproducer;
@@ -270,6 +274,10 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
     fFidvolYend = pset.get<float>("FidvolYend", 15);
     fFidvolXstart = pset.get<float>("FidvolXstart", 10);
     fFidvolXend = pset.get<float>("FidvolXend", 10);
+
+    fdEdxcmSkip  = pset.get<float>("dEdxcmSkip",0.0); // how many cm to skip @ vtx for dE/dx calculation
+    fdEdxcmLen   = pset.get<float>("dEdxcmLen" ,4.0); // how long the dE/dx segment should be
+    fLocaldEdx   = pset.get<bool >("LocaldEdx" , true); // use dE/dx from calo?
 }
 
 //----------------------------------------------------------------------------
@@ -561,43 +569,28 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         _shr_tkfit_theta = tk->StartDirection().Theta();
 
                         auto const tkcalos = tk.get<anab::Calorimetry>();
-                        for (const auto &tkcalo : tkcalos)
-                        {
-                            if (tkcalo->ResidualRange().size() == 0)
-                                continue;
-                            std::vector<float> dedx4cm;
-                            for (size_t ic = 0; ic < tkcalo->ResidualRange().size(); ++ic)
-                            {
-                                if ((tkcalo->ResidualRange().back() - tkcalo->ResidualRange()[ic]) < 4.)
-                                {
-                                    dedx4cm.push_back(tkcalo->dEdx()[ic]);
-                                }
-                            }
-                            float dedx4cm_med = -1.;
-                            if (dedx4cm.size() > 0)
-                            {
-                                std::sort(dedx4cm.begin(), dedx4cm.end());
-                                if (dedx4cm.size() % 2 == 1)
-                                    dedx4cm_med = dedx4cm[dedx4cm.size() / 2];
-                                else
-                                    dedx4cm_med = 0.5 * (dedx4cm[dedx4cm.size() / 2] + dedx4cm[dedx4cm.size() / 2 - 1]);
-                            }
-                            if (tkcalo->PlaneID().Plane == 2)
-                            {
-                                _shr_tkfit_dedx_Y = dedx4cm_med;
-                                _shr_tkfit_nhits_Y = dedx4cm.size();
-                            }
-                            else if (tkcalo->PlaneID().Plane == 1)
-                            {
-                                _shr_tkfit_dedx_V = dedx4cm_med;
-                                _shr_tkfit_nhits_V = dedx4cm.size();
-                            }
-                            else if (tkcalo->PlaneID().Plane == 0)
-                            {
-                                _shr_tkfit_dedx_U = dedx4cm_med;
-                                _shr_tkfit_nhits_U = dedx4cm.size();
-                            }
-                        }
+
+			float calodEdx; // dEdx computed for track-fitter
+			int   caloNpts; // number of track-fitter dE/dx hits
+			
+                        for (const auto &tkcalo : tkcalos) {
+
+			  // using function from CommonDefs/TrackFitterFunctions.h
+			  searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
+
+			  if (tkcalo->PlaneID().Plane == 2) {
+			    _shr_tkfit_dedx_Y  = calodEdx;
+			    _shr_tkfit_nhits_Y = caloNpts;
+			  }
+			  else if (tkcalo->PlaneID().Plane == 1) {
+			    _shr_tkfit_dedx_V  = calodEdx;
+			    _shr_tkfit_nhits_V = caloNpts;
+			  }
+			  else if (tkcalo->PlaneID().Plane == 0) {
+			    _shr_tkfit_dedx_U = calodEdx;
+			    _shr_tkfit_nhits_U = caloNpts;
+			  }
+                        }// for all calo objects
                     }
                 }
             }

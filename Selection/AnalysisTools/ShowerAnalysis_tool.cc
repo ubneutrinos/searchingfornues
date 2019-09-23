@@ -13,6 +13,7 @@
 #include "../CommonDefs/Geometry.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "../CommonDefs/ProximityClustering.h"
+#include "../CommonDefs/TrackFitterFunctions.h"
 
 namespace analysis
 {
@@ -81,8 +82,12 @@ public:
   void resetTTree(TTree *_tree) override;
 
 private:
+
+  // input variables for tool
   art::InputTag fTRKproducer;
   art::InputTag fCALproducer;
+  float fdEdxcmSkip, fdEdxcmLen;
+  bool fLocaldEdx;
 
   std::vector<float> _shr_energy_u_v;
   std::vector<float> _shr_energy_v_v;
@@ -144,6 +149,9 @@ ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
 {
   fTRKproducer = p.get<art::InputTag>("TRKproducer", "");
   fCALproducer = p.get<art::InputTag>("CALproducer", "");
+  fdEdxcmSkip  = p.get<float>("dEdxcmSkip",0.0); // how many cm to skip @ vtx for dE/dx calculation
+  fdEdxcmLen   = p.get<float>("dEdxcmLen" ,4.0); // how long the dE/dx segment should be
+  fLocaldEdx   = p.get<bool >("LocaldEdx" , true); // use dE/dx from calo?
 
   // load proximity clustering algorithm
   //PrxyCluster = new searchingfornues::ProximityClustering();
@@ -346,43 +354,32 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
         _shr_tkfit_theta_v.back() = tk->StartDirection().Theta();
 
         auto const tkcalos = tk.get<anab::Calorimetry>();
+
+	float calodEdx; // dEdx computed for track-fitter
+	int   caloNpts; // number of track-fitter dE/dx hits
+
         for (const auto &tkcalo : tkcalos)
         {
-          if (tkcalo->ResidualRange().size() == 0)
-            continue;
-          std::vector<float> dedx4cm;
-          for (size_t ic = 0; ic < tkcalo->ResidualRange().size(); ++ic)
-          {
-            if ((tkcalo->ResidualRange().back() - tkcalo->ResidualRange()[ic]) < 4.)
-            {
-              dedx4cm.push_back(tkcalo->dEdx()[ic]);
-            }
-          }
-          float dedx4cm_med = -1.;
-          if (dedx4cm.size() > 0)
-          {
-            std::sort(dedx4cm.begin(), dedx4cm.end());
-            if (dedx4cm.size() % 2 == 1)
-              dedx4cm_med = dedx4cm[dedx4cm.size() / 2];
-            else
-              dedx4cm_med = 0.5 * (dedx4cm[dedx4cm.size() / 2] + dedx4cm[dedx4cm.size() / 2 - 1]);
-          }
-          if (tkcalo->PlaneID().Plane == 0)
-          {
-            _shr_tkfit_dedx_u_v.back() = dedx4cm_med;
-            _shr_tkfit_dedx_nhits_u_v.back() = dedx4cm.size();
-          }
-          else if (tkcalo->PlaneID().Plane == 1)
-          {
-            _shr_tkfit_dedx_v_v.back() = dedx4cm_med;
-            _shr_tkfit_dedx_nhits_v_v.back() = dedx4cm.size();
-          }
-          else if (tkcalo->PlaneID().Plane == 2)
-          {
-            _shr_tkfit_dedx_y_v.back() = dedx4cm_med;
-            _shr_tkfit_dedx_nhits_y_v.back() = dedx4cm.size();
-          }
-        }
+
+	  // using function from CommonDefs/TrackFitterFunctions.h
+	  searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
+
+	  if (tkcalo->PlaneID().Plane == 0) {
+	    _shr_tkfit_dedx_u_v.back()       = calodEdx;
+	    _shr_tkfit_dedx_nhits_u_v.back() = caloNpts;
+	  }
+
+	  if (tkcalo->PlaneID().Plane == 1) {
+	    _shr_tkfit_dedx_v_v.back()       = calodEdx;
+	    _shr_tkfit_dedx_nhits_v_v.back() = caloNpts;
+	  }
+
+	  if (tkcalo->PlaneID().Plane == 2) {
+	    _shr_tkfit_dedx_y_v.back()       = calodEdx;
+	    _shr_tkfit_dedx_nhits_y_v.back() = caloNpts;
+	  }
+
+        }// for all calorimetry objects
       }
     }
   }
