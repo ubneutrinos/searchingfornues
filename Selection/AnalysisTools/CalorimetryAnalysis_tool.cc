@@ -135,10 +135,6 @@ private:
   int _nplanehits_Y;
   float _trk_score;
 
-  float _trk_start_x;
-  float _trk_start_y;
-  float _trk_start_z;
-
   float _trk_theta;
   float _trk_phi;
 
@@ -146,11 +142,23 @@ private:
   float _trk_dir_y;
   float _trk_dir_z;
 
+  float _trk_len;
+
+  float _trk_start_x;
+  float _trk_start_y;
+  float _trk_start_z;
+
+  float _trk_sce_start_x;
+  float _trk_sce_start_y;
+  float _trk_sce_start_z;
+
   float _trk_end_x;
   float _trk_end_y;
   float _trk_end_z;
 
-  float _trk_len;
+  float _trk_sce_end_x;
+  float _trk_sce_end_y;
+  float _trk_sce_end_z;
 
   float _trk_bragg_p;
   float _trk_bragg_mu;
@@ -199,6 +207,19 @@ private:
   std::vector<float> _pitch_u;
   std::vector<float> _pitch_v;
   std::vector<float> _pitch_y;
+
+  std::vector<float> _x_u;
+  std::vector<float> _x_v;
+  std::vector<float> _x_y;
+
+  std::vector<float> _y_u;
+  std::vector<float> _y_v;
+  std::vector<float> _y_y;
+
+  std::vector<float> _z_u;
+  std::vector<float> _z_v;
+  std::vector<float> _z_y;
+
 };
 
 //----------------------------------------------------------------------------
@@ -418,6 +439,10 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
     _trk_energy_proton = energy_proton;
     _trk_energy_muon = energy_muon;
 
+    _trk_theta = trk->Theta();
+    _trk_phi = trk->Phi();
+    _trk_len = trk->Length();
+
     _trk_dir_x = trk->StartDirection().X();
     _trk_dir_y = trk->StartDirection().Y();
     _trk_dir_z = trk->StartDirection().Z();
@@ -430,22 +455,36 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
     _trk_end_y = trk->End().Y();
     _trk_end_z = trk->End().Z();
 
-    _trk_theta = trk->Theta();
-    _trk_phi = trk->Phi();
+    float _trk_start_sce[3];
+    searchingfornues::ApplySCECorrectionXYZ(_trk_start_x, _trk_start_y, _trk_start_z, _trk_start_sce);
+    _trk_sce_start_x = _trk_start_sce[0];
+    _trk_sce_start_y = _trk_start_sce[1];
+    _trk_sce_start_z = _trk_start_sce[2];
 
-    _trk_len = trk->Length();
+    float _trk_end_sce[3];
+    searchingfornues::ApplySCECorrectionXYZ(_trk_end_x, _trk_end_y, _trk_end_z, _trk_end_sce);
+    _trk_sce_end_x = _trk_end_sce[0];
+    _trk_sce_end_y = _trk_end_sce[1];
+    _trk_sce_end_z = _trk_end_sce[2];
 
     // fill Calorimetry
     auto calo_v = calo_proxy[trk.key()].get<anab::Calorimetry>();
     for (auto const& calo : calo_v)
     {
       auto const& plane = calo->PlaneID().Plane;
+      auto xyz_v = calo->XYZ();
       if (plane == 0)
       {
         _dqdx_u = calo->dQdx();
         _dedx_u = calo->dEdx();
         _rr_u = calo->ResidualRange();
         _pitch_u = calo->TrkPitchVec();
+        for (auto xyz : xyz_v)
+        {
+          _x_u.push_back(xyz.X());
+          _y_u.push_back(xyz.Y());
+          _z_u.push_back(xyz.Z());
+        }
       }
       else if (plane == 1)
       {
@@ -453,6 +492,12 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
         _dedx_v = calo->dEdx();
         _rr_v = calo->ResidualRange();
         _pitch_v = calo->TrkPitchVec();
+        for (auto xyz : xyz_v)
+        {
+          _x_v.push_back(xyz.X());
+          _y_v.push_back(xyz.Y());
+          _z_v.push_back(xyz.Z());
+        }
       }
       else if (plane == 2) //collection
       {
@@ -460,6 +505,12 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
         _dedx_y = calo->dEdx();
         _rr_y = calo->ResidualRange();
         _pitch_y = calo->TrkPitchVec();
+        for (auto xyz : xyz_v)
+        {
+          _x_y.push_back(xyz.X());
+          _y_y.push_back(xyz.Y());
+          _z_y.push_back(xyz.Z());
+        }
       }
     }
     _calo_tree->Fill();
@@ -501,22 +552,29 @@ void CalorimetryAnalysis::fillDefault()
   _nplanehits_Y = std::numeric_limits<int>::lowest();
   _trk_score = std::numeric_limits<float>::lowest();
 
-  _trk_start_x = std::numeric_limits<float>::lowest();
-  _trk_start_y = std::numeric_limits<float>::lowest();
-  _trk_start_z = std::numeric_limits<float>::lowest();
-
   _trk_theta = std::numeric_limits<float>::lowest();
   _trk_phi = std::numeric_limits<float>::lowest();
+  _trk_len = std::numeric_limits<float>::lowest();
 
   _trk_dir_x = std::numeric_limits<float>::lowest();
   _trk_dir_y = std::numeric_limits<float>::lowest();
   _trk_dir_z = std::numeric_limits<float>::lowest();
 
+  _trk_start_x = std::numeric_limits<float>::lowest();
+  _trk_start_y = std::numeric_limits<float>::lowest();
+  _trk_start_z = std::numeric_limits<float>::lowest();
+
+  _trk_sce_start_x = std::numeric_limits<float>::lowest();
+  _trk_sce_start_y = std::numeric_limits<float>::lowest();
+  _trk_sce_start_z = std::numeric_limits<float>::lowest();
+
   _trk_end_x = std::numeric_limits<float>::lowest();
   _trk_end_y = std::numeric_limits<float>::lowest();
   _trk_end_z = std::numeric_limits<float>::lowest();
 
-  _trk_len = std::numeric_limits<float>::lowest();
+  _trk_sce_end_x = std::numeric_limits<float>::lowest();
+  _trk_sce_end_y = std::numeric_limits<float>::lowest();
+  _trk_sce_end_z = std::numeric_limits<float>::lowest();
 
   _trk_bragg_p = std::numeric_limits<float>::lowest();
   _trk_bragg_mu = std::numeric_limits<float>::lowest();
@@ -565,6 +623,18 @@ void CalorimetryAnalysis::fillDefault()
   _pitch_u.clear();
   _pitch_v.clear();
   _pitch_y.clear();
+
+  _x_u.clear();
+  _x_v.clear();
+  _x_y.clear();
+
+  _y_u.clear();
+  _y_v.clear();
+  _y_y.clear();
+
+  _z_u.clear();
+  _z_v.clear();
+  _z_y.clear();
 }
 
 void CalorimetryAnalysis::setBranches(TTree *_tree)
@@ -604,22 +674,29 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
   _calo_tree->Branch("nplanehits_Y", &_nplanehits_Y, "nplanehits_Y/i");
   _calo_tree->Branch("trk_score", &_trk_score, "trk_score/f");
 
-  _calo_tree->Branch("trk_start_x", &_trk_start_x, "trk_start_x/f");
-  _calo_tree->Branch("trk_start_y", &_trk_start_y, "trk_start_y/f");
-  _calo_tree->Branch("trk_start_z", &_trk_start_z, "trk_start_z/f");
-
   _calo_tree->Branch("trk_theta", &_trk_theta, "trk_theta/f");
   _calo_tree->Branch("trk_phi", &_trk_phi, "trk_phi/f");
+  _calo_tree->Branch("trk_len", &_trk_len, "trk_len/f");
 
   _calo_tree->Branch("trk_dir_x", &_trk_dir_x, "trk_dir_x/f");
   _calo_tree->Branch("trk_dir_y", &_trk_dir_y, "trk_dir_y/f");
   _calo_tree->Branch("trk_dir_z", &_trk_dir_z, "trk_dir_z/f");
 
+  _calo_tree->Branch("trk_start_x", &_trk_start_x, "trk_start_x/f");
+  _calo_tree->Branch("trk_start_y", &_trk_start_y, "trk_start_y/f");
+  _calo_tree->Branch("trk_start_z", &_trk_start_z, "trk_start_z/f");
+
+  _calo_tree->Branch("trk_sce_start_x", &_trk_sce_start_x, "trk_sce_start_x/f");
+  _calo_tree->Branch("trk_sce_start_y", &_trk_sce_start_y, "trk_sce_start_y/f");
+  _calo_tree->Branch("trk_sce_start_z", &_trk_sce_start_z, "trk_sce_start_z/f");
+
   _calo_tree->Branch("trk_end_x", &_trk_end_x, "trk_end_x/f");
   _calo_tree->Branch("trk_end_y", &_trk_end_y, "trk_end_y/f");
   _calo_tree->Branch("trk_end_z", &_trk_end_z, "trk_end_z/f");
 
-  _calo_tree->Branch("trk_len", &_trk_len, "trk_len/f");
+  _calo_tree->Branch("trk_sce_end_x", &_trk_sce_end_x, "trk_sce_end_x/f");
+  _calo_tree->Branch("trk_sce_end_y", &_trk_sce_end_y, "trk_sce_end_y/f");
+  _calo_tree->Branch("trk_sce_end_z", &_trk_sce_end_z, "trk_sce_end_z/f");
 
   _calo_tree->Branch("trk_bragg_p", &_trk_bragg_p, "trk_bragg_p/f");
   _calo_tree->Branch("trk_bragg_mu", &_trk_bragg_mu, "trk_bragg_mu/f");
