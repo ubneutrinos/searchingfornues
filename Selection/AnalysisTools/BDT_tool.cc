@@ -4,7 +4,7 @@
 #include <iostream>
 #include "AnalysisToolBase.h"
 
-#include <xgboost/c_api.h>
+#include "ubana/XGBoost/xgboost/c_api.h"
 
 namespace analysis
 {
@@ -98,12 +98,12 @@ namespace analysis
     xgtest = XGBoosterCreate(NULL, 0, &booster_ext);
     xgtest = XGBoosterCreate(NULL, 0, &booster_cosmic);
     xgtest = XGBoosterCreate(NULL, 0, &booster_global);
-    xgtest = XGBoosterLoadModel(booster_nuNCpi0,   "$UBANA_DIR/searchingfornues/Selection/data/booster_nopid_ncpi0.model");
-    xgtest = XGBoosterLoadModel(booster_numuCCpi0, "$UBANA_DIR/searchingfornues/Selection/data/booster_nopid_ccpi0.model");
-    xgtest = XGBoosterLoadModel(booster_numuCC,    "$UBANA_DIR/searchingfornues/Selection/data/booster_nopid_cc.model");
-    xgtest = XGBoosterLoadModel(booster_ext,       "$UBANA_DIR/searchingfornues/Selection/data/booster_nopid_ext.model");
-    xgtest = XGBoosterLoadModel(booster_cosmic,    "$UBANA_DIR/searchingfornues/Selection/data/booster_nopid_cosmic.model");
-    xgtest = XGBoosterLoadModel(booster_global,    "$UBANA_DIR/searchingfornues/Selection/data/booster_nopid.model");
+    xgtest = XGBoosterLoadModel(booster_nuNCpi0,   "ubana/searchingfornues/Selection/data/booster_nopid_ncpi0.model");
+    xgtest = XGBoosterLoadModel(booster_numuCCpi0, "ubana/searchingfornues/Selection/data/booster_nopid_ccpi0.model");
+    xgtest = XGBoosterLoadModel(booster_numuCC,    "ubana/searchingfornues/Selection/data/booster_nopid_cc.model");
+    xgtest = XGBoosterLoadModel(booster_ext,       "ubana/searchingfornues/Selection/data/booster_nopid_ext.model");
+    xgtest = XGBoosterLoadModel(booster_cosmic,    "ubana/searchingfornues/Selection/data/booster_nopid_cosmic.model");
+    xgtest = XGBoosterLoadModel(booster_global,    "ubana/searchingfornues/Selection/data/booster_nopid.model");
     assert(xgtest==0);
   }
 

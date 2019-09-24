@@ -171,8 +171,8 @@ NuSelectionFilter:{
     Verbose: false
     IsData: false
     Filter: true
-    BDT_branch: "bdt_global"
-    BDT_cut: 0.9
+    BDT_branch: ""
+    BDT_cut: -1
     PFPproducer: "pandora"
     SHRproducer: "shrreco3d" #"pandora" #if you change this, remember to change also the inputs to ShowerAnalysisTool!
     HITproducer: "pandora"

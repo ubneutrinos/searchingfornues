@@ -1,0 +1,19 @@
+#include "run_neutrinoselectionfilter_run3_data.fcl"
+
+# CC0PiNp Selection Tool
+physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool
+
+# Minimal list of Analysis Tools
+physics.filters.nuselection.AnalysisTools: {
+   default:  @local::physics.filters.nuselection.AnalysisTools.default
+   cosmicip: @local::physics.filters.nuselection.AnalysisTools.cosmicip
+   zbdt:     @local::physics.filters.nuselection.AnalysisTools.zbdt
+}
+
+# Turn on anti-BDT filter
+physics.filters.nuselection.BDT_branch: "bdt_global"
+physics.filters.nuselection.BDT_cut: 0.9
+
+# Run only this filter
+physics.filters: { nuselection: @local::physics.filters.nuselection }
+
