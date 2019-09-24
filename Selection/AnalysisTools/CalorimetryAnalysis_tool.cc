@@ -114,6 +114,8 @@ private:
   art::InputTag fMCRproducer;
   art::InputTag fT0producer;
 
+  bool fBacktrack; // do the backtracking needed for this module?
+
   TTree* _calo_tree;
 
   int _run, _sub, _evt;
@@ -267,6 +269,8 @@ CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p)
   fHproducer = p.get<art::InputTag>("Hproducer");
   fMCRproducer = p.get<art::InputTag>("MCRproducer");
 
+  fBacktrack = p.get<bool>("Backtrack", true);
+
   art::ServiceHandle<art::TFileService> tfs;
 
   _calo_tree = tfs->make<TTree>("CalorimetryAnalyzer", "Calo Tree");
@@ -296,6 +300,8 @@ void CalorimetryAnalysis::analyzeEvent(art::Event const &e, bool fData)
   _sub = e.subRun();
   _run = e.run();
 
+
+
   // if flag to store cosmic muon info is on -> save ACPT tagged tracks if any
   if (fT0producer == "")
     return;
@@ -318,13 +324,38 @@ void CalorimetryAnalysis::analyzeEvent(art::Event const &e, bool fData)
   // load backtrack information
   std::vector<searchingfornues::BtPart> btparts_v;
   std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
-  if (!fData)
+
+  if (fBacktrack)
   {
     const std::vector<sim::MCShower> &inputMCShower = *(e.getValidHandle<std::vector<sim::MCShower>>(fMCRproducer));
     const std::vector<sim::MCTrack> &inputMCTrack = *(e.getValidHandle<std::vector<sim::MCTrack>>(fMCRproducer));
     art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
     assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
     btparts_v = searchingfornues::initBacktrackingParticleVec(inputMCShower, inputMCTrack, *inputHits, assocMCPart);
+
+    /*
+    auto const &hit_mcpart_assn = *(e.getValidHandle<art::Assns<recob::Hit,simb::MCParticle,anab::BackTrackerHitMatchingData>>(fBacktrackTag));
+
+    std::unordered_set<size_t> my_hit_key_mc;
+
+    int ctr = 0.;
+    std::cout << "there are " << hit_mcpart_assn.size() << " hit_mcpart_assn" << std::endl;
+    for(auto &pair : hit_mcpart_assn){
+
+      std::cout << "hit " << pair.first.key() << " is associated to track-id " << pair.second->TrackId() << " " << std::endl;
+      my_hit_key_mc.insert(pair.first.key());
+      ctr += 1;
+
+    }
+    std::cout << " ctr is " << ctr << std::endl;
+
+    for (size_t h=0; h < inputHits->size(); h++) {
+      if(my_hit_key_mc.count(h) > 0)
+  std::cout << "hit backtracked!" << std::endl;
+    }
+    */
+
+
   }
 
 
@@ -359,9 +390,10 @@ void CalorimetryAnalysis::analyzeEvent(art::Event const &e, bool fData)
           calo_proxy,
           pid_proxy,
           clus_proxy,
-          fData,
+          !fBacktrack,
           btparts_v,
           assocMCPart);
+
     }//  if T0 assocaition is found
   }// for all PFParticles
 }// analyzeEvent
@@ -689,12 +721,13 @@ void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t
             const std::vector<searchingfornues::BtPart> btparts_v,
             const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart) {
 
-  if (pfp->IsPrimary())
+  if ( (pfp->IsPrimary()) && (fT0producer == ""))
     return;
 
   auto trk_v = pfp.get<recob::Track>();
   if (trk_v.size() != 1)
     return;
+
   auto trk = trk_v.at(0);
 
   //add is primary daughter ?

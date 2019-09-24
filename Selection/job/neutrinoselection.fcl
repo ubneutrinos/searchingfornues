@@ -1,11 +1,13 @@
 #include "pandoramodules_microboone.fcl"
 #include "shrreco3d.fcl"
+#include "mcreco.fcl"
 #include "trackproducerfrompfparticle.fcl"
 #include "calorimetry_microboone.fcl"
 #include "particleid_microboone.fcl"
 #include "calibration_microboone.fcl"
 #include "config_particle_identification.fcl"
 #include "services_microboone.fcl"
+
 
 CalorimetryAnalysisTool: {
     tool_type: "CalorimetryAnalysis"

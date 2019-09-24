@@ -161,6 +161,7 @@ std::vector<BtPart> initBacktrackingParticleVec(const std::vector<sim::MCShower>
   }
   for (auto mct : inputMCTrack)
   {
+
     if (mct.Process() == "primary")
     {
       sim::MCStep mc_step_track_start = mct.Start();
