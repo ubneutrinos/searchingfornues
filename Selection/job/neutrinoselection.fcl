@@ -199,7 +199,7 @@ NuSelectionFilter:{
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
         flashmatch:    @local::FlashMatchingTool
-        zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
+        #zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
     }
 }
 
