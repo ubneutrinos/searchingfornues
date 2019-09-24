@@ -98,12 +98,21 @@ namespace analysis
     xgtest = XGBoosterCreate(NULL, 0, &booster_ext);
     xgtest = XGBoosterCreate(NULL, 0, &booster_cosmic);
     xgtest = XGBoosterCreate(NULL, 0, &booster_global);
-    xgtest = XGBoosterLoadModel(booster_nuNCpi0,   "ubana/searchingfornues/Selection/data/booster_nopid_ncpi0.model");
-    xgtest = XGBoosterLoadModel(booster_numuCCpi0, "ubana/searchingfornues/Selection/data/booster_nopid_ccpi0.model");
-    xgtest = XGBoosterLoadModel(booster_numuCC,    "ubana/searchingfornues/Selection/data/booster_nopid_cc.model");
-    xgtest = XGBoosterLoadModel(booster_ext,       "ubana/searchingfornues/Selection/data/booster_nopid_ext.model");
-    xgtest = XGBoosterLoadModel(booster_cosmic,    "ubana/searchingfornues/Selection/data/booster_nopid_cosmic.model");
-    xgtest = XGBoosterLoadModel(booster_global,    "ubana/searchingfornues/Selection/data/booster_nopid.model");
+
+    std::string _filename;
+    cet::search_path sp("FW_SEARCH_PATH");
+    sp.find_file("searchingfornues/booster_nopid_ncpi0.model",_filename);
+    xgtest = XGBoosterLoadModel(booster_nuNCpi0, _filename.c_str());
+    sp.find_file("searchingfornues/booster_nopid_ccpi0.model",_filename);
+    xgtest = XGBoosterLoadModel(booster_numuCCpi0, _filename.c_str());
+    sp.find_file("searchingfornues/booster_nopid_cc.model",_filename);
+    xgtest = XGBoosterLoadModel(booster_numuCC, _filename.c_str());
+    sp.find_file("searchingfornues/booster_nopid_ext.model",_filename);
+    xgtest = XGBoosterLoadModel(booster_ext, _filename.c_str());
+    sp.find_file("searchingfornues/booster_nopid_cosmic.model",_filename);
+    xgtest = XGBoosterLoadModel(booster_cosmic, _filename.c_str());
+    sp.find_file("searchingfornues/booster_nopid.model",_filename);
+    xgtest = XGBoosterLoadModel(booster_global, _filename.c_str());
     assert(xgtest==0);
   }
 
