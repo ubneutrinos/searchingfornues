@@ -16,6 +16,8 @@
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "../CommonDefs/PIDFuncs.h"
 
+#include "lardataobj/AnalysisBase/T0.h"
+
 #include "ubana/ParticleID/Algorithms/uB_PlaneIDBitsetHelperFunctions.h"
 #include "larreco/RecoAlg/TrackMomentumCalculator.h"
 
@@ -87,11 +89,22 @@ public:
 
 
 private:
+
+  // function that given a track and its calo info fills NTuple variables
+  void FillCalorimetry(const searchingfornues::ProxyPfpElem_t pfp,
+		       const searchingfornues::ProxyCaloColl_t calo_proxy,
+		       const searchingfornues::ProxyPIDColl_t pid_proxy,
+		       const searchingfornues::ProxyClusColl_t clus_proxy,
+		       const bool fData,
+		       const std::vector<searchingfornues::BtPart> btparts_v,
+		       const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart);
+
   trkf::TrackMomentumCalculator _trkmom;
 
   TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
   TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
 
+  art::InputTag fPFPproducer;
   art::InputTag fCALOproducer;
   art::InputTag fPIDproducer;
   art::InputTag fTRKproducer;
@@ -99,6 +112,7 @@ private:
   art::InputTag fBacktrackTag;
   art::InputTag fHproducer;
   art::InputTag fMCRproducer;
+  art::InputTag fT0producer;
 
   TTree* _calo_tree;
 
@@ -231,9 +245,11 @@ private:
 ///
 CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p)
 {
+  fPFPproducer  = p.get< art::InputTag > ("PFPproducer","pandora");
   fCALOproducer = p.get< art::InputTag > ("CALOproducer");
   fPIDproducer  = p.get< art::InputTag > ("PIDproducer" );
   fTRKproducer  = p.get< art::InputTag > ("TRKproducer" );
+  fT0producer  = p.get< art::InputTag > ("T0producer", "" );
 
   fCLSproducer = p.get<art::InputTag>("CLSproducer");
   fBacktrackTag = p.get<art::InputTag>("BacktrackTag");
@@ -268,10 +284,85 @@ void CalorimetryAnalysis::analyzeEvent(art::Event const &e, bool fData)
   _evt = e.event();
   _sub = e.subRun();
   _run = e.run();
-}
+
+  // if flag to store cosmic muon info is on -> save ACPT tagged tracks if any
+  if (fT0producer == "")
+    return;
+
+  // grab PFParticles in event
+  searchingfornues::ProxyPfpColl_t const &pfp_proxy_v = proxy::getCollection<std::vector<recob::PFParticle>>(e, fPFPproducer,
+													     proxy::withAssociated<larpandoraobj::PFParticleMetadata>(fPFPproducer),
+													     proxy::withAssociated<recob::Cluster>(fPFPproducer),
+													     proxy::withAssociated<recob::Slice>(fPFPproducer),
+													     proxy::withAssociated<recob::Track>(fPFPproducer),
+													     proxy::withAssociated<recob::Vertex>(fPFPproducer),
+													     proxy::withAssociated<recob::PCAxis>(fPFPproducer),
+													     proxy::withAssociated<recob::Shower>(fPFPproducer),
+													     proxy::withAssociated<recob::SpacePoint>(fPFPproducer));
+  
+  // load clusters
+  ProxyClusColl_t const &clus_proxy = proxy::getCollection<std::vector<recob::Cluster>>(e, fCLSproducer,
+                                                                                        proxy::withAssociated<recob::Hit>(fCLSproducer));
+
+  // load backtrack information
+  std::vector<searchingfornues::BtPart> btparts_v;
+  std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
+  if (!fData)
+  {
+    const std::vector<sim::MCShower> &inputMCShower = *(e.getValidHandle<std::vector<sim::MCShower>>(fMCRproducer));
+    const std::vector<sim::MCTrack> &inputMCTrack = *(e.getValidHandle<std::vector<sim::MCTrack>>(fMCRproducer));
+    art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
+    assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
+    btparts_v = searchingfornues::initBacktrackingParticleVec(inputMCShower, inputMCTrack, *inputHits, assocMCPart);
+  }
+
+
+  // load calorimetry
+  searchingfornues::ProxyCaloColl_t const& calo_proxy = proxy::getCollection<std::vector<recob::Track> >(e, fTRKproducer,
+                           proxy::withAssociated<anab::Calorimetry>(fCALOproducer));
+
+  searchingfornues::ProxyPIDColl_t const& pid_proxy = proxy::getCollection<std::vector<recob::Track> >(e, fTRKproducer,
+                           proxy::withAssociated<anab::ParticleID>(fPIDproducer));
+
+  // grab tracks in the event
+  auto const& trk_h = e.getValidHandle<std::vector<recob::Track> >(fPFPproducer);
+  // grab anab::T0 for ACPT in-time associated to Tracks
+  art::FindManyP<anab::T0> trk_t0_assn_v(trk_h, e, fT0producer);
+
+  for (const ProxyPfpElem_t &pfp_pxy : pfp_proxy_v) {
+
+    fillDefault();
+
+    // grab associated tracks
+    auto trk_v = pfp_pxy.get<recob::Track>();
+    if (trk_v.size() != 1)
+      continue;
+
+    auto trk = trk_v.at(0);
+    
+    // grab track key to find anab::T0 association, if present
+    auto const T0_v = trk_t0_assn_v.at( trk.key() );
+    if (T0_v.size() == 1) {
+
+      FillCalorimetry(pfp_pxy,
+		      calo_proxy,
+		      pid_proxy,
+		      clus_proxy,
+		      fData,
+		      btparts_v,
+		      assocMCPart);      
+      
+    }//  if T0 assocaition is found
+  }// for all PFParticles
+}// analyzeEvent
 
 void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
 {
+
+  // if fT0producer was specified -> means we don't want to run on neutrino candidate tracks -> skip
+  if (fT0producer != "")
+    return;
+
   // load clusters
   ProxyClusColl_t const &clus_proxy = proxy::getCollection<std::vector<recob::Cluster>>(e, fCLSproducer,
                                                                                         proxy::withAssociated<recob::Hit>(fCLSproducer));
@@ -300,220 +391,15 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
     fillDefault();
 
     auto pfp = slice_pfp_v[i_pfp];
-    if (pfp->IsPrimary())
-      continue;
-
-    auto trk_v = pfp.get<recob::Track>();
-    if (trk_v.size() != 1)
-      continue;
-    auto trk = trk_v.at(0);
-
-    //add is primary daughter
-
-    // store pfp information
-    _trk_score = searchingfornues::GetTrackShowerScore(pfp);
-    // get hits associated to this PFParticle through the clusters
-    std::vector<art::Ptr<recob::Hit>> hit_v;
-    auto clus_pxy_v = pfp.get<recob::Cluster>();
-    for (auto ass_clus : clus_pxy_v)
-    {
-      // get cluster proxy
-      const auto &clus = clus_proxy[ass_clus.key()];
-      auto clus_hit_v = clus.get<recob::Hit>();
-      auto nhits = clus_hit_v.size();
-
-      if (clus->Plane().Plane == 0)
-      {
-        _nplanehits_U = nhits;
-      }
-      else if (clus->Plane().Plane == 1)
-      {
-        _nplanehits_V = nhits;
-      }
-      else if (clus->Plane().Plane == 2)
-      {
-        _nplanehits_Y = nhits;
-      }
-      for (const auto &hit : clus_hit_v)
-      {
-        hit_v.push_back(hit);
-      }
-    } // for all clusters associated to PFP
-
-    // store Backtracking
-    if (!fData)
-    {
-      if (clus_pxy_v.size() != 0)
-      {
-        float purity = 0., completeness = 0., overlay_purity = 0.;
-        int ibt = searchingfornues::getAssocBtPart(hit_v, assocMCPart, btparts_v, purity, completeness, overlay_purity);
-        if (ibt >= 0)
-        {
-          auto &mcp = btparts_v[ibt];
-          _backtracked_e = mcp.e;
-          _backtracked_pdg = mcp.pdg;
-          _backtracked_purity = purity;
-          _backtracked_completeness = completeness;
-          _backtracked_overlay_purity = overlay_purity;
-
-          _backtracked_px = mcp.px;
-          _backtracked_py = mcp.py;
-          _backtracked_pz = mcp.pz;
-          _backtracked_start_x = mcp.start_x;
-          _backtracked_start_y = mcp.start_y;
-          _backtracked_start_z = mcp.start_z;
-          _backtracked_start_t = mcp.start_t;
-
-          _backtracked_start_U = searchingfornues::YZtoPlanecoordinate(mcp.start_y, mcp.start_z, 0);
-          _backtracked_start_V = searchingfornues::YZtoPlanecoordinate(mcp.start_y, mcp.start_z, 1);
-          _backtracked_start_Y = searchingfornues::YZtoPlanecoordinate(mcp.start_y, mcp.start_z, 2);
-
-          float reco_st[3] = {mcp.start_x, mcp.start_y, mcp.start_z};
-
-          if (mcp.pdg == 11 || mcp.pdg == 22)
-          {
-            reco_st[0] += searchingfornues::x_offset(mcp.start_t);
-          }
-          else
-          {
-            searchingfornues::True2RecoMappingXYZ(mcp.start_t, mcp.start_x, mcp.start_y, mcp.start_z, reco_st);
-          }
-          _backtracked_sce_start_x = reco_st[0];
-          _backtracked_sce_start_y = reco_st[1];
-          _backtracked_sce_start_z = reco_st[2];
-
-          _backtracked_sce_start_U = searchingfornues::YZtoPlanecoordinate(reco_st[1], reco_st[2], 0);
-          _backtracked_sce_start_V = searchingfornues::YZtoPlanecoordinate(reco_st[1], reco_st[2], 1);
-          _backtracked_sce_start_Y = searchingfornues::YZtoPlanecoordinate(reco_st[1], reco_st[2], 2);
-        }
-      } // if there are associated clusters
-    }
-
-    // get trk proxy in order to fetch PID
-    auto trkpxy2 = pid_proxy[trk.key()];
-    auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
-
-    //collection plane
-    _trk_bragg_p = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 2),
-                              searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 2));
-    _trk_bragg_mu = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 2),
-                                searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 2));
-    _trk_bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
-    _trk_pid_chipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 2);
-    _trk_pid_chimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 13, 2);
-    _trk_pid_chipi = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 211, 2);
-    _trk_pid_chika = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 321, 2);
-    _trk_pida_v = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 2);
-
-    //u plane
-    _trk_bragg_p_u = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 0),
-                              searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 0));
-    _trk_bragg_mu_u = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 0),
-                                searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 0));
-    _trk_bragg_mip_u = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 0);
-    _trk_pid_chipr_u = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 0);
-    _trk_pid_chimu_u = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 13, 0);
-    _trk_pid_chipi_u = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 211, 0);
-    _trk_pid_chika_u = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 321, 0);
-    _trk_pida_u = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 0);
-
-    //v plane
-    _trk_bragg_p_v = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 1),
-                              searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 1));
-    _trk_bragg_mu_v = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 1),
-                                searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 1));
-    _trk_bragg_mip_v = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 1);
-    _trk_pid_chipr_v = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 1);
-    _trk_pid_chimu_v = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 13, 1);
-    _trk_pid_chipi_v = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 211, 1);
-    _trk_pid_chika_v = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 321, 1);
-    _trk_pida_v = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 1);
-
-
-    // Kinetic energy using tabulated stopping power (GeV)
-    float mcs_momentum_muon = _trkmom.GetTrackMomentum(trk->Length(), 13);
-    float energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), 2212), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
-    float energy_muon = std::sqrt(std::pow(mcs_momentum_muon, 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
-
-    _trk_mcs_muon_mom = mcs_momentum_muon;
-    _trk_energy_proton = energy_proton;
-    _trk_energy_muon = energy_muon;
-
-    _trk_theta = trk->Theta();
-    _trk_phi = trk->Phi();
-    _trk_len = trk->Length();
-
-    _trk_dir_x = trk->StartDirection().X();
-    _trk_dir_y = trk->StartDirection().Y();
-    _trk_dir_z = trk->StartDirection().Z();
-
-    _trk_start_x = trk->Start().X();
-    _trk_start_y = trk->Start().Y();
-    _trk_start_z = trk->Start().Z();
-
-    _trk_end_x = trk->End().X();
-    _trk_end_y = trk->End().Y();
-    _trk_end_z = trk->End().Z();
-
-    float _trk_start_sce[3];
-    searchingfornues::ApplySCECorrectionXYZ(_trk_start_x, _trk_start_y, _trk_start_z, _trk_start_sce);
-    _trk_sce_start_x = _trk_start_sce[0];
-    _trk_sce_start_y = _trk_start_sce[1];
-    _trk_sce_start_z = _trk_start_sce[2];
-
-    float _trk_end_sce[3];
-    searchingfornues::ApplySCECorrectionXYZ(_trk_end_x, _trk_end_y, _trk_end_z, _trk_end_sce);
-    _trk_sce_end_x = _trk_end_sce[0];
-    _trk_sce_end_y = _trk_end_sce[1];
-    _trk_sce_end_z = _trk_end_sce[2];
-
-    // fill Calorimetry
-    auto calo_v = calo_proxy[trk.key()].get<anab::Calorimetry>();
-    for (auto const& calo : calo_v)
-    {
-      auto const& plane = calo->PlaneID().Plane;
-      auto xyz_v = calo->XYZ();
-      if (plane == 0)
-      {
-        _dqdx_u = calo->dQdx();
-        _dedx_u = calo->dEdx();
-        _rr_u = calo->ResidualRange();
-        _pitch_u = calo->TrkPitchVec();
-        for (auto xyz : xyz_v)
-        {
-          _x_u.push_back(xyz.X());
-          _y_u.push_back(xyz.Y());
-          _z_u.push_back(xyz.Z());
-        }
-      }
-      else if (plane == 1)
-      {
-        _dqdx_v = calo->dQdx();
-        _dedx_v = calo->dEdx();
-        _rr_v = calo->ResidualRange();
-        _pitch_v = calo->TrkPitchVec();
-        for (auto xyz : xyz_v)
-        {
-          _x_v.push_back(xyz.X());
-          _y_v.push_back(xyz.Y());
-          _z_v.push_back(xyz.Z());
-        }
-      }
-      else if (plane == 2) //collection
-      {
-        _dqdx_y = calo->dQdx();
-        _dedx_y = calo->dEdx();
-        _rr_y = calo->ResidualRange();
-        _pitch_y = calo->TrkPitchVec();
-        for (auto xyz : xyz_v)
-        {
-          _x_y.push_back(xyz.X());
-          _y_y.push_back(xyz.Y());
-          _z_y.push_back(xyz.Z());
-        }
-      }
-    }
-    _calo_tree->Fill();
+    
+    FillCalorimetry(pfp,
+		    calo_proxy,
+		    pid_proxy,
+		    clus_proxy,
+		    fData,
+		    btparts_v,
+		    assocMCPart);
+    
   } // for all PFParticles
 }
 
@@ -749,6 +635,232 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
 
 void CalorimetryAnalysis::resetTTree(TTree *_tree)
 {
+}
+
+
+void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t pfp,
+					  const searchingfornues::ProxyCaloColl_t calo_proxy,
+					  const searchingfornues::ProxyPIDColl_t pid_proxy,
+					  const searchingfornues::ProxyClusColl_t clus_proxy,
+					  const bool fData,
+					  const std::vector<searchingfornues::BtPart> btparts_v,
+					  const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart) {
+  
+  if (pfp->IsPrimary())
+    return;
+  
+  auto trk_v = pfp.get<recob::Track>();
+  if (trk_v.size() != 1)
+    return;
+  auto trk = trk_v.at(0);
+  
+  //add is primary daughter
+  
+  // store pfp information
+  _trk_score = searchingfornues::GetTrackShowerScore(pfp);
+  // get hits associated to this PFParticle through the clusters
+  std::vector<art::Ptr<recob::Hit>> hit_v;
+  auto clus_pxy_v = pfp.get<recob::Cluster>();
+  for (auto ass_clus : clus_pxy_v)
+    {
+      // get cluster proxy
+      const auto &clus = clus_proxy[ass_clus.key()];
+      auto clus_hit_v = clus.get<recob::Hit>();
+      auto nhits = clus_hit_v.size();
+      
+      if (clus->Plane().Plane == 0)
+	{
+	  _nplanehits_U = nhits;
+	}
+      else if (clus->Plane().Plane == 1)
+	{
+	  _nplanehits_V = nhits;
+	}
+      else if (clus->Plane().Plane == 2)
+	{
+	  _nplanehits_Y = nhits;
+	}
+      for (const auto &hit : clus_hit_v)
+	{
+	  hit_v.push_back(hit);
+	}
+    } // for all clusters associated to PFP
+  
+  // store Backtracking
+  if (!fData)
+    {
+      if (clus_pxy_v.size() != 0)
+	{
+	  float purity = 0., completeness = 0., overlay_purity = 0.;
+	  int ibt = searchingfornues::getAssocBtPart(hit_v, assocMCPart, btparts_v, purity, completeness, overlay_purity);
+	  if (ibt >= 0)
+	    {
+	      auto &mcp = btparts_v[ibt];
+	      _backtracked_e = mcp.e;
+	      _backtracked_pdg = mcp.pdg;
+	      _backtracked_purity = purity;
+	      _backtracked_completeness = completeness;
+	      _backtracked_overlay_purity = overlay_purity;
+	      
+	      _backtracked_px = mcp.px;
+	      _backtracked_py = mcp.py;
+	      _backtracked_pz = mcp.pz;
+	      _backtracked_start_x = mcp.start_x;
+	      _backtracked_start_y = mcp.start_y;
+	      _backtracked_start_z = mcp.start_z;
+	      _backtracked_start_t = mcp.start_t;
+	      
+	      _backtracked_start_U = searchingfornues::YZtoPlanecoordinate(mcp.start_y, mcp.start_z, 0);
+	      _backtracked_start_V = searchingfornues::YZtoPlanecoordinate(mcp.start_y, mcp.start_z, 1);
+	      _backtracked_start_Y = searchingfornues::YZtoPlanecoordinate(mcp.start_y, mcp.start_z, 2);
+	      
+	      float reco_st[3] = {mcp.start_x, mcp.start_y, mcp.start_z};
+	      
+	      if (mcp.pdg == 11 || mcp.pdg == 22)
+		{
+		  reco_st[0] += searchingfornues::x_offset(mcp.start_t);
+		}
+	      else
+		{
+		  searchingfornues::True2RecoMappingXYZ(mcp.start_t, mcp.start_x, mcp.start_y, mcp.start_z, reco_st);
+		}
+	      _backtracked_sce_start_x = reco_st[0];
+	      _backtracked_sce_start_y = reco_st[1];
+	      _backtracked_sce_start_z = reco_st[2];
+	      
+	      _backtracked_sce_start_U = searchingfornues::YZtoPlanecoordinate(reco_st[1], reco_st[2], 0);
+	      _backtracked_sce_start_V = searchingfornues::YZtoPlanecoordinate(reco_st[1], reco_st[2], 1);
+	      _backtracked_sce_start_Y = searchingfornues::YZtoPlanecoordinate(reco_st[1], reco_st[2], 2);
+	    }
+	} // if there are associated clusters
+    }
+  
+  // get trk proxy in order to fetch PID
+  auto trkpxy2 = pid_proxy[trk.key()];
+  auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
+  
+  //collection plane
+  _trk_bragg_p = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 2),
+			  searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 2));
+  _trk_bragg_mu = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 2),
+			   searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 2));
+  _trk_bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
+  _trk_pid_chipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 2);
+  _trk_pid_chimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 13, 2);
+  _trk_pid_chipi = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 211, 2);
+  _trk_pid_chika = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 321, 2);
+  _trk_pida_v = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 2);
+  
+  //u plane
+  _trk_bragg_p_u = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 0),
+			    searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 0));
+  _trk_bragg_mu_u = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 0),
+			     searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 0));
+  _trk_bragg_mip_u = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 0);
+  _trk_pid_chipr_u = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 0);
+  _trk_pid_chimu_u = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 13, 0);
+  _trk_pid_chipi_u = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 211, 0);
+  _trk_pid_chika_u = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 321, 0);
+  _trk_pida_u = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 0);
+  
+  //v plane
+  _trk_bragg_p_v = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 1),
+			    searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 1));
+  _trk_bragg_mu_v = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 1),
+			     searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 1));
+  _trk_bragg_mip_v = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 1);
+  _trk_pid_chipr_v = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 1);
+  _trk_pid_chimu_v = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 13, 1);
+  _trk_pid_chipi_v = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 211, 1);
+  _trk_pid_chika_v = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 321, 1);
+  _trk_pida_v = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 1);
+  
+  
+  // Kinetic energy using tabulated stopping power (GeV)
+  float mcs_momentum_muon = _trkmom.GetTrackMomentum(trk->Length(), 13);
+  float energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), 2212), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
+  float energy_muon = std::sqrt(std::pow(mcs_momentum_muon, 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
+  
+  _trk_mcs_muon_mom = mcs_momentum_muon;
+  _trk_energy_proton = energy_proton;
+  _trk_energy_muon = energy_muon;
+  
+  _trk_theta = trk->Theta();
+  _trk_phi = trk->Phi();
+  _trk_len = trk->Length();
+  
+  _trk_dir_x = trk->StartDirection().X();
+  _trk_dir_y = trk->StartDirection().Y();
+  _trk_dir_z = trk->StartDirection().Z();
+  
+  _trk_start_x = trk->Start().X();
+  _trk_start_y = trk->Start().Y();
+  _trk_start_z = trk->Start().Z();
+  
+  _trk_end_x = trk->End().X();
+  _trk_end_y = trk->End().Y();
+  _trk_end_z = trk->End().Z();
+  
+  float _trk_start_sce[3];
+  searchingfornues::ApplySCECorrectionXYZ(_trk_start_x, _trk_start_y, _trk_start_z, _trk_start_sce);
+  _trk_sce_start_x = _trk_start_sce[0];
+  _trk_sce_start_y = _trk_start_sce[1];
+  _trk_sce_start_z = _trk_start_sce[2];
+  
+  float _trk_end_sce[3];
+  searchingfornues::ApplySCECorrectionXYZ(_trk_end_x, _trk_end_y, _trk_end_z, _trk_end_sce);
+  _trk_sce_end_x = _trk_end_sce[0];
+  _trk_sce_end_y = _trk_end_sce[1];
+  _trk_sce_end_z = _trk_end_sce[2];
+  
+  // fill Calorimetry
+  auto calo_v = calo_proxy[trk.key()].get<anab::Calorimetry>();
+  for (auto const& calo : calo_v)
+    {
+      auto const& plane = calo->PlaneID().Plane;
+      auto xyz_v = calo->XYZ();
+      if (plane == 0)
+	{
+	  _dqdx_u = calo->dQdx();
+	  _dedx_u = calo->dEdx();
+	  _rr_u = calo->ResidualRange();
+	  _pitch_u = calo->TrkPitchVec();
+	  for (auto xyz : xyz_v)
+	    {
+	      _x_u.push_back(xyz.X());
+	      _y_u.push_back(xyz.Y());
+	      _z_u.push_back(xyz.Z());
+	    }
+	}
+      else if (plane == 1)
+	{
+	  _dqdx_v = calo->dQdx();
+	  _dedx_v = calo->dEdx();
+	  _rr_v = calo->ResidualRange();
+	  _pitch_v = calo->TrkPitchVec();
+	  for (auto xyz : xyz_v)
+	    {
+	      _x_v.push_back(xyz.X());
+	      _y_v.push_back(xyz.Y());
+	      _z_v.push_back(xyz.Z());
+	    }
+	}
+      else if (plane == 2) //collection
+	{
+	  _dqdx_y = calo->dQdx();
+	  _dedx_y = calo->dEdx();
+	  _rr_y = calo->ResidualRange();
+	  _pitch_y = calo->TrkPitchVec();
+	  for (auto xyz : xyz_v)
+	    {
+	      _x_y.push_back(xyz.X());
+	      _y_y.push_back(xyz.Y());
+	      _z_y.push_back(xyz.Z());
+	    }
+	}
+    }
+  _calo_tree->Fill();
+
 }
 
 DEFINE_ART_CLASS_TOOL(CalorimetryAnalysis)
