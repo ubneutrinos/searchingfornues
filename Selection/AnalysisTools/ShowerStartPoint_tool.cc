@@ -77,6 +77,8 @@ public:
   void resetTTree(TTree *_tree) override;
 
 private:
+  int _run, _sub, _evt;
+
   std::vector<float> _shr_spacepoint_start_x_v;
   std::vector<float> _shr_spacepoint_start_y_v;
   std::vector<float> _shr_spacepoint_start_z_v;
@@ -132,7 +134,10 @@ void ShowerStartPoint::configure(fhicl::ParameterSet const &p)
 ///
 void ShowerStartPoint::analyzeEvent(art::Event const &e, bool fData)
 {
-  std::cout << "[ShowerStartPoint::analyzeEvent]" << std::endl;
+  _evt = e.event();
+  _sub = e.subRun();
+  _run = e.run();
+  std::cout << "[ShowerStartPoint::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: "<< _evt << std::endl;
 }
 
 void ShowerStartPoint::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)

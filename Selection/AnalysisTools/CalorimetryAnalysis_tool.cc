@@ -299,8 +299,7 @@ void CalorimetryAnalysis::analyzeEvent(art::Event const &e, bool fData)
   _evt = e.event();
   _sub = e.subRun();
   _run = e.run();
-
-
+  std::cout << "[CalorimetryAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: "<< _evt << std::endl;
 
   // if flag to store cosmic muon info is on -> save ACPT tagged tracks if any
   if (fT0producer == "")
@@ -962,16 +961,16 @@ void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t
         float x_sce[3];
         searchingfornues::ApplySCEMappingXYZ(xyz_v[i].X(), xyz_v[i].Y(), xyz_v[i].Z(), x_sce);
 
-        auto tp_index = tp_indices_v[i];
-        auto location = trk->LocationAtPoint(tp_index);
-        float x_tp_sce[3];
-        searchingfornues::ApplySCECorrectionXYZ(location.X(), location.Y(), location.Z(), x_tp_sce);
+        // auto tp_index = tp_indices_v[i];
+        // auto const& location = trk->LocationAtPoint(tp_index);
+        // float x_tp_sce[3];
+        // searchingfornues::ApplySCECorrectionXYZ(location.X(), location.Y(), location.Z(), x_tp_sce);
 
         std::cout << "point " << i
                   << " , x = " << xyz_v[i].X()
                   << " , x_sce = " << x_sce[0]
-                  << " , x_tp = " << location.X()
-                  << " , x_tp_sce = " << x_tp_sce[0]
+                  // << " , x_tp = " << location.X()
+                  // << " , x_tp_sce = " << x_tp_sce[0]
                   << std::endl;
       }
     }

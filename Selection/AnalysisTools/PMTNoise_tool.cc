@@ -35,24 +35,24 @@ namespace analysis
     ////////////////////////////////////////////////////////////////////////
 
   class PMTNoise : public AnalysisToolBase {
-    
+
   public:
-    
+
     /**
      *  @brief  Constructor
      *
      *  @param  pset
      */
     PMTNoise(const fhicl::ParameterSet& pset);
-    
+
     /**
      *  @brief  Destructor
      */
     ~PMTNoise(){ };
-    
+
     // provide for initialization
     void configure(fhicl::ParameterSet const & pset);
-    
+
     /**
      * @brief Analysis function
      */
@@ -72,13 +72,13 @@ namespace analysis
      * @brief reset ttree branches
      */
     void resetTTree(TTree* _tree) override;
-    
+
     //  private:
 
     //    art::InputTag HitInputTag("gaushit");
     //    art::InputTag OpHitCosmicInputTag("ophitCosmic");
     /*
-    //optical information                                                           
+    //optical information
     int totophits;
     std::vector<int> opchannel;
     std::vector<double> peaktime;
@@ -91,28 +91,30 @@ namespace analysis
     std::vector<double> ophit_time;
     std::vector<int> ophit_plane;
 
-    //hits                                                                          
+    //hits
     std::vector<float> hit_peaktime;
     std::vector<double> hit_wire;
     std::vector<double> hit_wire_cm;
     std::vector<int> hit_plane;
 
-    //hits in neutrino slice                                                        
+    //hits in neutrino slice
     std::vector<float> slicehit_peaktime;
     std::vector<double> slicehit_wire;
     std::vector<int> slicehit_plane;
     */
     //noise frac in neutrino slice on plane 1
-  private:    
+  private:
+    int _run, _sub, _evt;
+    
     float frac_slnoise_pl1;
 
     int nflag_pl1;
     int nnoise_pl1;
     int nslhits_pl1;
     int nslnoise_pl1;
-    int nhits_pl1;    
+    int nhits_pl1;
   };
-  
+
   //----------------------------------------------------------------------------
   /// Constructor.
   ///
@@ -144,11 +146,11 @@ namespace analysis
 
     fHighPEThresh = p.get< float > ("fHighPEThresh");
     */
-    
 
-  
+
+
   }
-  
+
   //----------------------------------------------------------------------------
   /// Reconfigure method.
   ///
@@ -159,7 +161,7 @@ namespace analysis
   void PMTNoise::configure(fhicl::ParameterSet const & p)
   {
   }
-  
+
   //----------------------------------------------------------------------------
   /// Reconfigure method.
   ///
@@ -169,13 +171,10 @@ namespace analysis
   ///
   void PMTNoise::analyzeEvent(art::Event const& e, bool fData)
   {
-    /*
     _evt = e.event();
     _sub = e.subRun();
     _run = e.run();
-
-    return;
-    */
+    std::cout << "[PMTNoise::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: "<< _evt << std::endl;
   }
 
 
@@ -204,17 +203,17 @@ namespace analysis
     art::ValidHandle<std::vector<recob::Slice> > inputSlice = e.getValidHandle<std::vector<recob::Slice> >(PfInputTag);
     auto assocSliceHit = std::unique_ptr<art::FindManyP<recob::Hit> >(new art::FindManyP<recob::Hit>(inputSlice, e, PfInputTag));
 
-    //hit                                                                                                                                              
+    //hit
     std::vector<float> hit_peaktime;
     std::vector<double> hit_wire;
     std::vector<int> hit_plane;
 
-    //hits in neutrino slice                                                                                                                           
+    //hits in neutrino slice
     std::vector<float> slicehit_peaktime;
     std::vector<double> slicehit_wire;
     std::vector<int> slicehit_plane;
 
-    //optical                                                                              
+    //optical
     std::vector<int> opchannel;
     std::vector<double> peaktime;
     std::vector<double> pe;
@@ -233,7 +232,7 @@ namespace analysis
     int n_slnoise_pl1=0;
 
 
-    //loop over optical hits                                                               
+    //loop over optical hits
     for ( unsigned int ioh=0; ioh<inputOpHits->size(); ioh++) {
       const auto& ophit = inputOpHits->at(ioh);
       std::vector<double> opwiretmp;
@@ -242,18 +241,18 @@ namespace analysis
 	opchannel.push_back(ophit.OpChannel());
 	peaktime.push_back(ophit.PeakTime());
 	pe.push_back(ophit.PE());
-	
+
 	double PMTxyz[3];
 	unsigned int opch;
-	
+
 	opch=ophit.OpChannel();
-	
+
 	geom->OpDetGeoFromOpChannel(opch).GetCenter(PMTxyz);
-	
+
 	for( int ipl=0; ipl<3; ipl++){
 	  auto plid=geo::PlaneID(0,0,ipl);
 	  auto wire = geom->WireCoordinate(PMTxyz[1],PMTxyz[2],plid);
-	  //auto time = PMTxyz[0]; //should be the same +/- ~cm for all PMTs                       
+	  //auto time = PMTxyz[0]; //should be the same +/- ~cm for all PMTs
 	  //	  std::cout<<"PMT HIT: "<<ophit.PE()<<std::endl;
 	  opwiretmp.push_back(wire);
 	  //	  ophit_wire.push_back(wire);
@@ -269,25 +268,25 @@ namespace analysis
     if(pe.size()==0){
       frac_slnoise_pl1=0;
     }
-   
+
     if(pe.size()!=0){
       //get TPC hits in the event
       for ( unsigned int ih=0; ih<inputHits->size(); ih++) {
-	
+
 	const auto& tpchit = inputHits->at(ih);
 	auto hit_w=tpchit.WireID().Wire;
 	int hit_pl=tpchit.WireID().Plane;
-	
+
 	//hit_peaktime.push_back(tpchit.PeakTime());
 	//hit_wire.push_back(tpchit.WireID().Wire);
 	//hit_plane.push_back(tpchit.WireID().Plane);
-	
+
 	//convert hit time to coordinates of TPC time, relative to trigger
 	float hit_time_pmtcoord=(tpchit.PeakTime()/2)-400;
-	
+
 	//count hits in boxes on plane 1
 	if(hit_pl==1){
-	  n_hits_pl1=n_hits_pl1+1;  
+	  n_hits_pl1=n_hits_pl1+1;
 	  //loop over high p.e. PMT hits
 	  for(unsigned int i=0; i<pe.size(); i++){
 	    //cut on position in flag region
@@ -300,29 +299,29 @@ namespace analysis
 	    }
 	    //cut on noise box
 	    if(ophit_wire[i][hit_pl]-hit_w>-50 && ophit_wire[i][hit_pl]-hit_w<50 && ispl1_noise==false){
-	      //cut on time                                                                                            
+	      //cut on time
 	      if(peaktime[i]-hit_time_pmtcoord>-2 && peaktime[i]-hit_time_pmtcoord<2){
-		n_noise_pl1=n_noise_pl1+1;//count number of hits in flag region                                          
+		n_noise_pl1=n_noise_pl1+1;//count number of hits in flag region
 		ispl1_noise=true;
 	      }
 	    }
 	  }// PMT loop
 	}//plane 1 only
 	ispl1_flag=false;
-	ispl1_noise=false; 
-      }// hit loop 
-     
+	ispl1_noise=false;
+      }// hit loop
 
-      
+
+
       for (unsigned int inpf=0; inpf<inputPfParticle->size(); ++inpf) {
 	art::Ptr<recob::PFParticle> npfp(inputPfParticle,inpf);
 	bool isTheNeutrino = false;
-	
+
 	const std::vector< art::Ptr<larpandoraobj::PFParticleMetadata> > &pfParticleMetadataList(pfPartToMetadataAssoc.at(inpf));
 	if (!pfParticleMetadataList.empty()) {
 	  for (unsigned int j=0; j<pfParticleMetadataList.size(); ++j) {
 	    const art::Ptr<larpandoraobj::PFParticleMetadata> &pfParticleMetadata(pfParticleMetadataList.at(j));
-	    
+
 	    const larpandoraobj::PFParticleMetadata::PropertiesMap &pfParticlePropertiesMap(pfParticleMetadata->GetPropertiesMap());
 	    for (larpandoraobj::PFParticleMetadata::PropertiesMap::const_iterator it = pfParticlePropertiesMap.begin(); it != pfParticlePropertiesMap.end(); ++it) {
 	      if (it->first=="IsNeutrino" && it->second==1) isTheNeutrino = true;
@@ -330,8 +329,8 @@ namespace analysis
 	  }
 	}
 	if (npfp->IsPrimary()==false) continue;
-	//  recob::Slices are unique for the neutrino slice and for clear cosmics. Ambiguous cosmics may have >1 primary PFParticle per slice 
-	//(i.e. the slice is not unique in terms of primary PFParticles)                           
+	//  recob::Slices are unique for the neutrino slice and for clear cosmics. Ambiguous cosmics may have >1 primary PFParticle per slice
+	//(i.e. the slice is not unique in terms of primary PFParticles)
 	auto slices = assocSlice->at(npfp.key());
 	if (slices.size()!=1) {
 	  std::cout << "WRONG!!! n slices = " << slices.size() << std::endl;
@@ -351,14 +350,14 @@ namespace analysis
 	    if(slhit_pl==1){
 	      //count hits in slice on plane 1
 	      n_slhits_pl1=n_slhits_pl1+1;
-	      //loop over high p.e. PMT hits                                                                                      
+	      //loop over high p.e. PMT hits
 	      for(unsigned int i=0; i<pe.size(); i++){
-		//cut on noise box                                                                                                             
+		//cut on noise box
 		//at least 2% of the noise hits in the event need to be in the flag box to count slice noise
 		if(ophit_wire[i][slhit_pl]-slhit_wire>-50 && ophit_wire[i][slhit_pl]-slhit_wire<50 && ispl1_slicenoise==false && frac_flag_to_noise>0.02){
-		  //cut on time                                                                                                                
+		  //cut on time
 		  if(peaktime[i]-slhit_time_pmtcoord>-2 && peaktime[i]-slhit_time_pmtcoord<2){
-		    n_slnoise_pl1=n_slnoise_pl1+1;//count number of hits in noise region                     
+		    n_slnoise_pl1=n_slnoise_pl1+1;//count number of hits in noise region
 		    ispl1_slicenoise=true;
 		  }// if hit is in PMT time noise box
 		}// if hit is in the noise box
@@ -371,9 +370,9 @@ namespace analysis
 
       std::cout<<"[PMTNoise::analyzeSlice] slicenoise: "<<n_slnoise_pl1<<" nslhits: "<<n_slhits_pl1<<std::endl;
       frac_slnoise_pl1=(float)n_slnoise_pl1/(float)n_slhits_pl1;
-      
+
     }// only look through TPC noise if there is one high PE pulse
-    
+
     nflag_pl1=n_flag_pl1;
     nnoise_pl1=n_noise_pl1;
     nslhits_pl1=n_slhits_pl1;
@@ -388,7 +387,7 @@ namespace analysis
 
   }//end of function
 
-  void PMTNoise::setBranches(TTree* _tree) 
+  void PMTNoise::setBranches(TTree* _tree)
   {
     /*
     _tree->Branch("opchannel",&opchannel);

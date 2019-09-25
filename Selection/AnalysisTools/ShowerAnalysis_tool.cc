@@ -83,6 +83,8 @@ public:
 
 private:
 
+  int _run, _sub, _evt;
+  
   // input variables for tool
   art::InputTag fTRKproducer;
   art::InputTag fCALproducer;
@@ -182,7 +184,10 @@ void ShowerAnalysis::configure(fhicl::ParameterSet const &p)
 ///
 void ShowerAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
-  std::cout << "[ShowerAnalysis::analyzeEvent]" << std::endl;
+  _evt = e.event();
+  _sub = e.subRun();
+  _run = e.run();
+  std::cout << "[ShowerAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: "<< _evt << std::endl;
 }
 
 void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)

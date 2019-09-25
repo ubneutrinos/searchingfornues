@@ -94,6 +94,8 @@ private:
   art::InputTag fPIDproducer;
   art::InputTag fTRKproducer;
 
+  int _run, _sub, _evt;
+  
   std::vector<size_t> _trk_pfp_id_v;
 
   std::vector<float> _trk_start_x_v;
@@ -185,6 +187,10 @@ void TrackAnalysis::configure(fhicl::ParameterSet const &p)
 ///
 void TrackAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
+  _evt = e.event();
+  _sub = e.subRun();
+  _run = e.run();
+  std::cout << "[TrackAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: "<< _evt << std::endl;
 }
 
 void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)

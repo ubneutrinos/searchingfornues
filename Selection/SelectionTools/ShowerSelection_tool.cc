@@ -78,6 +78,7 @@ private:
   float GetTrackShowerScore(const ProxyPfpElem_t &pfp_pxy);
 
   // TTree variables
+  int _run, _sub, _evt;
   int _nshower;
   int _ntrack;
   int _nupdgreco;
@@ -145,6 +146,10 @@ void ShowerSelection::configure(fhicl::ParameterSet const &pset)
 bool ShowerSelection::selectEvent(art::Event const &e,
                                   const std::vector<ProxyPfpElem_t> &pfp_pxy_v)
 {
+  _evt = e.event();
+  _sub = e.subRun();
+  _run = e.run();
+  std::cout << "[ShowerSelection::selectEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: "<< _evt << std::endl;
 
   Reset();
 
