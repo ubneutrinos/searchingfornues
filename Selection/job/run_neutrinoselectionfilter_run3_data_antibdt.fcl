@@ -19,3 +19,6 @@ physics.filters: { nuselection: @local::physics.filters.nuselection }
 
 physics.p1: ["pandoraTrack","pandoraTrackcalo","pandoraTrackpid","pandoraTrackcali","pandoraTrackcalipid",
 	     "shrreco3dKalmanShower","shrreco3dKalmanShowercalo","shrreco3dKalmanShowercali","nuselection"]
+
+outputs.rootout.fileName: "%ifb_bdtfilter.root"
+physics.end_paths: [ e1 ]
