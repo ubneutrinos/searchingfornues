@@ -694,17 +694,17 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
   _calo_tree->Branch("z_v", "std::vector<float>", &_z_v);
   _calo_tree->Branch("z_y", "std::vector<float>", &_z_y);
 
-  _calo_tree->Branch("dir_x_u", "std::vector<float>", &_dir_x_u);
-  _calo_tree->Branch("dir_x_v", "std::vector<float>", &_dir_x_v);
-  _calo_tree->Branch("dir_x_y", "std::vector<float>", &_dir_x_y);
-
-  _calo_tree->Branch("dir_y_u", "std::vector<float>", &_dir_y_u);
-  _calo_tree->Branch("dir_y_v", "std::vector<float>", &_dir_y_v);
-  _calo_tree->Branch("dir_y_y", "std::vector<float>", &_dir_y_y);
-
-  _calo_tree->Branch("dir_z_u", "std::vector<float>", &_dir_z_u);
-  _calo_tree->Branch("dir_z_v", "std::vector<float>", &_dir_z_v);
-  _calo_tree->Branch("dir_z_y", "std::vector<float>", &_dir_z_y);
+  // _calo_tree->Branch("dir_x_u", "std::vector<float>", &_dir_x_u);
+  // _calo_tree->Branch("dir_x_v", "std::vector<float>", &_dir_x_v);
+  // _calo_tree->Branch("dir_x_y", "std::vector<float>", &_dir_x_y);
+  //
+  // _calo_tree->Branch("dir_y_u", "std::vector<float>", &_dir_y_u);
+  // _calo_tree->Branch("dir_y_v", "std::vector<float>", &_dir_y_v);
+  // _calo_tree->Branch("dir_y_y", "std::vector<float>", &_dir_y_y);
+  //
+  // _calo_tree->Branch("dir_z_u", "std::vector<float>", &_dir_z_u);
+  // _calo_tree->Branch("dir_z_v", "std::vector<float>", &_dir_z_v);
+  // _calo_tree->Branch("dir_z_y", "std::vector<float>", &_dir_z_y);
 }
 
 void CalorimetryAnalysis::resetTTree(TTree *_tree)
@@ -895,7 +895,11 @@ void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t
   {
     auto const& plane = calo->PlaneID().Plane;
     auto const& xyz_v = calo->XYZ();
-    auto const& tp_indices_v = calo->TpIndices();
+    // const std::vector< size_t > & tp_indices_v = calo->TpIndices();
+    // std::cout << "tp indices = " << tp_indices_v.size()
+    //           << " , xyz_v = " << xyz_v.size()
+    //           << std::endl;
+
     if (plane == 0)
     {
       _dqdx_u = calo->dQdx();
@@ -908,13 +912,13 @@ void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t
         _y_u.push_back(xyz.Y());
         _z_u.push_back(xyz.Z());
       }
-      for (auto tp_index : tp_indices_v)
-      {
-        auto direction = trk->DirectionAtPoint(tp_index);
-        _dir_x_u.push_back(direction.X());
-        _dir_y_u.push_back(direction.Y());
-        _dir_z_u.push_back(direction.Z());
-      }
+      // for (auto tp_index : tp_indices_v)
+      // {
+      //   auto direction = trk->DirectionAtPoint(tp_index);
+      //   _dir_x_u.push_back(direction.X());
+      //   _dir_y_u.push_back(direction.Y());
+      //   _dir_z_u.push_back(direction.Z());
+      // }
     }
     else if (plane == 1)
     {
@@ -928,13 +932,13 @@ void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t
         _y_v.push_back(xyz.Y());
         _z_v.push_back(xyz.Z());
       }
-      for (auto tp_index : tp_indices_v)
-      {
-        auto direction = trk->DirectionAtPoint(tp_index);
-        _dir_x_v.push_back(direction.X());
-        _dir_y_v.push_back(direction.Y());
-        _dir_z_v.push_back(direction.Z());
-      }
+      // for (auto tp_index : tp_indices_v)
+      // {
+      //   auto direction = trk->DirectionAtPoint(tp_index);
+      //   _dir_x_v.push_back(direction.X());
+      //   _dir_y_v.push_back(direction.Y());
+      //   _dir_z_v.push_back(direction.Z());
+      // }
     }
     else if (plane == 2) //collection
     {
@@ -948,31 +952,33 @@ void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t
         _y_y.push_back(xyz.Y());
         _z_y.push_back(xyz.Z());
       }
-      for (auto tp_index : tp_indices_v)
-      {
-        auto direction = trk->DirectionAtPoint(tp_index);
-        _dir_x_y.push_back(direction.X());
-        _dir_y_y.push_back(direction.Y());
-        _dir_z_y.push_back(direction.Z());
-      }
+      // for (auto tp_index : tp_indices_v)
+      // {
+      //   auto direction = trk->DirectionAtPoint(tp_index);
+      //   _dir_x_y.push_back(direction.X());
+      //   _dir_y_y.push_back(direction.Y());
+      //   _dir_z_y.push_back(direction.Z());
+      // }
 
-      for (size_t i=0; i < xyz_v.size(); i++)
-      {
-        float x_sce[3];
-        searchingfornues::ApplySCEMappingXYZ(xyz_v[i].X(), xyz_v[i].Y(), xyz_v[i].Z(), x_sce);
 
-        // auto tp_index = tp_indices_v[i];
-        // auto const& location = trk->LocationAtPoint(tp_index);
-        // float x_tp_sce[3];
-        // searchingfornues::ApplySCECorrectionXYZ(location.X(), location.Y(), location.Z(), x_tp_sce);
-
-        std::cout << "point " << i
-                  << " , x = " << xyz_v[i].X()
-                  << " , x_sce = " << x_sce[0]
-                  // << " , x_tp = " << location.X()
-                  // << " , x_tp_sce = " << x_tp_sce[0]
-                  << std::endl;
-      }
+      // for (size_t i=0; i < xyz_v.size(); i++)
+      // {
+      //   float x_sce[3];
+      //   searchingfornues::ApplySCEMappingXYZ(xyz_v[i].X(), xyz_v[i].Y(), xyz_v[i].Z(), x_sce);
+      //
+      //   auto tp_index = tp_indices_v[i];
+      //   std::cout << tp_index << std::endl;
+      //   // auto const& location = trk->DirectionAtPoint(tp_index);
+      //   // float x_tp_sce[3];
+      //   // searchingfornues::ApplySCECorrectionXYZ(location.X(), location.Y(), location.Z(), x_tp_sce);
+      //
+      //   std::cout << "point " << i
+      //             << " , x = " << xyz_v[i].X()
+      //             << " , x_sce = " << x_sce[0]
+      //             // << " , x_tp = " << location.X()
+      //             // << " , x_tp_sce = " << x_tp_sce[0]
+      //             << std::endl;
+      // }
     }
   }
   _calo_tree->Fill();

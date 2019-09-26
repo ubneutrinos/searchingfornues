@@ -181,18 +181,7 @@ NuSelectionFilter:{
     }
     AnalysisTools: {
         default: @local::DefaultAnalysisTool
-        # you can add more analysis tools here
-        slicepurcompl: @local::SlicePurComplTool
-        containment:   @local::ContainmentAnalysis
-        shower:        @local::ShowerAnalysisTool
-        showerstart:        @local::ShowerStartPointTool
-        track:         @local::TrackAnalysisTool
-        #vertex:         @local::VertexAnalysisTool
-        #calorimetry:   @local::CalorimetryAnalysisTool
-        pmtnoise:      @local::PMTNoiseTool
-        pi0truth:      @local::Pi0TruthAnalysisTool
-        cosmicip:      @local::CosmicIPTool
-        flashmatch:    @local::FlashMatchingTool
+        calorimetry:   @local::CalorimetryAnalysisTool
     }
 }
 
@@ -236,13 +225,3 @@ CC0PiNpSelectionTool: {
 CCincSelectionTool: {
     tool_type: "CCincSelection"
 }
-
-# run 3 neutrino selection [ w/ crt veto ]
-NuSelectionFilterRun3: @local::NuSelectionFilter
-
-NuSelectionFilterRun3.AnalysisTools: {
-        default: @local::DefaultAnalysisTool
-        # you can add more analysis tools here
-        crtApproach:@local::CRTApproachAnalysisTool
-        }
-NuSelectionFilterRun3.AnalysisTools.default.CRTVetoproducer: "crtveto"

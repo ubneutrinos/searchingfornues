@@ -1,4 +1,4 @@
-#include "neutrinoselection.fcl"
+#include "calorimetryanalysis.fcl"
 
 
 process_name: NeutrinoSelectionFilter
@@ -104,8 +104,8 @@ physics:
  end_paths:     [ ]
 }
 
-#physics.filters.nuselection.SelectionTool: @local::ShowerSelectionTool
-#physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "" #"gaushitTruthMatch"
+physics.filters.nuselection.SelectionTool: @local::ShowerSelectionTool
+physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "" #"gaushitTruthMatch"
 physics.filters.nuselection.IsData: true
 
 physics.producers.pandoraTrack.PFParticleLabel:                                                "pandora"
