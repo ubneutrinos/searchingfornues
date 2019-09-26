@@ -34,7 +34,7 @@ namespace searchingfornues
     
     for (size_t ic = 0; ic < tkcalo->ResidualRange().size(); ++ic) {
       // check that at least cmskip cm away from vertex
-      if ((tkcalo->ResidualRange().back() - tkcalo->ResidualRange()[ic]) > cmskip) {
+      if ((tkcalo->ResidualRange().back() - tkcalo->ResidualRange()[ic]) >= cmskip) {
 	// check that no more then cmskip + cmlen away from vertex
 	if ((tkcalo->ResidualRange().back() - tkcalo->ResidualRange()[ic]) < (cmskip + cmlen) ) {
 	  if (localdEdx) 

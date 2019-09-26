@@ -575,6 +575,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 			
                         for (const auto &tkcalo : tkcalos) {
 
+			  if (tkcalo->ResidualRange().size() == 0) continue;
+
 			  // using function from CommonDefs/TrackFitterFunctions.h
 			  searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
 
