@@ -1,7 +1,4 @@
-#include "services_microboone.fcl"
-#include "UBCRTCosmicFilter.fcl"
 #include "neutrinoselection.fcl"
-
 
 process_name: NeutrinoSelectionFilter
 
@@ -12,15 +9,11 @@ services:
     TimeTracker:  {}
     MemoryTracker:     { }     #default is one
     RandomNumberGenerator: {}                     #ART native random number generator
-    ExptGeoHelperInterface:         @local::microboone_geometry_helper
-    Geometry:                       @local::microboone_geo
-    DetectorPropertiesService:             @local::microboone_detproperties
-    LArProperties:                  @local::microboone_properties
-    DetectorClocksService:          @local::microboone_detectorclocks
-    @table::microboone_services_reco
-    #@table::microboone_reco_data_services
+    @table::microboone_reco_data_services
     message:      @local::standard_info
 }
+services.DatabaseUtil.ShouldConnect: false
+services.TPCEnergyCalibService.TPCEnergyCalibProvider: @local::microboone_tpcenergycalib_provider_data
 
 #services.DetectorProperties.NumberTimeSamples:                             6400
 #services.DetectorProperties.ReadOutWindowSize:                             6400
