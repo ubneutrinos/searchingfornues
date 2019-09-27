@@ -195,8 +195,8 @@ void TrackAnalysis::analyzeEvent(art::Event const &e, bool fData)
 
 void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
 {
-  searchingfornues::ProxyCaloColl_t const& calo_proxy = proxy::getCollection<std::vector<recob::Track> >(e, fTRKproducer,
-                           proxy::withAssociated<anab::Calorimetry>(fCALOproducer));
+  //searchingfornues::ProxyCaloColl_t const& calo_proxy = proxy::getCollection<std::vector<recob::Track> >(e, fTRKproducer,
+  //                         proxy::withAssociated<anab::Calorimetry>(fCALOproducer));
 
   searchingfornues::ProxyPIDColl_t const& pid_proxy = proxy::getCollection<std::vector<recob::Track> >(e, fTRKproducer,
                            proxy::withAssociated<anab::ParticleID>(fPIDproducer));

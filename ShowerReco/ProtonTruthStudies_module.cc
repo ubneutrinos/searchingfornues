@@ -302,7 +302,7 @@ void ProtonTruthStudies::analyze(art::Event const& e)
   // loop through tagged clusters in slice
   for (size_t c=0; c < cluster_h->size(); c++) {
 
-    auto clus = cluster_h->at(c);
+    //auto clus = cluster_h->at(c);
 
     // get associated hits
     auto clus_hit_v = clus_hit_assn_v.at( c );

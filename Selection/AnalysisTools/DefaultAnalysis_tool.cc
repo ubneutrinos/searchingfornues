@@ -137,7 +137,7 @@ private:
   // kinematic thresholds to define signal
   float fProtonThreshold;
   float fPionThreshold;
-  float fPi0Threshold;
+  //float fPi0Threshold;
   float fElectronThreshold;
   float fMuonThreshold;
 
@@ -176,14 +176,14 @@ private:
   float _elec_e, _elec_p, _elec_c;       /**< energy, purity, completeness. */
   float _elec_vx, _elec_vy, _elec_vz;    /**< electron vertex. */
   int _npi0;                             /**< how many pi0s are there? */
-  int _pi0;                              /**< is there a final-state pi0 from the neutrino? [1=yes 0=no] */
+  //int _pi0;                              /**< is there a final-state pi0 from the neutrino? [1=yes 0=no] */
   float _pi0_e, _pi0_p, _pi0_c;          /**< energy, purity, completeness. */
   int _nneutron;                         /**< how many neutrons are there? */
   int _nproton;                          /**< how many protons are there? */
-  int _proton;                           /**< is there a final-state proton from the neutrino? [1=yes 0=no] */
+  //int _proton;                           /**< is there a final-state proton from the neutrino? [1=yes 0=no] */
   float _proton_e, _proton_p, _proton_c; /**< energy, purity, completeness. */
   int _npion;                            /**< how many pions are there? */
-  int _pion;                             /**< is there a final-state charged pion from the neutrino? [1=yes 0=no] */
+  //int _pion;                             /**< is there a final-state charged pion from the neutrino? [1=yes 0=no] */
   float _pion_e, _pion_p, _pion_c;       /**< energy, purity, completeness. */
 
   std::string _endmuonprocess; /**< End muon process name */

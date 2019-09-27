@@ -59,12 +59,12 @@ public:
   /**
      * @brief set branches for TTree
      */
-  void setBranches(TTree *_tree);
+  void setBranches(TTree *_tree) override;
 
   /**
      * @brief reset ttree branches
      */
-  void resetTTree(TTree *_tree);
+  void resetTTree(TTree *_tree) override;
 
 private:
   float DistFiducial(float x, float y, float z);

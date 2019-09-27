@@ -56,7 +56,7 @@ public:
   bool filter(art::Event &e) override;
 
   // Selected optional functions.
-  bool endSubRun(art::SubRun &subrun);
+  bool endSubRun(art::SubRun &subrun) override;
 
   using ProxyPfpColl_t = selection::ProxyPfpColl_t;
   using ProxyPfpElem_t = selection::ProxyPfpElem_t;

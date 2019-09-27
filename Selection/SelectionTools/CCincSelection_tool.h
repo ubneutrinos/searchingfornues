@@ -124,28 +124,28 @@ private:
    float m_shrRangeMomMuon; /**< Muon momentum from range (with the shower reconstructed as track) */
    float m_shrMCSMomMuon;   /**< Muon momentum from MCS (with the shower reconstructed as track) */
 
-   float m_shrBktPurity;       /**< Purity of the leading shower */
-   float m_shrBktCompleteness; /**< Completeness of the leading shower */
-   float m_shrBktE;            /**< Energy of the MCParticle matched to the leading shower */
-   int m_shrBktPdg;            /**< PDG code of the MCParticle matched to the leading shower */
+   //float m_shrBktPurity;       /**< Purity of the leading shower */
+   //float m_shrBktCompleteness; /**< Completeness of the leading shower */
+   //float m_shrBktE;            /**< Energy of the MCParticle matched to the leading shower */
+   //int m_shrBktPdg;            /**< PDG code of the MCParticle matched to the leading shower */
 
-   float m_shrTkfitStartX; /**< Start x coordinate of the leading shower obtained with the track fitting */
-   float m_shrTkfitStartY; /**< Start y coordinate of the leading shower obtained with the track fitting */
-   float m_shrTkfitStartZ; /**< Start z coordinate of the leading shower obtained with the track fitting */
-   float m_shrTkfitphi;    /**< Phi angle of the leading shower obtained with the track fitting */
-   float m_shrTkfittheta;  /**< Track angle of the leading shower obtained with the track fitting */
-   float m_shrTkfitdedxY;  /**< dE/dx of the leading shower on the Y plane with the track fitting */
-   float m_shrTkfitdedxV;  /**< dE/dx of the leading shower on the V plane with the track fitting */
-   float m_shrTkfitdedxU;  /**< dE/dx of the leading shower on the U plane with the track fitting */
-   uint m_shrTkfitnhitsY;  /**< Number of hits in the 1x4 cm box on the Y plane with the track fitting */
-   uint m_shrTkfitnhitsV;  /**< Number of hits in the 1x4 cm box on the V plane with the track fitting */
-   uint m_shrTkfitnhitsU;  /**< Number of hits in the 1x4 cm box on the U plane with the track fitting */
+   //float m_shrTkfitStartX; /**< Start x coordinate of the leading shower obtained with the track fitting */
+   //float m_shrTkfitStartY; /**< Start y coordinate of the leading shower obtained with the track fitting */
+   //float m_shrTkfitStartZ; /**< Start z coordinate of the leading shower obtained with the track fitting */
+   //float m_shrTkfitphi;    /**< Phi angle of the leading shower obtained with the track fitting */
+   //float m_shrTkfittheta;  /**< Track angle of the leading shower obtained with the track fitting */
+   //float m_shrTkfitdedxY;  /**< dE/dx of the leading shower on the Y plane with the track fitting */
+   //float m_shrTkfitdedxV;  /**< dE/dx of the leading shower on the V plane with the track fitting */
+   //float m_shrTkfitdedxU;  /**< dE/dx of the leading shower on the U plane with the track fitting */
+   //uint m_shrTkfitnhitsY;  /**< Number of hits in the 1x4 cm box on the Y plane with the track fitting */
+   //uint m_shrTkfitnhitsV;  /**< Number of hits in the 1x4 cm box on the V plane with the track fitting */
+   //uint m_shrTkfitnhitsU;  /**< Number of hits in the 1x4 cm box on the U plane with the track fitting */
 
    // Fields for the event
-   bool m_vtxFiducial;        /**< The vertex is in the fiducial volume */
-   bool m_trackFiducial;      /**< Start and end points of all pfp reconstructed as trackare in the fiducial volume */
-   uint m_hitsOutfv;          /**< Number of hits of PFParticles outside the fiducial volume */
-   float m_containedFraction; /**< Fraction of hits of the PFParticles contained in the fiducial volume */
+   //bool m_vtxFiducial;        /**< The vertex is in the fiducial volume */
+   //bool m_trackFiducial;      /**< Start and end points of all pfp reconstructed as trackare in the fiducial volume */
+   //uint m_hitsOutfv;          /**< Number of hits of PFParticles outside the fiducial volume */
+   //float m_containedFraction; /**< Fraction of hits of the PFParticles contained in the fiducial volume */
 
    // Fcl parameters
    float m_trkScore; /**< Threshold on the Pandora track score for electron candidate (default 0.9) */

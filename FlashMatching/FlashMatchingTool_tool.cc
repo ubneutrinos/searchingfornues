@@ -894,7 +894,7 @@ namespace flashmatch {
     float        m_minBeamFlashPE;   ///< The minimum number of photoelectrons required to consider a flash as the beam flash
     
     // Coefficient to account for the x-dependency in the charge light-ratio
-    float        m_xclCoef;          ///< m_xclCoef*log10(chargeToLightRatio)- centerX
+    //float        m_xclCoef;          ///< m_xclCoef*log10(chargeToLightRatio)- centerX
 
     // Pre-selection cuts to determine if a slice is compatible with the beam flash
     float        m_maxDeltaY;              ///< The maximum difference in Y between the beam flash center and the weighted charge center
@@ -912,15 +912,15 @@ namespace flashmatch {
     // Debugging / testing
     bool                                    m_shouldWriteToFile;   ///< If we should write interesting information to a root file
     bool                                    m_hasMCNeutrino;       ///< If there is an MC neutrino we can use to get truth information
-    int                                     m_nuInteractionType;   ///< The interaction type code from MCTruth
-    int                                     m_nuCCNC;                ///< Charged current or neutral current?
-    float                                   m_nuEnergy;            ///< The true neutrino energy
-    float                                   m_leptonEnergy;        ///< The true energy of the lepton coming from the CC interaction
-    float                                   m_nuVertexX;           ///< The true neutrino vertex X position
-    float                                   m_nuVertexY;           ///< The true neutrino vertex Y position
-    float                                   m_nuVertexZ;           ///< The true neutrino vertex Z position
-    float                                   m_nuTime;              ///< The time of the true neutrino interaction
-    int                                     m_nuPdgCode;           ///< The true neutrino pdg code
+    //int                                     m_nuInteractionType;   ///< The interaction type code from MCTruth
+    //int                                     m_nuCCNC;                ///< Charged current or neutral current?
+    //float                                   m_nuEnergy;            ///< The true neutrino energy
+    //float                                   m_leptonEnergy;        ///< The true energy of the lepton coming from the CC interaction
+    //float                                   m_nuVertexX;           ///< The true neutrino vertex X position
+    //float                                   m_nuVertexY;           ///< The true neutrino vertex Y position
+    //float                                   m_nuVertexZ;           ///< The true neutrino vertex Z position
+    //float                                   m_nuTime;              ///< The time of the true neutrino interaction
+    //int                                     m_nuPdgCode;           ///< The true neutrino pdg code
     std::string                             m_truthLabel;          ///< The MCTruth producer label
     std::string                             m_mcParticleLabel;     ///< The MCParticle producer label
     std::string                             m_hitLabel;            ///< The Hit producer label

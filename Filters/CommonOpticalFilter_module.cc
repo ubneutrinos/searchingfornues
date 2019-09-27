@@ -54,7 +54,8 @@ private:
   // TTree
   TTree* _tree;
   float _nu_e, _elec_e;
-  int   _nelec, _nreco;
+  int   _nelec;
+  //int   _nreco;
   float _vtx_x, _vtx_y, _vtx_z, _vtx_t;
   float  _opfilter_pe_beam, _opfilter_pe_beam_tot, _opfilter_pe_veto, _opfilter_pe_veto_tot;
   int _n_mcs;

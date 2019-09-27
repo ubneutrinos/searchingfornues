@@ -375,7 +375,7 @@ void ShowerMerger::produce(art::Event& e)
       for (size_t c=0; c < new_clus_v.size(); c++) {
   auto newclus = new_clus_v.at(c);
   auto newPl = newclus->Plane().Plane;
-  if ( (newPl < out_clus_v.size()) && (newPl >= 0) ) {
+  if (newPl < out_clus_v.size()) {
 
     // store extra hits associated
 
@@ -441,7 +441,7 @@ void ShowerMerger::produce(art::Event& e)
   for (size_t c=0; c < new_clus_v.size(); c++) {
     auto newclus = new_clus_v.at(c);
     auto newPl = newclus->Plane().Plane;
-    if ( (newPl < out_clus_v.size()) && (newPl >= 0) ) {
+    if (newPl < out_clus_v.size()) {
 
       // clus -> hit associations
       const auto& new_clus_pxy = clus_proxy[newclus.key()];
