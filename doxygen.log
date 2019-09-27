@@ -297,17 +297,16 @@ Generating code for file /home/travis/build/ubneutrinos/sea/home/travis/build/ub
 /home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:56: warning: Member _nu_e (variable) of class CommonOpticalFilter is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:56: warning: Member _elec_e (variable) of class CommonOpticalFilter is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:57: warning: Member _nelec (variable) of class CommonOpticalFilter is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:57: warning: Member _nreco (variable) of class CommonOpticalFilter is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:58: warning: Member _vtx_x (variable) of class CommonOpticalFilter is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:58: warning: Member _vtx_y (variable) of class CommonOpticalFilter is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:58: warning: Member _vtx_z (variable) of class CommonOpticalFilter is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:58: warning: Member _vtx_t (variable) of class CommonOpticalFilter is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:59: warning: Member _opfilter_pe_beam (variable) of class CommonOpticalFilter is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:59: warning: Member _opfilter_pe_beam_tot (variable) of class CommonOpticalFilter is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:59: warning: Member _opfilter_pe_veto (variable) of class CommonOpticalFilter is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:59: warning: Member _opfilter_pe_veto_tot (variable) of class CommonOpticalFilter is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:60: warning: Member _n_mcs (variable) of class CommonOpticalFilter is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:61: warning: Member _mcshr_edep (variable) of class CommonOpticalFilter is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:59: warning: Member _vtx_x (variable) of class CommonOpticalFilter is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:59: warning: Member _vtx_y (variable) of class CommonOpticalFilter is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:59: warning: Member _vtx_z (variable) of class CommonOpticalFilter is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:59: warning: Member _vtx_t (variable) of class CommonOpticalFilter is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:60: warning: Member _opfilter_pe_beam (variable) of class CommonOpticalFilter is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:60: warning: Member _opfilter_pe_beam_tot (variable) of class CommonOpticalFilter is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:60: warning: Member _opfilter_pe_veto (variable) of class CommonOpticalFilter is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:60: warning: Member _opfilter_pe_veto_tot (variable) of class CommonOpticalFilter is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:61: warning: Member _n_mcs (variable) of class CommonOpticalFilter is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:62: warning: Member _mcshr_edep (variable) of class CommonOpticalFilter is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/CosmicRejection_module.cc:48: warning: Member CosmicRejection(fhicl::ParameterSet const &p) (function) of class CosmicRejection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/CosmicRejection_module.cc:59: warning: Member produce(art::Event &e) override (function) of class CosmicRejection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/CosmicRejection_module.cc:66: warning: Member AddDaughters(const art::Ptr< recob::PFParticle > &pfp, const art::ValidHandle< std::vector< recob::PFParticle > > &pfp_h, std::vector< art::Ptr< recob::PFParticle > > &pfp_v) (function) of class CosmicRejection is not documented.
@@ -371,7 +370,7 @@ Generating code for file /home/travis/build/ubneutrinos/sea/home/travis/build/ub
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:62: warning: Member ProxyPfpElem_t (typedef) of class NeutrinoSelectionFilter is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:45: warning: Member NeutrinoSelectionFilter(fhicl::ParameterSet const &p) (function) of class NeutrinoSelectionFilter is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:56: warning: Member filter(art::Event &e) override (function) of class NeutrinoSelectionFilter is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:59: warning: Member endSubRun(art::SubRun &subrun) (function) of class NeutrinoSelectionFilter is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:59: warning: Member endSubRun(art::SubRun &subrun) override (function) of class NeutrinoSelectionFilter is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:66: warning: Member fPFPproducer (variable) of class NeutrinoSelectionFilter is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:67: warning: Member fCLSproducer (variable) of class NeutrinoSelectionFilter is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:68: warning: Member fSLCproducer (variable) of class NeutrinoSelectionFilter is not documented.
@@ -897,7 +896,6 @@ Generating code for file /home/travis/build/ubneutrinos/sea/home/travis/build/ub
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:136: warning: Member k_data (variable) of class analysis::DefaultAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:138: warning: Member fProtonThreshold (variable) of class analysis::DefaultAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:139: warning: Member fPionThreshold (variable) of class analysis::DefaultAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:140: warning: Member fPi0Threshold (variable) of class analysis::DefaultAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:141: warning: Member fElectronThreshold (variable) of class analysis::DefaultAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:142: warning: Member fMuonThreshold (variable) of class analysis::DefaultAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:144: warning: Member _category (variable) of class analysis::DefaultAnalysis is not documented.
@@ -1610,5 +1608,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 866/65536 hits=4455 misses=892
+lookup cache used 844/65536 hits=4411 misses=870
 finished...
