@@ -1,6 +1,6 @@
 #include "services_microboone.fcl"
 #include "triggeralgo_service.fcl"
-#include "flash_neutrino_id.fcl"
+#include "local_flash_neutrino_id.fcl"
 #include "MuCSTrackTagger_module.fcl"
 #include "photpropservices_microboone.fcl"
 

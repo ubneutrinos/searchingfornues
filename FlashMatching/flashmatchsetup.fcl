@@ -1,4 +1,4 @@
-#include "flash_neutrino_id.fcl"
+#include "local_flash_neutrino_id.fcl"
 
 PMTService: {
     CalibrationHelper: {
