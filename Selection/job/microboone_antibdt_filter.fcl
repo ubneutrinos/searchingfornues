@@ -1,0 +1,55 @@
+BEGIN_PROLOG
+
+microboone_antibdtfilter: 
+{
+    module_type: "NeutrinoSelectionFilter"
+    Filter: true
+    IsData: true
+    CLSproducer: "pandora"
+    HITproducer: "pandora"
+    MCTproducer: "generator"
+    PCAproducer: "pandora"
+    PFPproducer: "pandora"
+    SHRproducer: "shrreco3d"
+    SLCproducer: "pandora"
+    TRKproducer: "pandora"
+    VTXproducer: "pandora"
+    BDT_branch: "bdt_global"
+    BDT_cut: 9e-1
+    Verbose: false
+    SelectionTool: {
+       tool_type: "CC0piNpSelection"
+       CLSproducer: "pandora"
+       TRKproducer: "pandora"
+       CALproducer: "pandoracali"
+       PIDproducer: "pandoracalipid"
+       TRKproducerTrkFit: "shrreco3dKalmanShower"
+       CALproducerTrkFit: "shrreco3dKalmanShowercali"
+       TrkShrscore: 5e-1
+    }
+    AnalysisTools: {
+       cosmicip: {
+          tool_type: "CosmicIP"
+          PFPproducer: "pandora"
+          SpacePointproducer: "pandora"
+          TrkShrScore: 5e-1
+       }
+       default: {
+          tool_type: "DefaultAnalysis"
+          BacktrackTag: ""
+          CLSproducer: "pandora"
+          CRTVetoproducer: "crtveto"
+          Hproducer: "gaushit"
+          MCPproducer: "largeant"
+          MCRproducer: "mcreco"
+          MCTproducer: "generator"
+          ProtonThreshold: 4e-2
+          SLCproducer: "pandora"
+       }
+       zbdt: {
+          tool_type: "BDT"
+       }
+    }
+}
+
+END_PROLOG
