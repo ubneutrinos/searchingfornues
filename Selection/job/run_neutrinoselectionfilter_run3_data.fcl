@@ -106,19 +106,21 @@ physics.filters.nuselection.IsData: true
 physics.producers.pandoraTrack.PFParticleLabel:                                                "pandora"
 physics.producers.pandoraTrack.UseAllParticles:                                                true
 
-physics.producers.pandoraTrackcalipid.TrackModuleLabel:                                        "pandoraTrack"
-physics.producers.pandoraTrackcalipid.CalorimetryModuleLabel:                                  "pandoraTrackcali"
-physics.producers.pandoraTrackcalipid.Chi2PIDAlg.UseMedian:                                    true
-
 physics.producers.pandoraTrackcalo.TrackModuleLabel:                                           "pandoraTrack"
 physics.producers.pandoraTrackcalo.SpacePointModuleLabel:                                      "pandora"
 physics.producers.pandoraTrackcalo.CaloAlg.CalAreaConstants:                                   [4.31e-3, 4.02e-3, 4.26e-3]
 
-physics.producers.pandoraTrackpid.CalorimetryModuleLabel:                                      "pandoraTrackcalo"
-physics.producers.pandoraTrackpid.TrackModuleLabel:                                            "pandoraTrack"
-
 physics.producers.pandoraTrackcali.TrackModuleLabel:                                           "pandoraTrack"
 physics.producers.pandoraTrackcali.CalorimetryModuleLabel:                                     "pandoraTrackcalo"
-
 physics.producers.pandoraTrackcali.CorrectSCE:                                                 true
-physics.producers.pandoraTrackcalo.CorrectSCE:                                                 true
+
+physics.producers.pandoraTrackpid.ProducerLabels.CaloTrackAssn:                                "pandoraTrackcalo"
+physics.producers.pandoraTrackpid.ProducerLabels.CalorimetryLabel:                             "pandoraTrackcalo"
+physics.producers.pandoraTrackpid.ProducerLabels.HitTrackAssn:                                 "pandoraTrack"
+physics.producers.pandoraTrackpid.ProducerLabels.TrackLabel:                                   "pandoraTrack"
+
+physics.producers.pandoraTrackcalipid.ProducerLabels.CaloTrackAssn:                            "pandoraTrackcali"
+physics.producers.pandoraTrackcalipid.ProducerLabels.CalorimetryLabel:                         "pandoraTrackcali"
+physics.producers.pandoraTrackcalipid.ProducerLabels.HitTrackAssn:                             "pandoraTrack"
+physics.producers.pandoraTrackcalipid.ProducerLabels.TrackLabel:                               "pandoraTrack"
+physics.producers.pandoraTrackcalipid.Chi2PIDAlg.UseMedian:                                    true
