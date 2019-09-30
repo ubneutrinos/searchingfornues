@@ -1,6 +1,3 @@
-#include "eventweight_microboone.fcl"
-#include "seedservice_microboone.fcl"
-#include "microboone_eventweight_service.fcl"
 #include "run_calorimetryanalysis_run1_data.fcl"
 
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
