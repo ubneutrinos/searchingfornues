@@ -1,4 +1,4 @@
-#include "run_neutrinoselectionfilter_run1_data_mcreco.fcl"
+#include "run_neutrinoselectionfilter_run1_data_cc0pinp.fcl"
 
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
 physics.filters.nuselection.IsData: false
