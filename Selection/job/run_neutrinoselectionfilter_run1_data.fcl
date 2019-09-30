@@ -21,7 +21,7 @@ services.DetectorClocksService.InheritClockConfig:                         false
 services.DetectorClocksService.TriggerOffsetTPC:                          -0.400e3
 
 services.SpaceCharge.EnableCorrSCE: true
-services.SpaceCharge.EnableSimEFieldSCE: true
+services.SpaceCharge.EnableSimEfieldSCE: true
 services.SpaceCharge.EnableSimSpatialSCE: true
 services.SpaceCharge.RepresentationType: "Voxelized_TH3"
 services.SpaceCharge.CalibrationInputFilename: "SpaceCharge/SCEoffsets_dataDriven_combined_bkwd_Jan18.root"
@@ -64,9 +64,9 @@ physics:
         shrreco3dKalmanShowercalo:        @local::shrreco3dKalmanShowercalodata
         shrreco3dKalmanShowercali:        @local::shrreco3dKalmanShowercalidata
         pandoraTrack:                     @local::microboone_pandoraTrackCreation
-        pandoraTrackcalo:                 @local::microboone_calodata
+        pandoraTrackcalo:                 @local::microboone_reco_data_producers.pandoracalo
         pandoraTrackpid:                  @local::particleidconfig
-        pandoraTrackcali:                 @local::microboone_calibrationdedx_data
+        pandoraTrackcali:                 @local::microboone_reco_data_producers.pandoracaliSCE
         pandoraTrackcalipid:              @local::particleidconfig
  }
  filters:
@@ -107,11 +107,12 @@ physics.producers.pandoraTrack.UseAllParticles:                                 
 
 physics.producers.pandoraTrackcalo.TrackModuleLabel:                                           "pandoraTrack"
 physics.producers.pandoraTrackcalo.SpacePointModuleLabel:                                      "pandora"
-physics.producers.pandoraTrackcalo.CaloAlg.CalAreaConstants:                                   [4.31e-3, 4.02e-3, 4.26e-3]
+#physics.producers.pandoraTrackcalo.CaloAlg.CalAreaConstants:                                   @local::microboone_reco_data_producers.pandoracalo.CaloAlg.CalAreaConstants #[4.31e-3, 4.02e-3, 4.10e-3]
 
+#physics.producers.pandoraTrackcali.CaloAlg.CalAreaConstants:                                   @local::microboone_reco_data_producers.pandoracalo.CaloAlg.CalAreaConstants #[4.31e-3, 4.02e-3, 4.10e-3]
 physics.producers.pandoraTrackcali.TrackModuleLabel:                                           "pandoraTrack"
 physics.producers.pandoraTrackcali.CalorimetryModuleLabel:                                     "pandoraTrackcalo"
-physics.producers.pandoraTrackcali.CorrectSCE:                                                 true
+#physics.producers.pandoraTrackcali.CorrectSCE:                                                 true
 
 physics.producers.pandoraTrackpid.ProducerLabels.CaloTrackAssn:                                "pandoraTrackcalo"
 physics.producers.pandoraTrackpid.ProducerLabels.CalorimetryLabel:                             "pandoraTrackcalo"

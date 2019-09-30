@@ -1,13 +1,10 @@
-#include "run_neutrinoselectionfilter_run1_mc.fcl"
+#include "run_neutrinoselectionfilter_run1_overlay.fcl"
 
 physics.filters.nuselection.SHRproducer: "shrreco3d"
 
 physics.filters.nuselection.SelectionTool: {
-    tool_type: "Pi0Selection"
-    onlyshower: false
-    dotmin: 0.5
-    dmin: 2.
-    trkshrscore: 0.95
+    tool_type: "ShowerSelection"
+    trkshrscore: 0.9
     }
 
 physics.filters.nuselection.AnalysisTools: {
