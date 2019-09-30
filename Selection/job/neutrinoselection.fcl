@@ -140,7 +140,7 @@ shrreco3dKalmanShower.trackMaker.fitter.negDistTolerance:    -0.01
 shrreco3dKalmanShower.trackMaker.fitter.pickBestHitOnWire:   true
 
 shrreco3dKalmanShowercalodata: @local::microboone_calodata
-shrreco3dKalmanShowercalodata.CaloAlg.CalAreaConstants: @local::microboone_reco_data_producers.pandoracalo.CaloAlg.CalAreaConstants #[4.31e-3, 4.02e-3, 4.10e-3]
+shrreco3dKalmanShowercalodata.CaloAlg: @local::microboone_reco_data_producers.pandoracalo.CaloAlg #[4.31e-3, 4.02e-3, 4.10e-3]
 shrreco3dKalmanShowercalodata.TrackModuleLabel:         "shrreco3dKalmanShower"
 shrreco3dKalmanShowercalodata.SpacePointModuleLabel:    "shrreco3dKalmanShower"
 
@@ -150,7 +150,7 @@ shrreco3dKalmanShowercalomc.TrackModuleLabel:         "shrreco3dKalmanShower"
 shrreco3dKalmanShowercalomc.SpacePointModuleLabel:    "shrreco3dKalmanShower"
 
 shrreco3dKalmanShowercalidata: @local::microboone_calibrationdedx_data
-shrreco3dKalmanShowercalidata.CaloAlg.CalAreaConstants: @local::microboone_reco_data_producers.pandoracalo.CaloAlg.CalAreaConstants #[4.31e-3, 4.02e-3, 4.10e-3]
+shrreco3dKalmanShowercalidata.CaloAlg: @local::microboone_reco_data_producers.pandoracaliSCE.CaloAlg #[4.31e-3, 4.02e-3, 4.10e-3]
 shrreco3dKalmanShowercalidata.TrackModuleLabel:       "shrreco3dKalmanShower"
 shrreco3dKalmanShowercalidata.CalorimetryModuleLabel: "shrreco3dKalmanShowercalo"
 
