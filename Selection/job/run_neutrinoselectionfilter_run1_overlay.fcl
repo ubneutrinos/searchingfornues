@@ -39,7 +39,7 @@ physics.producers.eventweight.weight_functions: [
 ]
 
 #Store the weight map in a dedicated tree, in the main tree or both
-# physics.filters.nuselection.AnalysisTools.eventweighttree.createDedicatedTree: true
+physics.filters.nuselection.AnalysisTools.eventweighttree.createDedicatedTree: false
 physics.filters.nuselection.AnalysisTools.eventweighttree.createMapBranch: true
 
 #Run all weights of a given category simultaneously in the main tree (for flux, it is the product of individual weights) and create a branch in the main tree
