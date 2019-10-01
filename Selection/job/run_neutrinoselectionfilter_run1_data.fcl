@@ -109,7 +109,7 @@ physics.producers.pandoraTrackcalo.TrackModuleLabel:                            
 physics.producers.pandoraTrackcalo.SpacePointModuleLabel:                                      "pandora"
 #physics.producers.pandoraTrackcalo.CaloAlg.CalAreaConstants:                                   @local::microboone_reco_data_producers.pandoracalo.CaloAlg.CalAreaConstants #[4.31e-3, 4.02e-3, 4.10e-3]
 
-#physics.producers.pandoraTrackcali.CaloAlg.CalAreaConstants:                                   @local::microboone_reco_data_producers.pandoracalo.CaloAlg.CalAreaConstants #[4.31e-3, 4.02e-3, 4.10e-3]
+physics.producers.pandoraTrackcali.CaloAlg.CalAreaConstants:                                   @local::microboone_reco_data_producers.pandoracalo.CaloAlg.CalAreaConstants #  @local::microboone_reco_data_producers.pandoracalo.CaloAlg.CalAreaConstants #[4.31e-3, 4.02e-3, 4.10e-3]
 physics.producers.pandoraTrackcali.TrackModuleLabel:                                           "pandoraTrack"
 physics.producers.pandoraTrackcali.CalorimetryModuleLabel:                                     "pandoraTrackcalo"
 #physics.producers.pandoraTrackcali.CorrectSCE:                                                 true
