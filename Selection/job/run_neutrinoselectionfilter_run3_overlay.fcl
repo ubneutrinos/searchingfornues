@@ -1,5 +1,6 @@
 #include "run_neutrinoselectionfilter_run3_data.fcl"
 
+services.DetectorClocksService.TrigModuleName: "triggersim"
 
 physics.filters.crtveto: @local::UBCRTCosmicFilterBNBOFF # overlay beam-winow set to be the same as bnb off
 physics.filters.crtveto.useAsFilter: false

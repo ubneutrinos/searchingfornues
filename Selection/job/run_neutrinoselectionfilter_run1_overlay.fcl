@@ -3,6 +3,8 @@
 #include "microboone_eventweight_service.fcl"
 #include "run_neutrinoselectionfilter_run1_data.fcl"
 
+services.DetectorClocksService.TrigModuleName: "triggersim"
+
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
 physics.filters.nuselection.IsData: false
 
