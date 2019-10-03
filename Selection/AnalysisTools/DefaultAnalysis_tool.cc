@@ -235,6 +235,7 @@ private:
   std::vector<int> pfnplanehits_U; // number of hits in pfp plane U
   std::vector<int> pfnplanehits_V; // number of hits in pfp plane V
   std::vector<int> pfnplanehits_Y; // number of hits in pfp plane Y
+  float slclustfrac; //fraction of clustered hits in the slice
 
   unsigned int _n_pfps;
   std::vector<float> _trk_score_v;
@@ -659,6 +660,11 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       } // if there are associated clusters
     }   // if MC
   }
+  if (slnhits>0) {
+    slclustfrac = 0.;
+    for (auto n : pfnhits) slclustfrac+=n;
+    slclustfrac/=float(slnhits);
+  }
   _nslice += 1;
 
   if (!fData)
@@ -910,6 +916,7 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("hits_v", &_hits_v, "hits_v/i");
   _tree->Branch("hits_y", &_hits_y, "hits_y/i");
   _tree->Branch("topological_score", &_topo_score, "topological_score/F");
+  _tree->Branch("slclustfrac", &slclustfrac, "slclustfrac/F");
 
   _tree->Branch("mc_pdg", "std::vector< int >", &_mc_pdg);
   _tree->Branch("mc_E", "std::vector< float >", &_mc_E);
@@ -1058,6 +1065,7 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   pfnplanehits_U.clear();
   pfnplanehits_V.clear();
   pfnplanehits_Y.clear();
+  slclustfrac = std::numeric_limits<float>::lowest();
 
   _hits_u = 0;
   _hits_v = 0;
