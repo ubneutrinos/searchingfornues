@@ -31,7 +31,7 @@ physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeigh
 
 physics.producers.eventweight:        @local::microboone_eventweight
 
-physics.p1: [ eventweight, @sequence::physics.p1]
+#physics.p1: [ eventweight, @sequence::physics.p1]
 
 ##Run weights individually
 physics.producers.eventweight.weight_functions: [
