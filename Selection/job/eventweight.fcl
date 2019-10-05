@@ -1,4 +1,4 @@
-#Two things need to be specified below to get event weigths: 1) which to calculate, via the physics.p1 parameter, and 2) how to store them, via the EventWeightTreeTool parameters
+#Two things need to be specified below to get event weights: 1) which to calculate, via the physics.p1 parameter, and 2) how to store them, via the EventWeightTreeTool parameters
 
 #Force loading ubsim EventWeight calculator libraries instead of larsim default
 services.UBEventWeight: @local::microboone_eventweight_service
