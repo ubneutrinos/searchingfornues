@@ -1,0 +1,164 @@
+#Two things need to be specified below to get event weigths: 1) which to calculate, via the physics.p1 parameter, and 2) how to store them, via the EventWeightTreeTool parameters
+
+#Force loading ubsim EventWeight calculator libraries instead of larsim default
+services.UBEventWeight: @local::microboone_eventweight_service
+services.NuRandomService: @local::microboone_seedservice #might not be necessary
+EventWeightTreeTool: {
+    tool_type: "EventWeightTree"
+    createDedicatedTree: false
+    createMapBranch: false
+    createFluxBranch: false
+    createGenieBranch: false
+    createReintBranch: false
+    createSplineBranch: true
+}
+
+#Systematic weights
+physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeightTreeTool
+physics.producers.eventweight:        @local::microboone_eventweight
+# physics.p1: [ eventweight, @sequence::physics.p1] #Uncomment line to run systematic weights, or comment line to not run them
+
+#Genie spline weights
+physics.producers.eventweightSplines: @local::microboone_eventweight_justSplines
+physics.p1: [ eventweightSplines, @sequence::physics.p1]
+microboone_eventweight_justSplines.weight_functions: [ splines_general ]
+
+
+
+
+###########################
+#Systematic weight customization
+#Requires patched version of Genie v3 as of release v25
+###########################
+
+#Fixes flux weight
+physics.producers.eventweight.kminus.weight_calculator: "MiniBooNE"
+
+#Fixes Genie weights
+physics.producers.eventweight.weight_functions_genie: [
+    # genie_qema, #To be included in future Genie patch
+    # genie_qevec, #To be included in future Genie patch
+    genie_ncelAxial, genie_ncelEta,
+    genie_ccresAxial, genie_ccresVector,
+    genie_ncresAxial, genie_ncresVector,
+    genie_cohMA, genie_cohR0,
+    genie_NonResRvp1pi, genie_NonResRvbarp1pi,
+    genie_NonResRvp2pi, genie_NonResRvbarp2pi,
+    genie_ResDecayGamma, genie_ResDecayEta, genie_ResDecayTheta,
+    genie_NC,
+    genie_DISAth, genie_DISBth, genie_DISCv1u, genie_DISCv2u,
+    genie_AGKYxF, genie_AGKYpT,
+    genie_FormZone,
+    genie_FermiGasModelKf, genie_FermiGasModelSf,
+    genie_IntraNukeNmfp, genie_IntraNukeNcex,
+    # genie_IntraNukeNel, #Channel removed in Genie v3
+    genie_IntraNukeNinel, genie_IntraNukeNabs, genie_IntraNukeNpi,
+    genie_IntraNukePImfp, genie_IntraNukePIcex, 
+    # genie_IntraNukePIel, #Channel removed in Genie v3
+    genie_IntraNukePIinel, 
+    genie_IntraNukePIabs, 
+    genie_IntraNukePIpi
+]
+
+#Fixes genie_all weights
+physics.producers.eventweight.genie_all.parameter_list: [
+    # "QEMA", #To be included in future Genie patch
+    # "QEVec", #To be included in future Genie patch, usually not listed in central genie_all
+    "NCELaxial", "NCELeta", "CCResAxial", "CCResVector",
+    "NCResAxial", "NCResVector", "CohMA", "CohR0",
+    "NonResRvp1pi", "NonResRvbarp1pi", "NonResRvp2pi", "NonResRvbarp2pi",
+    "ResDecayGamma",
+    "ResDecayEta", #Usually not listed in genie_all
+    "ResDecayTheta", "NC",
+    "DISAth", "DISBth", "DISCv1u", "DISCv2u", "AGKYxF", "AGKYpT",
+    "FormZone", "FermiGasModelKf",
+    "FermiGasModelSf", #Usually not listed in genie_all
+    "IntraNukeNmfp", "IntraNukeNcex",
+    # "IntraNukeNel", #Channel removed in Genie v3
+    "IntraNukeNinel",
+    "IntraNukeNabs", "IntraNukeNpi", "IntraNukePImfp", "IntraNukePIcex",
+    # "IntraNukePIel", #Channel removed in Genie v3
+    "IntraNukePIinel",
+    "IntraNukePIabs",
+    "IntraNukePIpi"
+]
+physics.producers.eventweight.genie_all.parameter_sigma: [
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1#, 1
+]
+
+#Change number of universes
+physics.producers.eventweight.piplus.number_of_multisims: 50
+physics.producers.eventweight.piminus.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.kplus.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.kzero.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.kminus.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.horncurrent.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.pioninexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.nucleontotxsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.nucleonqexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.nucleoninexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.pionqexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.piontotxsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.expskin.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+
+physics.producers.eventweight.genie_qema.number_of_multisims: 50
+physics.producers.eventweight.genie_qevec.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_ncelAxial.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_ncelEta.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_ccresAxial.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_ccresVector.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_ncresAxial.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_ncresVector.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_cohMA.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_cohR0.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_NonResRvp1pi.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_NonResRvbarp1pi.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_NonResRvp2pi.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_NonResRvbarp2pi.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_ResDecayGamma.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_ResDecayEta.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_ResDecayTheta.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_NC.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_DISAth.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_DISBth.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_DISCv1u.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_DISCv2u.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_AGKYxF.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_AGKYpT.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_FormZone.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_FermiGasModelKf.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_FermiGasModelSf.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_IntraNukeNmfp.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_IntraNukeNcex.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_IntraNukeNel.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_IntraNukeNinel.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_IntraNukeNabs.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_IntraNukeNpi.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_IntraNukePImfp.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_IntraNukePIcex.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_IntraNukePIel.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_IntraNukePIinel.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_IntraNukePIabs.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_IntraNukePIpi.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+physics.producers.eventweight.genie_all.number_of_multisims: @local::physics.producers.eventweight.genie_qema.number_of_multisims
+
+
+physics.producers.eventweight.reinteractions_proton.number_of_multisims: 50
+physics.producers.eventweight.reinteractions_piplus.number_of_multisims: @local::physics.producers.eventweight.reinteractions_proton.number_of_multisims
+physics.producers.eventweight.reinteractions_piminus.number_of_multisims: @local::physics.producers.eventweight.reinteractions_proton.number_of_multisims
+physics.producers.eventweight.reinteractions_all.number_of_multisims: @local::physics.producers.eventweight.reinteractions_proton.number_of_multisims
+
+#Run weights individually
+physics.producers.eventweight.weight_functions: [
+    @sequence::microboone_eventweight.weight_functions_flux,
+    @sequence::physics.producers.eventweight.weight_functions_genie,
+    @sequence::microboone_eventweight.weight_functions_reint
+]
+
+#Run all weights of a given category simultaneously
+#physics.producers.eventweight.weight_functions: [
+#    @sequence::microboone_eventweight.weight_functions_flux,
+#    genie_all,
+#    reinteractions_all
+#]

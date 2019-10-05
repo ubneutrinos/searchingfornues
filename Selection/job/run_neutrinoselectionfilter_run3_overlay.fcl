@@ -1,4 +1,8 @@
+#include "eventweight_microboone.fcl"
+#include "seedservice_microboone.fcl"
+#include "microboone_eventweight_service.fcl"
 #include "run_neutrinoselectionfilter_run3_data.fcl"
+#include "eventweight.fcl"
 
 services.DetectorClocksService.TrigModuleName: "triggersim"
 

@@ -12,7 +12,7 @@ namespace analysis
     // Class:       EventWeightTree
     // File:        EventWeightTree_tool.cc
     //
-    //              Provide uncertainty event weights in a dedicated tree
+    //              Provide systematic uncertainty and spline event weights
     //
     // Configuration parameters:
     //
@@ -116,7 +116,7 @@ namespace analysis
                 std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
                 _mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
                 
-                if(_createFluxBranch || _createGenieBranch || _createReintBranch || _createSplineBranch || _createSplineBranch){
+                if(_createFluxBranch || _createGenieBranch || _createReintBranch || _createSplineBranch){
                     bool isFirstVector = true;
 
                     for(std::map<std::string, std::vector<double>>::iterator it=evtwgt_map.begin(); it!=evtwgt_map.end(); ++it){
