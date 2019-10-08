@@ -99,6 +99,9 @@ private:
            const std::vector<searchingfornues::BtPart> btparts_v,
            const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart);
 
+  void TrkDirectionAtXYZ(const recob::Track, const double x, const double y, const double z,
+                          float out[3]);
+
   trkf::TrackMomentumCalculator _trkmom;
 
   TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
@@ -694,17 +697,17 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
   _calo_tree->Branch("z_v", "std::vector<float>", &_z_v);
   _calo_tree->Branch("z_y", "std::vector<float>", &_z_y);
 
-  // _calo_tree->Branch("dir_x_u", "std::vector<float>", &_dir_x_u);
-  // _calo_tree->Branch("dir_x_v", "std::vector<float>", &_dir_x_v);
-  // _calo_tree->Branch("dir_x_y", "std::vector<float>", &_dir_x_y);
-  //
-  // _calo_tree->Branch("dir_y_u", "std::vector<float>", &_dir_y_u);
-  // _calo_tree->Branch("dir_y_v", "std::vector<float>", &_dir_y_v);
-  // _calo_tree->Branch("dir_y_y", "std::vector<float>", &_dir_y_y);
-  //
-  // _calo_tree->Branch("dir_z_u", "std::vector<float>", &_dir_z_u);
-  // _calo_tree->Branch("dir_z_v", "std::vector<float>", &_dir_z_v);
-  // _calo_tree->Branch("dir_z_y", "std::vector<float>", &_dir_z_y);
+  _calo_tree->Branch("dir_x_u", "std::vector<float>", &_dir_x_u);
+  _calo_tree->Branch("dir_x_v", "std::vector<float>", &_dir_x_v);
+  _calo_tree->Branch("dir_x_y", "std::vector<float>", &_dir_x_y);
+
+  _calo_tree->Branch("dir_y_u", "std::vector<float>", &_dir_y_u);
+  _calo_tree->Branch("dir_y_v", "std::vector<float>", &_dir_y_v);
+  _calo_tree->Branch("dir_y_y", "std::vector<float>", &_dir_y_y);
+
+  _calo_tree->Branch("dir_z_u", "std::vector<float>", &_dir_z_u);
+  _calo_tree->Branch("dir_z_v", "std::vector<float>", &_dir_z_v);
+  _calo_tree->Branch("dir_z_y", "std::vector<float>", &_dir_z_y);
 }
 
 void CalorimetryAnalysis::resetTTree(TTree *_tree)
@@ -895,10 +898,6 @@ void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t
   {
     auto const& plane = calo->PlaneID().Plane;
     auto const& xyz_v = calo->XYZ();
-    // const std::vector< size_t > & tp_indices_v = calo->TpIndices();
-    // std::cout << "tp indices = " << tp_indices_v.size()
-    //           << " , xyz_v = " << xyz_v.size()
-    //           << std::endl;
 
     if (plane == 0)
     {
@@ -911,14 +910,13 @@ void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t
         _x_u.push_back(xyz.X());
         _y_u.push_back(xyz.Y());
         _z_u.push_back(xyz.Z());
+
+        float _dir_u[3];
+        TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir_u);
+        _dir_x_u.push_back(_dir_u[0]);
+        _dir_y_u.push_back(_dir_u[1]);
+        _dir_z_u.push_back(_dir_u[2]);
       }
-      // for (auto tp_index : tp_indices_v)
-      // {
-      //   auto direction = trk->DirectionAtPoint(tp_index);
-      //   _dir_x_u.push_back(direction.X());
-      //   _dir_y_u.push_back(direction.Y());
-      //   _dir_z_u.push_back(direction.Z());
-      // }
     }
     else if (plane == 1)
     {
@@ -931,14 +929,13 @@ void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t
         _x_v.push_back(xyz.X());
         _y_v.push_back(xyz.Y());
         _z_v.push_back(xyz.Z());
+
+        float _dir_v[3];
+        TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir_v);
+        _dir_x_v.push_back(_dir_v[0]);
+        _dir_y_v.push_back(_dir_v[1]);
+        _dir_z_v.push_back(_dir_v[2]);
       }
-      // for (auto tp_index : tp_indices_v)
-      // {
-      //   auto direction = trk->DirectionAtPoint(tp_index);
-      //   _dir_x_v.push_back(direction.X());
-      //   _dir_y_v.push_back(direction.Y());
-      //   _dir_z_v.push_back(direction.Z());
-      // }
     }
     else if (plane == 2) //collection
     {
@@ -951,37 +948,39 @@ void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t
         _x_y.push_back(xyz.X());
         _y_y.push_back(xyz.Y());
         _z_y.push_back(xyz.Z());
+
+        float _dir_y[3];
+        TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir_y);
+        _dir_x_y.push_back(_dir_y[0]);
+        _dir_y_y.push_back(_dir_y[1]);
+        _dir_z_y.push_back(_dir_y[2]);
       }
-      // for (auto tp_index : tp_indices_v)
-      // {
-      //   auto direction = trk->DirectionAtPoint(tp_index);
-      //   _dir_x_y.push_back(direction.X());
-      //   _dir_y_y.push_back(direction.Y());
-      //   _dir_z_y.push_back(direction.Z());
-      // }
-
-
-      // for (size_t i=0; i < xyz_v.size(); i++)
-      // {
-      //   float x_sce[3];
-      //   searchingfornues::ApplySCEMappingXYZ(xyz_v[i].X(), xyz_v[i].Y(), xyz_v[i].Z(), x_sce);
-      //
-      //   auto tp_index = tp_indices_v[i];
-      //   std::cout << tp_index << std::endl;
-      //   // auto const& location = trk->DirectionAtPoint(tp_index);
-      //   // float x_tp_sce[3];
-      //   // searchingfornues::ApplySCECorrectionXYZ(location.X(), location.Y(), location.Z(), x_tp_sce);
-      //
-      //   std::cout << "point " << i
-      //             << " , x = " << xyz_v[i].X()
-      //             << " , x_sce = " << x_sce[0]
-      //             // << " , x_tp = " << location.X()
-      //             // << " , x_tp_sce = " << x_tp_sce[0]
-      //             << std::endl;
-      // }
     }
   }
   _calo_tree->Fill();
+}
+
+void CalorimetryAnalysis::TrkDirectionAtXYZ(const recob::Track trk, const double x, const double y, const double z, float out[3])
+{
+  float min_dist = 100;
+  size_t i_min = -1;
+  for(size_t i=0; i < trk.NumberTrajectoryPoints(); i++)
+  {
+    auto point_i = trk.LocationAtPoint(i);
+    float distance = searchingfornues::distance3d((double)point_i.X(), (double)point_i.Y(), (double)point_i.Z(),
+                                                  x, y, z);
+    if (distance < min_dist)
+    {
+      min_dist = distance;
+      i_min = i;
+    }
+  }
+  std::cout << "minimum distance = " << min_dist << std::endl;
+
+  auto direction = trk.DirectionAtPoint(i_min);
+  out[0] = (float)direction.X();
+  out[1] = (float)direction.Y();
+  out[2] = (float)direction.Z();
 }
 
 DEFINE_ART_CLASS_TOOL(CalorimetryAnalysis)

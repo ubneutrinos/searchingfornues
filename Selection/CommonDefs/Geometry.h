@@ -25,6 +25,30 @@ namespace searchingfornues
                 (z1-z2)*(z1-z2));
   }
 
+  double distance3d(const double& x1, const double& y1, const double& z1,
+                  const double& x2, const double& y2, const double& z2)
+  {
+    return sqrt((x1-x2)*(x1-x2) +
+                (y1-y2)*(y1-y2) +
+                (z1-z2)*(z1-z2));
+  }
+
+  float distance3d(const float& x1, const float& y1, const float& z1,
+                  const double& x2, const double& y2, const double& z2)
+  {
+    return sqrt((x1-x2)*(x1-x2) +
+                (y1-y2)*(y1-y2) +
+                (z1-z2)*(z1-z2));
+  }
+
+  float distance3d(const double& x1, const double& y1, const double& z1,
+                  const float& x2, const float& y2, const float& z2)
+  {
+    return sqrt((x1-x2)*(x1-x2) +
+                (y1-y2)*(y1-y2) +
+                (z1-z2)*(z1-z2));
+  }
+
   float YZtoPlanecoordinate(const float y, const float z, const int plane)
   {
     auto const* geom = ::lar::providerFrom<geo::Geometry>();
