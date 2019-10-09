@@ -1,5 +1,10 @@
 #include "run_neutrinoselectionfilter_run1_data.fcl"
 
+physics.filters.nuselection.AnalysisTools: {
+    default: @local::DefaultAnalysisTool
+    calorimetry: @local::CalorimetryAnalysisTool
+}
+
 physics.filters.nuselection.AnalysisTools.calorimetry.T0producer: "acpttrigtagger"
 physics.filters.nuselection.AnalysisTools.calorimetry.Backtrack: true
 
