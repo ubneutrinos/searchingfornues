@@ -1,11 +1,7 @@
-#include "run_neutrinoselectionfilter_run3_data.fcl"
+#include "run_neutrinoselectionfilter_run3_dataON.fcl"
 
 
 physics.filters.crtveto: @local::UBCRTCosmicFilterBNBOFF
 physics.filters.crtveto.useAsFilter: false
 physics.filters.crtveto.CRTHitProducer: "merger"
-
-physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "" #"gaushitTruthMatch"
-physics.filters.nuselection.IsData: true
-
-physics.filters.nuselection.AnalysisTools.crtApproach.TrackAssnModuleLabel: "crttrackmatch"
+physics.filters.crtveto.DTOffset: 68600.

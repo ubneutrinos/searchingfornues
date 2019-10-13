@@ -61,6 +61,16 @@ CosmicIPTool: {
     TrkShrScore: 0.5
 }
 
+NeutrinoEnergyTool: {
+    tool_type: "NeutrinoEnergy"
+    TRKproducer: "pandoraTrack"
+    CALOproducer: "pandoraTrackcali"
+    PDRproducer: "pandora"
+    TrkShrScore: 0.5
+    ShrEnergyBias: 0.8
+    ADCtoMeVMIP: 0.002876 # MCC9.2 collection plane values
+}
+
 DefaultAnalysisTool: {
     tool_type: "DefaultAnalysis"
     CRTVetoproducer: ""
@@ -192,6 +202,7 @@ NuSelectionFilter:{
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
+        nuenergy:      @local::NeutrinoEnergyTool
         flashmatchid:  @local::FlashMatchingTool
         #zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
     }

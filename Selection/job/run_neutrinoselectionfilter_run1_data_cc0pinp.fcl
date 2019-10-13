@@ -1,3 +1,5 @@
 #include "run_neutrinoselectionfilter_run1_data.fcl"
 
+physics.filters.nuselection.AnalysisTools.zbdt: @local::BDTTool
+
 physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool

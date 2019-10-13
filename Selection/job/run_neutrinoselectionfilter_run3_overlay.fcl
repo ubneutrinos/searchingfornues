@@ -1,16 +1,12 @@
-#include "eventweight_microboone.fcl"
-#include "seedservice_microboone.fcl"
-#include "microboone_eventweight_service.fcl"
-#include "run_neutrinoselectionfilter_run3_data.fcl"
-#include "eventweight.fcl"
-
-services.DetectorClocksService.TrigModuleName: "triggersim"
+#include "run_neutrinoselectionfilter_run1_overlay.fcl"
 
 physics.filters.crtveto: @local::UBCRTCosmicFilterBNBOFF # overlay beam-winow set to be the same as bnb off
 physics.filters.crtveto.useAsFilter: false
-physics.filters.crtveto.CRTHitProducer: "hotfix"
+physics.filters.crtveto.CRTHitProducer: "merger"
+physics.filters.crtveto.DTOffset: 68600.
 
-physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
-physics.filters.nuselection.IsData: true
+physics.p1: [ crtveto, @sequence::physics.p1 ]
 
-physics.filters.nuselection.AnalysisTools.crtApproach.TrackAssnModuleLabel: "AAA"
+physics.filters.nuselection.AnalysisTools.crtApproach:   @local::CRTApproachAnalysisTool
+physics.filters.nuselection.AnalysisTools.crtApproach.TrackAssnModuleLabel:   "crttrackmatch"
+physics.filters.nuselection.AnalysisTools.default.CRTVetoproducer: "crtveto"

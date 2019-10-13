@@ -1,11 +1,15 @@
-#include "run_neutrinoselectionfilter_run3_data.fcl"
+#include "run_neutrinoselectionfilter_run1_data.fcl"
 
-
+# configure CRT veto module
 physics.filters.crtveto: @local::UBCRTCosmicFilterBNBON
 physics.filters.crtveto.useAsFilter: false
 physics.filters.crtveto.CRTHitProducer: "merger"
+physics.filters.crtveto.DTOffset: 68600.
 
-physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "" #"gaushitTruthMatch"
-physics.filters.nuselection.IsData: true
+physics.p1: [ crtveto, @sequence::physics.p1 ]
 
+physics.filters.nuselection.AnalysisTools.crtApproach:   @local::CRTApproachAnalysisTool
 physics.filters.nuselection.AnalysisTools.crtApproach.TrackAssnModuleLabel: "crttrackmatch"
+physics.filters.nuselection.AnalysisTools.default.CRTVetoproducer: "crtveto"
+
+
