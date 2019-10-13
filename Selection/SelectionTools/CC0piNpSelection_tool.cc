@@ -135,6 +135,7 @@ private:
     float _shr_distance; /**< Distance between leading shower vertex and reconstructed neutrino vertex */
     float _tksh_distance; /**< Distance between leading shower vertex and longest track vertex */
     float _tksh_angle; /**< Angle between leading shower vertex and longest track vertex */
+    float _tksh_angle_muon; /**< Angle between leading shower vertex and longest track vertex */
     float _shr_score; /**< Pandora track score for the leading shower */
     float _shr_theta; /**< Reconstructed theta angle for the leading shower */
     float _shr_phi; /**< Reconstructed phi angle for the leading shower */
@@ -157,7 +158,9 @@ private:
 
     float _trk_len; /**< Length of the longest track */
     float _trk_energy;  /**< Energy of the longest track assuming it's a proton and using stopping power in LAr */
+    float _trk_energy_muon;  /**< Energy of the longest track assuming it's a muon and using stopping power in LAr */
     float _trk_energy_tot;  /**< Sum of the track energies assuming they are protons and using stopping power in LAr */
+    float _trk_energy_muon_tot;  /**< Sum of the track energies assuming they are muons and using stopping power in LAr */
     float _trk_distance;  /**< Distance between longest track and reconstructed neutrino vertex */
     float _trk_theta; /**< Reconstructed theta angle for the longest track */
     float _trk_phi; /**< Reconstructed phi angle for the longest track */
@@ -175,11 +178,16 @@ private:
     float _trk_pidchipr_worst; /**< Worst Chi2 proton score amongst all the tracks */
 
     float _trk_pidchimu; /**< Chi2 muon score for the longest track */
+    float _trk_pidchimu_best; /**< Best Chi2 muon score amongst all the tracks */
+    float _trk_pidchimu_worst; /**< Worst Chi2 muon score amongst all the tracks */
+
     float _trk_pida; /**< PIDA score for the longest track */
     float _trk_score; /**< Pandora track score for the longest track */
 
     float _pt; /**< Total reconstructed transverse momentum, assuming all the tracks are protons and all the showers are electrons */
+    float _pt_assume_muon; /**< Total reconstructed transverse momentum, assuming all the tracks are muons and all the showers are electrons */
     float _p; /**< Total reconstructed momentum, assuming all the tracks are protons and all the showers are electrons */
+    float _p_assume_muon; /**< Total reconstructed momentum, assuming all the tracks are muons and all the showers are electrons */
 
     float _shr_bkt_purity; /**< Purity of the leading shower */
     float _shr_bkt_completeness; /**< Completeness of the leading shower */
@@ -399,9 +407,11 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     }
 
     TVector3 total_p;
+    TVector3 total_p_mu;
     TVector3 trk_vtx;
     TVector3 shr_vtx;
     TVector3 trk_p;
+    TVector3 trk_p_mu;
     TVector3 shr_p;
     std::vector< float > matched_energies;
 
@@ -516,6 +526,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     shr_p.SetXYZ(shr->Direction().X(), shr->Direction().Y(), shr->Direction().Z());
                     shr_p.SetMag(sqrt(pow(shr->Energy()[2] / 1000. + electron->Mass(), 2) - pow(electron->Mass(), 2)));
                     total_p += shr_p;
+                    total_p_mu += shr_p;
                     std::vector< float > dqdx_cali(3);
                     searchingfornues::getDQdxCali(shr, dqdx_cali);
                     _shr_dedx_Y = shr->dEdx()[2];
@@ -674,9 +685,13 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 _trk_energy_tot += energy_proton;
                 _trk_hits_tot += trk_hits;
 
+                float energy_muon = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), muon->PdgCode()), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
+                _trk_energy_muon_tot += energy_muon;
+
                 auto trkpxy2 = pid_proxy[trk.key()];
                 auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
                 float chipr = std::numeric_limits<float>::lowest();
+                float chimu = std::numeric_limits<float>::lowest();
                 if (pidpxy_v.size() != 0)
                 {
                     chipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, proton->PdgCode(), 2);
@@ -684,6 +699,12 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         _trk_pidchipr_best = chipr;
                     if (chipr > 0 && chipr > _trk_pidchipr_worst)
                         _trk_pidchipr_worst = chipr;
+
+                    chimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, muon->PdgCode(), 2);
+                    if (chimu > 0 && chimu < _trk_pidchimu_best)
+                        _trk_pidchimu_best = chimu;
+                    if (chimu > 0 && chimu > _trk_pidchimu_worst)
+                        _trk_pidchimu_worst = chimu;
                 }
 
                 if (trk_hits > _trk_hits_max)
@@ -721,13 +742,17 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _trk_distance = (trk_vtx - nu_vtx).Mag();
                     _trk_len = trk->Length();
                     _trk_energy = energy_proton;
+                    _trk_energy_muon = energy_muon;
                     _trk_pfp_id = i_pfp;
                     _trk_hits_max = trk_hits;
                     _trk_theta = trk->Theta();
                     _trk_phi = trk->Phi();
                     trk_p.SetXYZ(trk->StartDirection().X(), trk->StartDirection().Y(), trk->StartDirection().Z());
                     trk_p.SetMag(sqrt(pow(energy_proton + proton->Mass(), 2) - pow(proton->Mass(), 2)));
+                    trk_p_mu.SetXYZ(trk->StartDirection().X(), trk->StartDirection().Y(), trk->StartDirection().Z());
+                    trk_p_mu.SetMag(sqrt(pow(energy_muon + muon->Mass(), 2) - pow(muon->Mass(), 2)));
                     total_p += trk_p;
+                    total_p_mu += trk_p_mu;
                     if (pidpxy_v.size() != 0)
                     {
                         _trk_bragg_p = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, proton->PdgCode(), 2),
@@ -740,7 +765,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                                                    searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, kaon->PdgCode(), 2));
                         _trk_bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
                         _trk_pidchipr = chipr;
-                        _trk_pidchimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, muon->PdgCode(), 2);
+                        _trk_pidchimu = chimu;
                         _trk_pida = searchingfornues::PID(pidpxy_v[0], "PIDA_median", anab::kPIDA, anab::kForward, 0, 2);
                     }
                     _trk_score = trkshrscore;
@@ -753,9 +778,12 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     _extra_energy_y -= (_trk_energy_hits_tot + _shr_energy_tot);
     _pt = total_p.Perp();
     _p = total_p.Mag();
+    _pt_assume_muon = total_p_mu.Perp();
+    _p_assume_muon = total_p_mu.Mag();
     if (_trk_hits_tot + _shr_hits_tot>0) _hits_ratio = (float)_shr_hits_tot / (_trk_hits_tot + _shr_hits_tot);
     _tksh_distance = (trk_vtx - shr_vtx).Mag();
     if (trk_p.Mag() * shr_p.Mag()>0) _tksh_angle = trk_p.Dot(shr_p) / (trk_p.Mag() * shr_p.Mag());
+    if (trk_p_mu.Mag() * shr_p.Mag()>0) _tksh_angle_muon = trk_p_mu.Dot(shr_p) / (trk_p_mu.Mag() * shr_p.Mag());
 
     _contained_fraction = ((float)(_trk_hits_tot + _shr_hits_tot)) / (_trk_hits_tot + _shr_hits_tot + _hits_outfv);
 
@@ -797,7 +825,9 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _trk_distance = std::numeric_limits<float>::lowest();
     _trk_len = std::numeric_limits<float>::lowest();
     _trk_energy = 0;
+    _trk_energy_muon = 0;
     _trk_energy_tot = 0;
+    _trk_energy_muon_tot = 0;
     _hits_ratio = 0;
     _trk_hits_tot = 0;
     _trk_hits_y_tot = 0;
@@ -819,6 +849,9 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _trk_pidchipr_worst = std::numeric_limits<float>::lowest();
 
     _trk_pidchimu = std::numeric_limits<float>::lowest();
+    _trk_pidchimu_best = std::numeric_limits<float>::max();
+    _trk_pidchimu_worst = std::numeric_limits<float>::lowest();
+
     _trk_pida = std::numeric_limits<float>::lowest();
     _trk_score = std::numeric_limits<float>::lowest();
     _trk_bkt_pdg = 0;
@@ -828,6 +861,9 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
 
     _pt = 0;
     _p = 0;
+    _pt_assume_muon = 0;
+    _p_assume_muon = 0;
+
     _trk_theta = std::numeric_limits<float>::lowest();
     _trk_phi = std::numeric_limits<float>::lowest();
     _shr_theta = std::numeric_limits<float>::lowest();
@@ -937,7 +973,9 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("trk_theta", &_trk_theta, "trk_theta/F");
     _tree->Branch("trk_phi", &_trk_phi, "trk_phi/F");
     _tree->Branch("trk_energy", &_trk_energy, "trk_energy/F");
+    _tree->Branch("trk_energy_muon", &_trk_energy_muon, "trk_energy_muon/F");
     _tree->Branch("trk_energy_tot", &_trk_energy_tot, "trk_energy_tot/F");
+    _tree->Branch("trk_energy_muon_tot", &_trk_energy_muon_tot, "trk_energy_muon_tot/F");
     _tree->Branch("trk_distance", &_trk_distance, "trk_distance/F");
     _tree->Branch("trk_score", &_trk_score, "trk_score/F");
     _tree->Branch("trk_bkt_pdg", &_trk_bkt_pdg, "trk_bkt_pdg/I");
@@ -946,6 +984,8 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("trk_bkt_E", &_trk_bkt_E, "trk_bkt_E/F");
     _tree->Branch("trk_chipr_best", &_trk_pidchipr_best, "trk_chipr_best/F");
     _tree->Branch("trk_chipr_worst", &_trk_pidchipr_worst, "trk_chipr_worst/F");
+    _tree->Branch("trk_chimu_best", &_trk_pidchimu_best, "trk_chimu_best/F");
+    _tree->Branch("trk_chimu_worst", &_trk_pidchimu_worst, "trk_chimu_worst/F");
 
     _tree->Branch("trk_chipr", &_trk_pidchipr, "trk_chipr/F");
     _tree->Branch("trk_chimu", &_trk_pidchimu, "trk_chimu/F");
@@ -982,6 +1022,8 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("contained_fraction", &_contained_fraction, "contained_fraction/F");
     _tree->Branch("pt", &_pt, "pt/F");
     _tree->Branch("p", &_p, "p/F");
+    _tree->Branch("pt_assume_muon", &_pt_assume_muon, "pt_assume_muon/F");
+    _tree->Branch("p_assume_muon", &_p_assume_muon, "p_assume_muon/F");
 }
 
 DEFINE_ART_CLASS_TOOL(CC0piNpSelection)

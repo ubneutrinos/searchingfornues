@@ -1,4 +1,0 @@
-#include "run_neutrinoselectionfilter_run1_data.fcl"
-
-physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool
-physics.filters.nuselection.SelectionTool.tool_type: "NuMuSelection"
