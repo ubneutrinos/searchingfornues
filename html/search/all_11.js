@@ -14,6 +14,7 @@ var searchData=
   ['_7eeventweighttree',['~EventWeightTree',['../classanalysis_1_1EventWeightTree.html#ac4c13dc05b4378d910f25afdd410475b',1,'analysis::EventWeightTree']]],
   ['_7efailuremode',['~FailureMode',['../classflashmatch_1_1FlashMatchingTool_1_1FailureMode.html#ab6ee2b8304974614e71440359a068acd',1,'flashmatch::FlashMatchingTool::FailureMode']]],
   ['_7eflashmatching',['~FlashMatching',['../classanalysis_1_1FlashMatching.html#ab2647643c3420bac36afe949ac252f20',1,'analysis::FlashMatching']]],
+  ['_7eneutrinoenergy',['~NeutrinoEnergy',['../classanalysis_1_1NeutrinoEnergy.html#a78f6dd22284932e8dff28bf549a37230',1,'analysis::NeutrinoEnergy']]],
   ['_7enumuselection',['~NuMuSelection',['../classselection_1_1NuMuSelection.html#af2a4b263e268fc51f0fa58ea4ad74ee4',1,'selection::NuMuSelection']]],
   ['_7eobviouscosmicflashmatching',['~ObviousCosmicFlashMatching',['../classanalysis_1_1ObviousCosmicFlashMatching.html#a130b94ad72bcc4157edc74e53d26d1c6',1,'analysis::ObviousCosmicFlashMatching']]],
   ['_7epi0selection',['~Pi0Selection',['../classselection_1_1Pi0Selection.html#ad691918c955035275406f16331ba0631',1,'selection::Pi0Selection']]],
