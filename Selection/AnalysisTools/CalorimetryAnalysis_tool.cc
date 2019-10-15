@@ -210,6 +210,8 @@ private:
   float _trk_energy_proton;
   float _trk_energy_muon;
 
+  int _longest; // longest track in slice?
+
   // dedx vector
   std::vector<float> _dqdx_u;
   std::vector<float> _dqdx_v;
@@ -430,9 +432,39 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
   searchingfornues::ProxyPIDColl_t const& pid_proxy = proxy::getCollection<std::vector<recob::Track> >(e, fTRKproducer,
                            proxy::withAssociated<anab::ParticleID>(fPIDproducer));
 
+
+  // find longest track
+  float  lenmax = 0;
+  size_t idxmax = 0;
+  for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++) {
+    
+    auto pfp = slice_pfp_v.at(i_pfp);
+    
+    if ( pfp->IsPrimary() )
+      continue;
+
+    auto trk_v = pfp.get<recob::Track>();
+    if (trk_v.size() != 1)
+      continue;
+
+    auto trk = trk_v.at(0);
+    
+    float len = trk->Length();
+    if (len > lenmax) {
+      lenmax = len;
+      idxmax = i_pfp;
+    }
+  }// for all pfps
+    
+
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
   {
     fillDefault();
+
+    _longest = 0;
+    if ((i_pfp == idxmax) && (lenmax != 0))
+      _longest = 1;
+
     auto pfp = slice_pfp_v[i_pfp];
     FillCalorimetry(pfp,
         calo_proxy,
@@ -530,6 +562,8 @@ void CalorimetryAnalysis::fillDefault()
   _trk_pid_chimu_v = std::numeric_limits<float>::lowest();
   _trk_pida_v = std::numeric_limits<float>::lowest();
 
+  _longest = std::numeric_limits<int>::lowest();
+
   _trk_mcs_muon_mom = std::numeric_limits<float>::lowest();
   _trk_energy_proton = std::numeric_limits<float>::lowest();
   _trk_energy_muon = std::numeric_limits<float>::lowest();
@@ -624,6 +658,8 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
   _calo_tree->Branch("trk_start_x", &_trk_start_x, "trk_start_x/f");
   _calo_tree->Branch("trk_start_y", &_trk_start_y, "trk_start_y/f");
   _calo_tree->Branch("trk_start_z", &_trk_start_z, "trk_start_z/f");
+
+  _calo_tree->Branch("longest", &_longest, "longest/I");
 
   _calo_tree->Branch("trk_sce_start_x", &_trk_sce_start_x, "trk_sce_start_x/f");
   _calo_tree->Branch("trk_sce_start_y", &_trk_sce_start_y, "trk_sce_start_y/f");
@@ -966,7 +1002,7 @@ void CalorimetryAnalysis::TrkDirectionAtXYZ(const recob::Track trk, const double
   size_t i_min = -1;
   for(size_t i=0; i < trk.NumberTrajectoryPoints(); i++)
   {
-    if (track.HasValidPoint(i)) { // check this point is valid
+    if (trk.HasValidPoint(i)) { // check this point is valid
       auto point_i = trk.LocationAtPoint(i);
       float distance = searchingfornues::distance3d((double)point_i.X(), (double)point_i.Y(), (double)point_i.Z(),
 						    x, y, z);
