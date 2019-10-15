@@ -966,15 +966,17 @@ void CalorimetryAnalysis::TrkDirectionAtXYZ(const recob::Track trk, const double
   size_t i_min = -1;
   for(size_t i=0; i < trk.NumberTrajectoryPoints(); i++)
   {
-    auto point_i = trk.LocationAtPoint(i);
-    float distance = searchingfornues::distance3d((double)point_i.X(), (double)point_i.Y(), (double)point_i.Z(),
-                                                  x, y, z);
-    if (distance < min_dist)
-    {
-      min_dist = distance;
-      i_min = i;
-    }
-  }
+    if (track.HasValidPoint(i)) { // check this point is valid
+      auto point_i = trk.LocationAtPoint(i);
+      float distance = searchingfornues::distance3d((double)point_i.X(), (double)point_i.Y(), (double)point_i.Z(),
+						    x, y, z);
+      if (distance < min_dist)
+	{
+	  min_dist = distance;
+	  i_min = i;
+	}
+    }// if point is valid
+  }// for all track points
   std::cout << "minimum distance = " << min_dist << std::endl;
 
   auto direction = trk.DirectionAtPoint(i_min);
