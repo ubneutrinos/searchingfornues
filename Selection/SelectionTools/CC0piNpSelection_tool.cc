@@ -11,6 +11,7 @@
 #include "../CommonDefs/PIDFuncs.h"
 #include "../CommonDefs/TrackFitterFunctions.h"
 #include "../CommonDefs/CalibrationFuncs.h"
+#include "../CommonDefs/PFPHitDistance.h"
 
 #include "larcore/Geometry/Geometry.h"
 #include "lardataobj/RecoBase/SpacePoint.h"
@@ -199,6 +200,8 @@ private:
     int _trk_bkt_pdg; /**< PDG code of the MCParticle matched to the longest track */
 
     float _matched_E; /**< Total kinetic energy of the MCParticles matched to PFParticles */
+  
+  float _trkshrhitdist0, _trkshrhitdist1, _trkshrhitdist2; /**< distance between hits of shower and track in 2D on each palne based on hit-hit distances */
 
     float _shr_tkfit_start_x; /**< Start x coordinate of the leading shower obtained with the track fitting */
     float _shr_tkfit_start_y; /**< Start y coordinate of the leading shower obtained with the track fitting */
@@ -775,6 +778,11 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         }
     }
 
+    auto trkshrhitdist_v = searchingfornues::GetPFPHitDistance( pfp_pxy_v[_trk_pfp_id], pfp_pxy_v[_shr_pfp_id],clus_proxy );
+    _trkshrhitdist0 = trkshrhitdist_v[0];
+    _trkshrhitdist1 = trkshrhitdist_v[1];
+    _trkshrhitdist2 = trkshrhitdist_v[2];
+
     _extra_energy_y -= (_trk_energy_hits_tot + _shr_energy_tot);
     _pt = total_p.Perp();
     _p = total_p.Mag();
@@ -863,6 +871,10 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _p = 0;
     _pt_assume_muon = 0;
     _p_assume_muon = 0;
+
+    _trkshrhitdist0 = std::numeric_limits<float>::lowest();
+    _trkshrhitdist1 = std::numeric_limits<float>::lowest();
+    _trkshrhitdist2 = std::numeric_limits<float>::lowest();
 
     _trk_theta = std::numeric_limits<float>::lowest();
     _trk_phi = std::numeric_limits<float>::lowest();
@@ -998,6 +1010,10 @@ void CC0piNpSelection::setBranches(TTree *_tree)
 
     _tree->Branch("trk_hits_max", &_trk_hits_max, "trk_hits_max/i");
     _tree->Branch("shr_hits_max", &_shr_hits_max, "shr_hits_max/i");
+    
+    _tree->Branch("trkshrhitdist0",&_trkshrhitdist0,"trkshrhitdist0/F");
+    _tree->Branch("trkshrhitdist1",&_trkshrhitdist1,"trkshrhitdist1/F");
+    _tree->Branch("trkshrhitdist2",&_trkshrhitdist2,"trkshrhitdist2/F");
 
     _tree->Branch("total_hits_y", &_total_hits_y, "total_hits_y/i");
     _tree->Branch("extra_energy_y", &_extra_energy_y, "extra_energy_y/F");
