@@ -30,6 +30,9 @@ bool \hyperlink{classselection_1_1CC0piNpSelection_ac3f55283ce26e2af8d5ba86a9faf
 const trkf\+::\+Track\+Momentum\+Calculator {\bfseries \+\_\+trkmom}\hypertarget{classselection_1_1CC0piNpSelection_a320b14dcb3cc1674048bc4f0dd18fa45}{}\label{classselection_1_1CC0piNpSelection_a320b14dcb3cc1674048bc4f0dd18fa45}
 
 \item 
+const trkf\+::\+Trajectory\+M\+C\+S\+Fitter {\bfseries mcsfitter}\hypertarget{classselection_1_1CC0piNpSelection_aab7c56654d30a9cc5ad2dbe09a3e12c9}{}\label{classselection_1_1CC0piNpSelection_aab7c56654d30a9cc5ad2dbe09a3e12c9}
+
+\item 
 T\+Particle\+P\+DG $\ast$ {\bfseries proton} = T\+Database\+P\+D\+G\+::\+Instance()-\/$>$Get\+Particle(2212)\hypertarget{classselection_1_1CC0piNpSelection_a721706e2b68efe51225fa6388bc184d1}{}\label{classselection_1_1CC0piNpSelection_a721706e2b68efe51225fa6388bc184d1}
 
 \item 
@@ -191,6 +194,8 @@ float \hyperlink{classselection_1_1CC0piNpSelection_aab7945993678b44d7100abac6cc
 float \hyperlink{classselection_1_1CC0piNpSelection_a98e03f33f34b5df397a1d1144b1de4a1}{\+\_\+trk\+\_\+energy}
 \item 
 float \hyperlink{classselection_1_1CC0piNpSelection_aabcb2e3b6df63f077fc37d881c1794a3}{\+\_\+trk\+\_\+energy\+\_\+muon}
+\item 
+float \hyperlink{classselection_1_1CC0piNpSelection_a4ae8946bcc37ce152c81ba3c28d60fbb}{\+\_\+trk\+\_\+energy\+\_\+muon\+\_\+mcs}
 \item 
 float \hyperlink{classselection_1_1CC0piNpSelection_a8a0da0081e2f182880249debba6551e3}{\+\_\+trk\+\_\+energy\+\_\+tot}
 \item 
@@ -663,7 +668,10 @@ Energy of the longest track assuming it\textquotesingle{}s a proton and using st
 Sum of the energy of the tracks obtained with the deposited charge \index{selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}!\+\_\+trk\+\_\+energy\+\_\+muon@{\+\_\+trk\+\_\+energy\+\_\+muon}}
 \index{\+\_\+trk\+\_\+energy\+\_\+muon@{\+\_\+trk\+\_\+energy\+\_\+muon}!selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}}
 \subsubsection[{\texorpdfstring{\+\_\+trk\+\_\+energy\+\_\+muon}{_trk_energy_muon}}]{\setlength{\rightskip}{0pt plus 5cm}float selection\+::\+C\+C0pi\+Np\+Selection\+::\+\_\+trk\+\_\+energy\+\_\+muon\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classselection_1_1CC0piNpSelection_aabcb2e3b6df63f077fc37d881c1794a3}{}\label{classselection_1_1CC0piNpSelection_aabcb2e3b6df63f077fc37d881c1794a3}
-Energy of the longest track assuming it\textquotesingle{}s a muon and using stopping power in L\+Ar \index{selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}!\+\_\+trk\+\_\+energy\+\_\+muon\+\_\+tot@{\+\_\+trk\+\_\+energy\+\_\+muon\+\_\+tot}}
+Energy of the longest track assuming it\textquotesingle{}s a muon and using stopping power in L\+Ar \index{selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}!\+\_\+trk\+\_\+energy\+\_\+muon\+\_\+mcs@{\+\_\+trk\+\_\+energy\+\_\+muon\+\_\+mcs}}
+\index{\+\_\+trk\+\_\+energy\+\_\+muon\+\_\+mcs@{\+\_\+trk\+\_\+energy\+\_\+muon\+\_\+mcs}!selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}}
+\subsubsection[{\texorpdfstring{\+\_\+trk\+\_\+energy\+\_\+muon\+\_\+mcs}{_trk_energy_muon_mcs}}]{\setlength{\rightskip}{0pt plus 5cm}float selection\+::\+C\+C0pi\+Np\+Selection\+::\+\_\+trk\+\_\+energy\+\_\+muon\+\_\+mcs\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classselection_1_1CC0piNpSelection_a4ae8946bcc37ce152c81ba3c28d60fbb}{}\label{classselection_1_1CC0piNpSelection_a4ae8946bcc37ce152c81ba3c28d60fbb}
+Energy of the longest track assuming it\textquotesingle{}s a muon and using M\+CS \index{selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}!\+\_\+trk\+\_\+energy\+\_\+muon\+\_\+tot@{\+\_\+trk\+\_\+energy\+\_\+muon\+\_\+tot}}
 \index{\+\_\+trk\+\_\+energy\+\_\+muon\+\_\+tot@{\+\_\+trk\+\_\+energy\+\_\+muon\+\_\+tot}!selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}}
 \subsubsection[{\texorpdfstring{\+\_\+trk\+\_\+energy\+\_\+muon\+\_\+tot}{_trk_energy_muon_tot}}]{\setlength{\rightskip}{0pt plus 5cm}float selection\+::\+C\+C0pi\+Np\+Selection\+::\+\_\+trk\+\_\+energy\+\_\+muon\+\_\+tot\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classselection_1_1CC0piNpSelection_aebac9c09110d469f5d7ed3817c33e437}{}\label{classselection_1_1CC0piNpSelection_aebac9c09110d469f5d7ed3817c33e437}
 Sum of the track energies assuming they are muons and using stopping power in L\+Ar \index{selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}!\+\_\+trk\+\_\+energy\+\_\+tot@{\+\_\+trk\+\_\+energy\+\_\+tot}}

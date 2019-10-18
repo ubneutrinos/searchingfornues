@@ -145,6 +145,9 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a320b14dcb3cc1674048bc4f0dd18fa45"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a320b14dcb3cc1674048bc4f0dd18fa45"></a>
 const trkf::TrackMomentumCalculator&#160;</td><td class="memItemRight" valign="bottom"><b>_trkmom</b></td></tr>
 <tr class="separator:a320b14dcb3cc1674048bc4f0dd18fa45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab7c56654d30a9cc5ad2dbe09a3e12c9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aab7c56654d30a9cc5ad2dbe09a3e12c9"></a>
+const trkf::TrajectoryMCSFitter&#160;</td><td class="memItemRight" valign="bottom"><b>mcsfitter</b></td></tr>
+<tr class="separator:aab7c56654d30a9cc5ad2dbe09a3e12c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a721706e2b68efe51225fa6388bc184d1"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a721706e2b68efe51225fa6388bc184d1"></a>
 TParticlePDG *&#160;</td><td class="memItemRight" valign="bottom"><b>proton</b> = TDatabasePDG::Instance()-&gt;GetParticle(2212)</td></tr>
 <tr class="separator:a721706e2b68efe51225fa6388bc184d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -307,6 +310,8 @@ art::InputTag&#160;</td><td class="memItemRight" valign="bottom"><b>fCALproducer
 <tr class="separator:a98e03f33f34b5df397a1d1144b1de4a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabcb2e3b6df63f077fc37d881c1794a3"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CC0piNpSelection.html#aabcb2e3b6df63f077fc37d881c1794a3">_trk_energy_muon</a></td></tr>
 <tr class="separator:aabcb2e3b6df63f077fc37d881c1794a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ae8946bcc37ce152c81ba3c28d60fbb"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CC0piNpSelection.html#a4ae8946bcc37ce152c81ba3c28d60fbb">_trk_energy_muon_mcs</a></td></tr>
+<tr class="separator:a4ae8946bcc37ce152c81ba3c28d60fbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a0da0081e2f182880249debba6551e3"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CC0piNpSelection.html#a8a0da0081e2f182880249debba6551e3">_trk_energy_tot</a></td></tr>
 <tr class="separator:a8a0da0081e2f182880249debba6551e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebac9c09110d469f5d7ed3817c33e437"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classselection_1_1CC0piNpSelection.html#aebac9c09110d469f5d7ed3817c33e437">_trk_energy_muon_tot</a></td></tr>
@@ -2287,6 +2292,27 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>fData</b></td></tr>
 </table>
 </div><div class="memdoc">
 <p>Energy of the longest track assuming it's a muon and using stopping power in LAr </p>
+
+</div>
+</div>
+<a class="anchor" id="a4ae8946bcc37ce152c81ba3c28d60fbb"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float selection::CC0piNpSelection::_trk_energy_muon_mcs</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Energy of the longest track assuming it's a muon and using MCS </p>
 
 </div>
 </div>
