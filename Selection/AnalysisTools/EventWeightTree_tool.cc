@@ -114,6 +114,7 @@ namespace analysis
                 std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
                 art::fill_ptr_vector(eventweights, eventweights_handle);
                 std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
+                evtwgt_map.erase("splines_general_Spline");
                 _mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
                 
                 if(_createFluxBranch || _createGenieBranch || _createReintBranch || _createSplineBranch){

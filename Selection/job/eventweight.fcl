@@ -35,21 +35,23 @@ microboone_eventweight_justSplines.weight_functions: [ splines_general ]
 physics.producers.eventweight.kminus.weight_calculator: "MiniBooNE"
 
 #Fixes Genie weights
+#For more details, see /pnfs/uboone/resilient/users/gardiner/eventweight_microboone_genie_test.fcl
 physics.producers.eventweight.weight_functions_genie: [
     # genie_qema, #To be included in future Genie patch
     # genie_qevec, #To be included in future Genie patch
     genie_ncelAxial, genie_ncelEta,
     genie_ccresAxial, genie_ccresVector,
     genie_ncresAxial, genie_ncresVector,
-    genie_cohMA, genie_cohR0,
+    #genie_cohMA, genie_cohR0, #To be included in future Genie patch
     genie_NonResRvp1pi, genie_NonResRvbarp1pi,
     genie_NonResRvp2pi, genie_NonResRvbarp2pi,
     genie_ResDecayGamma, genie_ResDecayEta, genie_ResDecayTheta,
     genie_NC,
     genie_DISAth, genie_DISBth, genie_DISCv1u, genie_DISCv2u,
     genie_AGKYxF, genie_AGKYpT,
-    genie_FormZone,
-    genie_FermiGasModelKf, genie_FermiGasModelSf,
+    #genie_FormZone, #To be included in future Genie patch
+    genie_FermiGasModelKf,
+    #genie_FermiGasModelSf, #To be included in future Genie patch
     genie_IntraNukeNmfp, genie_IntraNukeNcex,
     # genie_IntraNukeNel, #Channel removed in Genie v3
     genie_IntraNukeNinel, genie_IntraNukeNabs, genie_IntraNukeNpi,
@@ -65,14 +67,16 @@ physics.producers.eventweight.genie_all.parameter_list: [
     # "QEMA", #To be included in future Genie patch
     # "QEVec", #To be included in future Genie patch, usually not listed in central genie_all
     "NCELaxial", "NCELeta", "CCResAxial", "CCResVector",
-    "NCResAxial", "NCResVector", "CohMA", "CohR0",
+    "NCResAxial", "NCResVector",
+    #"CohMA", "CohR0", #To be included in future Genie patch
     "NonResRvp1pi", "NonResRvbarp1pi", "NonResRvp2pi", "NonResRvbarp2pi",
     "ResDecayGamma",
     "ResDecayEta", #Usually not listed in genie_all
     "ResDecayTheta", "NC",
     "DISAth", "DISBth", "DISCv1u", "DISCv2u", "AGKYxF", "AGKYpT",
-    "FormZone", "FermiGasModelKf",
-    "FermiGasModelSf", #Usually not listed in genie_all
+    #"FormZone", #To be included in future Genie patch
+    "FermiGasModelKf",
+    #"FermiGasModelSf", #To be included in future Genie patch, usually not listed in genie_all
     "IntraNukeNmfp", "IntraNukeNcex",
     # "IntraNukeNel", #Channel removed in Genie v3
     "IntraNukeNinel",
@@ -84,7 +88,7 @@ physics.producers.eventweight.genie_all.parameter_list: [
 ]
 physics.producers.eventweight.genie_all.parameter_sigma: [
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1#, 1
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1#, 1, 1, 1, 1, 1
 ]
 
 #Change number of universes
@@ -150,15 +154,15 @@ physics.producers.eventweight.reinteractions_piminus.number_of_multisims: @local
 physics.producers.eventweight.reinteractions_all.number_of_multisims: @local::physics.producers.eventweight.reinteractions_proton.number_of_multisims
 
 #Run weights individually
-physics.producers.eventweight.weight_functions: [
-    @sequence::microboone_eventweight.weight_functions_flux,
-    @sequence::physics.producers.eventweight.weight_functions_genie,
-    @sequence::microboone_eventweight.weight_functions_reint
-]
-
-#Run all weights of a given category simultaneously
 #physics.producers.eventweight.weight_functions: [
 #    @sequence::microboone_eventweight.weight_functions_flux,
-#    genie_all,
-#    reinteractions_all
+#    @sequence::physics.producers.eventweight.weight_functions_genie,
+#    @sequence::microboone_eventweight.weight_functions_reint
 #]
+
+#Run all weights of a given category simultaneously
+physics.producers.eventweight.weight_functions: [
+    @sequence::microboone_eventweight.weight_functions_flux,
+    genie_all,
+    reinteractions_all
+]

@@ -7,7 +7,7 @@ void readMap(string filename){
    TFile file(filename.c_str());
 
    TTree* tree = nullptr;
-   file.GetObject("neutrinoselection_filt.root:/nuselection/NeutrinoSelectionFilter",tree);
+   file.GetObject((filename+":/nuselection/NeutrinoSelectionFilter").c_str(),tree);
 
    map<string,vector<double>>* weights = nullptr;
    TBranch* b_weights = tree->GetBranch("weights");

@@ -242,7 +242,7 @@ CC0PiNpSelectionTool: {
     PIDproducer: "pandoraTrackcalipid"
     CALproducerTrkFit: "shrreco3dKalmanShowercali"
     TRKproducerTrkFit: "shrreco3dKalmanShower"
-
+    mcsfitmu: @local::microboone_reco_data_producers.pandoraMCSMu.fitter
 }
 
 CCincSelectionTool: {
