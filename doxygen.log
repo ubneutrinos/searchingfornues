@@ -170,7 +170,7 @@ Prepro/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchin
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/AnalysisToolBase.h:23: warning: Compound analysis::AnalysisToolBase is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:36: warning: Compound analysis::FlashMatching is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Filters/TruthFilter_module.cc:30: warning: Compound TruthFilter is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:36: warning: Compound analysis::CosmicIP is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:42: warning: Compound analysis::CosmicIP is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/EmptySelection_tool.cc:24: warning: Compound selection::EmptySelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/SlicePurCompl_tool.cc:30: warning: Compound analysis::SlicePurCompl is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CRTApproachAnalysis_tool.cc:39: warning: Compound analysis::CRTApproachAnalysis is not documented.
@@ -803,12 +803,18 @@ Generatin/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigF
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:93: warning: Member _dvtx_z_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:95: warning: Member _dvtx_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:96: warning: Member _dshr_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:81: warning: Member fPFPproducer (variable) of class analysis::CosmicIP is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:82: warning: Member fSpacePointproducer (variable) of class analysis::CosmicIP is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:84: warning: Member fTrkShrScore (variable) of class analysis::CosmicIP is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:85: warning: Member _CosmicIP (variable) of class analysis::CosmicIP is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:90: warning: argument 'pset' of command @param is not found in the argument list of analysis::CosmicIP::CosmicIP(const fhicl::ParameterSet &p)
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:45: warning: The following parameters of analysis::CosmicIP::CosmicIP(const fhicl::ParameterSet &p) are not documented:
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:87: warning: Member fPFPproducer (variable) of class analysis::CosmicIP is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:88: warning: Member fSpacePointproducer (variable) of class analysis::CosmicIP is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:90: warning: Member fTrkShrScore (variable) of class analysis::CosmicIP is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:91: warning: Member _CosmicIP (variable) of class analysis::CosmicIP is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:92: warning: Member _CosmicIPAll3D (variable) of class analysis::CosmicIP is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:93: warning: Member _CosmicDirAll3D (variable) of class analysis::CosmicIP is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:94: warning: Member _CosmicIPAll2DEnds (variable) of class analysis::CosmicIP is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:95: warning: Member _CosmicDirAll2DEnds (variable) of class analysis::CosmicIP is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:96: warning: Member _CosmicIPAll2DOvlp (variable) of class analysis::CosmicIP is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:97: warning: Member _CosmicDirAll2DOvlp (variable) of class analysis::CosmicIP is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:102: warning: argument 'pset' of command @param is not found in the argument list of analysis::CosmicIP::CosmicIP(const fhicl::ParameterSet &p)
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:51: warning: The following parameters of analysis::CosmicIP::CosmicIP(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CRTApproachAnalysis_tool.cc:84: warning: Member Point2PointDistance(const TVector3 &nuvtx, TVector3 &taggedTrackSpt) (function) of class analysis::CRTApproachAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CRTApproachAnalysis_tool.cc:85: warning: Member Reset() (function) of class analysis::CRTApproachAnalysis is not documented.
@@ -1414,17 +1420,18 @@ Generatin/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTool
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:91: warning: Member kaon (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:101: warning: Member fdEdxcmSkip (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:101: warning: Member fdEdxcmLen (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:102: warning: Member fLocaldEdx (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:104: warning: Member fCLSproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:105: warning: Member fPIDproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:106: warning: Member fTRKproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:107: warning: Member fTRKproducerTrkFit (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:108: warning: Member fBacktrackTag (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:109: warning: Member fHproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:110: warning: Member fMCRproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:111: warning: Member fMCPproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:112: warning: Member fCALproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:113: warning: Member fCALproducerTrkFit (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:102: warning: Member fSaveMoreDedx (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:103: warning: Member fLocaldEdx (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:105: warning: Member fCLSproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:106: warning: Member fPIDproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:107: warning: Member fTRKproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:108: warning: Member fTRKproducerTrkFit (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:109: warning: Member fBacktrackTag (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:110: warning: Member fHproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:111: warning: Member fMCRproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:112: warning: Member fMCPproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:113: warning: Member fCALproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:114: warning: Member fCALproducerTrkFit (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:82: warning: Member fData (variable) of class selection::SelectionToolBase is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CCincSelection_tool.h:73: warning: Member isContained(const double x[3], float tolerance) const  (function) of class selection::CCincSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CCincSelection_tool.h:161: warning: Member fCLSproducer (variable) of class selection::CCincSelection is not documented.
@@ -1634,5 +1641,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 863/65536 hits=4583 misses=889
+lookup cache used 876/65536 hits=4609 misses=902
 finished...
