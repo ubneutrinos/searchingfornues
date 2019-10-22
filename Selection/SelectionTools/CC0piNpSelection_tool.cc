@@ -98,8 +98,9 @@ private:
     float fFidvolXstart; /**< Fiducial volume distance from the start of the TPC on the x axis (default 10 cm) */
     float fFidvolXend; /**< Fiducial volume distance from the end of the TPC on the x axis (default 10 cm) */
 
-  float fdEdxcmSkip, fdEdxcmLen; // cm from vtx to skip for dE/dx and dE/dx segment length, respectively
-  bool fLocaldEdx; // use local dE/dx from calorimetry (true) or globally convert Q -> MeV (false)
+    float fdEdxcmSkip, fdEdxcmLen; // cm from vtx to skip for dE/dx and dE/dx segment length, respectively
+    bool fSaveMoreDedx; // save more track fit dedx definitions (currently with 0.5 and 1.0 cm gap at start)
+    bool fLocaldEdx; // use local dE/dx from calorimetry (true) or globally convert Q -> MeV (false)
 
     art::InputTag fCLSproducer;
     art::InputTag fPIDproducer;
@@ -218,8 +219,24 @@ private:
     unsigned int _shr_tkfit_nhits_Y; /**< Number of hits in the 1x4 cm box on the Y plane with the track fitting */
     unsigned int _shr_tkfit_nhits_V; /**< Number of hits in the 1x4 cm box on the V plane with the track fitting */
     unsigned int _shr_tkfit_nhits_U; /**< Number of hits in the 1x4 cm box on the U plane with the track fitting */
+
+    float _shr_tkfit_gap05_dedx_Y; /**< dE/dx of the leading shower on the Y plane with the track fitting, skip first 5 mm */
+    float _shr_tkfit_gap05_dedx_V; /**< dE/dx of the leading shower on the V plane with the track fitting, skip first 5 mm */
+    float _shr_tkfit_gap05_dedx_U; /**< dE/dx of the leading shower on the U plane with the track fitting, skip first 5 mm */
+    unsigned int _shr_tkfit_gap05_nhits_Y; /**< Number of hits in the 1x4 cm box on the Y plane with the track fitting, skip first 5 mm */
+    unsigned int _shr_tkfit_gap05_nhits_V; /**< Number of hits in the 1x4 cm box on the V plane with the track fitting, skip first 5 mm */
+    unsigned int _shr_tkfit_gap05_nhits_U; /**< Number of hits in the 1x4 cm box on the U plane with the track fitting, skip first 5 mm */
+
+    float _shr_tkfit_gap10_dedx_Y; /**< dE/dx of the leading shower on the Y plane with the track fitting, skip first 10 mm */
+    float _shr_tkfit_gap10_dedx_V; /**< dE/dx of the leading shower on the V plane with the track fitting, skip first 10 mm */
+    float _shr_tkfit_gap10_dedx_U; /**< dE/dx of the leading shower on the U plane with the track fitting, skip first 10 mm */
+    unsigned int _shr_tkfit_gap10_nhits_Y; /**< Number of hits in the 1x4 cm box on the Y plane with the track fitting, skip first 10 mm */
+    unsigned int _shr_tkfit_gap10_nhits_V; /**< Number of hits in the 1x4 cm box on the V plane with the track fitting, skip first 10 mm */
+    unsigned int _shr_tkfit_gap10_nhits_U; /**< Number of hits in the 1x4 cm box on the U plane with the track fitting, skip first 10 mm */
+
     unsigned int _hits_outfv; /**< Number of hits of PFParticles outside the fiducial volume */
     float _contained_fraction; /**< Fraction of hits of the PFParticles contained in the fiducial volume */
+    float _sps_contained_fraction; /**< Fraction of SpacePoints of the PFParticles contained in the fiducial volume */
 
     float _trk_energy_hits_tot; /**< Sum of the energy of the tracks obtained with the deposited charge */
 
@@ -289,6 +306,7 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
 
     fdEdxcmSkip  = pset.get<float>("dEdxcmSkip",0.0); // how many cm to skip @ vtx for dE/dx calculation
     fdEdxcmLen   = pset.get<float>("dEdxcmLen" ,4.0); // how long the dE/dx segment should be
+    fSaveMoreDedx = pset.get<bool >("SaveMoreDedx" , true); // save additional track fit dedx definitions
     fLocaldEdx   = pset.get<bool >("LocaldEdx" , true); // use dE/dx from calo?
 }
 
@@ -419,6 +437,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     TVector3 shr_p;
     std::vector< float > matched_energies;
 
+    size_t sps_fv=0, sps_all=0;
     for (size_t i_pfp = 0; i_pfp < pfp_pxy_v.size(); i_pfp++)
     {
 
@@ -428,6 +447,12 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
         if (PDG == 12 || PDG == 14)
             continue;
+
+	std::vector<art::Ptr<recob::SpacePoint>> spcpnts = assocSpacePoint->at(i_pfp);
+	sps_all += spcpnts.size();
+	for (auto& sp : spcpnts) {
+	  if (isFiducial(sp->XYZ())) sps_fv++;
+	}
 
         auto trkshrscore = searchingfornues::GetTrackShowerScore(pfp_pxy);
         if (trkshrscore < fTrkShrscore)
@@ -490,7 +515,6 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 _shr_energy_tot += shr->Energy()[2] / 1000;
 
                 std::vector<float> cali_corr(3);
-                std::vector<art::Ptr<recob::SpacePoint>> spcpnts = assocSpacePoint->at(i_pfp);
                 searchingfornues::getCali(spcpnts, *assocSpacePointHit, cali_corr);
                 _shr_energy_tot_cali += shr->Energy()[2] / 1000 * cali_corr[2];
 
@@ -568,6 +592,13 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         _shr_tkfit_dedx_V = std::numeric_limits<float>::lowest();
                         _shr_tkfit_dedx_U = std::numeric_limits<float>::lowest();
 
+                        _shr_tkfit_gap05_dedx_Y = std::numeric_limits<float>::lowest();
+                        _shr_tkfit_gap05_dedx_V = std::numeric_limits<float>::lowest();
+                        _shr_tkfit_gap05_dedx_U = std::numeric_limits<float>::lowest();
+                        _shr_tkfit_gap10_dedx_Y = std::numeric_limits<float>::lowest();
+                        _shr_tkfit_gap10_dedx_V = std::numeric_limits<float>::lowest();
+                        _shr_tkfit_gap10_dedx_U = std::numeric_limits<float>::lowest();
+
                         continue;
                     }
 
@@ -594,7 +625,6 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
 			  // using function from CommonDefs/TrackFitterFunctions.h
 			  searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
-
 			  if (tkcalo->PlaneID().Plane == 2) {
 			    _shr_tkfit_dedx_Y  = calodEdx;
 			    _shr_tkfit_nhits_Y = caloNpts;
@@ -607,6 +637,39 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 			    _shr_tkfit_dedx_U = calodEdx;
 			    _shr_tkfit_nhits_U = caloNpts;
 			  }
+
+                          if (fSaveMoreDedx==false) continue;
+
+			  // Gap 0.5 cm
+			  searchingfornues::GetTrackFitdEdx(tkcalo, 0.5, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
+			  if (tkcalo->PlaneID().Plane == 2) {
+			    _shr_tkfit_gap05_dedx_Y  = calodEdx;
+			    _shr_tkfit_gap05_nhits_Y = caloNpts;
+			  }
+			  else if (tkcalo->PlaneID().Plane == 1) {
+			    _shr_tkfit_gap05_dedx_V  = calodEdx;
+			    _shr_tkfit_gap05_nhits_V = caloNpts;
+			  }
+			  else if (tkcalo->PlaneID().Plane == 0) {
+			    _shr_tkfit_gap05_dedx_U = calodEdx;
+			    _shr_tkfit_gap05_nhits_U = caloNpts;
+			  }
+
+			  // Gap 1.0 cm
+			  searchingfornues::GetTrackFitdEdx(tkcalo, 1.0, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
+			  if (tkcalo->PlaneID().Plane == 2) {
+			    _shr_tkfit_gap10_dedx_Y  = calodEdx;
+			    _shr_tkfit_gap10_nhits_Y = caloNpts;
+			  }
+			  else if (tkcalo->PlaneID().Plane == 1) {
+			    _shr_tkfit_gap10_dedx_V  = calodEdx;
+			    _shr_tkfit_gap10_nhits_V = caloNpts;
+			  }
+			  else if (tkcalo->PlaneID().Plane == 0) {
+			    _shr_tkfit_gap10_dedx_U = calodEdx;
+			    _shr_tkfit_gap10_nhits_U = caloNpts;
+			  }
+
                         }// for all calo objects
                     }
                 }
@@ -791,6 +854,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     if (trk_p_mu.Mag() * shr_p.Mag()>0) _tksh_angle_muon = trk_p_mu.Dot(shr_p) / (trk_p_mu.Mag() * shr_p.Mag());
 
     _contained_fraction = ((float)(_trk_hits_tot + _shr_hits_tot)) / (_trk_hits_tot + _shr_hits_tot + _hits_outfv);
+    _sps_contained_fraction = float(sps_fv)/float(sps_all);
 
     if (_contained_fraction < 0.9)
         return false;
@@ -902,6 +966,20 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_tkfit_nhits_U = 0;
     _shr_tkfit_nhits_V = 0;
 
+    _shr_tkfit_gap05_dedx_Y = std::numeric_limits<float>::lowest();
+    _shr_tkfit_gap05_dedx_U = std::numeric_limits<float>::lowest();
+    _shr_tkfit_gap05_dedx_V = std::numeric_limits<float>::lowest();
+    _shr_tkfit_gap05_nhits_Y = 0;
+    _shr_tkfit_gap05_nhits_U = 0;
+    _shr_tkfit_gap05_nhits_V = 0;
+
+    _shr_tkfit_gap10_dedx_Y = std::numeric_limits<float>::lowest();
+    _shr_tkfit_gap10_dedx_U = std::numeric_limits<float>::lowest();
+    _shr_tkfit_gap10_dedx_V = std::numeric_limits<float>::lowest();
+    _shr_tkfit_gap10_nhits_Y = 0;
+    _shr_tkfit_gap10_nhits_U = 0;
+    _shr_tkfit_gap10_nhits_V = 0;
+
     _shr_pidchipr = std::numeric_limits<float>::lowest();
     _shr_pidchimu = std::numeric_limits<float>::lowest();
     _shr_bragg_p = std::numeric_limits<float>::lowest();
@@ -916,6 +994,7 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _trk_energy_hits_tot = 0;
     _hits_outfv = 0;
     _contained_fraction = 0;
+    _sps_contained_fraction = 0;
 }
 
 void CC0piNpSelection::setBranches(TTree *_tree)
@@ -958,6 +1037,20 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_tkfit_nhits_Y", &_shr_tkfit_nhits_Y, "shr_tkfit_nhits_Y/i");
     _tree->Branch("shr_tkfit_nhits_V", &_shr_tkfit_nhits_V, "shr_tkfit_nhits_V/i");
     _tree->Branch("shr_tkfit_nhits_U", &_shr_tkfit_nhits_U, "shr_tkfit_nhits_U/i");
+    if (fSaveMoreDedx) {
+      _tree->Branch("shr_tkfit_gap05_dedx_Y", &_shr_tkfit_gap05_dedx_Y, "shr_tkfit_gap05_dedx_Y/F");
+      _tree->Branch("shr_tkfit_gap05_dedx_V", &_shr_tkfit_gap05_dedx_V, "shr_tkfit_gap05_dedx_V/F");
+      _tree->Branch("shr_tkfit_gap05_dedx_U", &_shr_tkfit_gap05_dedx_U, "shr_tkfit_gap05_dedx_U/F");
+      _tree->Branch("shr_tkfit_gap05_nhits_Y", &_shr_tkfit_gap05_nhits_Y, "shr_tkfit_gap05_nhits_Y/i");
+      _tree->Branch("shr_tkfit_gap05_nhits_V", &_shr_tkfit_gap05_nhits_V, "shr_tkfit_gap05_nhits_V/i");
+      _tree->Branch("shr_tkfit_gap05_nhits_U", &_shr_tkfit_gap05_nhits_U, "shr_tkfit_gap05_nhits_U/i");
+      _tree->Branch("shr_tkfit_gap10_dedx_Y", &_shr_tkfit_gap10_dedx_Y, "shr_tkfit_gap10_dedx_Y/F");
+      _tree->Branch("shr_tkfit_gap10_dedx_V", &_shr_tkfit_gap10_dedx_V, "shr_tkfit_gap10_dedx_V/F");
+      _tree->Branch("shr_tkfit_gap10_dedx_U", &_shr_tkfit_gap10_dedx_U, "shr_tkfit_gap10_dedx_U/F");
+      _tree->Branch("shr_tkfit_gap10_nhits_Y", &_shr_tkfit_gap10_nhits_Y, "shr_tkfit_gap10_nhits_Y/i");
+      _tree->Branch("shr_tkfit_gap10_nhits_V", &_shr_tkfit_gap10_nhits_V, "shr_tkfit_gap10_nhits_V/i");
+      _tree->Branch("shr_tkfit_gap10_nhits_U", &_shr_tkfit_gap10_nhits_U, "shr_tkfit_gap10_nhits_U/i");
+    }
     _tree->Branch("shr_chipr", &_shr_pidchipr, "shr_chipr/F");
     _tree->Branch("shr_chimu", &_shr_pidchimu, "shr_chimu/F");
     _tree->Branch("shr_bragg_p", &_shr_bragg_p, "shr_bragg_p/F");
@@ -1027,6 +1120,7 @@ void CC0piNpSelection::setBranches(TTree *_tree)
 
     _tree->Branch("hits_ratio", &_hits_ratio, "hits_ratio/F");
     _tree->Branch("contained_fraction", &_contained_fraction, "contained_fraction/F");
+    _tree->Branch("sps_contained_fraction", &_sps_contained_fraction, "sps_contained_fraction/F");
     _tree->Branch("pt", &_pt, "pt/F");
     _tree->Branch("p", &_p, "p/F");
     _tree->Branch("pt_assume_muon", &_pt_assume_muon, "pt_assume_muon/F");
