@@ -1,0 +1,274 @@
+\hypertarget{classanalysis_1_1Pi0Tagger}{}\section{analysis\+:\+:Pi0\+Tagger Class Reference}
+\label{classanalysis_1_1Pi0Tagger}\index{analysis\+::\+Pi0\+Tagger@{analysis\+::\+Pi0\+Tagger}}
+Inheritance diagram for analysis\+:\+:Pi0\+Tagger\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classanalysis_1_1Pi0Tagger}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classanalysis_1_1Pi0Tagger_a39627bb5408b7dbecaa2d0e21d0b9899}{Pi0\+Tagger} (const fhicl\+::\+Parameter\+Set \&pset)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{classanalysis_1_1Pi0Tagger_af054b6d41d9454f6ecc1891fcea24bca}{$\sim$\+Pi0\+Tagger} ()\hypertarget{classanalysis_1_1Pi0Tagger_af054b6d41d9454f6ecc1891fcea24bca}{}\label{classanalysis_1_1Pi0Tagger_af054b6d41d9454f6ecc1891fcea24bca}
+
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1Pi0Tagger_a7daaccd1915ec191491536016e3564a8}{configure} (fhicl\+::\+Parameter\+Set const \&pset)
+\item 
+void \hyperlink{classanalysis_1_1Pi0Tagger_a0a67b1b24417d854f946cd8f5e88771f}{analyze\+Event} (art\+::\+Event const \&e, bool f\+Data) override\hypertarget{classanalysis_1_1Pi0Tagger_a0a67b1b24417d854f946cd8f5e88771f}{}\label{classanalysis_1_1Pi0Tagger_a0a67b1b24417d854f946cd8f5e88771f}
+
+\begin{DoxyCompactList}\small\item\em Analysis function. \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1Pi0Tagger_a98c8d3f92ce5a5fa1f45537a19671cdd}{analyze\+Slice} (art\+::\+Event const \&e, std\+::vector$<$ Proxy\+Pfp\+Elem\+\_\+t $>$ \&slice\+\_\+pfp\+\_\+v, bool f\+Data, bool selected) override
+\begin{DoxyCompactList}\small\item\em Analyze slice. \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1Pi0Tagger_a300c79be4d79c50d28347b4ae6270029}{set\+Branches} (T\+Tree $\ast$\+\_\+tree)\hypertarget{classanalysis_1_1Pi0Tagger_a300c79be4d79c50d28347b4ae6270029}{}\label{classanalysis_1_1Pi0Tagger_a300c79be4d79c50d28347b4ae6270029}
+
+\begin{DoxyCompactList}\small\item\em set branches for T\+Tree \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1Pi0Tagger_af4f17e7d84f5a62fd4c3f1a85ff7c73d}{reset\+T\+Tree} (T\+Tree $\ast$\+\_\+tree)\hypertarget{classanalysis_1_1Pi0Tagger_af4f17e7d84f5a62fd4c3f1a85ff7c73d}{}\label{classanalysis_1_1Pi0Tagger_af4f17e7d84f5a62fd4c3f1a85ff7c73d}
+
+\begin{DoxyCompactList}\small\item\em reset ttree branches \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::pair$<$ double, double $>$ {\bfseries Vtx\+Compatibility} (const T\+Vector3 \&nuvtx, const T\+Vector3 \&shrvtx, const T\+Vector3 \&shrdir)\hypertarget{classanalysis_1_1Pi0Tagger_a9578654c18acbe3b04243fa1515c4157}{}\label{classanalysis_1_1Pi0Tagger_a9578654c18acbe3b04243fa1515c4157}
+
+\item 
+{\footnotesize template$<$typename T $>$ }\\float \hyperlink{classanalysis_1_1Pi0Tagger_a76d170d7d7059d3b2d09bf94309d4b30}{P\+F\+P\+Energy} (const T \&ass\+\_\+clus\+\_\+v)\hypertarget{classanalysis_1_1Pi0Tagger_a76d170d7d7059d3b2d09bf94309d4b30}{}\label{classanalysis_1_1Pi0Tagger_a76d170d7d7059d3b2d09bf94309d4b30}
+
+\begin{DoxyCompactList}\small\item\em calculate P\+FP energy based on hits associated to clusters \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1Pi0Tagger_a11bc949d14b020473a18f4bbf11cd0be}{Read\+Truth} (art\+::\+Event const \&e)\hypertarget{classanalysis_1_1Pi0Tagger_a11bc949d14b020473a18f4bbf11cd0be}{}\label{classanalysis_1_1Pi0Tagger_a11bc949d14b020473a18f4bbf11cd0be}
+
+\begin{DoxyCompactList}\small\item\em read truth info associated to pi0 \end{DoxyCompactList}\item 
+void {\bfseries Reset} ()\hypertarget{classanalysis_1_1Pi0Tagger_a42d30772bb653fa65250a195f79b3361}{}\label{classanalysis_1_1Pi0Tagger_a42d30772bb653fa65250a195f79b3361}
+
+\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries \+\_\+pi0\+\_\+ispi0}\hypertarget{classanalysis_1_1Pi0Tagger_a8a24941b2c9275c6d9364f65f252f28e}{}\label{classanalysis_1_1Pi0Tagger_a8a24941b2c9275c6d9364f65f252f28e}
+
+\item 
+T\+Vector3 {\bfseries \+\_\+pi0\+\_\+mcgamma0\+\_\+mom}\hypertarget{classanalysis_1_1Pi0Tagger_a88f79fdbb1739128e87a1d8338d4bf6e}{}\label{classanalysis_1_1Pi0Tagger_a88f79fdbb1739128e87a1d8338d4bf6e}
+
+\item 
+T\+Vector3 {\bfseries \+\_\+pi0\+\_\+mcgamma1\+\_\+mom}\hypertarget{classanalysis_1_1Pi0Tagger_a837ecdef1450067636c99324509f9086}{}\label{classanalysis_1_1Pi0Tagger_a837ecdef1450067636c99324509f9086}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+mcgamma0\+\_\+e}\hypertarget{classanalysis_1_1Pi0Tagger_ae3431782332f833d2df41d0d9b872475}{}\label{classanalysis_1_1Pi0Tagger_ae3431782332f833d2df41d0d9b872475}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+mcgamma0\+\_\+px}\hypertarget{classanalysis_1_1Pi0Tagger_a5a89d896f2677cb00f08a33266681eda}{}\label{classanalysis_1_1Pi0Tagger_a5a89d896f2677cb00f08a33266681eda}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+mcgamma0\+\_\+py}\hypertarget{classanalysis_1_1Pi0Tagger_af0a7a951fd06ecf894b6128502db3f43}{}\label{classanalysis_1_1Pi0Tagger_af0a7a951fd06ecf894b6128502db3f43}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+mcgamma0\+\_\+pz}\hypertarget{classanalysis_1_1Pi0Tagger_aca971e82e3d6b3f98cb4501829b22734}{}\label{classanalysis_1_1Pi0Tagger_aca971e82e3d6b3f98cb4501829b22734}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+mcgamma1\+\_\+e}\hypertarget{classanalysis_1_1Pi0Tagger_a4d8982e19ab1f803a309cca726320713}{}\label{classanalysis_1_1Pi0Tagger_a4d8982e19ab1f803a309cca726320713}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+mcgamma1\+\_\+px}\hypertarget{classanalysis_1_1Pi0Tagger_a6e4dfcb77a12a65c0664318816973b40}{}\label{classanalysis_1_1Pi0Tagger_a6e4dfcb77a12a65c0664318816973b40}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+mcgamma1\+\_\+py}\hypertarget{classanalysis_1_1Pi0Tagger_a44121a4ce0c4b5bf9418308a19b83043}{}\label{classanalysis_1_1Pi0Tagger_a44121a4ce0c4b5bf9418308a19b83043}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+mcgamma1\+\_\+pz}\hypertarget{classanalysis_1_1Pi0Tagger_ad0328594e997c3357b2e962bd27393b3}{}\label{classanalysis_1_1Pi0Tagger_ad0328594e997c3357b2e962bd27393b3}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+mcrcdot0}\hypertarget{classanalysis_1_1Pi0Tagger_a213c13979dc0736e4bea6dda4da69aae}{}\label{classanalysis_1_1Pi0Tagger_a213c13979dc0736e4bea6dda4da69aae}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+mcrcdot1}\hypertarget{classanalysis_1_1Pi0Tagger_ac433e803c847be41e546f26f1dc0bb8f}{}\label{classanalysis_1_1Pi0Tagger_ac433e803c847be41e546f26f1dc0bb8f}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+mcrce0}\hypertarget{classanalysis_1_1Pi0Tagger_a1a3caf4b964b213b1144ae8d6c4a3054}{}\label{classanalysis_1_1Pi0Tagger_a1a3caf4b964b213b1144ae8d6c4a3054}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+mcrce1}\hypertarget{classanalysis_1_1Pi0Tagger_a68d9527d56a4d9ef5ba6d41c5dc6f1dc}{}\label{classanalysis_1_1Pi0Tagger_a68d9527d56a4d9ef5ba6d41c5dc6f1dc}
+
+\item 
+int {\bfseries \+\_\+pi0\+\_\+nshower}\hypertarget{classanalysis_1_1Pi0Tagger_a80a2301b13ad6fcdc3719e72c0a61d35}{}\label{classanalysis_1_1Pi0Tagger_a80a2301b13ad6fcdc3719e72c0a61d35}
+
+\item 
+int {\bfseries \+\_\+pi0\+\_\+ntrack}\hypertarget{classanalysis_1_1Pi0Tagger_a59f5859b40a283d643c5920e9ab88cba}{}\label{classanalysis_1_1Pi0Tagger_a59f5859b40a283d643c5920e9ab88cba}
+
+\item 
+int {\bfseries \+\_\+pi0\+\_\+ngamma}\hypertarget{classanalysis_1_1Pi0Tagger_a8bc9d0fd3c9ac05f7d4aaffb04044073}{}\label{classanalysis_1_1Pi0Tagger_a8bc9d0fd3c9ac05f7d4aaffb04044073}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+radlen1}\hypertarget{classanalysis_1_1Pi0Tagger_a7abfff219d03f5d4ae37d91be22e3f78}{}\label{classanalysis_1_1Pi0Tagger_a7abfff219d03f5d4ae37d91be22e3f78}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+radlen2}\hypertarget{classanalysis_1_1Pi0Tagger_abd0bb4918de5c63f949e41fd11c29a89}{}\label{classanalysis_1_1Pi0Tagger_abd0bb4918de5c63f949e41fd11c29a89}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dot1}\hypertarget{classanalysis_1_1Pi0Tagger_a4fcafcb79fc0c2ba4311dcd4c4b06883}{}\label{classanalysis_1_1Pi0Tagger_a4fcafcb79fc0c2ba4311dcd4c4b06883}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dot2}\hypertarget{classanalysis_1_1Pi0Tagger_a4628bca051bf1bbb87fe8f8c5a1ccf3e}{}\label{classanalysis_1_1Pi0Tagger_a4628bca051bf1bbb87fe8f8c5a1ccf3e}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+energy1\+\_\+Y}\hypertarget{classanalysis_1_1Pi0Tagger_a45f8591b4667be51ebf2c3e44dbd664c}{}\label{classanalysis_1_1Pi0Tagger_a45f8591b4667be51ebf2c3e44dbd664c}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+energy2\+\_\+Y}\hypertarget{classanalysis_1_1Pi0Tagger_a99e29336d450af6995e68857597e74e2}{}\label{classanalysis_1_1Pi0Tagger_a99e29336d450af6995e68857597e74e2}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dedx1\+\_\+Y}\hypertarget{classanalysis_1_1Pi0Tagger_a168efcfba876dc748d797581e793a0d1}{}\label{classanalysis_1_1Pi0Tagger_a168efcfba876dc748d797581e793a0d1}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dedx2\+\_\+Y}\hypertarget{classanalysis_1_1Pi0Tagger_a09c8981cba8aa525fb95c7252b1c2680}{}\label{classanalysis_1_1Pi0Tagger_a09c8981cba8aa525fb95c7252b1c2680}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dedx1\+\_\+fit\+\_\+Y}\hypertarget{classanalysis_1_1Pi0Tagger_afff3e963b105eb17d6fc7b2ed572929b}{}\label{classanalysis_1_1Pi0Tagger_afff3e963b105eb17d6fc7b2ed572929b}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dedx2\+\_\+fit\+\_\+Y}\hypertarget{classanalysis_1_1Pi0Tagger_a8aafcdabdb784bfda841e20e3d8090b4}{}\label{classanalysis_1_1Pi0Tagger_a8aafcdabdb784bfda841e20e3d8090b4}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+energy1\+\_\+V}\hypertarget{classanalysis_1_1Pi0Tagger_a7f829f6c317c110ae4b444ea3e97e006}{}\label{classanalysis_1_1Pi0Tagger_a7f829f6c317c110ae4b444ea3e97e006}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+energy2\+\_\+V}\hypertarget{classanalysis_1_1Pi0Tagger_aa8e2cb1d017f74691aeda453fa0657a3}{}\label{classanalysis_1_1Pi0Tagger_aa8e2cb1d017f74691aeda453fa0657a3}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dedx1\+\_\+V}\hypertarget{classanalysis_1_1Pi0Tagger_a5a2255bd3069f7d37cd1d29a23f7a41a}{}\label{classanalysis_1_1Pi0Tagger_a5a2255bd3069f7d37cd1d29a23f7a41a}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dedx2\+\_\+V}\hypertarget{classanalysis_1_1Pi0Tagger_af4bd6dfa3094a860f2e7983020efdf63}{}\label{classanalysis_1_1Pi0Tagger_af4bd6dfa3094a860f2e7983020efdf63}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dedx1\+\_\+fit\+\_\+V}\hypertarget{classanalysis_1_1Pi0Tagger_a257027506c3fece6bb295c8ab62e2f06}{}\label{classanalysis_1_1Pi0Tagger_a257027506c3fece6bb295c8ab62e2f06}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dedx2\+\_\+fit\+\_\+V}\hypertarget{classanalysis_1_1Pi0Tagger_a59efb01c53dde34ee143bf1bfa899ae8}{}\label{classanalysis_1_1Pi0Tagger_a59efb01c53dde34ee143bf1bfa899ae8}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+energy1\+\_\+U}\hypertarget{classanalysis_1_1Pi0Tagger_a253c93b4dd87ab329b3c818ce874e188}{}\label{classanalysis_1_1Pi0Tagger_a253c93b4dd87ab329b3c818ce874e188}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+energy2\+\_\+U}\hypertarget{classanalysis_1_1Pi0Tagger_a8965443e65550ec49704c75e5883b071}{}\label{classanalysis_1_1Pi0Tagger_a8965443e65550ec49704c75e5883b071}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dedx1\+\_\+U}\hypertarget{classanalysis_1_1Pi0Tagger_a5f963b5cbbe0c802151c48ef160196af}{}\label{classanalysis_1_1Pi0Tagger_a5f963b5cbbe0c802151c48ef160196af}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dedx2\+\_\+U}\hypertarget{classanalysis_1_1Pi0Tagger_a6cddc3aeda69589030b6e279fc6fe935}{}\label{classanalysis_1_1Pi0Tagger_a6cddc3aeda69589030b6e279fc6fe935}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dedx1\+\_\+fit\+\_\+U}\hypertarget{classanalysis_1_1Pi0Tagger_a2c3a4b7ac6ea4e49feb0e46b7a4b39ea}{}\label{classanalysis_1_1Pi0Tagger_a2c3a4b7ac6ea4e49feb0e46b7a4b39ea}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dedx2\+\_\+fit\+\_\+U}\hypertarget{classanalysis_1_1Pi0Tagger_a15b9c576e1303f25bfb08f44a3f90caa}{}\label{classanalysis_1_1Pi0Tagger_a15b9c576e1303f25bfb08f44a3f90caa}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+shrscore1}\hypertarget{classanalysis_1_1Pi0Tagger_a6c2bca0ad214ff2b2af28d961d676fa9}{}\label{classanalysis_1_1Pi0Tagger_a6c2bca0ad214ff2b2af28d961d676fa9}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+shrscore2}\hypertarget{classanalysis_1_1Pi0Tagger_adfed8b4f939ecdb90d0debfa43190971}{}\label{classanalysis_1_1Pi0Tagger_adfed8b4f939ecdb90d0debfa43190971}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+gammadot}\hypertarget{classanalysis_1_1Pi0Tagger_a6a46a33a681cc713f74bae9abc4c8614}{}\label{classanalysis_1_1Pi0Tagger_a6a46a33a681cc713f74bae9abc4c8614}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+mass\+\_\+Y}\hypertarget{classanalysis_1_1Pi0Tagger_a7e66c61bed712892cd9a8499f6f5cd08}{}\label{classanalysis_1_1Pi0Tagger_a7e66c61bed712892cd9a8499f6f5cd08}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+mass\+\_\+V}\hypertarget{classanalysis_1_1Pi0Tagger_a905e1028804d70972e2ffbe2531481e9}{}\label{classanalysis_1_1Pi0Tagger_a905e1028804d70972e2ffbe2531481e9}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+mass\+\_\+U}\hypertarget{classanalysis_1_1Pi0Tagger_a43693a03f90d7157eb38c5fd817b2649}{}\label{classanalysis_1_1Pi0Tagger_a43693a03f90d7157eb38c5fd817b2649}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+rc\+\_\+vtx\+\_\+x}\hypertarget{classanalysis_1_1Pi0Tagger_ab1f6b093bb96c45899393b3da27d7383}{}\label{classanalysis_1_1Pi0Tagger_ab1f6b093bb96c45899393b3da27d7383}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+rc\+\_\+vtx\+\_\+y}\hypertarget{classanalysis_1_1Pi0Tagger_a723cef7efa05a22344e0f216a13d062e}{}\label{classanalysis_1_1Pi0Tagger_a723cef7efa05a22344e0f216a13d062e}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+rc\+\_\+vtx\+\_\+z}\hypertarget{classanalysis_1_1Pi0Tagger_a4f4f3946e5f02b73fd7d7252bee2af72}{}\label{classanalysis_1_1Pi0Tagger_a4f4f3946e5f02b73fd7d7252bee2af72}
+
+\item 
+bool {\bfseries \+\_\+pi0\+\_\+onlyshower}\hypertarget{classanalysis_1_1Pi0Tagger_a2f6a1e09af53174cfb0bedc13f350a7e}{}\label{classanalysis_1_1Pi0Tagger_a2f6a1e09af53174cfb0bedc13f350a7e}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dmin}\hypertarget{classanalysis_1_1Pi0Tagger_a58ebb7bcca300a4ec7621001fe34eebb}{}\label{classanalysis_1_1Pi0Tagger_a58ebb7bcca300a4ec7621001fe34eebb}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+dotmin}\hypertarget{classanalysis_1_1Pi0Tagger_a3d07235758a4a5f05da39e7c8061e6f9}{}\label{classanalysis_1_1Pi0Tagger_a3d07235758a4a5f05da39e7c8061e6f9}
+
+\item 
+float {\bfseries \+\_\+pi0\+\_\+trkshrscore}\hypertarget{classanalysis_1_1Pi0Tagger_a0c0e955a40dd7f06f89edf7d3392eed2}{}\label{classanalysis_1_1Pi0Tagger_a0c0e955a40dd7f06f89edf7d3392eed2}
+
+\item 
+art\+::\+Input\+Tag {\bfseries f\+T\+R\+Kproducer}\hypertarget{classanalysis_1_1Pi0Tagger_a997843cbe3b9dbfb374f23ad8795b55e}{}\label{classanalysis_1_1Pi0Tagger_a997843cbe3b9dbfb374f23ad8795b55e}
+
+\item 
+art\+::\+Input\+Tag {\bfseries f\+C\+A\+Lproducer}\hypertarget{classanalysis_1_1Pi0Tagger_ab05016a8c9679ad42d06ed52c3d88b77}{}\label{classanalysis_1_1Pi0Tagger_ab05016a8c9679ad42d06ed52c3d88b77}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{analysis\+::\+Pi0\+Tagger@{analysis\+::\+Pi0\+Tagger}!Pi0\+Tagger@{Pi0\+Tagger}}
+\index{Pi0\+Tagger@{Pi0\+Tagger}!analysis\+::\+Pi0\+Tagger@{analysis\+::\+Pi0\+Tagger}}
+\subsubsection[{\texorpdfstring{Pi0\+Tagger(const fhicl\+::\+Parameter\+Set \&pset)}{Pi0Tagger(const fhicl::ParameterSet &pset)}}]{\setlength{\rightskip}{0pt plus 5cm}analysis\+::\+Pi0\+Tagger\+::\+Pi0\+Tagger (
+\begin{DoxyParamCaption}
+\item[{const fhicl\+::\+Parameter\+Set \&}]{pset}
+\end{DoxyParamCaption}
+)}\hypertarget{classanalysis_1_1Pi0Tagger_a39627bb5408b7dbecaa2d0e21d0b9899}{}\label{classanalysis_1_1Pi0Tagger_a39627bb5408b7dbecaa2d0e21d0b9899}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pset} & Constructor.\\
+\hline
+\end{DoxyParams}
+Arguments\+:
+
+pset -\/ Fcl parameters. 
+
+\subsection{Member Function Documentation}
+\index{analysis\+::\+Pi0\+Tagger@{analysis\+::\+Pi0\+Tagger}!analyze\+Slice@{analyze\+Slice}}
+\index{analyze\+Slice@{analyze\+Slice}!analysis\+::\+Pi0\+Tagger@{analysis\+::\+Pi0\+Tagger}}
+\subsubsection[{\texorpdfstring{analyze\+Slice(art\+::\+Event const \&e, std\+::vector$<$ Proxy\+Pfp\+Elem\+\_\+t $>$ \&slice\+\_\+pfp\+\_\+v, bool f\+Data, bool selected) override}{analyzeSlice(art::Event const &e, std::vector< ProxyPfpElem_t > &slice_pfp_v, bool fData, bool selected) override}}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\+::\+Pi0\+Tagger\+::analyze\+Slice (
+\begin{DoxyParamCaption}
+\item[{art\+::\+Event const \&}]{e, }
+\item[{std\+::vector$<$ Proxy\+Pfp\+Elem\+\_\+t $>$ \&}]{slice\+\_\+pfp\+\_\+v, }
+\item[{bool}]{f\+Data, }
+\item[{bool}]{selected}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}\hypertarget{classanalysis_1_1Pi0Tagger_a98c8d3f92ce5a5fa1f45537a19671cdd}{}\label{classanalysis_1_1Pi0Tagger_a98c8d3f92ce5a5fa1f45537a19671cdd}
+
+
+Analyze slice. 
+
+select\+Event
+
+Arguments\+:
+
+art\+::\+Event slice track pointer vector slice shower pointer vector 
+
+Implements \hyperlink{classanalysis_1_1AnalysisToolBase_ac1611ea1b1a5db62a6543709ec1d2e96}{analysis\+::\+Analysis\+Tool\+Base}.
+
+\index{analysis\+::\+Pi0\+Tagger@{analysis\+::\+Pi0\+Tagger}!configure@{configure}}
+\index{configure@{configure}!analysis\+::\+Pi0\+Tagger@{analysis\+::\+Pi0\+Tagger}}
+\subsubsection[{\texorpdfstring{configure(fhicl\+::\+Parameter\+Set const \&pset)}{configure(fhicl::ParameterSet const &pset)}}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\+::\+Pi0\+Tagger\+::configure (
+\begin{DoxyParamCaption}
+\item[{fhicl\+::\+Parameter\+Set const \&}]{pset}
+\end{DoxyParamCaption}
+)}\hypertarget{classanalysis_1_1Pi0Tagger_a7daaccd1915ec191491536016e3564a8}{}\label{classanalysis_1_1Pi0Tagger_a7daaccd1915ec191491536016e3564a8}
+Reconfigure method.
+
+Arguments\+:
+
+pset -\/ Fcl parameter set. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\+Selection/\+Analysis\+Tools/Pi0\+Tagger\+\_\+tool.\+cc\end{DoxyCompactItemize}

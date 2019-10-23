@@ -18,6 +18,7 @@ var searchData=
   ['_7enumuselection',['~NuMuSelection',['../classselection_1_1NuMuSelection.html#af2a4b263e268fc51f0fa58ea4ad74ee4',1,'selection::NuMuSelection']]],
   ['_7eobviouscosmicflashmatching',['~ObviousCosmicFlashMatching',['../classanalysis_1_1ObviousCosmicFlashMatching.html#a130b94ad72bcc4157edc74e53d26d1c6',1,'analysis::ObviousCosmicFlashMatching']]],
   ['_7epi0selection',['~Pi0Selection',['../classselection_1_1Pi0Selection.html#ad691918c955035275406f16331ba0631',1,'selection::Pi0Selection']]],
+  ['_7epi0tagger',['~Pi0Tagger',['../classanalysis_1_1Pi0Tagger.html#af054b6d41d9454f6ecc1891fcea24bca',1,'analysis::Pi0Tagger']]],
   ['_7epi0truthanalysis',['~Pi0TruthAnalysis',['../classanalysis_1_1Pi0TruthAnalysis.html#aacb1da6bc05c5af7d13e6699c1b9112d',1,'analysis::Pi0TruthAnalysis']]],
   ['_7epmtnoise',['~PMTNoise',['../classanalysis_1_1PMTNoise.html#a10c11f2bd8fd9a55ff8cb816ae23bf33',1,'analysis::PMTNoise']]],
   ['_7eselectionexample',['~SelectionExample',['../classselection_1_1SelectionExample.html#a23080e1af959ccac8b922ebae7dd1d73',1,'selection::SelectionExample']]],
