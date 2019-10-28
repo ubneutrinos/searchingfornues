@@ -1101,6 +1101,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   pfnplanehits_U.clear();
   pfnplanehits_V.clear();
   pfnplanehits_Y.clear();
+  _generataion.clear();
+  _shr_daughters.clear();
+  _trk_daughters.clear();
   slclustfrac = std::numeric_limits<float>::lowest();
 
   _hits_u = 0;
