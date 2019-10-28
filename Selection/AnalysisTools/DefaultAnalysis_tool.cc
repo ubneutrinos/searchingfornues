@@ -164,9 +164,6 @@ private:
   int _nu_pdg;                  /**< neutrino PDG code */
   int _ccnc;                    /**< CC or NC tag from GENIE */
   int _interaction;             /**< Interaction code from GENIE */
-  float _vtx_x, _vtx_y, _vtx_z; /**< neutrino interaction vertex coordinates [cm] */
-  float _vtx_t;                 /**< neutrino generation time */
-  bool _isVtxInActive;          /**< true if neutrino in active volume, 0 < x < 256 -116 < y < 116;  0 < z <  1036 */
   bool _isVtxInFiducial;        /**< true if neutrino in fiducial volume */
 
   // final state particle information
@@ -237,8 +234,8 @@ private:
   std::vector<int> pfnplanehits_Y; // number of hits in pfp plane Y
   float slclustfrac;               //fraction of clustered hits in the slice
 
-  std::vector<uint> _generation;   // generation, 1 is primary
-  std::vector<uint> _shr_daughters; // number of shower daughters 
+  std::vector<uint> _generation;    // generation, 1 is primary
+  std::vector<uint> _shr_daughters; // number of shower daughters
   std::vector<uint> _trk_daughters; // number of track daughters
 
   unsigned int _n_pfps;
@@ -249,8 +246,6 @@ private:
   unsigned int _hits_u;
   unsigned int _hits_v;
   unsigned int _hits_y;
-  unsigned int _overlay_hits;
-  unsigned int _mc_hits;
 
   std::vector<int> _mc_pdg;
   std::vector<float> _mc_E;
@@ -396,7 +391,7 @@ bool DefaultAnalysis::isFiducial(const double x[3]) const
   art::ServiceHandle<geo::Geometry> geo;
   geo::TPCGeo const &thisTPC = geo->TPC();
   geo::BoxBoundedGeo theTpcGeo = thisTPC.ActiveBoundingBox();
-  std::vector<double> bnd = {theTpcGeo.MinX() , theTpcGeo.MaxX(), theTpcGeo.MinY(), theTpcGeo.MaxY() , theTpcGeo.MinZ() , theTpcGeo.MaxZ() };
+  std::vector<double> bnd = {theTpcGeo.MinX(), theTpcGeo.MaxX(), theTpcGeo.MinY(), theTpcGeo.MaxY(), theTpcGeo.MinZ(), theTpcGeo.MaxZ()};
   bool is_x =
       x[0] > (bnd[0] + fFidvolXstart) && x[0] < (bnd[1] - fFidvolXend);
   bool is_y =
@@ -419,7 +414,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
   lar_pandora::LArPandoraHelper larpandora;
   lar_pandora::PFParticleVector pfparticles;
   lar_pandora::PFParticleMap particleMap;
-  larpandora.CollectPFParticles (e, "pandora", pfparticles);
+  larpandora.CollectPFParticles(e, "pandora", pfparticles);
   larpandora.BuildPFParticleMap(pfparticles, particleMap);
 
   // load backtrack information
@@ -505,9 +500,9 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     _generation.push_back(larpandora.GetGeneration(particleMap, particleMap.at(pfp->Self())));
     uint this_num_trk_d = 0;
     uint this_num_shr_d = 0;
-    for(size_t daughter: pfp->Daughters())
+    for (size_t daughter : pfp->Daughters())
     {
-      if(larpandora.IsTrack(particleMap.at(daughter)))
+      if (larpandora.IsTrack(particleMap.at(daughter)))
       {
         this_num_trk_d++; // Track daughter
       }
@@ -518,7 +513,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     }
     _shr_daughters.push_back(this_num_shr_d);
     _trk_daughters.push_back(this_num_trk_d);
-    
+
     // store track score
     float trkscore = searchingfornues::GetTrackShowerScore(pfp);
     if ((trkscore >= 0) && (trkscore >= fTrkShrScore))
@@ -577,7 +572,6 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         int ibt = searchingfornues::getAssocBtPart(hit_v, assocMCPart, btparts_v, purity, completeness, overlay_purity);
         if (ibt >= 0)
         {
-          _mc_hits += hit_v.size();
           auto &mcp = btparts_v[ibt];
           auto PDG = mcp.pdg;
           //_backtracked_idx.push_back(pfp->Self());
@@ -663,7 +657,6 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           _backtracked_purity.push_back(std::numeric_limits<float>::lowest());
           _backtracked_completeness.push_back(std::numeric_limits<float>::lowest());
           _backtracked_overlay_purity.push_back(std::numeric_limits<float>::lowest());
-          _overlay_hits += hit_v.size();
 
           _backtracked_px.push_back(std::numeric_limits<float>::lowest());
           _backtracked_py.push_back(std::numeric_limits<float>::lowest());
@@ -699,49 +692,31 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
 
   if (!fData)
   {
-
-    // Check if there is a PFParticle associated to an electron
-    std::vector<int>::iterator e_reco_id = std::find(_backtracked_pdg.begin(), _backtracked_pdg.end(), 11);
-    bool there_is_reco_electron = e_reco_id != _backtracked_pdg.end();
-
-    // Check if there is a PFParticle associated to an overlay cosmic
-    // std::vector<int>::iterator cosmic_id = std::find(_backtracked_pdg.begin(), _backtracked_pdg.end(), 0);
-    // bool there_is_reco_cosmic = cosmic_id != _backtracked_pdg.end();
-
-    bool there_is_reco_cosmic = (float)_overlay_hits / (_overlay_hits + _mc_hits) > 0.5;
-
     bool there_is_true_proton = _nproton > 0;
     bool there_is_true_pi = _npion > 0;
     bool there_is_true_mu = _nmuon > 0;
     bool there_is_true_pi0 = _npi0 > 0;
     bool there_is_true_electron = _nelec > 0;
 
-    if (!there_is_reco_cosmic && !_isVtxInFiducial)
+    if (!_isVtxInFiducial)
     {
       _category = k_outfv;
     }
-    else if (abs(_nu_pdg) == electron_neutrino->PdgCode() && !there_is_reco_cosmic)
+    else if (abs(_nu_pdg) == electron_neutrino->PdgCode())
     {
       if (there_is_true_electron)
       {
-        if (there_is_reco_electron)
+        if (!there_is_true_pi && there_is_true_proton && !there_is_true_pi0)
         {
-          if (!there_is_true_pi && there_is_true_proton && !there_is_true_pi0)
-          {
-            _category = k_nu_e_cc0pinp;
-          }
-          else if (!there_is_true_pi && !there_is_true_proton && !there_is_true_pi0)
-          {
-            _category = k_nu_e_cc0pi0p;
-          }
-          else
-          {
-            _category = k_nu_e_other;
-          }
+          _category = k_nu_e_cc0pinp;
+        }
+        else if (!there_is_true_pi && !there_is_true_proton && !there_is_true_pi0)
+        {
+          _category = k_nu_e_cc0pi0p;
         }
         else
         {
-          _category = k_other;
+          _category = k_nu_e_other;
         }
       }
       else
@@ -756,7 +731,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         }
       }
     }
-    else if (abs(_nu_pdg) == muon_neutrino->PdgCode() && !there_is_reco_cosmic)
+    else if (abs(_nu_pdg) == muon_neutrino->PdgCode())
     {
       if (there_is_true_mu)
       {
@@ -820,11 +795,6 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("nu_e", &_nu_e, "nu_e/F");
   _tree->Branch("nu_pt", &_nu_pt, "nu_pt/F");
   _tree->Branch("theta", &_theta, "theta/F");
-
-  _tree->Branch("vtx_x", &_vtx_x, "vtx_x/F");
-  _tree->Branch("vtx_y", &_vtx_y, "vtx_y/F");
-  _tree->Branch("vtx_z", &_vtx_z, "vtx_z/F");
-  _tree->Branch("isVtxInActive", &_isVtxInActive, "isVtxInActive/O");
   _tree->Branch("isVtxInFiducial", &_isVtxInFiducial, "isVtxInFiducial/O");
 
   _tree->Branch("true_nu_vtx_t", &_true_nu_vtx_t, "true_nu_vtx_t/F");
@@ -991,9 +961,6 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _ccnc = std::numeric_limits<int>::lowest();
   _interaction = std::numeric_limits<int>::lowest();
   _pass = 0;
-  _vtx_x = std::numeric_limits<float>::lowest();
-  _vtx_y = std::numeric_limits<float>::lowest();
-  _vtx_z = std::numeric_limits<float>::lowest();
 
   _category = 0;
 
@@ -1019,9 +986,6 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _reco_nu_vtx_sce_y = std::numeric_limits<float>::lowest();
   _reco_nu_vtx_sce_z = std::numeric_limits<float>::lowest();
 
-  _overlay_hits = 0;
-  _mc_hits = 0;
-  _isVtxInActive = false;
   _isVtxInFiducial = false;
 
   _nslice = 0;
@@ -1151,10 +1115,6 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _interaction = neutrino.Mode();
   _nu_pdg = nu.PdgCode();
   _nu_e = nu.Trajectory().E(0);
-  _vtx_x = nu.EndX();
-  _vtx_y = nu.EndY();
-  _vtx_z = nu.EndZ();
-  _vtx_t = nu.T();
 
   _true_nu_vtx_t = nu.T();
   _true_nu_vtx_x = nu.Vx();
@@ -1171,18 +1131,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _theta = neutrino.Theta();
   _nu_pt = neutrino.Pt();
 
-  art::ServiceHandle<geo::Geometry> geo;
-
-  if (_vtx_x < 2. * geo->DetHalfWidth() && _vtx_x > 0. &&
-      _vtx_y < geo->DetHalfHeight() && _vtx_y > -geo->DetHalfHeight() &&
-      _vtx_z < geo->DetLength() && _vtx_z > 0.)
-  {
-    _isVtxInActive = true;
-  }
-  else
-    _isVtxInActive = false;
-
-  double vtx[3] = {_vtx_x, _vtx_y, _vtx_z};
+  double vtx[3] = {_true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z};
   _isVtxInFiducial = isFiducial(vtx);
 
   _nelec = 0;
@@ -1329,8 +1278,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     _mc_completeness.push_back(std::numeric_limits<float>::lowest());
     _mc_purity.push_back(std::numeric_limits<float>::lowest());
   }
-
-  searchingfornues::ApplyDetectorOffsets(_vtx_t, _vtx_x, _vtx_y, _vtx_z, _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset);
+  searchingfornues::ApplyDetectorOffsets(_true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z, _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset);
 
   // find if mu -> michel
   _endmuonprocess = "";
@@ -1357,9 +1305,12 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
       {
         muonTrackId = mcp.TrackId();
         // stops in the detector?
-        if ((mcp.EndPosition().X() > 0) && (mcp.EndPosition().X() < 2 * geo->DetHalfWidth()) &&
-            (mcp.EndPosition().Y() > -geo->DetHalfHeight()) && (mcp.EndPosition().Y() < geo->DetHalfHeight()) &&
-            (mcp.EndPosition().Z() > 0) && (mcp.EndPosition().Z() < geo->DetLength()))
+        art::ServiceHandle<geo::Geometry> geo;
+        geo::TPCGeo const &thisTPC = geo->TPC();
+        geo::BoxBoundedGeo theTpcGeo = thisTPC.ActiveBoundingBox();
+        if ((mcp.EndPosition().X() > theTpcGeo.MinX()) && (mcp.EndPosition().X() < theTpcGeo.MaxX()) &&
+            (mcp.EndPosition().Y() > theTpcGeo.MinY()) && (mcp.EndPosition().Y() < theTpcGeo.MaxY()) &&
+            (mcp.EndPosition().Z() > theTpcGeo.MinZ()) && (mcp.EndPosition().Z() < theTpcGeo.MaxZ()))
         {
           _endmuonprocess = mcp.EndProcess();
           containedMu = true;
