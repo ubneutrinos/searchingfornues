@@ -1,4 +1,5 @@
-/* Usage:
+/*
+Usage:
 root 'readMap.C("file.root")'
 */
 void readMap(string filename){
@@ -20,4 +21,5 @@ void readMap(string filename){
          cout<<kv.first<<" "<<val<<endl;
       }
    }
+   gApplication->Terminate();
 }
