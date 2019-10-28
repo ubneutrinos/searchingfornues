@@ -83,12 +83,6 @@ public:
 
 private:
   /**
-     * @brief apply SCE corections from reconstruction maps
-     */
-  void ApplySCECorrection(const float &vtx_x, const float &vtx_y, const float &vtx_z,
-                          float &sce_x, float &sce_y, float &sce_z);
-
-  /**
    * @brief Determine if the specified point is in the fiducial volume
    *        Not recommended, no array size checking is done.
    *
@@ -142,11 +136,6 @@ private:
   float fMuonThreshold;
 
   int _category; // event category
-
-  // neutrino vertx (reco)
-  float _nu_vtx_x, _nu_vtx_y, _nu_vtx_z;
-  // neutrino vertex SCE position corrections (reco)
-  float _nu_sce_x, _nu_sce_y, _nu_sce_z;
 
   float _true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z;
   float _true_nu_vtx_sce_x, _true_nu_vtx_sce_y, _true_nu_vtx_sce_z;
@@ -221,7 +210,6 @@ private:
 
   float _lep_e;                                              // lepton energy (if one exists) [GeV]
   int _pass;                                                 // does the slice pass the selection
-  float _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset; // offsets for generation time and SCE
 
   int evnhits;                     // number of hits in event
   int slpdg;                       // PDG code of primary pfp in slice
@@ -469,11 +457,6 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         // save vertex to array
         vtx.at(0)->XYZ(xyz);
         auto nuvtx = TVector3(xyz[0], xyz[1], xyz[2]);
-
-        _nu_vtx_x = nuvtx.X();
-        _nu_vtx_y = nuvtx.Y();
-        _nu_vtx_z = nuvtx.Z();
-        ApplySCECorrection(_nu_vtx_x, _nu_vtx_y, _nu_vtx_z, _nu_sce_x, _nu_sce_y, _nu_sce_z);
 
         _reco_nu_vtx_x = nuvtx.X();
         _reco_nu_vtx_y = nuvtx.Y();
@@ -773,14 +756,6 @@ void DefaultAnalysis::setBranches(TTree *_tree)
 {
   _tree->Branch("leeweight", &_leeweight, "leeweight/F");
 
-  // reconstructed neutrino vertex
-  _tree->Branch("nu_vtx_x", &_nu_vtx_x, "nu_vtx_x/F");
-  _tree->Branch("nu_vtx_y", &_nu_vtx_y, "nu_vtx_y/F");
-  _tree->Branch("nu_vtx_z", &_nu_vtx_z, "nu_vtx_z/F");
-  _tree->Branch("nu_sce_x", &_nu_sce_x, "nu_sce_x/F");
-  _tree->Branch("nu_sce_y", &_nu_sce_y, "nu_sce_y/F");
-  _tree->Branch("nu_sce_z", &_nu_sce_z, "nu_sce_z/F");
-
   _tree->Branch("true_pt", &_true_pt, "true_pt/F");
   _tree->Branch("true_pt_visible", &_true_pt_visible, "true_pt_visible/F");
   _tree->Branch("true_p", &_true_p, "true_p/F");
@@ -893,11 +868,6 @@ void DefaultAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("swtrig", &_swtrig, "swtrig/I");
 
-  _tree->Branch("xtimeoffset", &_xtimeoffset, "xtimeoffset/F");
-  _tree->Branch("xsceoffset", &_xsceoffset, "xsceoffset/F");
-  _tree->Branch("ysceoffset", &_ysceoffset, "ysceoffset/F");
-  _tree->Branch("zsceoffset", &_zsceoffset, "zsceoffset/F");
-
   _tree->Branch("evnhits", &evnhits, "evnhits/I");
   _tree->Branch("slpdg", &slpdg, "slpdg/I");
   _tree->Branch("slnhits", &slnhits, "slnhits/I");
@@ -963,14 +933,6 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _pass = 0;
 
   _category = 0;
-
-  _nu_vtx_x = std::numeric_limits<float>::lowest();
-  _nu_vtx_y = std::numeric_limits<float>::lowest();
-  _nu_vtx_z = std::numeric_limits<float>::lowest();
-
-  _nu_sce_x = std::numeric_limits<float>::lowest();
-  _nu_sce_y = std::numeric_limits<float>::lowest();
-  _nu_sce_z = std::numeric_limits<float>::lowest();
 
   _true_nu_vtx_t = std::numeric_limits<float>::lowest();
   _true_nu_vtx_x = std::numeric_limits<float>::lowest();
@@ -1278,7 +1240,6 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     _mc_completeness.push_back(std::numeric_limits<float>::lowest());
     _mc_purity.push_back(std::numeric_limits<float>::lowest());
   }
-  searchingfornues::ApplyDetectorOffsets(_true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z, _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset);
 
   // find if mu -> michel
   _endmuonprocess = "";
@@ -1352,23 +1313,6 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   return;
 }
 
-void DefaultAnalysis::ApplySCECorrection(const float &vtx_x, const float &vtx_y, const float &vtx_z,
-                                         float &sce_x, float &sce_y, float &sce_z)
-{
-
-  auto const *SCE = lar::providerFrom<spacecharge::SpaceChargeService>();
-
-  if (SCE->EnableSimSpatialSCE() == true)
-  {
-
-    auto offset = SCE->GetPosOffsets(geo::Point_t(vtx_x, vtx_y, vtx_z));
-    sce_x = offset.X();
-    sce_y = offset.Y();
-    sce_z = offset.Z();
-  } // if spatial offset calibrations are enabled
-
-  return;
-}
 
 DEFINE_ART_CLASS_TOOL(DefaultAnalysis)
 } // namespace analysis

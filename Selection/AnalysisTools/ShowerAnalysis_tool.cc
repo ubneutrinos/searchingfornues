@@ -84,7 +84,7 @@ public:
 private:
 
   int _run, _sub, _evt;
-  
+
   // input variables for tool
   art::InputTag fTRKproducer;
   art::InputTag fCALproducer;
@@ -118,6 +118,11 @@ private:
 
   std::vector<float> _shr_theta_v;
   std::vector<float> _shr_phi_v;
+
+  std::vector<float> _shr_pitch_u_v;
+  std::vector<float> _shr_pitch_v_v;
+  std::vector<float> _shr_pitch_y_v;
+
   std::vector<float> _shr_openangle_v;
 
   std::vector<int> _shr_tkfit_nhits_v;
@@ -130,6 +135,10 @@ private:
 
   std::vector<float> _shr_tkfit_theta_v;
   std::vector<float> _shr_tkfit_phi_v;
+
+  std::vector<float> _shr_tkfit_pitch_u_v;
+  std::vector<float> _shr_tkfit_pitch_v_v;
+  std::vector<float> _shr_tkfit_pitch_y_v;
 
   std::vector<float> _shr_tkfit_dedx_u_v;
   std::vector<float> _shr_tkfit_dedx_v_v;
@@ -257,6 +266,11 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_openangle_v.push_back(shr->OpenAngle());
       _shr_phi_v.push_back(shr->Direction().Phi());
       _shr_theta_v.push_back(shr->Direction().Theta());
+
+      _shr_pitch_u_v.push_back(searchingfornues::getPitch(shr->Direction().Y(), shr->Direction().Z(), 0));
+      _shr_pitch_v_v.push_back(searchingfornues::getPitch(shr->Direction().Y(), shr->Direction().Z(), 1));
+      _shr_pitch_y_v.push_back(searchingfornues::getPitch(shr->Direction().Y(), shr->Direction().Z(), 2));
+
       _shr_start_x_v.push_back(shr->ShowerStart().X());
       _shr_start_y_v.push_back(shr->ShowerStart().Y());
       _shr_start_z_v.push_back(shr->ShowerStart().Z());
@@ -275,6 +289,10 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 
       _shr_tkfit_phi_v.push_back(std::numeric_limits<float>::lowest());
       _shr_tkfit_theta_v.push_back(std::numeric_limits<float>::lowest());
+
+      _shr_tkfit_pitch_u_v.push_back(std::numeric_limits<float>::lowest());
+      _shr_tkfit_pitch_v_v.push_back(std::numeric_limits<float>::lowest());
+      _shr_tkfit_pitch_y_v.push_back(std::numeric_limits<float>::lowest());
 
       _shr_tkfit_dedx_u_v.push_back(std::numeric_limits<float>::lowest());
       _shr_tkfit_dedx_v_v.push_back(std::numeric_limits<float>::lowest());
@@ -358,32 +376,37 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
         _shr_tkfit_phi_v.back() = tk->StartDirection().Phi();
         _shr_tkfit_theta_v.back() = tk->StartDirection().Theta();
 
+        _shr_tkfit_pitch_u_v.push_back(searchingfornues::getPitch(tk->StartDirection().Y(), tk->StartDirection().Z(), 0));
+        _shr_tkfit_pitch_v_v.push_back(searchingfornues::getPitch(tk->StartDirection().Y(), tk->StartDirection().Z(), 1));
+        _shr_tkfit_pitch_y_v.push_back(searchingfornues::getPitch(tk->StartDirection().Y(), tk->StartDirection().Z(), 2));
+
         auto const tkcalos = tk.get<anab::Calorimetry>();
 
-	float calodEdx; // dEdx computed for track-fitter
-	int   caloNpts; // number of track-fitter dE/dx hits
+        float calodEdx; // dEdx computed for track-fitter
+        int   caloNpts; // number of track-fitter dE/dx hits
 
         for (const auto &tkcalo : tkcalos)
         {
+          // using function from CommonDefs/TrackFitterFunctions.h
+          searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
 
-	  // using function from CommonDefs/TrackFitterFunctions.h
-	  searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
+          if (tkcalo->PlaneID().Plane == 0)
+          {
+            _shr_tkfit_dedx_u_v.back()       = calodEdx;
+            _shr_tkfit_dedx_nhits_u_v.back() = caloNpts;
+          }
 
-	  if (tkcalo->PlaneID().Plane == 0) {
-	    _shr_tkfit_dedx_u_v.back()       = calodEdx;
-	    _shr_tkfit_dedx_nhits_u_v.back() = caloNpts;
-	  }
+          if (tkcalo->PlaneID().Plane == 1)
+          {
+            _shr_tkfit_dedx_v_v.back()       = calodEdx;
+            _shr_tkfit_dedx_nhits_v_v.back() = caloNpts;
+          }
 
-	  if (tkcalo->PlaneID().Plane == 1) {
-	    _shr_tkfit_dedx_v_v.back()       = calodEdx;
-	    _shr_tkfit_dedx_nhits_v_v.back() = caloNpts;
-	  }
-
-	  if (tkcalo->PlaneID().Plane == 2) {
-	    _shr_tkfit_dedx_y_v.back()       = calodEdx;
-	    _shr_tkfit_dedx_nhits_y_v.back() = caloNpts;
-	  }
-
+          if (tkcalo->PlaneID().Plane == 2)
+          {
+            _shr_tkfit_dedx_y_v.back()       = calodEdx;
+            _shr_tkfit_dedx_nhits_y_v.back() = caloNpts;
+          }
         }// for all calorimetry objects
       }
     }
@@ -413,7 +436,6 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_nclus_v", "std::vector< int >"  , &_shr_nclus_v);
   _tree->Branch("shr_clushitfrac_v", "std::vector< float >", &_shr_clushitfrac_v);
 
-
   _tree->Branch("shr_px_v", "std::vector< float >", &_shr_px_v);
   _tree->Branch("shr_py_v", "std::vector< float >", &_shr_py_v);
   _tree->Branch("shr_pz_v", "std::vector< float >", &_shr_pz_v);
@@ -421,6 +443,10 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_openangle_v", "std::vector< float >", &_shr_openangle_v);
   _tree->Branch("shr_theta_v", "std::vector< float >", &_shr_theta_v);
   _tree->Branch("shr_phi_v", "std::vector< float >", &_shr_phi_v);
+
+  _tree->Branch("shr_pitch_u_v", "std::vector<float>", &_shr_pitch_u_v);
+  _tree->Branch("shr_pitch_v_v", "std::vector<float>", &_shr_pitch_v_v);
+  _tree->Branch("shr_pitch_y_v", "std::vector<float>", &_shr_pitch_y_v);
 
   _tree->Branch("shr_tkfit_nhits_v", "std::vector< int >", &_shr_tkfit_nhits_v);
   _tree->Branch("shr_tkfit_start_x_v", "std::vector< float >", &_shr_tkfit_start_x_v);
@@ -432,6 +458,11 @@ void ShowerAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("shr_tkfit_theta_v", "std::vector< float >", &_shr_tkfit_theta_v);
   _tree->Branch("shr_tkfit_phi_v", "std::vector< float >", &_shr_tkfit_phi_v);
+
+  _tree->Branch("shr_tkfit_pitch_u_v", "std::vector<float>", &_shr_tkfit_pitch_u_v);
+  _tree->Branch("shr_tkfit_pitch_v_v", "std::vector<float>", &_shr_tkfit_pitch_v_v);
+  _tree->Branch("shr_tkfit_pitch_y_v", "std::vector<float>", &_shr_tkfit_pitch_y_v);
+
   _tree->Branch("shr_tkfit_dedx_u_v", "std::vector< float >", &_shr_tkfit_dedx_u_v);
   _tree->Branch("shr_tkfit_dedx_v_v", "std::vector< float >", &_shr_tkfit_dedx_v_v);
   _tree->Branch("shr_tkfit_dedx_y_v", "std::vector< float >", &_shr_tkfit_dedx_y_v);
@@ -462,6 +493,11 @@ void ShowerAnalysis::fillDefault()
   _shr_openangle_v.push_back(std::numeric_limits<float>::lowest());
   _shr_theta_v.push_back(std::numeric_limits<float>::lowest());
   _shr_phi_v.push_back(std::numeric_limits<float>::lowest());
+
+  _shr_pitch_u_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_pitch_v_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_pitch_y_v.push_back(std::numeric_limits<float>::lowest());
+
   _shr_dist_v.push_back(std::numeric_limits<float>::lowest());
 
   _shr_px_v.push_back(std::numeric_limits<float>::lowest());
@@ -478,6 +514,10 @@ void ShowerAnalysis::fillDefault()
 
   _shr_tkfit_theta_v.push_back(std::numeric_limits<float>::lowest());
   _shr_tkfit_phi_v.push_back(std::numeric_limits<float>::lowest());
+
+  _shr_tkfit_pitch_u_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_tkfit_pitch_v_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_tkfit_pitch_y_v.push_back(std::numeric_limits<float>::lowest());
 
   _shr_tkfit_dedx_u_v.push_back(std::numeric_limits<float>::lowest());
   _shr_tkfit_dedx_v_v.push_back(std::numeric_limits<float>::lowest());
@@ -511,6 +551,11 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
   _shr_openangle_v.clear();
   _shr_theta_v.clear();
   _shr_phi_v.clear();
+
+  _shr_pitch_u_v.clear();
+  _shr_pitch_v_v.clear();
+  _shr_pitch_y_v.clear();
+
   _shr_dist_v.clear();
 
   _shr_px_v.clear();
@@ -530,6 +575,10 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
 
   _shr_tkfit_theta_v.clear();
   _shr_tkfit_phi_v.clear();
+
+  _shr_tkfit_pitch_u_v.clear();
+  _shr_tkfit_pitch_v_v.clear();
+  _shr_tkfit_pitch_y_v.clear();
 
   _shr_tkfit_dedx_u_v.clear();
   _shr_tkfit_dedx_v_v.clear();
