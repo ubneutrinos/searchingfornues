@@ -16,9 +16,9 @@ namespace searchingfornues
    * @input hitcoll  : proxy connecting clusters to hits
    * @return vector of distances on the three planes [U,V,Y]
    */
-  std::vector<float> GetTrackShowerScore(const ProxyPfpElem_t &pfp_pxy1,
-					 const ProxyPfpElem_t &pfp_pxy2,
-					 const ProxyClusColl_t &hitcoll)
+  std::vector<float> GetPFPHitDistance(const ProxyPfpElem_t &pfp_pxy1,
+				       const ProxyPfpElem_t &pfp_pxy2,
+				       const ProxyClusColl_t &hitcoll)
     {
 
     auto const* geom = ::lar::providerFrom<geo::Geometry>();

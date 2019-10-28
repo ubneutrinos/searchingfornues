@@ -71,6 +71,16 @@ NeutrinoEnergyTool: {
     ADCtoMeVMIP: 0.002876 # MCC9.2 collection plane values
 }
 
+Pi0TaggerTool: {
+    tool_type: "Pi0Tagger"
+    onlyshower: false
+    dotmin: 0.5
+    dmin: 2.
+    trkshrscore: 0.8
+    TRKproducer: "shrreco3dKalmanShower"     # "pandoraKalmanShower"     #remove or leave empty of there are no track fits of the shower
+    CALproducer: "shrreco3dKalmanShowercali" # "pandoraKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
+}
+
 DefaultAnalysisTool: {
     tool_type: "DefaultAnalysis"
     CRTVetoproducer: ""
@@ -192,6 +202,7 @@ NuSelectionFilter:{
         cosmicip:      @local::CosmicIPTool
         nuenergy:      @local::NeutrinoEnergyTool
         flashmatchid:  @local::FlashMatchingTool
+        pi0tagger:     @local::Pi0TaggerTool
         #zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
     }
 }

@@ -12,6 +12,8 @@
 #include "../CommonDefs/PIDFuncs.h"
 #include "../CommonDefs/TrackFitterFunctions.h"
 #include "../CommonDefs/CalibrationFuncs.h"
+#include "../CommonDefs/PFPHitDistance.h"
+#include "../CommonDefs/ProximityClustering.h"
 
 #include "larcore/Geometry/Geometry.h"
 #include "lardataobj/RecoBase/SpacePoint.h"
@@ -203,6 +205,10 @@ private:
     int _trk_bkt_pdg; /**< PDG code of the MCParticle matched to the longest track */
 
     float _matched_E; /**< Total kinetic energy of the MCParticles matched to PFParticles */
+  
+  int _shrsubclusters0, _shrsubclusters1, _shrsubclusters2; /**< in how many sub-clusters can the shower be broken based on proximity clustering? */
+  float _shrclusfrac0, _shrclusfrac1, _shrclusfrac2; /**< what fraction of the total charge does the dominant shower sub-cluster carry? */
+  float _trkshrhitdist0, _trkshrhitdist1, _trkshrhitdist2; /**< distance between hits of shower and track in 2D on each palne based on hit-hit distances */
 
     float _shr_tkfit_start_x; /**< Start x coordinate of the leading shower obtained with the track fitting */
     float _shr_tkfit_start_y; /**< Start y coordinate of the leading shower obtained with the track fitting */
@@ -329,6 +335,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     art::ValidHandle<std::vector<recob::Slice>> inputSlice = e.getValidHandle<std::vector<recob::Slice>>(fCLSproducer);
     art::ValidHandle<std::vector<recob::SpacePoint>> inputSpacePoint = e.getValidHandle<std::vector<recob::SpacePoint>>(fCLSproducer);
 
+    
 
     auto assocSliceHit = std::unique_ptr<art::FindManyP<recob::Hit>>(new art::FindManyP<recob::Hit>(inputSlice, e, fCLSproducer));
     auto assocSlice = std::unique_ptr<art::FindManyP<recob::Slice>>(new art::FindManyP<recob::Slice>(inputPfParticle, e, fCLSproducer));
@@ -487,7 +494,9 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr_pca_2 = pca_pxy_v[0]->getEigenValues()[2];
                 }
 
-
+		// store hits for each plane
+		std::vector< std::vector< art::Ptr<recob::Hit> > > cluster_hits_v_v(3,std::vector<art::Ptr<recob::Hit> >());
+		
                 for (auto ass_clus : clus_pxy_v)
                 {
                     // get cluster proxy
@@ -501,16 +510,58 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     if (clus->Plane().Plane == 0)
                     {
                         _shr_hits_u_tot += clus_hit_v.size();
+			// gather hits from this plane's cluster
+			for (size_t h=0; h < clus_hit_v.size(); h++)
+			  cluster_hits_v_v[0].push_back( clus_hit_v[h] );
                     }
                     else if (clus->Plane().Plane == 1)
                     {
                         _shr_hits_v_tot += clus_hit_v.size();
+			// gather hits from this plane's cluster
+			for (size_t h=0; h < clus_hit_v.size(); h++)
+			  cluster_hits_v_v[1].push_back( clus_hit_v[h] );
                     }
                     else if (clus->Plane().Plane == 2)
                     {
                         _shr_hits_y_tot += clus_hit_v.size();
+			// gather hits from this plane's cluster
+			for (size_t h=0; h < clus_hit_v.size(); h++)
+			  cluster_hits_v_v[2].push_back( clus_hit_v[h] );
+
                     }
-                }
+                }// for all clusters associated to this shower
+
+		for (size_t pl=0; pl < 3; pl++) {
+		  int nclus = 0;
+		  float hitfracmax = 0.;
+		  std::vector< std::vector< unsigned int> > out_cluster_v;
+		  if (cluster_hits_v_v[pl].size()) {
+		    searchingfornues::cluster(cluster_hits_v_v[pl], out_cluster_v, 2.0, 1.0);
+		    // find how many clusters above some # of hit threshold there are
+		    // find cluste with largest fraction of all hits
+		    float tothits = cluster_hits_v_v[pl].size();
+		    for (size_t nc=0; nc < out_cluster_v.size(); nc++) {
+		      auto clus_hit_idx_v = out_cluster_v.at(nc);
+		      int nhitclus = clus_hit_idx_v.size();
+		      if (nhitclus > 3.) nclus += 1;
+		      float hitfrac = nhitclus / tothits;
+		      if (hitfrac > hitfracmax)
+			hitfracmax = hitfrac;
+		    }// for all sub-clusters
+		  }// if there are any hits on this plane
+		  if (pl==0) {
+		    _shrsubclusters0 = nclus;
+		    _shrclusfrac0    = hitfracmax;
+		  }
+		  if (pl==1) {
+		    _shrsubclusters1 = nclus;
+		    _shrclusfrac1    = hitfracmax;
+		  }
+		  if (pl==2) {
+		    _shrsubclusters2 = nclus;
+		    _shrclusfrac2    = hitfracmax;
+		  }
+		}// for all planes
 
                 _shr_energy_tot += shr->Energy()[2] / 1000;
 
@@ -843,6 +894,11 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         }
     }
 
+    auto trkshrhitdist_v = searchingfornues::GetPFPHitDistance( pfp_pxy_v[_trk_pfp_id], pfp_pxy_v[_shr_pfp_id],clus_proxy );
+    _trkshrhitdist0 = trkshrhitdist_v[0];
+    _trkshrhitdist1 = trkshrhitdist_v[1];
+    _trkshrhitdist2 = trkshrhitdist_v[2];
+
     _extra_energy_y -= (_trk_energy_hits_tot + _shr_energy_tot);
     _pt = total_p.Perp();
     _p = total_p.Mag();
@@ -934,6 +990,10 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _pt_assume_muon = 0;
     _p_assume_muon = 0;
 
+    _trkshrhitdist0 = std::numeric_limits<float>::lowest();
+    _trkshrhitdist1 = std::numeric_limits<float>::lowest();
+    _trkshrhitdist2 = std::numeric_limits<float>::lowest();
+
     _trk_theta = std::numeric_limits<float>::lowest();
     _trk_phi = std::numeric_limits<float>::lowest();
     _shr_theta = std::numeric_limits<float>::lowest();
@@ -956,6 +1016,14 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_start_x = std::numeric_limits<float>::lowest();
     _shr_start_y = std::numeric_limits<float>::lowest();
     _shr_start_z = std::numeric_limits<float>::lowest();
+
+    _shrsubclusters0 = std::numeric_limits<int>::lowest();
+    _shrsubclusters1 = std::numeric_limits<int>::lowest();
+    _shrsubclusters2 = std::numeric_limits<int>::lowest();
+
+    _shrclusfrac0 = std::numeric_limits<float>::lowest();
+    _shrclusfrac1 = std::numeric_limits<float>::lowest();
+    _shrclusfrac2 = std::numeric_limits<float>::lowest();
 
     _shr_tkfit_phi = std::numeric_limits<float>::lowest();
     _shr_tkfit_theta = std::numeric_limits<float>::lowest();
@@ -1098,10 +1166,22 @@ void CC0piNpSelection::setBranches(TTree *_tree)
 
     _tree->Branch("trk_hits_max", &_trk_hits_max, "trk_hits_max/i");
     _tree->Branch("shr_hits_max", &_shr_hits_max, "shr_hits_max/i");
+    
+    _tree->Branch("trkshrhitdist0",&_trkshrhitdist0,"trkshrhitdist0/F");
+    _tree->Branch("trkshrhitdist1",&_trkshrhitdist1,"trkshrhitdist1/F");
+    _tree->Branch("trkshrhitdist2",&_trkshrhitdist2,"trkshrhitdist2/F");
 
     _tree->Branch("total_hits_y", &_total_hits_y, "total_hits_y/i");
     _tree->Branch("extra_energy_y", &_extra_energy_y, "extra_energy_y/F");
     _tree->Branch("trk_energy_hits_tot", &_trk_energy_hits_tot, "trk_energy_hits_tot/F");
+
+    _tree->Branch("shrsubclusters0", &_shrsubclusters0, "shrsubclusters0/i");
+    _tree->Branch("shrsubclusters1", &_shrsubclusters1, "shrsubclusters1/i");
+    _tree->Branch("shrsubclusters2", &_shrsubclusters2, "shrsubclusters2/i");
+
+    _tree->Branch("shrclusfrac0", &_shrclusfrac0, "shrclusfrac0/f");
+    _tree->Branch("shrclusfrac1", &_shrclusfrac1, "shrclusfrac1/f");
+    _tree->Branch("shrclusfrac2", &_shrclusfrac2, "shrclusfrac2/f");
 
     _tree->Branch("shr_hits_tot", &_shr_hits_tot, "shr_hits_tot/i");
     _tree->Branch("shr_hits_y_tot", &_shr_hits_y_tot, "shr_hits_y_tot/i");

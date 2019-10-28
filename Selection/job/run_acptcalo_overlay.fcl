@@ -1,17 +1,11 @@
-#include "run_neutrinoselectionfilter_run1_data.fcl"
+#include "run_acptcalo_data.fcl"
 
-physics.filters.nuselection.AnalysisTools: {
-    default: @local::DefaultAnalysisTool
-    calorimetry: @local::CalorimetryAnalysisTool
-}
-
-physics.filters.nuselection.AnalysisTools.calorimetry.T0producer: "acpttrigtagger"
 physics.filters.nuselection.AnalysisTools.calorimetry.Backtrack: true
 
 #physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
 #physics.filters.nuselection.IsData: false
 
-    
+
 physics.producers.mcreco: @local::standard_mcreco
 
 physics.producers.mcreco.MCParticleLabel: "largeant"

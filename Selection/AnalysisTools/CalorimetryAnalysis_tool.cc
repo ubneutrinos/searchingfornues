@@ -179,14 +179,14 @@ private:
   float _trk_sce_end_y;
   float _trk_sce_end_z;
 
-  float _trk_bragg_p;
-  float _trk_bragg_mu;
-  float _trk_bragg_mip;
-  float _trk_pid_chipr;
-  float _trk_pid_chika;
-  float _trk_pid_chipi;
-  float _trk_pid_chimu;
-  float _trk_pida;
+  float _trk_bragg_p_y;
+  float _trk_bragg_mu_y;
+  float _trk_bragg_mip_y;
+  float _trk_pid_chipr_y;
+  float _trk_pid_chika_y;
+  float _trk_pid_chipi_y;
+  float _trk_pid_chimu_y;
+  float _trk_pida_y;
 
   float _trk_bragg_p_u;
   float _trk_bragg_mu_u;
@@ -205,6 +205,8 @@ private:
   float _trk_pid_chipi_v;
   float _trk_pid_chimu_v;
   float _trk_pida_v;
+
+  float _trk_bragg_p_three_planes;
 
   float _trk_mcs_muon_mom;
   float _trk_energy_proton;
@@ -437,9 +439,9 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
   float  lenmax = 0;
   size_t idxmax = 0;
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++) {
-    
+
     auto pfp = slice_pfp_v.at(i_pfp);
-    
+
     if ( pfp->IsPrimary() )
       continue;
 
@@ -448,14 +450,14 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
       continue;
 
     auto trk = trk_v.at(0);
-    
+
     float len = trk->Length();
     if (len > lenmax) {
       lenmax = len;
       idxmax = i_pfp;
     }
   }// for all pfps
-    
+
 
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
   {
@@ -535,14 +537,14 @@ void CalorimetryAnalysis::fillDefault()
   _trk_sce_end_y = std::numeric_limits<float>::lowest();
   _trk_sce_end_z = std::numeric_limits<float>::lowest();
 
-  _trk_bragg_p = std::numeric_limits<float>::lowest();
-  _trk_bragg_mu = std::numeric_limits<float>::lowest();
-  _trk_bragg_mip = std::numeric_limits<float>::lowest();
-  _trk_pid_chipr = std::numeric_limits<float>::lowest();
-  _trk_pid_chika = std::numeric_limits<float>::lowest();
-  _trk_pid_chipi = std::numeric_limits<float>::lowest();
-  _trk_pid_chimu = std::numeric_limits<float>::lowest();
-  _trk_pida = std::numeric_limits<float>::lowest();
+  _trk_bragg_p_y = std::numeric_limits<float>::lowest();
+  _trk_bragg_mu_y = std::numeric_limits<float>::lowest();
+  _trk_bragg_mip_y = std::numeric_limits<float>::lowest();
+  _trk_pid_chipr_y = std::numeric_limits<float>::lowest();
+  _trk_pid_chika_y = std::numeric_limits<float>::lowest();
+  _trk_pid_chipi_y = std::numeric_limits<float>::lowest();
+  _trk_pid_chimu_y = std::numeric_limits<float>::lowest();
+  _trk_pida_y = std::numeric_limits<float>::lowest();
 
   _trk_bragg_p_u = std::numeric_limits<float>::lowest();
   _trk_bragg_mu_u = std::numeric_limits<float>::lowest();
@@ -561,6 +563,8 @@ void CalorimetryAnalysis::fillDefault()
   _trk_pid_chipi_v = std::numeric_limits<float>::lowest();
   _trk_pid_chimu_v = std::numeric_limits<float>::lowest();
   _trk_pida_v = std::numeric_limits<float>::lowest();
+
+  _trk_bragg_p_three_planes = std::numeric_limits<float>::lowest();
 
   _longest = std::numeric_limits<int>::lowest();
 
@@ -617,7 +621,7 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
   _calo_tree->Branch("evt", &_evt, "evt/i");
   _calo_tree->Branch("isprimary", &_isprimary, "isprimary/i");
   // backtracking information
-  _calo_tree->Branch("backtracked_pdg", &_backtracked_pdg, "backtracked_pdg/i");            // PDG code of backtracked particle
+  _calo_tree->Branch("backtracked_pdg", &_backtracked_pdg, "backtracked_pdg/I");            // PDG code of backtracked particle
   _calo_tree->Branch("backtracked_e", &_backtracked_e, "backtracked_e/f");            // energy of backtracked particle
   _calo_tree->Branch("backtracked_purity", &_backtracked_purity, "backtracked_purity/f");       // purity of backtracking
   _calo_tree->Branch("backtracked_completeness", &_backtracked_completeness, "backtracked_completeness/f"); // completeness of backtracking
@@ -642,9 +646,9 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
   _calo_tree->Branch("backtracked_sce_start_Y", &_backtracked_sce_start_Y, "backtracked_sce_start_Y/f");
 
   // track information
-  _calo_tree->Branch("nplanehits_U", &_nplanehits_U, "nplanehits_U/i");
-  _calo_tree->Branch("nplanehits_V", &_nplanehits_V, "nplanehits_V/i");
-  _calo_tree->Branch("nplanehits_Y", &_nplanehits_Y, "nplanehits_Y/i");
+  _calo_tree->Branch("nplanehits_U", &_nplanehits_U, "nplanehits_U/I");
+  _calo_tree->Branch("nplanehits_V", &_nplanehits_V, "nplanehits_V/I");
+  _calo_tree->Branch("nplanehits_Y", &_nplanehits_Y, "nplanehits_Y/I");
   _calo_tree->Branch("trk_score", &_trk_score, "trk_score/f");
 
   _calo_tree->Branch("trk_theta", &_trk_theta, "trk_theta/f");
@@ -673,14 +677,14 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
   _calo_tree->Branch("trk_sce_end_y", &_trk_sce_end_y, "trk_sce_end_y/f");
   _calo_tree->Branch("trk_sce_end_z", &_trk_sce_end_z, "trk_sce_end_z/f");
 
-  _calo_tree->Branch("trk_bragg_p", &_trk_bragg_p, "trk_bragg_p/f");
-  _calo_tree->Branch("trk_bragg_mu", &_trk_bragg_mu, "trk_bragg_mu/f");
-  _calo_tree->Branch("trk_bragg_mip", &_trk_bragg_mip, "trk_bragg_mip/f");
-  _calo_tree->Branch("trk_pid_chipr", &_trk_pid_chipr, "trk_pid_chipr/f");
-  _calo_tree->Branch("trk_pid_chika", &_trk_pid_chika, "trk_pid_chika/f");
-  _calo_tree->Branch("trk_pid_chipi", &_trk_pid_chipi, "trk_pid_chipi/f");
-  _calo_tree->Branch("trk_pid_chimu", &_trk_pid_chimu, "trk_pid_chimu/f");
-  _calo_tree->Branch("trk_pida", &_trk_pida, "trk_pida/f");
+  _calo_tree->Branch("trk_bragg_p_y", &_trk_bragg_p_y, "trk_bragg_p_y/f");
+  _calo_tree->Branch("trk_bragg_mu_y", &_trk_bragg_mu_y, "trk_bragg_mu_y/f");
+  _calo_tree->Branch("trk_bragg_mip_y", &_trk_bragg_mip_y, "trk_bragg_mip_y/f");
+  _calo_tree->Branch("trk_pid_chipr_y", &_trk_pid_chipr_y, "trk_pid_chipr_y/f");
+  _calo_tree->Branch("trk_pid_chika_y", &_trk_pid_chika_y, "trk_pid_chika_y/f");
+  _calo_tree->Branch("trk_pid_chipi_y", &_trk_pid_chipi_y, "trk_pid_chipi_y/f");
+  _calo_tree->Branch("trk_pid_chimu_y", &_trk_pid_chimu_y, "trk_pid_chimu_y/f");
+  _calo_tree->Branch("trk_pida_y", &_trk_pida_y, "trk_pida_y/f");
 
   _calo_tree->Branch("trk_bragg_p_u", &_trk_bragg_p_u, "trk_bragg_p_u/f");
   _calo_tree->Branch("trk_bragg_mu_u", &_trk_bragg_mu_u, "trk_bragg_mu_u/f");
@@ -699,6 +703,8 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
   _calo_tree->Branch("trk_pid_chipi_v", &_trk_pid_chipi_v, "trk_pid_chipi_v/f");
   _calo_tree->Branch("trk_pid_chimu_v", &_trk_pid_chimu_v, "trk_pid_chimu_v/f");
   _calo_tree->Branch("trk_pida_v", &_trk_pida_v, "trk_pida_v/f");
+
+  _calo_tree->Branch("trk_bragg_p_three_planes", &_trk_bragg_p_three_planes, "trk_bragg_p_three_planes/f");
 
   _calo_tree->Branch("trk_mcs_muon_mom", &_trk_mcs_muon_mom, "trk_mcs_muon_mom/f");
   _calo_tree->Branch("trk_energy_proton", &_trk_energy_proton, "trk_energy_proton/f");
@@ -783,6 +789,10 @@ void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t
     auto clus_hit_v = clus.get<recob::Hit>();
     auto nhits = clus_hit_v.size();
 
+    _nplanehits_U = 0;
+    _nplanehits_V = 0;
+    _nplanehits_Y = 0;
+
     if (clus->Plane().Plane == 0)
     {
       _nplanehits_U = nhits;
@@ -855,16 +865,16 @@ void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t
   auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
 
   //collection plane
-  _trk_bragg_p = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 2),
+  _trk_bragg_p_y = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 2),
         searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 2));
-  _trk_bragg_mu = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 2),
+  _trk_bragg_mu_y = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 2),
          searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 2));
-  _trk_bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
-  _trk_pid_chipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 2);
-  _trk_pid_chimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 13, 2);
-  _trk_pid_chipi = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 211, 2);
-  _trk_pid_chika = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 321, 2);
-  _trk_pida_v = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 2);
+  _trk_bragg_mip_y = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
+  _trk_pid_chipr_y = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 2);
+  _trk_pid_chimu_y = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 13, 2);
+  _trk_pid_chipi_y = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 211, 2);
+  _trk_pid_chika_y = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 321, 2);
+  _trk_pida_y = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 2);
 
   //u plane
   _trk_bragg_p_u = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 0),
@@ -890,6 +900,8 @@ void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t
   _trk_pid_chika_v = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 321, 1);
   _trk_pida_v = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 1);
 
+  //three plane pid from Pip
+  // _trk_bragg_p_three_planes = searchingfornues::PID(pidpxy_v[0], "ThreePlaneProtonPID", anab::kLikelihood, anab::kForward, 2212, UBPID::uB_SinglePlaneGetBitset(2));
 
   // Kinetic energy using tabulated stopping power (GeV)
   float mcs_momentum_muon = _trkmom.GetTrackMomentum(trk->Length(), 13);
