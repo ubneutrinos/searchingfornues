@@ -9,6 +9,7 @@ art_make( TOOL_LIBRARIES lardataobj_RecoBase
                          lardata_RecoObjects
                          lardata_Utilities
                          larreco_RecoAlg
+                         larpandora_LArPandoraInterface
                          ${ART_FRAMEWORK_CORE}
                          ${ART_FRAMEWORK_PRINCIPAL}
                          ${ART_FRAMEWORK_SERVICES_REGISTRY}

@@ -18,6 +18,7 @@
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 
 #include "canvas/Persistency/Common/TriggerResults.h"
+#include "larpandora/LArPandoraInterface/LArPandoraHelper.h"
 
 namespace analysis
 {
@@ -113,8 +114,7 @@ private:
   art::InputTag fHproducer;
   art::InputTag fMCRproducer;
   art::InputTag fSLCproducer; // slice associated to PFP
-  float fTrkShrScore; /**< Threshold on the Pandora track score (default 0.5) */
-
+  float fTrkShrScore;         /**< Threshold on the Pandora track score (default 0.5) */
 
   float fFidvolXstart;
   float fFidvolXend;
@@ -170,21 +170,21 @@ private:
   bool _isVtxInFiducial;        /**< true if neutrino in fiducial volume */
 
   // final state particle information
-  int _nmuon;                            /**< is there a final-state muon from the neutrino? [1=yes 0=no] */
-  float _muon_e, _muon_p, _muon_c;       /**< energy, purity, completeness. */
-  int _nelec;                            /**< is there a final-state electron from the neutrino? [1=yes 0=no] */
-  float _elec_e, _elec_p, _elec_c;       /**< energy, purity, completeness. */
-  float _elec_vx, _elec_vy, _elec_vz;    /**< electron vertex. */
-  int _npi0;                             /**< how many pi0s are there? */
+  int _nmuon;                         /**< is there a final-state muon from the neutrino? [1=yes 0=no] */
+  float _muon_e, _muon_p, _muon_c;    /**< energy, purity, completeness. */
+  int _nelec;                         /**< is there a final-state electron from the neutrino? [1=yes 0=no] */
+  float _elec_e, _elec_p, _elec_c;    /**< energy, purity, completeness. */
+  float _elec_vx, _elec_vy, _elec_vz; /**< electron vertex. */
+  int _npi0;                          /**< how many pi0s are there? */
   //int _pi0;                              /**< is there a final-state pi0 from the neutrino? [1=yes 0=no] */
-  float _pi0_e, _pi0_p, _pi0_c;          /**< energy, purity, completeness. */
-  int _nneutron;                         /**< how many neutrons are there? */
-  int _nproton;                          /**< how many protons are there? */
+  float _pi0_e, _pi0_p, _pi0_c; /**< energy, purity, completeness. */
+  int _nneutron;                /**< how many neutrons are there? */
+  int _nproton;                 /**< how many protons are there? */
   //int _proton;                           /**< is there a final-state proton from the neutrino? [1=yes 0=no] */
   float _proton_e, _proton_p, _proton_c; /**< energy, purity, completeness. */
   int _npion;                            /**< how many pions are there? */
   //int _pion;                             /**< is there a final-state charged pion from the neutrino? [1=yes 0=no] */
-  float _pion_e, _pion_p, _pion_c;       /**< energy, purity, completeness. */
+  float _pion_e, _pion_p, _pion_c; /**< energy, purity, completeness. */
 
   std::string _endmuonprocess; /**< End muon process name */
   float _endmuonmichel;        /**< End muon Michel electron energy */
@@ -198,10 +198,10 @@ private:
   // reco PFParticle backtracking. One entry for PFParticle in the slice
   // std::vector<int>   _backtracked_idx;    // index of PFP [key]
   // std::vector<int>   _backtracked_tid;    // TrackID of backtracked MCParticle
-  std::vector<int> _backtracked_pdg;            // PDG code of backtracked particle
-  std::vector<float> _backtracked_e;            // energy of backtracked particle
-  std::vector<float> _backtracked_purity;       // purity of backtracking
-  std::vector<float> _backtracked_completeness; // completeness of backtracking
+  std::vector<int> _backtracked_pdg;              // PDG code of backtracked particle
+  std::vector<float> _backtracked_e;              // energy of backtracked particle
+  std::vector<float> _backtracked_purity;         // purity of backtracking
+  std::vector<float> _backtracked_completeness;   // completeness of backtracking
   std::vector<float> _backtracked_overlay_purity; // purity of overlay
 
   std::vector<float> _backtracked_px;
@@ -226,16 +226,20 @@ private:
   int _pass;                                                 // does the slice pass the selection
   float _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset; // offsets for generation time and SCE
 
-  int evnhits;                                // number of hits in event
-  int slpdg;                                  // PDG code of primary pfp in slice
-  int slnhits;                                // number of hits in slice
-  float _topo_score;                          /**< topological score of the slice */
-  std::vector<int> pfpdg;                     // PDG code of pfp in slice
-  std::vector<int> pfnhits;                   // number of hits in pfp
+  int evnhits;                     // number of hits in event
+  int slpdg;                       // PDG code of primary pfp in slice
+  int slnhits;                     // number of hits in slice
+  float _topo_score;               /**< topological score of the slice */
+  std::vector<int> pfpdg;          // PDG code of pfp in slice
+  std::vector<int> pfnhits;        // number of hits in pfp
   std::vector<int> pfnplanehits_U; // number of hits in pfp plane U
   std::vector<int> pfnplanehits_V; // number of hits in pfp plane V
   std::vector<int> pfnplanehits_Y; // number of hits in pfp plane Y
-  float slclustfrac; //fraction of clustered hits in the slice
+  float slclustfrac;               //fraction of clustered hits in the slice
+
+  std::vector<uint> _generation;   // generation, 1 is primary
+  std::vector<uint> _shr_daughters; // number of shower daughters 
+  std::vector<uint> _trk_daughters; // number of track daughters
 
   unsigned int _n_pfps;
   std::vector<float> _trk_score_v;
@@ -332,18 +336,19 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   _sub = e.subRun();
   _run = e.run();
 
-  std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: "<< _evt << std::endl;
+  std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: " << _evt << std::endl;
 
   // storing trigger result output for software trigger
-  art::InputTag swtrig_tag("TriggerResults","","DataOverlayOptical");
+  art::InputTag swtrig_tag("TriggerResults", "", "DataOverlayOptical");
   art::Handle<art::TriggerResults> swtrig_handle;
   e.getByLabel(swtrig_tag, swtrig_handle);
-  if (swtrig_handle.isValid()) {
+  if (swtrig_handle.isValid())
+  {
     if (swtrig_handle->accept() == true)
       _swtrig = 1;
     else
       _swtrig = 0;
-  }// if software trigger run by this producer
+  } // if software trigger run by this producer
 
   if (!fData)
   {
@@ -411,6 +416,13 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
   // somehow proxies don't work for the slice-hit association, so go back to old assns
   art::ValidHandle<std::vector<recob::Slice>> inputSlice = e.getValidHandle<std::vector<recob::Slice>>(fSLCproducer);
   auto assocSliceHit = std::unique_ptr<art::FindManyP<recob::Hit>>(new art::FindManyP<recob::Hit>(inputSlice, e, fSLCproducer));
+
+  // Build larpandora info:
+  lar_pandora::LArPandoraHelper larpandora;
+  lar_pandora::PFParticleVector pfparticles;
+  lar_pandora::PFParticleMap particleMap;
+  larpandora.CollectPFParticles (e, "pandora", pfparticles);
+  larpandora.BuildPFParticleMap(pfparticles, particleMap);
 
   // load backtrack information
   std::vector<searchingfornues::BtPart> btparts_v;
@@ -487,10 +499,28 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       continue;
     } // if neutrino PFParticle
 
-    _n_pfps ++;
+    _n_pfps++;
     _pfp_slice_idx.push_back(pfpidx++);
     pfpdg.push_back(pfp->PdgCode());
 
+    // Hieracrchy information:
+    _generation.push_back(larpandora.GetGeneration(particleMap, particleMap.at(pfp->Self())));
+    uint this_num_trk_d = 0;
+    uint this_num_shr_d = 0;
+    for(size_t daughter: pfp->Daughters())
+    {
+      if(larpandora.IsTrack(particleMap.at(daughter)))
+      {
+        this_num_trk_d++; // Track daughter
+      }
+      else
+      {
+        this_num_shr_d++; // Shower daughter
+      }
+    }
+    _shr_daughters.push_back(this_num_shr_d);
+    _trk_daughters.push_back(this_num_trk_d);
+    
     // store track score
     float trkscore = searchingfornues::GetTrackShowerScore(pfp);
     if ((trkscore >= 0) && (trkscore >= fTrkShrScore))
@@ -660,10 +690,12 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       } // if there are associated clusters
     }   // if MC
   }
-  if (slnhits>0) {
+  if (slnhits > 0)
+  {
     slclustfrac = 0.;
-    for (auto n : pfnhits) slclustfrac+=n;
-    slclustfrac/=float(slnhits);
+    for (auto n : pfnhits)
+      slclustfrac += n;
+    slclustfrac /= float(slnhits);
   }
   _nslice += 1;
 
@@ -885,14 +917,13 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("backtracked_sce_start_V", "std::vector<float>", &_backtracked_sce_start_V);
   _tree->Branch("backtracked_sce_start_Y", "std::vector<float>", &_backtracked_sce_start_Y);
 
-
   _tree->Branch("lep_e", &_lep_e, "lep_e/F");
   _tree->Branch("pass", &_pass, "pass/I");
   _tree->Branch("run", &_run, "run/I");
   _tree->Branch("sub", &_sub, "sub/I");
   _tree->Branch("evt", &_evt, "evt/I");
 
-  _tree->Branch("swtrig",&_swtrig,"swtrig/I");
+  _tree->Branch("swtrig", &_swtrig, "swtrig/I");
 
   _tree->Branch("xtimeoffset", &_xtimeoffset, "xtimeoffset/F");
   _tree->Branch("xsceoffset", &_xsceoffset, "xsceoffset/F");
@@ -905,6 +936,11 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("n_pfps", &_n_pfps, "n_pfps/I");
   _tree->Branch("n_tracks", &_n_tracks, "n_tracks/I");
   _tree->Branch("n_showers", &_n_showers, "n_showers/I");
+
+  _tree->Branch("pfp_generation_v", "std::vector< uint >", &_generation);
+  _tree->Branch("pfp_trk_daughters_v", "std::vector< uint >", &_trk_daughters);
+  _tree->Branch("pfp_shr_daughters_v", "std::vector< uint >", &_shr_daughters);
+
   _tree->Branch("trk_score_v", "std::vector< float >", &_trk_score_v);
 
   _tree->Branch("pfpdg", "std::vector<int>", &pfpdg);
