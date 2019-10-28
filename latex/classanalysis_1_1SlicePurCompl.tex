@@ -36,7 +36,7 @@ void \hyperlink{classanalysis_1_1SlicePurCompl_a43bf5b44e619f2dc3e5d00098048471b
 void {\bfseries fill\+Id} (const std\+::vector$<$ double $>$ \&p, const simb\+::\+M\+C\+Particle \&mcp, std\+::vector$<$ size\+\_\+t $>$ \&id)\hypertarget{classanalysis_1_1SlicePurCompl_a1cab4a3ebdd3aae05b22ad5d06a6ce1b}{}\label{classanalysis_1_1SlicePurCompl_a1cab4a3ebdd3aae05b22ad5d06a6ce1b}
 
 \item 
-void {\bfseries increment\+Counts} (const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$ $>$ \&hits, const std\+::unique\+\_\+ptr$<$ art\+::\+Find\+ManyP$<$ simb\+::\+M\+C\+Particle, anab\+::\+Back\+Tracker\+Hit\+Matching\+Data $>$ $>$ \&assoc\+M\+C\+Part, const std\+::vector$<$ size\+\_\+t $>$ \&lepid, const std\+::vector$<$ size\+\_\+t $>$ \&proid, const std\+::vector$<$ size\+\_\+t $>$ \&pi1id, const std\+::vector$<$ size\+\_\+t $>$ \&pi0id, const std\+::vector$<$ size\+\_\+t $>$ \&neuid, const std\+::vector$<$ size\+\_\+t $>$ \&gamid, const std\+::vector$<$ size\+\_\+t $>$ \&othid, int \&nlephits, int \&nprohits, int \&npi1hits, int \&npi0hits, int \&nneuhits, int \&ngamhits, int \&nothhits) const \hypertarget{classanalysis_1_1SlicePurCompl_a3ae6a4a95f5d387edd47f3646bc39c70}{}\label{classanalysis_1_1SlicePurCompl_a3ae6a4a95f5d387edd47f3646bc39c70}
+void {\bfseries increment\+Counts} (const std\+::vector$<$ art\+::\+Ptr$<$ recob\+::\+Hit $>$$>$ \&hits, const std\+::unique\+\_\+ptr$<$ art\+::\+Find\+ManyP$<$ simb\+::\+M\+C\+Particle, anab\+::\+Back\+Tracker\+Hit\+Matching\+Data $>$$>$ \&assoc\+M\+C\+Part, const std\+::vector$<$ size\+\_\+t $>$ \&lepid, const std\+::vector$<$ size\+\_\+t $>$ \&proid, const std\+::vector$<$ size\+\_\+t $>$ \&pi1id, const std\+::vector$<$ size\+\_\+t $>$ \&pi0id, const std\+::vector$<$ size\+\_\+t $>$ \&neuid, const std\+::vector$<$ size\+\_\+t $>$ \&gamid, const std\+::vector$<$ size\+\_\+t $>$ \&othid, int \&nlephits, int \&nprohits, int \&npi1hits, int \&npi0hits, int \&nneuhits, int \&ngamhits, int \&nothhits) const \hypertarget{classanalysis_1_1SlicePurCompl_a9082598390de196a54bb9ba4ce4b02b4}{}\label{classanalysis_1_1SlicePurCompl_a9082598390de196a54bb9ba4ce4b02b4}
 
 \end{DoxyCompactItemize}
 \subsection*{Private Attributes}
@@ -81,7 +81,7 @@ std\+::vector$<$ size\+\_\+t $>$ {\bfseries gamid}\hypertarget{classanalysis_1_1
 std\+::vector$<$ size\+\_\+t $>$ {\bfseries othid}\hypertarget{classanalysis_1_1SlicePurCompl_ab09dc6647525b89ebee6e9ee622cce58}{}\label{classanalysis_1_1SlicePurCompl_ab09dc6647525b89ebee6e9ee622cce58}
 
 \item 
-std\+::unique\+\_\+ptr$<$ art\+::\+Find\+ManyP$<$ simb\+::\+M\+C\+Particle, anab\+::\+Back\+Tracker\+Hit\+Matching\+Data $>$ $>$ {\bfseries assoc\+M\+C\+Part}\hypertarget{classanalysis_1_1SlicePurCompl_aee3dce7966b5e1ea71c93413bcbc6d8a}{}\label{classanalysis_1_1SlicePurCompl_aee3dce7966b5e1ea71c93413bcbc6d8a}
+std\+::unique\+\_\+ptr$<$ art\+::\+Find\+ManyP$<$ simb\+::\+M\+C\+Particle, anab\+::\+Back\+Tracker\+Hit\+Matching\+Data $>$ $>$ {\bfseries assoc\+M\+C\+Part}\hypertarget{classanalysis_1_1SlicePurCompl_aa8a4a1c33e45d41c5cbd930fd55e2450}{}\label{classanalysis_1_1SlicePurCompl_aa8a4a1c33e45d41c5cbd930fd55e2450}
 
 \item 
 int {\bfseries evnunhits}\hypertarget{classanalysis_1_1SlicePurCompl_abb4d90c2bccf98be8583ee7ec4786e7b}{}\label{classanalysis_1_1SlicePurCompl_abb4d90c2bccf98be8583ee7ec4786e7b}
@@ -154,6 +154,12 @@ std\+::vector$<$ int $>$ {\bfseries pfgamnhits}\hypertarget{classanalysis_1_1Sli
 
 \item 
 std\+::vector$<$ int $>$ {\bfseries pfothnhits}\hypertarget{classanalysis_1_1SlicePurCompl_a2925bdf47da943b053693527fbbca375}{}\label{classanalysis_1_1SlicePurCompl_a2925bdf47da943b053693527fbbca375}
+
+\item 
+float {\bfseries nu\+\_\+completeness\+\_\+from\+\_\+pfp}\hypertarget{classanalysis_1_1SlicePurCompl_a0e1da79b88ba3f70e6b197996f06d88d}{}\label{classanalysis_1_1SlicePurCompl_a0e1da79b88ba3f70e6b197996f06d88d}
+
+\item 
+float {\bfseries nu\+\_\+purity\+\_\+from\+\_\+pfp}\hypertarget{classanalysis_1_1SlicePurCompl_ace127ce23c3feb0114c701001dda156d}{}\label{classanalysis_1_1SlicePurCompl_ace127ce23c3feb0114c701001dda156d}
 
 \end{DoxyCompactItemize}
 

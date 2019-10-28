@@ -149,9 +149,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a1cab4a3ebdd3aae05b22ad5d06a6ce1b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1cab4a3ebdd3aae05b22ad5d06a6ce1b"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>fillId</b> (const std::vector&lt; double &gt; &amp;p, const simb::MCParticle &amp;mcp, std::vector&lt; size_t &gt; &amp;id)</td></tr>
 <tr class="separator:a1cab4a3ebdd3aae05b22ad5d06a6ce1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ae6a4a95f5d387edd47f3646bc39c70"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3ae6a4a95f5d387edd47f3646bc39c70"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>incrementCounts</b> (const std::vector&lt; art::Ptr&lt; recob::Hit &gt; &gt; &amp;hits, const std::unique_ptr&lt; art::FindManyP&lt; simb::MCParticle, anab::BackTrackerHitMatchingData &gt; &gt; &amp;assocMCPart, const std::vector&lt; size_t &gt; &amp;lepid, const std::vector&lt; size_t &gt; &amp;proid, const std::vector&lt; size_t &gt; &amp;pi1id, const std::vector&lt; size_t &gt; &amp;pi0id, const std::vector&lt; size_t &gt; &amp;neuid, const std::vector&lt; size_t &gt; &amp;gamid, const std::vector&lt; size_t &gt; &amp;othid, int &amp;nlephits, int &amp;nprohits, int &amp;npi1hits, int &amp;npi0hits, int &amp;nneuhits, int &amp;ngamhits, int &amp;nothhits) const </td></tr>
-<tr class="separator:a3ae6a4a95f5d387edd47f3646bc39c70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9082598390de196a54bb9ba4ce4b02b4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9082598390de196a54bb9ba4ce4b02b4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>incrementCounts</b> (const std::vector&lt; art::Ptr&lt; recob::Hit &gt;&gt; &amp;hits, const std::unique_ptr&lt; art::FindManyP&lt; simb::MCParticle, anab::BackTrackerHitMatchingData &gt;&gt; &amp;assocMCPart, const std::vector&lt; size_t &gt; &amp;lepid, const std::vector&lt; size_t &gt; &amp;proid, const std::vector&lt; size_t &gt; &amp;pi1id, const std::vector&lt; size_t &gt; &amp;pi0id, const std::vector&lt; size_t &gt; &amp;neuid, const std::vector&lt; size_t &gt; &amp;gamid, const std::vector&lt; size_t &gt; &amp;othid, int &amp;nlephits, int &amp;nprohits, int &amp;npi1hits, int &amp;npi0hits, int &amp;nneuhits, int &amp;ngamhits, int &amp;nothhits) const </td></tr>
+<tr class="separator:a9082598390de196a54bb9ba4ce4b02b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -194,9 +194,9 @@ std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><
 <tr class="memitem:ab09dc6647525b89ebee6e9ee622cce58"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab09dc6647525b89ebee6e9ee622cce58"></a>
 std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>othid</b></td></tr>
 <tr class="separator:ab09dc6647525b89ebee6e9ee622cce58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee3dce7966b5e1ea71c93413bcbc6d8a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aee3dce7966b5e1ea71c93413bcbc6d8a"></a>
+<tr class="memitem:aa8a4a1c33e45d41c5cbd930fd55e2450"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa8a4a1c33e45d41c5cbd930fd55e2450"></a>
 std::unique_ptr&lt; art::FindManyP&lt; simb::MCParticle, anab::BackTrackerHitMatchingData &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>assocMCPart</b></td></tr>
-<tr class="separator:aee3dce7966b5e1ea71c93413bcbc6d8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:aa8a4a1c33e45d41c5cbd930fd55e2450"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb4d90c2bccf98be8583ee7ec4786e7b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="abb4d90c2bccf98be8583ee7ec4786e7b"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>evnunhits</b></td></tr>
 <tr class="separator:abb4d90c2bccf98be8583ee7ec4786e7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -269,6 +269,12 @@ std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>p
 <tr class="memitem:a2925bdf47da943b053693527fbbca375"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2925bdf47da943b053693527fbbca375"></a>
 std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pfothnhits</b></td></tr>
 <tr class="separator:a2925bdf47da943b053693527fbbca375"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e1da79b88ba3f70e6b197996f06d88d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0e1da79b88ba3f70e6b197996f06d88d"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>nu_completeness_from_pfp</b></td></tr>
+<tr class="separator:a0e1da79b88ba3f70e6b197996f06d88d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace127ce23c3feb0114c701001dda156d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ace127ce23c3feb0114c701001dda156d"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>nu_purity_from_pfp</b></td></tr>
+<tr class="separator:ace127ce23c3feb0114c701001dda156d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a8d0b7176feea1c0cda563f1a528a4643"></a>
