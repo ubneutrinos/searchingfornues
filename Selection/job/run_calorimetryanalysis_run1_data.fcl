@@ -3,5 +3,3 @@
 physics.filters.nuselection.AnalysisTools : {
   calorimetry:   @local::CalorimetryAnalysisTool
 }
-
-#physics.filters.nuselection.AnalysisTools.calorimetry.CALOproducer: "pandoraTrackcalo"
