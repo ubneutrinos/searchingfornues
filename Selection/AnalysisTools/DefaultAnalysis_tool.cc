@@ -305,8 +305,8 @@ DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
   fFidvolXstart = p.get<double>("fidvolXstart", 10);
   fFidvolXend = p.get<double>("fidvolXend", 10);
 
-  fFidvolYstart = p.get<double>("fidvolYstart", 15);
-  fFidvolYend = p.get<double>("fidvolYend", 15);
+  fFidvolYstart = p.get<double>("fidvolYstart", 10);
+  fFidvolYend = p.get<double>("fidvolYend", 10);
 
   fFidvolZstart = p.get<double>("fidvolZstart", 10);
   fFidvolZend = p.get<double>("fidvolZend", 50);
@@ -393,12 +393,10 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 
 bool DefaultAnalysis::isFiducial(const double x[3]) const
 {
-
   art::ServiceHandle<geo::Geometry> geo;
-  std::vector<double> bnd = {
-      0., 2. * geo->DetHalfWidth(), -geo->DetHalfHeight(), geo->DetHalfHeight(),
-      0., geo->DetLength()};
-
+  geo::TPCGeo const &thisTPC = geo->TPC();
+  geo::BoxBoundedGeo theTpcGeo = thisTPC.ActiveBoundingBox();
+  std::vector<double> bnd = {theTpcGeo.MinX() , theTpcGeo.MaxX(), theTpcGeo.MinY(), theTpcGeo.MaxY() , theTpcGeo.MinZ() , theTpcGeo.MaxZ() };
   bool is_x =
       x[0] > (bnd[0] + fFidvolXstart) && x[0] < (bnd[1] - fFidvolXend);
   bool is_y =
@@ -1101,7 +1099,7 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   pfnplanehits_U.clear();
   pfnplanehits_V.clear();
   pfnplanehits_Y.clear();
-  _generataion.clear();
+  _generation.clear();
   _shr_daughters.clear();
   _trk_daughters.clear();
   slclustfrac = std::numeric_limits<float>::lowest();
