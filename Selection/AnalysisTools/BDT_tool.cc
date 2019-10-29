@@ -4,6 +4,9 @@
 #include <iostream>
 #include "AnalysisToolBase.h"
 
+#include "art/Framework/Services/System/TriggerNamesService.h"
+#include "canvas/Persistency/Common/TriggerResults.h"
+
 #include "ubana/XGBoost/xgboost/c_api.h"
 
 namespace analysis
@@ -76,6 +79,7 @@ namespace analysis
     float _bdt_ext;
     float _bdt_cosmic;
     float _bdt_global;
+    int _pass_antibdt_filter;
     TTree* _mytree;
     bool fVerbose;
   };
@@ -148,6 +152,23 @@ namespace analysis
   ///
   void BDT::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
   {
+
+    art::Handle<art::TriggerResults> filter;
+    e.getByLabel(art::InputTag("TriggerResults","","OverlayFiltersPostStage2"),filter);
+    if (filter.isValid() && filter->size()==4) {
+      _pass_antibdt_filter = filter->at(1).accept();//fixme accessing position at(1) is not robust
+    }
+    // std::cout << "filter size=" << filter->size() << std::endl;
+    // std::cout << "filter pset=" << filter->parameterSetID().to_string() << std::endl;
+    // auto tns = art::ServiceHandle<art::TriggerNamesService>();
+    // size_t ntp =  tns->size();
+    // std::cout << "ntp=" << ntp << std::endl;
+    // // size_t ftp = ntp;
+    // for (size_t itp=0;itp<filter->size();itp++) {
+    //   std::cout << itp << " " << filter->at(itp).accept()  << std::endl;
+    //   // std::cout << art::ServiceHandle<art::TriggerNamesService>()->getTrigPath(itp) << " " << filter->at(itp).accept()  << std::endl;
+    //   // if (art::ServiceHandle<art::TriggerNamesService>()->getTrigPath(itp)=="sel2") ftp = itp;
+    // }
 
     std::vector<float> data;
     std::vector<std::string> variables{"shr_dedx_Y", "shr_distance", "trk_distance", "pt", "hits_y",
@@ -262,6 +283,7 @@ namespace analysis
     _tree->Branch("bdt_ext"      ,&_bdt_ext      ,"bdt_ext/F"      );
     _tree->Branch("bdt_cosmic"   ,&_bdt_cosmic   ,"bdt_cosmic/F"   );
     _tree->Branch("bdt_global"   ,&_bdt_global   ,"bdt_global/F"   );
+    _tree->Branch("pass_antibdt_filter", &_pass_antibdt_filter,"bdt_global/I");
     _mytree = _tree;//not ideal, be careful...
   }
   
@@ -273,6 +295,7 @@ namespace analysis
     _bdt_ext       = 9999.;
     _bdt_cosmic    = 9999.;
     _bdt_global    = 9999.;
+    _pass_antibdt_filter = -9999;
   }
 
   
