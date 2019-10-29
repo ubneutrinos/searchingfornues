@@ -210,8 +210,10 @@ private:
   float _shrclusfrac0, _shrclusfrac1, _shrclusfrac2; /**< what fraction of the total charge does the dominant shower sub-cluster carry? */
   float _trkshrhitdist0, _trkshrhitdist1, _trkshrhitdist2; /**< distance between hits of shower and track in 2D on each palne based on hit-hit distances */
 
-  int _shr_tkfit_npoints;
-  int _shr_tkfit_npointsvalid;
+  int _shr_tkfit_npoints; // number of points associated to shower fitted track
+  int _shr_tkfit_npointsvalid; // number of VALID points associated to shower fitted track
+
+  float _shr_trkfitmedangle; // median angle for first N cm (default 10) for track-fitter track
 
     float _shr_tkfit_start_x; /**< Start x coordinate of the leading shower obtained with the track fitting */
     float _shr_tkfit_start_y; /**< Start y coordinate of the leading shower obtained with the track fitting */
@@ -659,12 +661,16 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     for (const searchingfornues::ProxyCaloElem_t &tk : *tkcalo_proxy)
                     {
 
+
+		      // find track with ID matching the pfp index (this convention apparently works only for shower fits...)
+		      if (tk->ID() != int(pfp_pxy_v[i_pfp].index()))
+			continue;
+
 		      _shr_tkfit_npoints       = tk->NumberTrajectoryPoints();
 		      _shr_tkfit_npointsvalid = tk->CountValidPoints();
+		      
+		      _shr_trkfitmedangle = searchingfornues::GetTrackMedianDeflection(tk,10.);
 
-                        // find track with ID matching the pfp index (this convention apparently works only for shower fits...)
-                        if (tk->ID() != int(pfp_pxy_v[i_pfp].index()))
-                            continue;
                         _shr_tkfit_start_x = tk->Start().X();
                         _shr_tkfit_start_y = tk->Start().Y();
                         _shr_tkfit_start_z = tk->Start().Z();
@@ -1044,6 +1050,8 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_tkfit_npoints      = std::numeric_limits<int>::lowest();
     _shr_tkfit_npointsvalid = std::numeric_limits<int>::lowest();
 
+    _shr_trkfitmedangle = std::numeric_limits<float>::lowest();
+
     _shr_tkfit_gap05_dedx_Y = std::numeric_limits<float>::lowest();
     _shr_tkfit_gap05_dedx_U = std::numeric_limits<float>::lowest();
     _shr_tkfit_gap05_dedx_V = std::numeric_limits<float>::lowest();
@@ -1118,6 +1126,7 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_tkfit_nhits_U", &_shr_tkfit_nhits_U, "shr_tkfit_nhits_U/i");    
     _tree->Branch("shr_tkfit_npoints"     , &_shr_tkfit_npoints     , "shr_tkfit_npoints/i"     );
     _tree->Branch("shr_tkfit_npointsvalid", &_shr_tkfit_npointsvalid, "shr_tkfit_npointsvalid/i");
+    _tree->Branch("shr_trkfitmedangle", &_shr_trkfitmedangle,"shr_trkfitmedangle/f");
     if (fSaveMoreDedx) {
       _tree->Branch("shr_tkfit_gap05_dedx_Y", &_shr_tkfit_gap05_dedx_Y, "shr_tkfit_gap05_dedx_Y/F");
       _tree->Branch("shr_tkfit_gap05_dedx_V", &_shr_tkfit_gap05_dedx_V, "shr_tkfit_gap05_dedx_V/F");
