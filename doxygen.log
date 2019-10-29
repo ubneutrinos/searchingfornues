@@ -173,7 +173,7 @@ Preprocessing /home//home/travis/build/ubneutrinos/searchingfornues/FlashMatchin
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/EmptySelection_tool.cc:24: warning: Compound selection::EmptySelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/SlicePurCompl_tool.cc:31: warning: Compound analysis::SlicePurCompl is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CRTApproachAnalysis_tool.cc:39: warning: Compound analysis::CRTApproachAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:31: warning: Compound analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:32: warning: Compound analysis::ContainmentAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/Pi0Selection_tool.cc:26: warning: Compound selection::Pi0Selection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMatch_module.cc:47: warning: Compound ACPTTrigFlashMatch is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/NeutrinoEnergy_tool.cc:36: warning: Compound analysis::NeutrinoEnergy is not documented.
@@ -788,25 +788,27 @@ Generating code for file/home/travis/build/ubneutrinos/searchingfornues/FlashMat
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:260: warning: argument 'pset' of command @param is not found in the argument list of analysis::CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p)
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:50: warning: The following parameters of analysis::CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:70: warning: Member DistFiducial(float x, float y, float z) (function) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:71: warning: Member DistFiducialBoundaries(float x, float y, float z, std::vector< std::vector< double >> &dboundaries) (function) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:73: warning: Member fMCTproducer (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:75: warning: Member _FV (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:78: warning: Member _dvtx (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:79: warning: Member _dtrk (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:81: warning: Member _dmc_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:82: warning: Member _dtrk_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:83: warning: Member _dtrk_x_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:84: warning: Member _dtrk_y_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:85: warning: Member _dtrk_z_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:87: warning: Member _dshr_x_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:88: warning: Member _dshr_y_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:89: warning: Member _dshr_z_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:91: warning: Member _dvtx_x_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:92: warning: Member _dvtx_y_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:93: warning: Member _dvtx_z_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:95: warning: Member _dvtx_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:96: warning: Member _dshr_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:71: warning: Member DistFiducial(float x, float y, float z) (function) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:72: warning: Member DistFiducialBoundaries(float x, float y, float z, std::vector< std::vector< double >> &dboundaries) (function) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:73: warning: Member isFiducial(const float x[3]) const  (function) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:75: warning: Member fMCTproducer (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:77: warning: Member _FV (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:80: warning: Member _dvtx (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:81: warning: Member _dtrk (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:83: warning: Member _dmc_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:84: warning: Member _dtrk_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:85: warning: Member _dtrk_x_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:86: warning: Member _dtrk_y_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:87: warning: Member _dtrk_z_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:89: warning: Member _dshr_x_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:90: warning: Member _dshr_y_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:91: warning: Member _dshr_z_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:93: warning: Member _dvtx_x_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:94: warning: Member _dvtx_y_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:95: warning: Member _dvtx_z_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:97: warning: Member _dvtx_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:98: warning: Member _dshr_boundary (variable) of class analysis::ContainmentAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:100: warning: Member contained_sps_ratio (variable) of class analysis::ContainmentAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:87: warning: Member fPFPproducer (variable) of class analysis::CosmicIP is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:88: warning: Member fSpacePointproducer (variable) of class analysis::CosmicIP is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CosmicIP_tool.cc:90: warning: Member fTrkShrScore (variable) of class analysis::CosmicIP is not documented.
@@ -1696,5 +1698,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 779/65536 hits=4321 misses=805
+lookup cache used 779/65536 hits=4325 misses=805
 finished...
