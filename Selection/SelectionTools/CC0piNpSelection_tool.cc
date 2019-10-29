@@ -210,6 +210,9 @@ private:
   float _shrclusfrac0, _shrclusfrac1, _shrclusfrac2; /**< what fraction of the total charge does the dominant shower sub-cluster carry? */
   float _trkshrhitdist0, _trkshrhitdist1, _trkshrhitdist2; /**< distance between hits of shower and track in 2D on each palne based on hit-hit distances */
 
+  int _shr_tkfit_npoints;
+  int _shr_tkfit_npointsvalid;
+
     float _shr_tkfit_start_x; /**< Start x coordinate of the leading shower obtained with the track fitting */
     float _shr_tkfit_start_y; /**< Start y coordinate of the leading shower obtained with the track fitting */
     float _shr_tkfit_start_z; /**< Start z coordinate of the leading shower obtained with the track fitting */
@@ -655,6 +658,10 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
                     for (const searchingfornues::ProxyCaloElem_t &tk : *tkcalo_proxy)
                     {
+
+		      _shr_tkfit_npoints       = tk->NumberTrajectoryPoints();
+		      _shr_tkfit_npointsvalid = tk->CountValidPoints();
+
                         // find track with ID matching the pfp index (this convention apparently works only for shower fits...)
                         if (tk->ID() != int(pfp_pxy_v[i_pfp].index()))
                             continue;
@@ -1034,6 +1041,9 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_tkfit_nhits_U = 0;
     _shr_tkfit_nhits_V = 0;
 
+    _shr_tkfit_npoints      = std::numeric_limits<int>::lowest();
+    _shr_tkfit_npointsvalid = std::numeric_limits<int>::lowest();
+
     _shr_tkfit_gap05_dedx_Y = std::numeric_limits<float>::lowest();
     _shr_tkfit_gap05_dedx_U = std::numeric_limits<float>::lowest();
     _shr_tkfit_gap05_dedx_V = std::numeric_limits<float>::lowest();
@@ -1105,6 +1115,9 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_tkfit_nhits_Y", &_shr_tkfit_nhits_Y, "shr_tkfit_nhits_Y/i");
     _tree->Branch("shr_tkfit_nhits_V", &_shr_tkfit_nhits_V, "shr_tkfit_nhits_V/i");
     _tree->Branch("shr_tkfit_nhits_U", &_shr_tkfit_nhits_U, "shr_tkfit_nhits_U/i");
+    _tree->Branch("shr_tkfit_nhits_U", &_shr_tkfit_nhits_U, "shr_tkfit_nhits_U/i");    
+    _tree->Branch("shr_tkfit_npoints"     , &_shr_tkfit_npoints     , "shr_tkfit_npoints/i"     );
+    _tree->Branch("shr_tkfit_npointsvalid", &_shr_tkfit_npointsvalid, "shr_tkfit_npointsvalid/i");
     if (fSaveMoreDedx) {
       _tree->Branch("shr_tkfit_gap05_dedx_Y", &_shr_tkfit_gap05_dedx_Y, "shr_tkfit_gap05_dedx_Y/F");
       _tree->Branch("shr_tkfit_gap05_dedx_V", &_shr_tkfit_gap05_dedx_V, "shr_tkfit_gap05_dedx_V/F");
