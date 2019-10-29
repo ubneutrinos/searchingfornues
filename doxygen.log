@@ -645,22 +645,23 @@ Generating code for file/home/travis/build/ubneutrinos/searchingfornues/FlashMat
   parameter 'fData'
   parameter 'selected'
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/AnalysisToolBase.h:33: warning: argument 'ParameterSet' of command @param is not found in the argument list of analysis::AnalysisToolBase::configure(const fhicl::ParameterSet &)
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:70: warning: Member booster_nuNCpi0 (variable) of class analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:71: warning: Member booster_numuCCpi0 (variable) of class analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:72: warning: Member booster_numuCC (variable) of class analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:73: warning: Member booster_ext (variable) of class analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:74: warning: Member booster_cosmic (variable) of class analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:75: warning: Member booster_global (variable) of class analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:76: warning: Member _bdt_nuNCpi0 (variable) of class analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:77: warning: Member _bdt_numuCCpi0 (variable) of class analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:78: warning: Member _bdt_numuCC (variable) of class analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:79: warning: Member _bdt_ext (variable) of class analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:80: warning: Member _bdt_cosmic (variable) of class analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:81: warning: Member _bdt_global (variable) of class analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:82: warning: Member _pass_antibdt_filter (variable) of class analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:83: warning: Member _mytree (variable) of class analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:84: warning: Member fVerbose (variable) of class analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:88: warning: argument 'pset' of command @param is not found in the argument list of analysis::BDT::BDT(const fhicl::ParameterSet &p)
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:70: warning: Member fTrigResProducer (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:71: warning: Member booster_nuNCpi0 (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:72: warning: Member booster_numuCCpi0 (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:73: warning: Member booster_numuCC (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:74: warning: Member booster_ext (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:75: warning: Member booster_cosmic (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:76: warning: Member booster_global (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:77: warning: Member _bdt_nuNCpi0 (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:78: warning: Member _bdt_numuCCpi0 (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:79: warning: Member _bdt_numuCC (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:80: warning: Member _bdt_ext (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:81: warning: Member _bdt_cosmic (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:82: warning: Member _bdt_global (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:83: warning: Member _pass_antibdt_filter (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:84: warning: Member _mytree (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:85: warning: Member fVerbose (variable) of class analysis::BDT is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:89: warning: argument 'pset' of command @param is not found in the argument list of analysis::BDT::BDT(const fhicl::ParameterSet &p)
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:38: warning: The following parameters of analysis::BDT::BDT(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:94: warning: Member FillCalorimetry(const searchingfornues::ProxyPfpElem_t pfp, const searchingfornues::ProxyCaloColl_t calo_proxy, const searchingfornues::ProxyPIDColl_t pid_proxy, const searchingfornues::ProxyClusColl_t clus_proxy, const bool fData, const std::vector< searchingfornues::BtPart > btparts_v, const std::unique_ptr< art::FindManyP< simb::MCParticle, anab::BackTrackerHitMatchingData >> &assocMCPart) (function) of class analysis::CalorimetryAnalysis is not documented.
