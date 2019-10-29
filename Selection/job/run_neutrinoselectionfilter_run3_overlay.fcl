@@ -10,3 +10,5 @@ physics.p1: [ crtveto, @sequence::physics.p1 ]
 physics.filters.nuselection.AnalysisTools.crtApproach:   @local::CRTApproachAnalysisTool
 physics.filters.nuselection.AnalysisTools.crtApproach.TrackAssnModuleLabel:   "crttrackmatch"
 physics.filters.nuselection.AnalysisTools.default.CRTVetoproducer: "crtveto"
+
+physics.filters.nuselection.AnalysisTools.zbdt.TrigResProducer: "TriggerResults::OverlayFiltersPostStage2"
