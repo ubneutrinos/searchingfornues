@@ -817,6 +817,7 @@ void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t
     if (clus_pxy_v.size() != 0)
     {
       float purity = 0., completeness = 0., overlay_purity = 0.;
+      _backtracked_pdg = 0;
       int ibt = searchingfornues::getAssocBtPart(hit_v, assocMCPart, btparts_v, purity, completeness, overlay_purity);
       if (ibt >= 0)
       {
@@ -901,7 +902,7 @@ void CalorimetryAnalysis::FillCalorimetry(const searchingfornues::ProxyPfpElem_t
   _trk_pida_v = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 1);
 
   //three plane pid from Pip
-  // _trk_bragg_p_three_planes = searchingfornues::PID(pidpxy_v[0], "ThreePlaneProtonPID", anab::kLikelihood, anab::kForward, 2212, UBPID::uB_SinglePlaneGetBitset(2));
+  _trk_bragg_p_three_planes = searchingfornues::PID(pidpxy_v[0], "ThreePlaneProtonPID", anab::kLikelihood, anab::kForward, 2212, -1);
 
   // Kinetic energy using tabulated stopping power (GeV)
   float mcs_momentum_muon = _trkmom.GetTrackMomentum(trk->Length(), 13);
@@ -1025,7 +1026,7 @@ void CalorimetryAnalysis::TrkDirectionAtXYZ(const recob::Track trk, const double
 	}
     }// if point is valid
   }// for all track points
-  std::cout << "minimum distance = " << min_dist << std::endl;
+  // std::cout << "minimum distance = " << min_dist << std::endl;
 
   auto direction = trk.DirectionAtPoint(i_min);
   out[0] = (float)direction.X();
