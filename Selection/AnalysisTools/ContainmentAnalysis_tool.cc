@@ -8,6 +8,7 @@
 
 // backtracking tools
 #include "../CommonDefs/BacktrackingFuncs.h"
+#include "../CommonDefs/SCECorrections.h"
 #include "larcore/Geometry/Geometry.h"
 
 namespace analysis
@@ -69,6 +70,7 @@ public:
 private:
   float DistFiducial(float x, float y, float z);
   void DistFiducialBoundaries(float x, float y, float z, std::vector<std::vector<double>> &dboundaries);
+  bool isFiducial(const float x[3]) const;
 
   art::InputTag fMCTproducer;
 
@@ -94,6 +96,8 @@ private:
 
   std::vector<std::vector<double>> _dvtx_boundary; // smallest distance between the neutrino vertex and each boundary
   std::vector<std::vector<double>> _dshr_boundary; // smallest distance between any shower start point and each boundary
+
+  float contained_sps_ratio;
 };
 
 //----------------------------------------------------------------------------
@@ -179,6 +183,8 @@ void ContainmentAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
   _dvtx_boundary.resize(3, std::vector<double>(2, std::numeric_limits<double>::max()));
   _dshr_boundary.resize(3, std::vector<double>(2, std::numeric_limits<double>::max()));
 
+  size_t sps_fv = 0, sps_all = 0;
+
   for (const auto &pfp_pxy : slice_pfp_v)
   {
 
@@ -208,6 +214,17 @@ void ContainmentAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
 
     else
     { // if not the neutrino PFP
+
+      auto spcpnts = pfp_pxy.get<recob::SpacePoint>();
+      sps_all += spcpnts.size();
+      for (auto &sp : spcpnts)
+      {
+        float _reco_nu_vtx_sce[3];
+        searchingfornues::ApplySCECorrectionXYZ(sp->XYZ()[0], sp->XYZ()[1], sp->XYZ()[2], _reco_nu_vtx_sce);
+          if (isFiducial(_reco_nu_vtx_sce))
+              sps_fv++;
+      }
+
 
       auto ntrk = pfp_pxy.get<recob::Track>().size();
 
@@ -249,6 +266,7 @@ void ContainmentAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
     } // if not the neutrino PFP
 
   } // for all PFP
+  contained_sps_ratio = sps_fv/sps_all;
 }
 
 void ContainmentAnalysis::setBranches(TTree *_tree)
@@ -283,6 +301,24 @@ void ContainmentAnalysis::resetTTree(TTree *_tree)
 
   return;
 }
+
+bool ContainmentAnalysis::isFiducial(const float x[3]) const
+{
+  float border = 10.;
+  art::ServiceHandle<geo::Geometry> geo;
+  geo::TPCGeo const &thisTPC = geo->TPC();
+  geo::BoxBoundedGeo theTpcGeo = thisTPC.ActiveBoundingBox();
+  std::vector<double> bnd = {theTpcGeo.MinX(), theTpcGeo.MaxX(), theTpcGeo.MinY(), theTpcGeo.MaxY(), theTpcGeo.MinZ(), theTpcGeo.MaxZ()};
+  bool is_x =
+      x[0] > (bnd[0] + border) && x[0] < (bnd[1] - border);
+  bool is_y =
+      x[1] > (bnd[2] + border) && x[1] < (bnd[3] - border);
+  bool is_z =
+      x[2] > (bnd[4] + border) && x[2] < (bnd[5] - border);
+
+  return is_x && is_y && is_z;
+}
+
 
 void ContainmentAnalysis::DistFiducialBoundaries(float x, float y, float z, std::vector<std::vector<double>> &dist_boundaries)
 {
