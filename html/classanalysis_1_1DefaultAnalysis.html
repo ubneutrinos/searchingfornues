@@ -146,10 +146,6 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a248e4a44368e7c8a632242fa7e171ade"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a248e4a44368e7c8a632242fa7e171ade"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1DefaultAnalysis.html#a248e4a44368e7c8a632242fa7e171ade">ApplySCECorrection</a> (const float &amp;vtx_x, const float &amp;vtx_y, const float &amp;vtx_z, float &amp;sce_x, float &amp;sce_y, float &amp;sce_z)</td></tr>
-<tr class="memdesc:a248e4a44368e7c8a632242fa7e171ade"><td class="mdescLeft">&#160;</td><td class="mdescRight">apply SCE corections from reconstruction maps <br /></td></tr>
-<tr class="separator:a248e4a44368e7c8a632242fa7e171ade"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51efe899f0117f479c9f833663c7111f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1DefaultAnalysis.html#a51efe899f0117f479c9f833663c7111f">isFiducial</a> (const double x[3]) const </td></tr>
 <tr class="memdesc:a51efe899f0117f479c9f833663c7111f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the specified point is in the fiducial volume Not recommended, no array size checking is done.  <a href="#a51efe899f0117f479c9f833663c7111f">More...</a><br /></td></tr>
 <tr class="separator:a51efe899f0117f479c9f833663c7111f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -272,24 +268,6 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>fMuonThreshold</b></
 <tr class="memitem:a439203d5925baa2ccdd8108618801267"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a439203d5925baa2ccdd8108618801267"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>_category</b></td></tr>
 <tr class="separator:a439203d5925baa2ccdd8108618801267"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae74ddbcfe3d655a7a2ef2e7f51110c8b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae74ddbcfe3d655a7a2ef2e7f51110c8b"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>_nu_vtx_x</b></td></tr>
-<tr class="separator:ae74ddbcfe3d655a7a2ef2e7f51110c8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60598c35745e81417d2fe44a7198a3cf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a60598c35745e81417d2fe44a7198a3cf"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>_nu_vtx_y</b></td></tr>
-<tr class="separator:a60598c35745e81417d2fe44a7198a3cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61e5383c17b136ad3c0d62c1d91d972e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a61e5383c17b136ad3c0d62c1d91d972e"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>_nu_vtx_z</b></td></tr>
-<tr class="separator:a61e5383c17b136ad3c0d62c1d91d972e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae15f1f173710c3763e52e8341d6d6e9b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae15f1f173710c3763e52e8341d6d6e9b"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>_nu_sce_x</b></td></tr>
-<tr class="separator:ae15f1f173710c3763e52e8341d6d6e9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4800e3781e9eae7c18ad22fa97753a11"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4800e3781e9eae7c18ad22fa97753a11"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>_nu_sce_y</b></td></tr>
-<tr class="separator:a4800e3781e9eae7c18ad22fa97753a11"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49371c019270026c36906ad302b8c32b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a49371c019270026c36906ad302b8c32b"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>_nu_sce_z</b></td></tr>
-<tr class="separator:a49371c019270026c36906ad302b8c32b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a182516cd673c8a96d713cacbc545dfcf"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a182516cd673c8a96d713cacbc545dfcf"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>_true_nu_vtx_t</b></td></tr>
 <tr class="separator:a182516cd673c8a96d713cacbc545dfcf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -496,18 +474,6 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>_lep_e</b></td></tr>
 <tr class="memitem:a8d58d05d4b0750a67babff41beece3ac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8d58d05d4b0750a67babff41beece3ac"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>_pass</b></td></tr>
 <tr class="separator:a8d58d05d4b0750a67babff41beece3ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ab8489552ea4bfceb0301df80100c65"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6ab8489552ea4bfceb0301df80100c65"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>_xtimeoffset</b></td></tr>
-<tr class="separator:a6ab8489552ea4bfceb0301df80100c65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31b53194403f7db533cd349a0f85a62c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a31b53194403f7db533cd349a0f85a62c"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>_xsceoffset</b></td></tr>
-<tr class="separator:a31b53194403f7db533cd349a0f85a62c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3948474002486f07a07ff52f24976ce"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa3948474002486f07a07ff52f24976ce"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>_ysceoffset</b></td></tr>
-<tr class="separator:aa3948474002486f07a07ff52f24976ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2471e0f1bf6cf3c5bec18f830f41c8d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af2471e0f1bf6cf3c5bec18f830f41c8d"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>_zsceoffset</b></td></tr>
-<tr class="separator:af2471e0f1bf6cf3c5bec18f830f41c8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a32911aea589477a3832a4de8d134696d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a32911aea589477a3832a4de8d134696d"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>evnhits</b></td></tr>
 <tr class="separator:a32911aea589477a3832a4de8d134696d"><td class="memSeparator" colspan="2">&#160;</td></tr>
