@@ -55,6 +55,20 @@ namespace searchingfornues
     double _wire2cm = geom->WirePitch(0, 0, 0);
     return geom->WireCoordinate(y, z, geo::PlaneID(0, 0, plane)) * _wire2cm;
   }
+
+  float getPitch(float dir_y, float dir_z, int plane)
+  {
+    float aux_cos = 1.;
+    if (plane == 0)
+      aux_cos = dir_y * (-sqrt(3)/2) + dir_z * (1/2);
+    if (plane == 1)
+      aux_cos = dir_y * (sqrt(3)/2) + dir_z * (1/2);
+    if (plane == 2)
+      aux_cos = dir_z;
+
+    return 0.3/aux_cos;
+  }
+
 } // namespace searchingfornues
 
 #endif

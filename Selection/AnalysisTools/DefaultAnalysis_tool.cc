@@ -18,6 +18,7 @@
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 
 #include "canvas/Persistency/Common/TriggerResults.h"
+#include "larpandora/LArPandoraInterface/LArPandoraHelper.h"
 
 namespace analysis
 {
@@ -82,12 +83,6 @@ public:
 
 private:
   /**
-     * @brief apply SCE corections from reconstruction maps
-     */
-  void ApplySCECorrection(const float &vtx_x, const float &vtx_y, const float &vtx_z,
-                          float &sce_x, float &sce_y, float &sce_z);
-
-  /**
    * @brief Determine if the specified point is in the fiducial volume
    *        Not recommended, no array size checking is done.
    *
@@ -113,8 +108,7 @@ private:
   art::InputTag fHproducer;
   art::InputTag fMCRproducer;
   art::InputTag fSLCproducer; // slice associated to PFP
-  float fTrkShrScore; /**< Threshold on the Pandora track score (default 0.5) */
-
+  float fTrkShrScore;         /**< Threshold on the Pandora track score (default 0.5) */
 
   float fFidvolXstart;
   float fFidvolXend;
@@ -143,11 +137,6 @@ private:
 
   int _category; // event category
 
-  // neutrino vertx (reco)
-  float _nu_vtx_x, _nu_vtx_y, _nu_vtx_z;
-  // neutrino vertex SCE position corrections (reco)
-  float _nu_sce_x, _nu_sce_y, _nu_sce_z;
-
   float _true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z;
   float _true_nu_vtx_sce_x, _true_nu_vtx_sce_y, _true_nu_vtx_sce_z;
   float _reco_nu_vtx_x, _reco_nu_vtx_y, _reco_nu_vtx_z;
@@ -164,27 +153,24 @@ private:
   int _nu_pdg;                  /**< neutrino PDG code */
   int _ccnc;                    /**< CC or NC tag from GENIE */
   int _interaction;             /**< Interaction code from GENIE */
-  float _vtx_x, _vtx_y, _vtx_z; /**< neutrino interaction vertex coordinates [cm] */
-  float _vtx_t;                 /**< neutrino generation time */
-  bool _isVtxInActive;          /**< true if neutrino in active volume, 0 < x < 256 -116 < y < 116;  0 < z <  1036 */
   bool _isVtxInFiducial;        /**< true if neutrino in fiducial volume */
 
   // final state particle information
-  int _nmuon;                            /**< is there a final-state muon from the neutrino? [1=yes 0=no] */
-  float _muon_e, _muon_p, _muon_c;       /**< energy, purity, completeness. */
-  int _nelec;                            /**< is there a final-state electron from the neutrino? [1=yes 0=no] */
-  float _elec_e, _elec_p, _elec_c;       /**< energy, purity, completeness. */
-  float _elec_vx, _elec_vy, _elec_vz;    /**< electron vertex. */
-  int _npi0;                             /**< how many pi0s are there? */
+  int _nmuon;                         /**< is there a final-state muon from the neutrino? [1=yes 0=no] */
+  float _muon_e, _muon_p, _muon_c;    /**< energy, purity, completeness. */
+  int _nelec;                         /**< is there a final-state electron from the neutrino? [1=yes 0=no] */
+  float _elec_e, _elec_p, _elec_c;    /**< energy, purity, completeness. */
+  float _elec_vx, _elec_vy, _elec_vz; /**< electron vertex. */
+  int _npi0;                          /**< how many pi0s are there? */
   //int _pi0;                              /**< is there a final-state pi0 from the neutrino? [1=yes 0=no] */
-  float _pi0_e, _pi0_p, _pi0_c;          /**< energy, purity, completeness. */
-  int _nneutron;                         /**< how many neutrons are there? */
-  int _nproton;                          /**< how many protons are there? */
+  float _pi0_e, _pi0_p, _pi0_c; /**< energy, purity, completeness. */
+  int _nneutron;                /**< how many neutrons are there? */
+  int _nproton;                 /**< how many protons are there? */
   //int _proton;                           /**< is there a final-state proton from the neutrino? [1=yes 0=no] */
   float _proton_e, _proton_p, _proton_c; /**< energy, purity, completeness. */
   int _npion;                            /**< how many pions are there? */
   //int _pion;                             /**< is there a final-state charged pion from the neutrino? [1=yes 0=no] */
-  float _pion_e, _pion_p, _pion_c;       /**< energy, purity, completeness. */
+  float _pion_e, _pion_p, _pion_c; /**< energy, purity, completeness. */
 
   std::string _endmuonprocess; /**< End muon process name */
   float _endmuonmichel;        /**< End muon Michel electron energy */
@@ -198,10 +184,10 @@ private:
   // reco PFParticle backtracking. One entry for PFParticle in the slice
   // std::vector<int>   _backtracked_idx;    // index of PFP [key]
   // std::vector<int>   _backtracked_tid;    // TrackID of backtracked MCParticle
-  std::vector<int> _backtracked_pdg;            // PDG code of backtracked particle
-  std::vector<float> _backtracked_e;            // energy of backtracked particle
-  std::vector<float> _backtracked_purity;       // purity of backtracking
-  std::vector<float> _backtracked_completeness; // completeness of backtracking
+  std::vector<int> _backtracked_pdg;              // PDG code of backtracked particle
+  std::vector<float> _backtracked_e;              // energy of backtracked particle
+  std::vector<float> _backtracked_purity;         // purity of backtracking
+  std::vector<float> _backtracked_completeness;   // completeness of backtracking
   std::vector<float> _backtracked_overlay_purity; // purity of overlay
 
   std::vector<float> _backtracked_px;
@@ -224,18 +210,21 @@ private:
 
   float _lep_e;                                              // lepton energy (if one exists) [GeV]
   int _pass;                                                 // does the slice pass the selection
-  float _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset; // offsets for generation time and SCE
 
-  int evnhits;                                // number of hits in event
-  int slpdg;                                  // PDG code of primary pfp in slice
-  int slnhits;                                // number of hits in slice
-  float _topo_score;                          /**< topological score of the slice */
-  std::vector<int> pfpdg;                     // PDG code of pfp in slice
-  std::vector<int> pfnhits;                   // number of hits in pfp
+  int evnhits;                     // number of hits in event
+  int slpdg;                       // PDG code of primary pfp in slice
+  int slnhits;                     // number of hits in slice
+  float _topo_score;               /**< topological score of the slice */
+  std::vector<int> pfpdg;          // PDG code of pfp in slice
+  std::vector<int> pfnhits;        // number of hits in pfp
   std::vector<int> pfnplanehits_U; // number of hits in pfp plane U
   std::vector<int> pfnplanehits_V; // number of hits in pfp plane V
   std::vector<int> pfnplanehits_Y; // number of hits in pfp plane Y
-  float slclustfrac; //fraction of clustered hits in the slice
+  float slclustfrac;               //fraction of clustered hits in the slice
+
+  std::vector<uint> _generation;    // generation, 1 is primary
+  std::vector<uint> _shr_daughters; // number of shower daughters
+  std::vector<uint> _trk_daughters; // number of track daughters
 
   unsigned int _n_pfps;
   std::vector<float> _trk_score_v;
@@ -245,8 +234,6 @@ private:
   unsigned int _hits_u;
   unsigned int _hits_v;
   unsigned int _hits_y;
-  unsigned int _overlay_hits;
-  unsigned int _mc_hits;
 
   std::vector<int> _mc_pdg;
   std::vector<float> _mc_E;
@@ -301,8 +288,8 @@ DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
   fFidvolXstart = p.get<double>("fidvolXstart", 10);
   fFidvolXend = p.get<double>("fidvolXend", 10);
 
-  fFidvolYstart = p.get<double>("fidvolYstart", 15);
-  fFidvolYend = p.get<double>("fidvolYend", 15);
+  fFidvolYstart = p.get<double>("fidvolYstart", 10);
+  fFidvolYend = p.get<double>("fidvolYend", 10);
 
   fFidvolZstart = p.get<double>("fidvolZstart", 10);
   fFidvolZend = p.get<double>("fidvolZend", 50);
@@ -332,18 +319,19 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   _sub = e.subRun();
   _run = e.run();
 
-  std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: "<< _evt << std::endl;
+  std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: " << _evt << std::endl;
 
   // storing trigger result output for software trigger
-  art::InputTag swtrig_tag("TriggerResults","","DataOverlayOptical");
+  art::InputTag swtrig_tag("TriggerResults", "", "DataOverlayOptical");
   art::Handle<art::TriggerResults> swtrig_handle;
   e.getByLabel(swtrig_tag, swtrig_handle);
-  if (swtrig_handle.isValid()) {
+  if (swtrig_handle.isValid())
+  {
     if (swtrig_handle->accept() == true)
       _swtrig = 1;
     else
       _swtrig = 0;
-  }// if software trigger run by this producer
+  } // if software trigger run by this producer
 
   if (!fData)
   {
@@ -388,12 +376,10 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 
 bool DefaultAnalysis::isFiducial(const double x[3]) const
 {
-
   art::ServiceHandle<geo::Geometry> geo;
-  std::vector<double> bnd = {
-      0., 2. * geo->DetHalfWidth(), -geo->DetHalfHeight(), geo->DetHalfHeight(),
-      0., geo->DetLength()};
-
+  geo::TPCGeo const &thisTPC = geo->TPC();
+  geo::BoxBoundedGeo theTpcGeo = thisTPC.ActiveBoundingBox();
+  std::vector<double> bnd = {theTpcGeo.MinX(), theTpcGeo.MaxX(), theTpcGeo.MinY(), theTpcGeo.MaxY(), theTpcGeo.MinZ(), theTpcGeo.MaxZ()};
   bool is_x =
       x[0] > (bnd[0] + fFidvolXstart) && x[0] < (bnd[1] - fFidvolXend);
   bool is_y =
@@ -411,6 +397,13 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
   // somehow proxies don't work for the slice-hit association, so go back to old assns
   art::ValidHandle<std::vector<recob::Slice>> inputSlice = e.getValidHandle<std::vector<recob::Slice>>(fSLCproducer);
   auto assocSliceHit = std::unique_ptr<art::FindManyP<recob::Hit>>(new art::FindManyP<recob::Hit>(inputSlice, e, fSLCproducer));
+
+  // Build larpandora info:
+  lar_pandora::LArPandoraHelper larpandora;
+  lar_pandora::PFParticleVector pfparticles;
+  lar_pandora::PFParticleMap particleMap;
+  larpandora.CollectPFParticles(e, "pandora", pfparticles);
+  larpandora.BuildPFParticleMap(pfparticles, particleMap);
 
   // load backtrack information
   std::vector<searchingfornues::BtPart> btparts_v;
@@ -465,11 +458,6 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         vtx.at(0)->XYZ(xyz);
         auto nuvtx = TVector3(xyz[0], xyz[1], xyz[2]);
 
-        _nu_vtx_x = nuvtx.X();
-        _nu_vtx_y = nuvtx.Y();
-        _nu_vtx_z = nuvtx.Z();
-        ApplySCECorrection(_nu_vtx_x, _nu_vtx_y, _nu_vtx_z, _nu_sce_x, _nu_sce_y, _nu_sce_z);
-
         _reco_nu_vtx_x = nuvtx.X();
         _reco_nu_vtx_y = nuvtx.Y();
         _reco_nu_vtx_z = nuvtx.Z();
@@ -487,9 +475,27 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       continue;
     } // if neutrino PFParticle
 
-    _n_pfps ++;
+    _n_pfps++;
     _pfp_slice_idx.push_back(pfpidx++);
     pfpdg.push_back(pfp->PdgCode());
+
+    // Hieracrchy information:
+    _generation.push_back(larpandora.GetGeneration(particleMap, particleMap.at(pfp->Self())));
+    uint this_num_trk_d = 0;
+    uint this_num_shr_d = 0;
+    for (size_t daughter : pfp->Daughters())
+    {
+      if (larpandora.IsTrack(particleMap.at(daughter)))
+      {
+        this_num_trk_d++; // Track daughter
+      }
+      else
+      {
+        this_num_shr_d++; // Shower daughter
+      }
+    }
+    _shr_daughters.push_back(this_num_shr_d);
+    _trk_daughters.push_back(this_num_trk_d);
 
     // store track score
     float trkscore = searchingfornues::GetTrackShowerScore(pfp);
@@ -549,7 +555,6 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         int ibt = searchingfornues::getAssocBtPart(hit_v, assocMCPart, btparts_v, purity, completeness, overlay_purity);
         if (ibt >= 0)
         {
-          _mc_hits += hit_v.size();
           auto &mcp = btparts_v[ibt];
           auto PDG = mcp.pdg;
           //_backtracked_idx.push_back(pfp->Self());
@@ -635,7 +640,6 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           _backtracked_purity.push_back(std::numeric_limits<float>::lowest());
           _backtracked_completeness.push_back(std::numeric_limits<float>::lowest());
           _backtracked_overlay_purity.push_back(std::numeric_limits<float>::lowest());
-          _overlay_hits += hit_v.size();
 
           _backtracked_px.push_back(std::numeric_limits<float>::lowest());
           _backtracked_py.push_back(std::numeric_limits<float>::lowest());
@@ -660,58 +664,42 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       } // if there are associated clusters
     }   // if MC
   }
-  if (slnhits>0) {
+  if (slnhits > 0)
+  {
     slclustfrac = 0.;
-    for (auto n : pfnhits) slclustfrac+=n;
-    slclustfrac/=float(slnhits);
+    for (auto n : pfnhits)
+      slclustfrac += n;
+    slclustfrac /= float(slnhits);
   }
   _nslice += 1;
 
   if (!fData)
   {
-
-    // Check if there is a PFParticle associated to an electron
-    std::vector<int>::iterator e_reco_id = std::find(_backtracked_pdg.begin(), _backtracked_pdg.end(), 11);
-    bool there_is_reco_electron = e_reco_id != _backtracked_pdg.end();
-
-    // Check if there is a PFParticle associated to an overlay cosmic
-    // std::vector<int>::iterator cosmic_id = std::find(_backtracked_pdg.begin(), _backtracked_pdg.end(), 0);
-    // bool there_is_reco_cosmic = cosmic_id != _backtracked_pdg.end();
-
-    bool there_is_reco_cosmic = (float)_overlay_hits / (_overlay_hits + _mc_hits) > 0.5;
-
     bool there_is_true_proton = _nproton > 0;
     bool there_is_true_pi = _npion > 0;
     bool there_is_true_mu = _nmuon > 0;
     bool there_is_true_pi0 = _npi0 > 0;
     bool there_is_true_electron = _nelec > 0;
 
-    if (!there_is_reco_cosmic && !_isVtxInFiducial)
+    if (!_isVtxInFiducial)
     {
       _category = k_outfv;
     }
-    else if (abs(_nu_pdg) == electron_neutrino->PdgCode() && !there_is_reco_cosmic)
+    else if (abs(_nu_pdg) == electron_neutrino->PdgCode())
     {
       if (there_is_true_electron)
       {
-        if (there_is_reco_electron)
+        if (!there_is_true_pi && there_is_true_proton && !there_is_true_pi0)
         {
-          if (!there_is_true_pi && there_is_true_proton && !there_is_true_pi0)
-          {
-            _category = k_nu_e_cc0pinp;
-          }
-          else if (!there_is_true_pi && !there_is_true_proton && !there_is_true_pi0)
-          {
-            _category = k_nu_e_cc0pi0p;
-          }
-          else
-          {
-            _category = k_nu_e_other;
-          }
+          _category = k_nu_e_cc0pinp;
+        }
+        else if (!there_is_true_pi && !there_is_true_proton && !there_is_true_pi0)
+        {
+          _category = k_nu_e_cc0pi0p;
         }
         else
         {
-          _category = k_other;
+          _category = k_nu_e_other;
         }
       }
       else
@@ -726,7 +714,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         }
       }
     }
-    else if (abs(_nu_pdg) == muon_neutrino->PdgCode() && !there_is_reco_cosmic)
+    else if (abs(_nu_pdg) == muon_neutrino->PdgCode())
     {
       if (there_is_true_mu)
       {
@@ -768,14 +756,6 @@ void DefaultAnalysis::setBranches(TTree *_tree)
 {
   _tree->Branch("leeweight", &_leeweight, "leeweight/F");
 
-  // reconstructed neutrino vertex
-  _tree->Branch("nu_vtx_x", &_nu_vtx_x, "nu_vtx_x/F");
-  _tree->Branch("nu_vtx_y", &_nu_vtx_y, "nu_vtx_y/F");
-  _tree->Branch("nu_vtx_z", &_nu_vtx_z, "nu_vtx_z/F");
-  _tree->Branch("nu_sce_x", &_nu_sce_x, "nu_sce_x/F");
-  _tree->Branch("nu_sce_y", &_nu_sce_y, "nu_sce_y/F");
-  _tree->Branch("nu_sce_z", &_nu_sce_z, "nu_sce_z/F");
-
   _tree->Branch("true_pt", &_true_pt, "true_pt/F");
   _tree->Branch("true_pt_visible", &_true_pt_visible, "true_pt_visible/F");
   _tree->Branch("true_p", &_true_p, "true_p/F");
@@ -790,11 +770,6 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("nu_e", &_nu_e, "nu_e/F");
   _tree->Branch("nu_pt", &_nu_pt, "nu_pt/F");
   _tree->Branch("theta", &_theta, "theta/F");
-
-  _tree->Branch("vtx_x", &_vtx_x, "vtx_x/F");
-  _tree->Branch("vtx_y", &_vtx_y, "vtx_y/F");
-  _tree->Branch("vtx_z", &_vtx_z, "vtx_z/F");
-  _tree->Branch("isVtxInActive", &_isVtxInActive, "isVtxInActive/O");
   _tree->Branch("isVtxInFiducial", &_isVtxInFiducial, "isVtxInFiducial/O");
 
   _tree->Branch("true_nu_vtx_t", &_true_nu_vtx_t, "true_nu_vtx_t/F");
@@ -885,19 +860,13 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("backtracked_sce_start_V", "std::vector<float>", &_backtracked_sce_start_V);
   _tree->Branch("backtracked_sce_start_Y", "std::vector<float>", &_backtracked_sce_start_Y);
 
-
   _tree->Branch("lep_e", &_lep_e, "lep_e/F");
   _tree->Branch("pass", &_pass, "pass/I");
   _tree->Branch("run", &_run, "run/I");
   _tree->Branch("sub", &_sub, "sub/I");
   _tree->Branch("evt", &_evt, "evt/I");
 
-  _tree->Branch("swtrig",&_swtrig,"swtrig/I");
-
-  _tree->Branch("xtimeoffset", &_xtimeoffset, "xtimeoffset/F");
-  _tree->Branch("xsceoffset", &_xsceoffset, "xsceoffset/F");
-  _tree->Branch("ysceoffset", &_ysceoffset, "ysceoffset/F");
-  _tree->Branch("zsceoffset", &_zsceoffset, "zsceoffset/F");
+  _tree->Branch("swtrig", &_swtrig, "swtrig/I");
 
   _tree->Branch("evnhits", &evnhits, "evnhits/I");
   _tree->Branch("slpdg", &slpdg, "slpdg/I");
@@ -905,6 +874,11 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("n_pfps", &_n_pfps, "n_pfps/I");
   _tree->Branch("n_tracks", &_n_tracks, "n_tracks/I");
   _tree->Branch("n_showers", &_n_showers, "n_showers/I");
+
+  _tree->Branch("pfp_generation_v", "std::vector< uint >", &_generation);
+  _tree->Branch("pfp_trk_daughters_v", "std::vector< uint >", &_trk_daughters);
+  _tree->Branch("pfp_shr_daughters_v", "std::vector< uint >", &_shr_daughters);
+
   _tree->Branch("trk_score_v", "std::vector< float >", &_trk_score_v);
 
   _tree->Branch("pfpdg", "std::vector<int>", &pfpdg);
@@ -957,19 +931,8 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _ccnc = std::numeric_limits<int>::lowest();
   _interaction = std::numeric_limits<int>::lowest();
   _pass = 0;
-  _vtx_x = std::numeric_limits<float>::lowest();
-  _vtx_y = std::numeric_limits<float>::lowest();
-  _vtx_z = std::numeric_limits<float>::lowest();
 
   _category = 0;
-
-  _nu_vtx_x = std::numeric_limits<float>::lowest();
-  _nu_vtx_y = std::numeric_limits<float>::lowest();
-  _nu_vtx_z = std::numeric_limits<float>::lowest();
-
-  _nu_sce_x = std::numeric_limits<float>::lowest();
-  _nu_sce_y = std::numeric_limits<float>::lowest();
-  _nu_sce_z = std::numeric_limits<float>::lowest();
 
   _true_nu_vtx_t = std::numeric_limits<float>::lowest();
   _true_nu_vtx_x = std::numeric_limits<float>::lowest();
@@ -985,9 +948,6 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _reco_nu_vtx_sce_y = std::numeric_limits<float>::lowest();
   _reco_nu_vtx_sce_z = std::numeric_limits<float>::lowest();
 
-  _overlay_hits = 0;
-  _mc_hits = 0;
-  _isVtxInActive = false;
   _isVtxInFiducial = false;
 
   _nslice = 0;
@@ -1065,6 +1025,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   pfnplanehits_U.clear();
   pfnplanehits_V.clear();
   pfnplanehits_Y.clear();
+  _generation.clear();
+  _shr_daughters.clear();
+  _trk_daughters.clear();
   slclustfrac = std::numeric_limits<float>::lowest();
 
   _hits_u = 0;
@@ -1114,10 +1077,6 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _interaction = neutrino.Mode();
   _nu_pdg = nu.PdgCode();
   _nu_e = nu.Trajectory().E(0);
-  _vtx_x = nu.EndX();
-  _vtx_y = nu.EndY();
-  _vtx_z = nu.EndZ();
-  _vtx_t = nu.T();
 
   _true_nu_vtx_t = nu.T();
   _true_nu_vtx_x = nu.Vx();
@@ -1134,18 +1093,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _theta = neutrino.Theta();
   _nu_pt = neutrino.Pt();
 
-  art::ServiceHandle<geo::Geometry> geo;
-
-  if (_vtx_x < 2. * geo->DetHalfWidth() && _vtx_x > 0. &&
-      _vtx_y < geo->DetHalfHeight() && _vtx_y > -geo->DetHalfHeight() &&
-      _vtx_z < geo->DetLength() && _vtx_z > 0.)
-  {
-    _isVtxInActive = true;
-  }
-  else
-    _isVtxInActive = false;
-
-  double vtx[3] = {_vtx_x, _vtx_y, _vtx_z};
+  double vtx[3] = {_true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z};
   _isVtxInFiducial = isFiducial(vtx);
 
   _nelec = 0;
@@ -1293,8 +1241,6 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     _mc_purity.push_back(std::numeric_limits<float>::lowest());
   }
 
-  searchingfornues::ApplyDetectorOffsets(_vtx_t, _vtx_x, _vtx_y, _vtx_z, _xtimeoffset, _xsceoffset, _ysceoffset, _zsceoffset);
-
   // find if mu -> michel
   _endmuonprocess = "";
   _endmuonmichel = 0;
@@ -1320,9 +1266,12 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
       {
         muonTrackId = mcp.TrackId();
         // stops in the detector?
-        if ((mcp.EndPosition().X() > 0) && (mcp.EndPosition().X() < 2 * geo->DetHalfWidth()) &&
-            (mcp.EndPosition().Y() > -geo->DetHalfHeight()) && (mcp.EndPosition().Y() < geo->DetHalfHeight()) &&
-            (mcp.EndPosition().Z() > 0) && (mcp.EndPosition().Z() < geo->DetLength()))
+        art::ServiceHandle<geo::Geometry> geo;
+        geo::TPCGeo const &thisTPC = geo->TPC();
+        geo::BoxBoundedGeo theTpcGeo = thisTPC.ActiveBoundingBox();
+        if ((mcp.EndPosition().X() > theTpcGeo.MinX()) && (mcp.EndPosition().X() < theTpcGeo.MaxX()) &&
+            (mcp.EndPosition().Y() > theTpcGeo.MinY()) && (mcp.EndPosition().Y() < theTpcGeo.MaxY()) &&
+            (mcp.EndPosition().Z() > theTpcGeo.MinZ()) && (mcp.EndPosition().Z() < theTpcGeo.MaxZ()))
         {
           _endmuonprocess = mcp.EndProcess();
           containedMu = true;
@@ -1364,23 +1313,6 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   return;
 }
 
-void DefaultAnalysis::ApplySCECorrection(const float &vtx_x, const float &vtx_y, const float &vtx_z,
-                                         float &sce_x, float &sce_y, float &sce_z)
-{
-
-  auto const *SCE = lar::providerFrom<spacecharge::SpaceChargeService>();
-
-  if (SCE->EnableSimSpatialSCE() == true)
-  {
-
-    auto offset = SCE->GetPosOffsets(geo::Point_t(vtx_x, vtx_y, vtx_z));
-    sce_x = offset.X();
-    sce_y = offset.Y();
-    sce_z = offset.Z();
-  } // if spatial offset calibrations are enabled
-
-  return;
-}
 
 DEFINE_ART_CLASS_TOOL(DefaultAnalysis)
 } // namespace analysis

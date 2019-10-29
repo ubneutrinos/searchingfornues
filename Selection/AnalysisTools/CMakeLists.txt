@@ -6,6 +6,7 @@ art_make( TOOL_LIBRARIES lardataobj_RecoBase
                          nusimdata_SimulationBase
                          larcorealg_Geometry
                          larcore_Geometry_Geometry_service
+                         larpandora_LArPandoraInterface
                          lardata_RecoObjects
                          lardata_Utilities
 			 larreco_RecoAlg

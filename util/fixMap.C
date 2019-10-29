@@ -2,7 +2,7 @@
 Usage:
 source /cvmfs/uboone.opensciencegrid.org/products/setup_uboone.sh
 setup root v6_18_04b -q e17:prof
-root 'readMap.C("file.root")'
+root 'fixMap.C("file.root")'
 */
 void fixMap(string filename){
     gInterpreter->GenerateDictionary("map<string,vector<double>>","map");
