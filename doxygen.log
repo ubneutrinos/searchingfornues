@@ -1026,11 +1026,14 @@ Generating code for file/home/travis/build/ubneutrinos/searchingfornues/FlashMat
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:79: warning: Member _evt (variable) of class analysis::EventWeightTree is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:77: warning: Member fPFPproducer (variable) of class analysis::FlashMatching is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:78: warning: Member fT0producer (variable) of class analysis::FlashMatching is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:80: warning: Member _nu_flashmatch_score (variable) of class analysis::FlashMatching is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:81: warning: Member _best_cosmic_flashmatch_score (variable) of class analysis::FlashMatching is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:82: warning: Member _best_obviouscosmic_flashmatch_score (variable) of class analysis::FlashMatching is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:83: warning: Member _cosmic_flashmatch_score_v (variable) of class analysis::FlashMatching is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:88: warning: argument 'pset' of command @param is not found in the argument list of analysis::FlashMatching::FlashMatching(const fhicl::ParameterSet &p)
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:79: warning: Member fFLASHproducer (variable) of class analysis::FlashMatching is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:81: warning: Member _flash_pe (variable) of class analysis::FlashMatching is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:82: warning: Member _flash_time (variable) of class analysis::FlashMatching is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:84: warning: Member _nu_flashmatch_score (variable) of class analysis::FlashMatching is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:85: warning: Member _best_cosmic_flashmatch_score (variable) of class analysis::FlashMatching is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:86: warning: Member _best_obviouscosmic_flashmatch_score (variable) of class analysis::FlashMatching is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:87: warning: Member _cosmic_flashmatch_score_v (variable) of class analysis::FlashMatching is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:92: warning: argument 'pset' of command @param is not found in the argument list of analysis::FlashMatching::FlashMatching(const fhicl::ParameterSet &p)
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:45: warning: The following parameters of analysis::FlashMatching::FlashMatching(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/NeutrinoEnergy_tool.cc:77: warning: Member fTRKproducer (variable) of class analysis::NeutrinoEnergy is not documented.
