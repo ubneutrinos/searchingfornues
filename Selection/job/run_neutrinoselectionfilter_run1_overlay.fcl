@@ -9,6 +9,8 @@ services.DetectorClocksService.TrigModuleName: "triggersim"
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
 physics.filters.nuselection.IsData: false
 
+physics.filters.nuselection.AnalysisTools.zbdt.TrigResProducer: "TriggerResults::OverlayFiltersPostStage2"
+
 # I think the lines below need to be uncommented for pure MC but is ok to leave out for overlays
 ###physics.producers.shrreco3dKalmanShowercalo: @local::shrreco3dKalmanShowercalomc
 ###physics.producers.shrreco3dKalmanShowercali: @local::shrreco3dKalmanShowercalimc

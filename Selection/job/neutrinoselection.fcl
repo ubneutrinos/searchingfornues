@@ -121,6 +121,7 @@ PMTNoiseTool: {
 
 BDTTool: {
     tool_type: "BDT"
+    TrigResProducer: "TriggerResults::DataFiltersPostStage2"
 }
 
 ContainmentAnalysis: {
@@ -204,7 +205,7 @@ NuSelectionFilter:{
         nuenergy:      @local::NeutrinoEnergyTool
         flashmatchid:  @local::FlashMatchingTool
         pi0tagger:     @local::Pi0TaggerTool
-        #zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
+        zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
     }
 }
 

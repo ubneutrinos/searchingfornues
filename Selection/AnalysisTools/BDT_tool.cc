@@ -67,6 +67,7 @@ namespace analysis
     
   private:
 
+    art::InputTag fTrigResProducer;
     BoosterHandle booster_nuNCpi0;
     BoosterHandle booster_numuCCpi0;
     BoosterHandle booster_numuCC;
@@ -93,6 +94,7 @@ namespace analysis
   ///
   BDT::BDT(const fhicl::ParameterSet& p)
   {
+    fTrigResProducer = p.get<art::InputTag>("TrigResProducer");
     fVerbose = p.get<bool>("Verbose", false);
     //documentation in xgboost/include/xgboost/c_api.h
     int xgtest = -1;
@@ -154,9 +156,12 @@ namespace analysis
   {
 
     art::Handle<art::TriggerResults> filter;
-    e.getByLabel(art::InputTag("TriggerResults","","OverlayFiltersPostStage2"),filter);
-    if (filter.isValid() && filter->size()==4) {
-      _pass_antibdt_filter = filter->at(1).accept();//fixme accessing position at(1) is not robust
+    e.getByLabel(fTrigResProducer,filter);
+    if (filter.isValid()) {
+      //std::cout << "filter size=" << filter->size() << std::endl;
+      if (filter->size()==4 || filter->size()==5) {
+	_pass_antibdt_filter = filter->at(1).accept();//fixme accessing position at(1) is not robust
+      }
     }
     // std::cout << "filter size=" << filter->size() << std::endl;
     // std::cout << "filter pset=" << filter->parameterSetID().to_string() << std::endl;
