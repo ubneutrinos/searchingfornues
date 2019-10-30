@@ -245,10 +245,6 @@ private:
     unsigned int _shr_tkfit_gap10_nhits_V; /**< Number of hits in the 1x4 cm box on the V plane with the track fitting, skip first 10 mm */
     unsigned int _shr_tkfit_gap10_nhits_U; /**< Number of hits in the 1x4 cm box on the U plane with the track fitting, skip first 10 mm */
 
-    unsigned int _hits_outfv;      /**< Number of hits of PFParticles outside the fiducial volume */
-    float _contained_fraction;     /**< Fraction of hits of the PFParticles contained in the fiducial volume */
-    float _sps_contained_fraction; /**< Fraction of SpacePoints of the PFParticles contained in the fiducial volume */
-
     float _trk_energy_hits_tot; /**< Sum of the energy of the tracks obtained with the deposited charge */
 
     unsigned int _total_hits_y; /**< Total number of hits on the Y plane */
@@ -478,12 +474,6 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
                 if (!isFiducial(shr_vertex))
                 {
-                    for (auto ass_clus : clus_pxy_v)
-                    {
-                        const auto &clus = clus_proxy[ass_clus.key()];
-                        auto clus_hit_v = clus.get<recob::Hit>();
-                        _hits_outfv += clus_hit_v.size();
-                    }
                     continue;
                 }
 
@@ -790,12 +780,6 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
                 if (!isFiducial(trk_start) || !isFiducial(trk_end))
                 {
-                    for (auto ass_clus : clus_pxy_v)
-                    {
-                        const auto &clus = clus_proxy[ass_clus.key()];
-                        auto clus_hit_v = clus.get<recob::Hit>();
-                        _hits_outfv += clus_hit_v.size();
-                    }
                     continue;
                 }
                 _n_tracks_contained++;
@@ -942,12 +926,6 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         _tksh_angle = trk_p.Dot(shr_p) / (trk_p.Mag() * shr_p.Mag());
     if (trk_p_mu.Mag() * shr_p.Mag() > 0)
         _tksh_angle_muon = trk_p_mu.Dot(shr_p) / (trk_p_mu.Mag() * shr_p.Mag());
-
-    _contained_fraction = ((float)(_trk_hits_tot + _shr_hits_tot)) / (_trk_hits_tot + _shr_hits_tot + _hits_outfv);
-    _sps_contained_fraction = float(sps_fv) / float(sps_all);
-
-    if (_contained_fraction < 0.9)
-        return false;
 
     if (!(_n_tracks_contained > 0 && _n_showers_contained > 0))
         return false;
@@ -1099,9 +1077,6 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _total_hits_y = 0;
     _extra_energy_y = 0;
     _trk_energy_hits_tot = 0;
-    _hits_outfv = 0;
-    _contained_fraction = 0;
-    _sps_contained_fraction = 0;
 }
 
 void CC0piNpSelection::setBranches(TTree *_tree)
@@ -1243,8 +1218,6 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("matched_E", &_matched_E, "matched_E/F");
 
     _tree->Branch("hits_ratio", &_hits_ratio, "hits_ratio/F");
-    _tree->Branch("contained_fraction", &_contained_fraction, "contained_fraction/F");
-    _tree->Branch("sps_contained_fraction", &_sps_contained_fraction, "sps_contained_fraction/F");
     _tree->Branch("pt", &_pt, "pt/F");
     _tree->Branch("p", &_p, "p/F");
     _tree->Branch("pt_assume_muon", &_pt_assume_muon, "pt_assume_muon/F");
