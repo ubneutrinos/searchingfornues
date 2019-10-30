@@ -132,6 +132,7 @@ FlashMatchingTool: {
     tool_type: "FlashMatching"
     PFPproducer: "pandora"
     T0producer: "flashmatch"
+    FLASHproducer: "simpleFlashBeam"
 }
 
 shrreco3dDATA: @local::ShrReco3DPandora

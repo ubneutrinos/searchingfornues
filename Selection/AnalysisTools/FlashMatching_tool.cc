@@ -76,6 +76,10 @@ namespace analysis
 
     art::InputTag fPFPproducer;
     art::InputTag fT0producer;
+    art::InputTag fFLASHproducer;
+
+    float _flash_pe;
+    float _flash_time;
 
     float _nu_flashmatch_score;
     float _best_cosmic_flashmatch_score;
@@ -96,6 +100,7 @@ namespace analysis
 
     fPFPproducer = p.get< art::InputTag >("PFPproducer");
     fT0producer  = p.get< art::InputTag >("T0producer" );
+    fFLASHproducer  = p.get< art::InputTag >("FLASHproducer" );
   }
   
   //----------------------------------------------------------------------------
@@ -216,11 +221,30 @@ namespace analysis
   
   void FlashMatching::analyzeEvent(art::Event const &e, bool fData)
   {
-    // std::cout << "analyze event" << std::endl;
+ 
+    art::Handle<std::vector<recob::OpFlash> > flash_h;
+    e.getByLabel( fFLASHproducer , flash_h );   
+
+    for (size_t f=0; f < flash_h->size(); f++) {
+
+      auto flash = flash_h->at(f);
+      
+      if (flash.TotalPE() > _flash_pe) {
+	_flash_pe    = flash.TotalPE();
+	_flash_time  = flash.Time();
+      }// if larger then other flashes
+
+    }// for all flashes
+
+    return;
   }
 
   void FlashMatching::setBranches(TTree* _tree)
   {
+
+    _tree->Branch("flash_pe",&_flash_pe,"flash_pe/F");
+    _tree->Branch("flash_time",&_flash_time,"flash_time/F");
+
     _tree->Branch("nu_flashmatch_score",&_nu_flashmatch_score,"nu_flashmatch_score/F");
     _tree->Branch("best_cosmic_flashmatch_score",&_best_cosmic_flashmatch_score,"best_cosmic_flashmatch_score/F");
     _tree->Branch("best_obviouscosmic_flashmatch_score",&_best_obviouscosmic_flashmatch_score,"best_obviouscosmic_flashmatch_score/F");
@@ -233,6 +257,8 @@ namespace analysis
     _best_cosmic_flashmatch_score = 1e6;
     _best_obviouscosmic_flashmatch_score = 1e6;
     _cosmic_flashmatch_score_v.clear();
+    _flash_pe   = std::numeric_limits<float>::lowest();
+    _flash_time = std::numeric_limits<float>::lowest();
   }
 
   
