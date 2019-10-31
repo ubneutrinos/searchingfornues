@@ -65,15 +65,16 @@ namespace searchingfornues
 
 
   /**
-   * @brief Return median angular deviation of a track in a given cm interval
+   * @brief Return rms angular deviation of a track in a given cm interval
    * @input trk  : track being provided as input
    * @input dmax : distance from track start point over which to calculate the angular deviations
-   * @output median deflection angle [radins]
+   * @output rms deflection angle [radins]
    */
-  float GetTrackMedianDeflection(const searchingfornues::ProxyCaloElem_t& trk,
-				 const float dmax) {
+  float GetTrackRMSDeflection(const searchingfornues::ProxyCaloElem_t& trk,
+			      const float dmax) {
     
     float medangle = 0.;
+    float rmsangle = 0.;
     std::vector<float> dir_v; // vector of all directions
     //int npoints = 0; // how many direction vectors have we looked at?
 
@@ -114,19 +115,19 @@ namespace searchingfornues
 	}
       }// if point is valid
     }// for all track points
-    
-    std::sort(dir_v.begin(), dir_v.end());
 
     if (dir_v.size() == 0) return 0.;
-      
-    if (dir_v.size() % 2 == 1)
-	medangle = dir_v[dir_v.size() / 2];
-      else
-	medangle = 0.5 * (dir_v[dir_v.size() / 2] + dir_v[dir_v.size() / 2 - 1]);
 
-    //std::cout << "DAVIDC median angle : " << medangle << std::endl;
-    
-    return medangle;
+    // calculate average...
+    for (size_t d=0; d < dir_v.size(); d++) 
+      medangle += dir_v[d];
+    medangle /= dir_v.size();
+    // ... and RMS
+    for (size_t d=0; d < dir_v.size(); d++) 
+      rmsangle += (dir_v[d] - medangle) * (dir_v[d] - medangle);
+    rmsangle /= sqrt( dir_v.size() );
+
+    return rmsangle;
 
   }
   

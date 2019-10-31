@@ -664,7 +664,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         _shr_tkfit_npoints = tk->NumberTrajectoryPoints();
                         _shr_tkfit_npointsvalid = tk->CountValidPoints();
 
-                        _shr_trkfitmedangle = searchingfornues::GetTrackMedianDeflection(tk, 10.);
+                        _shr_trkfitmedangle = searchingfornues::GetTrackRMSDeflection(tk, 10.);
 
                         _shr_tkfit_start_x = tk->Start().X();
                         _shr_tkfit_start_y = tk->Start().Y();
