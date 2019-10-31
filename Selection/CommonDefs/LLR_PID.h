@@ -31,6 +31,8 @@ namespace searchingfornues
 
     size_t digitize(float value, std::vector<float> bin_edges)
     {
+      if (value <= bin_edges[0])
+        return 0;
       for(size_t i=0; i<bin_edges.size(); i++)
       {
         if (value >= bin_edges[i])

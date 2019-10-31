@@ -1,0 +1,5 @@
+#include "run_neutrinoselectionfilter_run1_data.fcl"
+
+physics.filters.nuselection.AnalysisTools : {
+  track:   @local::TrackAnalysisTool
+}

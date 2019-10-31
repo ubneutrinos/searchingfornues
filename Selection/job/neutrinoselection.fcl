@@ -9,13 +9,10 @@ CalorimetryAnalysisTool: {
 
     CLSproducer: "pandora"
     Hproducer: "gaushit"
+    Backtrack: "true"
     BacktrackTag: "gaushitTruthMatch"
     MCRproducer: "mcreco"
 }
-
-# calorimetry analysis tool for using ACPT tagged tracks
-CalorimetryAnalysisToolACPT: @local::CalorimetryAnalysisTool
-CalorimetryAnalysisToolACPT.T0producer: "acpttrigtagger"
 
 VertexAnalysisTool: {
     tool_type: "VertexAnalysis"

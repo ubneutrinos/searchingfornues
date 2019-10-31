@@ -1,9 +1,7 @@
 #include "run_acptcalo_data.fcl"
 
 physics.filters.nuselection.AnalysisTools.calorimetry.Backtrack: true
-
-#physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
-#physics.filters.nuselection.IsData: false
+physics.filters.nuselection.IsData: false
 
 
 physics.producers.mcreco: @local::standard_mcreco

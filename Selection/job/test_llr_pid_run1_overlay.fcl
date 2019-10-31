@@ -1,0 +1,3 @@
+#include "test_llr_pid_run1_data.fcl"
+
+physics.filters.nuselection.IsData: false
