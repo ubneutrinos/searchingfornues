@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['vertexanalysis',['VertexAnalysis',['../classanalysis_1_1VertexAnalysis.html',1,'analysis']]]
+  ['trackanalysis',['TrackAnalysis',['../classanalysis_1_1TrackAnalysis.html',1,'analysis']]],
+  ['truthfilter',['TruthFilter',['../classTruthFilter.html',1,'']]]
 ];
