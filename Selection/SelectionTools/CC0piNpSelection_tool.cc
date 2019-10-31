@@ -927,7 +927,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     if (trk_p_mu.Mag() * shr_p.Mag() > 0)
         _tksh_angle_muon = trk_p_mu.Dot(shr_p) / (trk_p_mu.Mag() * shr_p.Mag());
 
-    if (!(_n_tracks_contained > 0 && _n_showers_contained > 0))
+    if (!(_n_showers_contained > 0))
         return false;
     return true;
 }
