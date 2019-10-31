@@ -220,12 +220,16 @@ void ContainmentAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
       for (auto &sp : spcpnts)
       {
         float _reco_nu_vtx_sce[3];
-        searchingfornues::ApplySCECorrectionXYZ(sp->XYZ()[0], sp->XYZ()[1], sp->XYZ()[2], _reco_nu_vtx_sce);
-          if (isFiducial(_reco_nu_vtx_sce))
-              sps_fv++;
+	// commenting out sce correction to avoid database issues
+	_reco_nu_vtx_sce[0] = sp->XYZ()[0];
+	_reco_nu_vtx_sce[1] = sp->XYZ()[1];
+	_reco_nu_vtx_sce[2] = sp->XYZ()[2];
+        //searchingfornues::ApplySCECorrectionXYZ(sp->XYZ()[0], sp->XYZ()[1], sp->XYZ()[2], _reco_nu_vtx_sce);
+	if (isFiducial(_reco_nu_vtx_sce))
+	  sps_fv++;
       }
-
-
+      
+      
       auto ntrk = pfp_pxy.get<recob::Track>().size();
 
       if (ntrk == 1)
