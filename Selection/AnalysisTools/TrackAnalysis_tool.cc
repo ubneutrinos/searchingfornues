@@ -13,6 +13,7 @@
 #include "../CommonDefs/BacktrackingFuncs.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "../CommonDefs/PIDFuncs.h"
+#include "../CommonDefs/LLR_PID.h"
 
 #include "ubana/ParticleID/Algorithms/uB_PlaneIDBitsetHelperFunctions.h"
 #include "larreco/RecoAlg/TrackMomentumCalculator.h"
@@ -90,12 +91,14 @@ private:
   TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
   TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
 
+  searchingfornues::LLRPID llr_pid_calculator;
+
   art::InputTag fCALOproducer;
   art::InputTag fPIDproducer;
   art::InputTag fTRKproducer;
 
   int _run, _sub, _evt;
-  
+
   std::vector<size_t> _trk_pfp_id_v;
 
   std::vector<float> _trk_start_x_v;
@@ -144,6 +147,11 @@ private:
   std::vector<float> _trk_pid_chimu_v_v;
   std::vector<float> _trk_pida_v_v;
 
+  std::vector<float> _trk_llr_pid_u;
+  std::vector<float> _trk_llr_pid_v;
+  std::vector<float> _trk_llr_pid_y;
+  std::vector<float> _trk_llr_pid;
+
   std::vector<float> _trk_mcs_muon_mom_v;
   std::vector<float> _trk_energy_proton_v;
   std::vector<float> _trk_energy_muon_v;
@@ -165,6 +173,23 @@ TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p)
   fPIDproducer  = p.get< art::InputTag > ("PIDproducer" );
   fTRKproducer  = p.get< art::InputTag > ("TRKproducer" );
 
+  llr_pid_calculator.set_dedx_binning(0, dedx_num_bins_pl_0, dedx_edges_pl_0);
+  std::vector<size_t> parameters_num_bins_0 = {parameter_0_num_bins_pl_0, parameter_1_num_bins_pl_0};
+  std::vector<std::vector<float>> parameters_bin_edges_0 = {parameter_0_edges_pl_0, parameter_1_edges_pl_0};
+  llr_pid_calculator.set_par_binning(0, parameters_num_bins_0, parameters_bin_edges_0);
+  llr_pid_calculator.set_lookup_tables(0, dedx_pdf_pl_0);
+
+  llr_pid_calculator.set_dedx_binning(1, dedx_num_bins_pl_1, dedx_edges_pl_1);
+  std::vector<size_t> parameters_num_bins_1 = {parameter_0_num_bins_pl_1, parameter_1_num_bins_pl_1};
+  std::vector<std::vector<float>> parameters_bin_edges_1 = {parameter_0_edges_pl_1, parameter_1_edges_pl_1};
+  llr_pid_calculator.set_par_binning(1, parameters_num_bins_1, parameters_bin_edges_1);
+  llr_pid_calculator.set_lookup_tables(1, dedx_pdf_pl_1);
+
+  llr_pid_calculator.set_dedx_binning(2, dedx_num_bins_pl_2, dedx_edges_pl_2);
+  std::vector<size_t> parameters_num_bins_2 = {parameter_0_num_bins_pl_2, parameter_1_num_bins_pl_2};
+  std::vector<std::vector<float>> parameters_bin_edges_2 = {parameter_0_edges_pl_2, parameter_1_edges_pl_2};
+  llr_pid_calculator.set_par_binning(2, parameters_num_bins_2, parameters_bin_edges_2);
+  llr_pid_calculator.set_lookup_tables(2, dedx_pdf_pl_2);
 }
 
 //----------------------------------------------------------------------------
@@ -195,8 +220,8 @@ void TrackAnalysis::analyzeEvent(art::Event const &e, bool fData)
 
 void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
 {
-  //searchingfornues::ProxyCaloColl_t const& calo_proxy = proxy::getCollection<std::vector<recob::Track> >(e, fTRKproducer,
-  //                         proxy::withAssociated<anab::Calorimetry>(fCALOproducer));
+  searchingfornues::ProxyCaloColl_t const& calo_proxy = proxy::getCollection<std::vector<recob::Track> >(e, fTRKproducer,
+                          proxy::withAssociated<anab::Calorimetry>(fCALOproducer));
 
   searchingfornues::ProxyPIDColl_t const& pid_proxy = proxy::getCollection<std::vector<recob::Track> >(e, fTRKproducer,
                            proxy::withAssociated<anab::ParticleID>(fPIDproducer));
@@ -345,6 +370,38 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       _trk_distance_v.push_back(trk_vtx_v.Mag());
 
       _trk_pfp_id_v.push_back(i_pfp);
+
+      //PID LLR calculator
+      _trk_llr_pid_u.push_back(0);
+      _trk_llr_pid_v.push_back(0);
+      _trk_llr_pid_y.push_back(0);
+      _trk_llr_pid.push_back(0);
+      auto calo_v = calo_proxy[trk.key()].get<anab::Calorimetry>();
+      for (auto const& calo : calo_v)
+      {
+        auto const& plane = calo->PlaneID().Plane;
+        auto const& dedx_values = calo->dEdx();
+        auto const& rr = calo->ResidualRange();
+        auto const& pitch = calo->TrkPitchVec();
+        std::vector<std::vector<float>> par_values;
+        par_values.push_back(rr);
+        par_values.push_back(pitch);
+
+        float llr_pid = llr_pid_calculator.LLR_many_hits_one_plane(dedx_values, par_values, plane);
+        if (plane == 0)
+        {
+          _trk_llr_pid_u.back() = llr_pid;
+        }
+        else if (plane == 1)
+        {
+          _trk_llr_pid_v.back() = llr_pid;
+        }
+        else if (plane == 2)
+        {
+          _trk_llr_pid_y.back() = llr_pid;
+        }
+        _trk_llr_pid.back() += llr_pid;
+      }
     }
     else
     {
@@ -407,11 +464,15 @@ void TrackAnalysis::fillDefault()
   _trk_mcs_muon_mom_v.push_back(std::numeric_limits<float>::lowest());
   _trk_energy_proton_v.push_back(std::numeric_limits<float>::lowest());
   _trk_energy_muon_v.push_back(std::numeric_limits<float>::lowest());
+
+  _trk_llr_pid_u.push_back(std::numeric_limits<float>::lowest());
+  _trk_llr_pid_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_llr_pid_y.push_back(std::numeric_limits<float>::lowest());
+  _trk_llr_pid.push_back(std::numeric_limits<float>::lowest());
 }
 
 void TrackAnalysis::setBranches(TTree *_tree)
 {
-
   _tree->Branch("trk_bragg_p_v", "std::vector< float >", &_trk_bragg_p_v);
   _tree->Branch("trk_bragg_mu_v", "std::vector< float >", &_trk_bragg_mu_v);
   _tree->Branch("trk_bragg_mip_v", "std::vector< float >", &_trk_bragg_mip_v);
@@ -460,12 +521,15 @@ void TrackAnalysis::setBranches(TTree *_tree)
   _tree->Branch("trk_mcs_muon_mom_v", "std::vector< float >", &_trk_mcs_muon_mom_v);
   _tree->Branch("trk_energy_proton_v", "std::vector< float >", &_trk_energy_proton_v);
   _tree->Branch("trk_energy_muon_v", "std::vector< float >", &_trk_energy_muon_v);
+
+  _tree->Branch("trk_llr_pid_u", "std::vector<float>", &_trk_llr_pid_u);
+  _tree->Branch("trk_llr_pid_v", "std::vector<float>", &_trk_llr_pid_v);
+  _tree->Branch("trk_llr_pid_y", "std::vector<float>", &_trk_llr_pid_y);
+  _tree->Branch("trk_llr_pid", "std::vector<float>", &_trk_llr_pid);
 }
 
 void TrackAnalysis::resetTTree(TTree *_tree)
 {
-
-
   _trk_bragg_p_v.clear();
   _trk_bragg_mu_v.clear();
   _trk_bragg_mip_v.clear();
@@ -515,6 +579,11 @@ void TrackAnalysis::resetTTree(TTree *_tree)
 
   _trk_energy_muon_v.clear();
   _trk_energy_proton_v.clear();
+
+  _trk_llr_pid_u.clear();
+  _trk_llr_pid_v.clear();
+  _trk_llr_pid_y.clear();
+  _trk_llr_pid.clear();
 }
 
 DEFINE_ART_CLASS_TOOL(TrackAnalysis)
