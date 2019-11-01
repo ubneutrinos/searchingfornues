@@ -69,7 +69,7 @@ namespace searchingfornues
       size_t lookup_index = lookup_row_index;
       lookup_index += digitize(dedx_value, dedx_bin_edges[plane]);
 
-      std::cout << "lookup index " << lookup_index << std::endl;
+      // std::cout << "lookup index " << lookup_index << std::endl;
       return lookup_index;
     }
 

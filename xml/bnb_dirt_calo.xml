@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE project [
+<!ENTITY name "bnb_nu">
+<!ENTITY project_version "v01">
+<!ENTITY release "v08_00_00_25">
+<!ENTITY qualifier "e17:prof">
+<!ENTITY user "foppiani">
+<!ENTITY dataset "prodgenie_bnb_dirt_overlay_run1_mcc9.1_v08_00_00_16_reco2">
+<!ENTITY resilient "/pnfs/uboone/resilient/users">
+<!ENTITY scratch "/pnfs/uboone/scratch/users">
+<!ENTITY data "/uboone/data/users">
+<!ENTITY fcl_name "run_calorimetryanalysis_run1_overlay.fcl">
+<!ENTITY folder_name "calorimetry">
+<!ENTITY tar_name "local">
+]>
+
+
+<project name="&name;">
+
+  <!-- Group -->
+  <group>uboone</group>
+
+  <!-- Operating System -->
+  <os>SL6</os>
+
+  <!--  Project size  -->
+  <numevents>1000000</numevents>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC,OFFSITE</resource>
+
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&release;</tag>
+    <qual>&qualifier;</qual>
+    <local>&resilient;/&user;/&folder_name;/&project_version;/&tar_name;.tar</local>
+  </larsoft>
+
+  <!-- Project stages -->
+
+  <stage name="&name;">
+    <fcl>&fcl_name;</fcl>
+    <inputdef>&dataset;</inputdef>
+
+    <outdir>&scratch;/&user;/&folder_name;/&project_version;/&name;/out/</outdir>
+    <logdir>&scratch;/&user;/&folder_name;/&project_version;/&name;/log/</logdir>
+    <workdir>&resilient;/&user;/&folder_name;/&project_version;/&name;/work/</workdir>
+    <bookdir>&data;/&user;/&folder_name;/&project_version;/&name;/book/</bookdir>
+
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>100</numjobs>
+    <!-- <numjobs>478</numjobs> -->
+    <maxfilesperjob>25</maxfilesperjob>
+    <schema>root</schema>
+    <jobsub>--expected-lifetime=12h -q --generate-email-summary --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub>
+    <jobsub_start>--append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+</project>

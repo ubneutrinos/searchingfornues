@@ -1,0 +1,5 @@
+#include "run_calorimetryanalysis_run1_data.fcl"
+
+physics.filters.nuselection.AnalysisTools.calorimetry.TRKproducer: "shrreco3dKalmanShower"
+physics.filters.nuselection.AnalysisTools.calorimetry.CALOproducer: "shrreco3dKalmanShowercali"
+physics.filters.nuselection.IsData: false

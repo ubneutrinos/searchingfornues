@@ -116,6 +116,7 @@ private:
   art::InputTag fHproducer;
   art::InputTag fMCRproducer;
   art::InputTag fT0producer;
+  bool fRange; //if False does residual range, if True it stores the range
 
   bool fBacktrack; // do the backtracking needed for this module?
 
@@ -1015,15 +1016,16 @@ void CalorimetryAnalysis::TrkDirectionAtXYZ(const recob::Track trk, const double
   size_t i_min = -1;
   for(size_t i=0; i < trk.NumberTrajectoryPoints(); i++)
   {
-    if (trk.HasValidPoint(i)) { // check this point is valid
+    if (trk.HasValidPoint(i))
+    { // check this point is valid
       auto point_i = trk.LocationAtPoint(i);
       float distance = searchingfornues::distance3d((double)point_i.X(), (double)point_i.Y(), (double)point_i.Z(),
-						    x, y, z);
+                x, y, z);
       if (distance < min_dist)
-	{
-	  min_dist = distance;
-	  i_min = i;
-	}
+      {
+        min_dist = distance;
+        i_min = i;
+      }
     }// if point is valid
   }// for all track points
   // std::cout << "minimum distance = " << min_dist << std::endl;
