@@ -114,8 +114,14 @@ namespace analysis
                 std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
                 art::fill_ptr_vector(eventweights, eventweights_handle);
                 std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
+                
                 if(evtwgt_map.find("splines_general_Spline") != evtwgt_map.end()) _weightSpline = evtwgt_map.find("splines_general_Spline")->second[0];
                 evtwgt_map.erase("splines_general_Spline");
+                if(evtwgt_map.find("genie_all_Genie") != evtwgt_map.end()) _vecWeightsGenie = evtwgt_map.find("genie_all_Genie")->second;
+                evtwgt_map.erase("genie_all_Genie");
+                if(evtwgt_map.find("reinteractions_all_Reinteraction") != evtwgt_map.end()) _vecWeightsReint = evtwgt_map.find("reinteractions_all_Reinteraction")->second;
+                evtwgt_map.erase("reinteractions_all_Reinteraction");
+
                 _mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
                 
                 if(_createFluxBranch || _createGenieBranch || _createReintBranch){
@@ -146,8 +152,6 @@ namespace analysis
                                 }
                             }
                         }
-                        if(keyname.find("genie_all") != std::string::npos) _vecWeightsGenie = it->second;
-                        if(keyname.find("reinteractions_all") != std::string::npos) _vecWeightsReint = it->second;
                     }
                 }
             }

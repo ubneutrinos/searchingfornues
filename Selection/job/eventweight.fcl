@@ -164,5 +164,7 @@ physics.producers.eventweight.reinteractions_all.number_of_multisims: @local::ph
 physics.producers.eventweight.weight_functions: [
     @sequence::microboone_eventweight.weight_functions_flux,
     genie_all,
-    reinteractions_all
+    reinteractions_all,
+    @sequence::physics.producers.eventweight.weight_functions_genie,
+    @sequence::microboone_eventweight.weight_functions_reint
 ]
