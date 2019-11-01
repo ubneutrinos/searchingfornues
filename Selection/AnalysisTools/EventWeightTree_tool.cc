@@ -114,15 +114,15 @@ namespace analysis
                 std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
                 art::fill_ptr_vector(eventweights, eventweights_handle);
                 std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
+                if(evtwgt_map.find("splines_general_Spline") != evtwgt_map.end()) _weightSpline = evtwgt_map.find("splines_general_Spline")->second[0];
                 evtwgt_map.erase("splines_general_Spline");
                 _mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
                 
-                if(_createFluxBranch || _createGenieBranch || _createReintBranch || _createSplineBranch){
+                if(_createFluxBranch || _createGenieBranch || _createReintBranch){
                     bool isFirstVector = true;
 
                     for(std::map<std::string, std::vector<double>>::iterator it=evtwgt_map.begin(); it!=evtwgt_map.end(); ++it){
                         std::string keyname = it->first;
-
                         if(keyname.find("horncurrent") != std::string::npos ||
                            keyname.find("expskin") != std::string::npos ||
                            keyname.find("piplus") != std::string::npos ||
@@ -148,7 +148,6 @@ namespace analysis
                         }
                         if(keyname.find("genie_all") != std::string::npos) _vecWeightsGenie = it->second;
                         if(keyname.find("reinteractions_all") != std::string::npos) _vecWeightsReint = it->second;
-                        if(keyname.find("spline") != std::string::npos) _weightSpline = it->second[0];
                     }
                 }
             }
