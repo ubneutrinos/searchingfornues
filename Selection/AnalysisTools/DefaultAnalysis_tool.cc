@@ -147,6 +147,7 @@ private:
   int _ccnc;                    /**< CC or NC tag from GENIE */
   int _interaction;             /**< Interaction code from GENIE */
   bool _isVtxInFiducial;        /**< true if neutrino in fiducial volume */
+  bool _truthFiducial;          /**< is the truth information contained? */
 
   // final state particle information
   int _nmuon;                         /**< is there a final-state muon from the neutrino? [1=yes 0=no] */
@@ -313,6 +314,7 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   _run = e.run();
 
   std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: " << _evt << std::endl;
+  std::cout << "DAVIDC Run: " << _run << ", SubRun: " << _sub << ", Event: " << _evt << std::endl;
 
   // storing trigger result output for software trigger
   art::InputTag swtrig_tag("TriggerResults", "", "DataOverlayOptical");
@@ -351,7 +353,14 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 
     // SaveTruth
     SaveTruth(e);
-  }
+
+    const std::vector<sim::MCShower> &inputMCShower = *(e.getValidHandle<std::vector<sim::MCShower>>(fMCRproducer));
+    const std::vector<sim::MCTrack> &inputMCTrack = *(e.getValidHandle<std::vector<sim::MCTrack>>(fMCRproducer));
+    _truthFiducial = searchingfornues::TruthContained(fFidvolXstart,fFidvolYstart,fFidvolZstart,
+						      fFidvolXend  ,fFidvolYend  ,fFidvolZend  ,
+						      inputMCShower,inputMCTrack);
+
+  }// if MC
 
   // Grab CRT veto information if available - CRT should probably have its own tool?
   if (fCRTVetoproducer != "")
@@ -387,11 +396,13 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
   std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
   if (!fData)
   {
+    
     const std::vector<sim::MCShower> &inputMCShower = *(e.getValidHandle<std::vector<sim::MCShower>>(fMCRproducer));
     const std::vector<sim::MCTrack> &inputMCTrack = *(e.getValidHandle<std::vector<sim::MCTrack>>(fMCRproducer));
     art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
     assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
     btparts_v = searchingfornues::initBacktrackingParticleVec(inputMCShower, inputMCTrack, *inputHits, assocMCPart);
+    
   }
 
   size_t pfpidx = 0;
@@ -748,6 +759,7 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("nu_pt", &_nu_pt, "nu_pt/F");
   _tree->Branch("theta", &_theta, "theta/F");
   _tree->Branch("isVtxInFiducial", &_isVtxInFiducial, "isVtxInFiducial/O");
+  _tree->Branch("truthFiducial", &_truthFiducial, "truthFiducial/O");
 
   _tree->Branch("true_nu_vtx_t", &_true_nu_vtx_t, "true_nu_vtx_t/F");
   _tree->Branch("true_nu_vtx_x", &_true_nu_vtx_x, "true_nu_vtx_x/F");

@@ -57,17 +57,61 @@ namespace searchingfornues
     // (2) require all MCTracks are contained within the FV
     // (3) require all MCShowers to deposit > some fraction of energy in the FV
     
-    bool contained = true;
-    
+    std::cout << "DAVIDC ***************" << std::endl;
+    std::cout << "DAVIDC ***************" << std::endl;
+    std::cout << "DAVIDC TruthContained!" << std::endl;
+
     for (auto mcs : inputMCShower) {
       if (mcs.Process() == "primary" || (mcs.MotherPdgCode() == 111 && mcs.Process() == "Decay" && mcs.MotherProcess() == "primary") ) {
-	if (mcs.DetProfile().E() / mcs.Start().E() < 0.8) {
+	float contained = mcs.DetProfile().E() / mcs.Start().E();
+	float edep = mcs.DetProfile().E();
+	std::cout << "DAVIDC PDG : " << mcs.PdgCode() << std::endl;
+	std::cout << "DAVIDC Energy : " << mcs.Start().E() << std::endl;
+	std::cout << "DAVIDC Start Point : " << mcs.Start().X() << ", "  << mcs.Start().Y() << ", "  << mcs.Start().Z() << std::endl;
+	std::cout << "DAVIDC new MCShower...with containment fraction of " << contained << std::endl;
+	if ( (contained < 0.6) && (edep < 100.) ) {
+	  std::cout << "DAVID -> this shower is NOT contained..." << std::endl;
 	  return false;
 	}
       }// if primary
     }
-
-    return contained;
+    
+    for (auto mct : inputMCTrack) {
+      
+      if (mct.Process() == "primary") {
+	//is the start point in the FV?
+	sim::MCStep mc_step_track_start = mct.Start();
+	sim::MCStep mc_step_track_end   = mct.End();
+	
+	std::cout << "DAVIDC new MCTrack..." << std::endl;
+	std::cout << "DAVIDC this track is a " << mct.PdgCode() << std::endl;
+	
+	double start[3];
+	start[0] = mc_step_track_start.X();
+	start[1] = mc_step_track_start.Y();
+	start[2] = mc_step_track_start.Z();
+	
+	std::cout << "DAVIDC Start Point : " << start[0] << ", "  << start[1] << ", "  << start[2] << std::endl;
+	
+	double end[3];
+	end[0] = mc_step_track_end.X();
+	end[1] = mc_step_track_end.Y();
+	end[2] = mc_step_track_end.Z();
+	
+	std::cout << "DAVIDC end Point : " << end[0] << ", "  << end[1] << ", "  << end[2] << std::endl;
+	
+	if (isFiducial(start,FVxS,FVyS,FVzS,FVxE,FVyE,FVzE) == false) {
+	  std::cout << "\t DAVIDC start out of FV!" << std::endl;
+	  return false;
+	}
+	if (isFiducial(end  ,FVxS,FVyS,FVzS,FVxE,FVyE,FVzE) == false) {
+	  std::cout << "\t DAVIDC end out of FV!" << std::endl;
+	  return false;
+	}
+      }
+    }
+    
+    return true;
     
   }
   
