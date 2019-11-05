@@ -88,7 +88,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classanalysis_1_1DefaultAnalysis-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -143,12 +142,6 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memitem:a99bb8301fb7988663c6febc152e4060f inherit pub_methods_classanalysis_1_1AnalysisToolBase"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1AnalysisToolBase.html#a99bb8301fb7988663c6febc152e4060f">configure</a> (const fhicl::ParameterSet &amp;)</td></tr>
 <tr class="memdesc:a99bb8301fb7988663c6febc152e4060f inherit pub_methods_classanalysis_1_1AnalysisToolBase"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface for configuring the particular algorithm tool.  <a href="#a99bb8301fb7988663c6febc152e4060f">More...</a><br /></td></tr>
 <tr class="separator:a99bb8301fb7988663c6febc152e4060f inherit pub_methods_classanalysis_1_1AnalysisToolBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
-Private Member Functions</h2></td></tr>
-<tr class="memitem:a51efe899f0117f479c9f833663c7111f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1DefaultAnalysis.html#a51efe899f0117f479c9f833663c7111f">isFiducial</a> (const double x[3]) const </td></tr>
-<tr class="memdesc:a51efe899f0117f479c9f833663c7111f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if the specified point is in the fiducial volume Not recommended, no array size checking is done.  <a href="#a51efe899f0117f479c9f833663c7111f">More...</a><br /></td></tr>
-<tr class="separator:a51efe899f0117f479c9f833663c7111f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -676,39 +669,6 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>_leeweight</b></td><
 <p>Reconfigure method.</p>
 <p>Arguments:</p>
 <p>pset - Fcl parameter set. </p>
-
-</div>
-</div>
-<a class="anchor" id="a51efe899f0117f479c9f833663c7111f"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool analysis::DefaultAnalysis::isFiducial </td>
-          <td>(</td>
-          <td class="paramtype">const double&#160;</td>
-          <td class="paramname"><em>x</em>[3]</td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Determine if the specified point is in the fiducial volume Not recommended, no array size checking is done. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">x</td><td>array of 3D location </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the point is inside the fiducial volume </dd></dl>
 
 </div>
 </div>
