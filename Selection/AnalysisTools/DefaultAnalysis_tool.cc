@@ -15,6 +15,7 @@
 #include "../CommonDefs/BacktrackingFuncs.h"
 #include "../CommonDefs/Geometry.h"
 #include "../CommonDefs/SCECorrections.h"
+#include "../CommonDefs/Containment.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 
 #include "canvas/Persistency/Common/TriggerResults.h"
@@ -82,14 +83,6 @@ public:
   void resetTTree(TTree *_tree) override;
 
 private:
-  /**
-   * @brief Determine if the specified point is in the fiducial volume
-   *        Not recommended, no array size checking is done.
-   *
-   * @param x array of 3D location
-   * @return True if the point is inside the fiducial volume
-   */
-  bool isFiducial(const double x[3]) const;
 
   TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
   TParticlePDG *neutron = TDatabasePDG::Instance()->GetParticle(2112);
@@ -372,22 +365,6 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 
   art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
   evnhits = inputHits->size();
-}
-
-bool DefaultAnalysis::isFiducial(const double x[3]) const
-{
-  art::ServiceHandle<geo::Geometry> geo;
-  geo::TPCGeo const &thisTPC = geo->TPC();
-  geo::BoxBoundedGeo theTpcGeo = thisTPC.ActiveBoundingBox();
-  std::vector<double> bnd = {theTpcGeo.MinX(), theTpcGeo.MaxX(), theTpcGeo.MinY(), theTpcGeo.MaxY(), theTpcGeo.MinZ(), theTpcGeo.MaxZ()};
-  bool is_x =
-      x[0] > (bnd[0] + fFidvolXstart) && x[0] < (bnd[1] - fFidvolXend);
-  bool is_y =
-      x[1] > (bnd[2] + fFidvolYstart) && x[1] < (bnd[3] - fFidvolYend);
-  bool is_z =
-      x[2] > (bnd[4] + fFidvolZstart) && x[2] < (bnd[5] - fFidvolZend);
-
-  return is_x && is_y && is_z;
 }
 
 void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
@@ -1094,8 +1071,10 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _nu_pt = neutrino.Pt();
 
   double vtx[3] = {_true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z};
-  _isVtxInFiducial = isFiducial(vtx);
-
+  _isVtxInFiducial = searchingfornues::isFiducial(vtx,
+						  fFidvolXstart, fFidvolYstart, fFidvolZstart,
+						  fFidvolXend, fFidvolYend, fFidvolZend);
+  
   _nelec = 0;
   _nmuon = 0;
   _npi0 = 0;
