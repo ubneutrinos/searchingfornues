@@ -147,7 +147,7 @@ private:
   int _ccnc;                    /**< CC or NC tag from GENIE */
   int _interaction;             /**< Interaction code from GENIE */
   bool _isVtxInFiducial;        /**< true if neutrino in fiducial volume */
-  bool _truthFiducial;          /**< is the truth information contained? */
+  bool _truthFiducial;          /**< is the truth information contained. Require all track start/end point in FV and showers deposit > 60% of energy in TPC or deposit at least 100 MeV in TPC */
 
   // final state particle information
   int _nmuon;                         /**< is there a final-state muon from the neutrino? [1=yes 0=no] */
