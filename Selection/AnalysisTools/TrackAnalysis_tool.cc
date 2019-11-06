@@ -349,6 +349,9 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       _trk_mcs_muon_mom_v.push_back(mcs_momentum_muon);
       _trk_energy_proton_v.push_back(energy_proton);
       _trk_energy_muon_v.push_back(energy_muon);
+      _trk_calo_energy_u_v.push_back(-1);
+      _trk_calo_energy_v_v.push_back(-1);
+      _trk_calo_energy_y_v.push_back(-1);
 
       _trk_dir_x_v.push_back(trk->StartDirection().X());
       _trk_dir_y_v.push_back(trk->StartDirection().Y());
@@ -379,6 +382,8 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       _trk_llr_pid_v_v.push_back(0);
       _trk_llr_pid_y_v.push_back(0);
       _trk_llr_pid_v.push_back(0);
+      _trk_llr_pid_score_v.push_back(0);
+      
       auto calo_v = calo_proxy[trk.key()].get<anab::Calorimetry>();
       for (auto const& calo : calo_v)
       {
