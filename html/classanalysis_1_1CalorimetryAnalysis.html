@@ -150,9 +150,9 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:ace6489df3503462c25bea5ae3837abae"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ace6489df3503462c25bea5ae3837abae"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>FillCalorimetry</b> (const searchingfornues::ProxyPfpElem_t pfp, const searchingfornues::ProxyCaloColl_t calo_proxy, const searchingfornues::ProxyPIDColl_t pid_proxy, const searchingfornues::ProxyClusColl_t clus_proxy, const bool fData, const std::vector&lt; <a class="el" href="structsearchingfornues_1_1BtPart.html">searchingfornues::BtPart</a> &gt; btparts_v, const std::unique_ptr&lt; art::FindManyP&lt; simb::MCParticle, anab::BackTrackerHitMatchingData &gt;&gt; &amp;assocMCPart)</td></tr>
-<tr class="separator:ace6489df3503462c25bea5ae3837abae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a281c73cffe78d4afcd9d34a8de7d04fa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a281c73cffe78d4afcd9d34a8de7d04fa"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>FillCalorimetry</b> (art::Event const &amp;e, const searchingfornues::ProxyPfpElem_t pfp, const searchingfornues::ProxyCaloColl_t calo_proxy, const searchingfornues::ProxyPIDColl_t pid_proxy, const searchingfornues::ProxyClusColl_t clus_proxy, const bool fData, const std::vector&lt; <a class="el" href="structsearchingfornues_1_1BtPart.html">searchingfornues::BtPart</a> &gt; btparts_v, const std::unique_ptr&lt; art::FindManyP&lt; simb::MCParticle, anab::BackTrackerHitMatchingData &gt;&gt; &amp;assocMCPart)</td></tr>
+<tr class="separator:a281c73cffe78d4afcd9d34a8de7d04fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9dda46fef9265f005050b3df5a5702c6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9dda46fef9265f005050b3df5a5702c6"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>TrkDirectionAtXYZ</b> (const recob::Track, const double x, const double y, const double z, float out[3])</td></tr>
 <tr class="separator:a9dda46fef9265f005050b3df5a5702c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -195,9 +195,9 @@ art::InputTag&#160;</td><td class="memItemRight" valign="bottom"><b>fMCRproducer
 <tr class="memitem:a260e52a5756bb4d735df4d4e5b33db14"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a260e52a5756bb4d735df4d4e5b33db14"></a>
 art::InputTag&#160;</td><td class="memItemRight" valign="bottom"><b>fT0producer</b></td></tr>
 <tr class="separator:a260e52a5756bb4d735df4d4e5b33db14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab989524d56f246727bd5fa33a7597684"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab989524d56f246727bd5fa33a7597684"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>fRange</b></td></tr>
-<tr class="separator:ab989524d56f246727bd5fa33a7597684"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acee71d82b900257b551c72e389fec32d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="acee71d82b900257b551c72e389fec32d"></a>
+art::InputTag&#160;</td><td class="memItemRight" valign="bottom"><b>fMCPproducer</b></td></tr>
+<tr class="separator:acee71d82b900257b551c72e389fec32d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac88146bcc5d598200c9dbaa007502c4a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac88146bcc5d598200c9dbaa007502c4a"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>fBacktrack</b></td></tr>
 <tr class="separator:ac88146bcc5d598200c9dbaa007502c4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -279,6 +279,21 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>_backtracked_sce_sta
 <tr class="memitem:a721b3219d53454ed6f0bd9c79029973f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a721b3219d53454ed6f0bd9c79029973f"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>_backtracked_sce_start_Y</b></td></tr>
 <tr class="separator:a721b3219d53454ed6f0bd9c79029973f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52c5cd6014a03b3f2e4e28344da5a105"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a52c5cd6014a03b3f2e4e28344da5a105"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>_backtracked_end_process</b></td></tr>
+<tr class="separator:a52c5cd6014a03b3f2e4e28344da5a105"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf05a4a38d7763a7053275314de89858"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adf05a4a38d7763a7053275314de89858"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>_backtracked_end_in_tpc</b></td></tr>
+<tr class="separator:adf05a4a38d7763a7053275314de89858"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24853e33579e0928ca749a33fd34e577"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a24853e33579e0928ca749a33fd34e577"></a>
+uint&#160;</td><td class="memItemRight" valign="bottom"><b>_generation</b></td></tr>
+<tr class="separator:a24853e33579e0928ca749a33fd34e577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adaf75559c0cff9216e098d63f7c08554"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adaf75559c0cff9216e098d63f7c08554"></a>
+uint&#160;</td><td class="memItemRight" valign="bottom"><b>_shr_daughters</b></td></tr>
+<tr class="separator:adaf75559c0cff9216e098d63f7c08554"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a565c4010dc508a86d3f64595b5782f85"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a565c4010dc508a86d3f64595b5782f85"></a>
+uint&#160;</td><td class="memItemRight" valign="bottom"><b>_trk_daughters</b></td></tr>
+<tr class="separator:a565c4010dc508a86d3f64595b5782f85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d0788abac1db4d7edb15902d102a086"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8d0788abac1db4d7edb15902d102a086"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>_nplanehits_U</b></td></tr>
 <tr class="separator:a8d0788abac1db4d7edb15902d102a086"><td class="memSeparator" colspan="2">&#160;</td></tr>
