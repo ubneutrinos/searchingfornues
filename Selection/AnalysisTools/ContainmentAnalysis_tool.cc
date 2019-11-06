@@ -224,7 +224,7 @@ void ContainmentAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
 	_reco_nu_vtx_sce[0] = sp->XYZ()[0];
 	_reco_nu_vtx_sce[1] = sp->XYZ()[1];
 	_reco_nu_vtx_sce[2] = sp->XYZ()[2];
-        //searchingfornues::ApplySCECorrectionXYZ(sp->XYZ()[0], sp->XYZ()[1], sp->XYZ()[2], _reco_nu_vtx_sce);
+        searchingfornues::ApplySCECorrectionXYZ(sp->XYZ()[0], sp->XYZ()[1], sp->XYZ()[2], _reco_nu_vtx_sce);
 	if (isFiducial(_reco_nu_vtx_sce))
 	  sps_fv++;
       }
