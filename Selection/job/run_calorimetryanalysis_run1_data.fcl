@@ -3,3 +3,7 @@
 physics.filters.nuselection.AnalysisTools : {
   calorimetry:   @local::CalorimetryAnalysisTool
 }
+
+physics.filters.nuselection.SelectionTool : {
+  tool_type: "EmptySelection"
+}

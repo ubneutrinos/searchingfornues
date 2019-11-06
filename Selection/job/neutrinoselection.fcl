@@ -12,6 +12,7 @@ CalorimetryAnalysisTool: {
     Backtrack: "true"
     BacktrackTag: "gaushitTruthMatch"
     MCRproducer: "mcreco"
+    MCPproducer: "largeant"
 }
 
 VertexAnalysisTool: {

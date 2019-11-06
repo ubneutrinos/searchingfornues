@@ -396,13 +396,11 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
   std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
   if (!fData)
   {
-    
     const std::vector<sim::MCShower> &inputMCShower = *(e.getValidHandle<std::vector<sim::MCShower>>(fMCRproducer));
     const std::vector<sim::MCTrack> &inputMCTrack = *(e.getValidHandle<std::vector<sim::MCTrack>>(fMCRproducer));
     art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
     assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
     btparts_v = searchingfornues::initBacktrackingParticleVec(inputMCShower, inputMCTrack, *inputHits, assocMCPart);
-    
   }
 
   size_t pfpidx = 0;
@@ -1086,7 +1084,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _isVtxInFiducial = searchingfornues::isFiducial(vtx,
 						  fFidvolXstart, fFidvolYstart, fFidvolZstart,
 						  fFidvolXend, fFidvolYend, fFidvolZend);
-  
+
   _nelec = 0;
   _nmuon = 0;
   _npi0 = 0;

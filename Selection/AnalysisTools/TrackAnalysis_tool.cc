@@ -147,16 +147,19 @@ private:
   std::vector<float> _trk_pid_chimu_v_v;
   std::vector<float> _trk_pida_v_v;
 
-  std::vector<float> _trk_llr_pid_u;
+  std::vector<float> _trk_llr_pid_u_v;
+  std::vector<float> _trk_llr_pid_v_v;
+  std::vector<float> _trk_llr_pid_y_v;
   std::vector<float> _trk_llr_pid_v;
-  std::vector<float> _trk_llr_pid_y;
-  std::vector<float> _trk_llr_pid;
+
+  std::vector<float> _trk_llr_pid_score_v;
 
   std::vector<float> _trk_mcs_muon_mom_v;
   std::vector<float> _trk_energy_proton_v;
   std::vector<float> _trk_energy_muon_v;
-
-
+  std::vector<float> _trk_calo_energy_u_v;
+  std::vector<float> _trk_calo_energy_v_v;
+  std::vector<float> _trk_calo_energy_y_v;
 };
 
 //----------------------------------------------------------------------------
@@ -372,10 +375,10 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       _trk_pfp_id_v.push_back(i_pfp);
 
       //PID LLR calculator
-      _trk_llr_pid_u.push_back(0);
+      _trk_llr_pid_u_v.push_back(0);
+      _trk_llr_pid_v_v.push_back(0);
+      _trk_llr_pid_y_v.push_back(0);
       _trk_llr_pid_v.push_back(0);
-      _trk_llr_pid_y.push_back(0);
-      _trk_llr_pid.push_back(0);
       auto calo_v = calo_proxy[trk.key()].get<anab::Calorimetry>();
       for (auto const& calo : calo_v)
       {
@@ -387,21 +390,31 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
         par_values.push_back(rr);
         par_values.push_back(pitch);
 
+        float calo_energy = 0;
+        for (size_t i=0; i<dedx_values.size(); i++)
+        {
+          calo_energy += dedx_values[i]*pitch[i];
+        }
+
         float llr_pid = llr_pid_calculator.LLR_many_hits_one_plane(dedx_values, par_values, plane);
         if (plane == 0)
         {
-          _trk_llr_pid_u.back() = llr_pid;
+          _trk_llr_pid_u_v.back() = llr_pid;
+          _trk_calo_energy_u_v.back() = calo_energy;
         }
         else if (plane == 1)
         {
-          _trk_llr_pid_v.back() = llr_pid;
+          _trk_llr_pid_v_v.back() = llr_pid;
+          _trk_calo_energy_v_v.back() = calo_energy;
         }
         else if (plane == 2)
         {
-          _trk_llr_pid_y.back() = llr_pid;
+          _trk_llr_pid_y_v.back() = llr_pid;
+          _trk_calo_energy_y_v.back() = calo_energy;
         }
-        _trk_llr_pid.back() += llr_pid;
+        _trk_llr_pid_v.back() += llr_pid;
       }
+      _trk_llr_pid_score_v.back() = atan(_trk_llr_pid_v.back()/100.)*3.14159265/2.;
     }
     else
     {
@@ -413,7 +426,6 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 void TrackAnalysis::fillDefault()
 {
   _trk_pfp_id_v.push_back(std::numeric_limits<int>::lowest());
-
 
   _trk_start_x_v.push_back(std::numeric_limits<float>::lowest());
   _trk_start_y_v.push_back(std::numeric_limits<float>::lowest());
@@ -464,11 +476,15 @@ void TrackAnalysis::fillDefault()
   _trk_mcs_muon_mom_v.push_back(std::numeric_limits<float>::lowest());
   _trk_energy_proton_v.push_back(std::numeric_limits<float>::lowest());
   _trk_energy_muon_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_calo_energy_u_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_calo_energy_v_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_calo_energy_y_v.push_back(std::numeric_limits<float>::lowest());
 
-  _trk_llr_pid_u.push_back(std::numeric_limits<float>::lowest());
+  _trk_llr_pid_u_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_llr_pid_v_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_llr_pid_y_v.push_back(std::numeric_limits<float>::lowest());
   _trk_llr_pid_v.push_back(std::numeric_limits<float>::lowest());
-  _trk_llr_pid_y.push_back(std::numeric_limits<float>::lowest());
-  _trk_llr_pid.push_back(std::numeric_limits<float>::lowest());
+  _trk_llr_pid_score_v.push_back(std::numeric_limits<float>::lowest());
 }
 
 void TrackAnalysis::setBranches(TTree *_tree)
@@ -521,11 +537,15 @@ void TrackAnalysis::setBranches(TTree *_tree)
   _tree->Branch("trk_mcs_muon_mom_v", "std::vector< float >", &_trk_mcs_muon_mom_v);
   _tree->Branch("trk_energy_proton_v", "std::vector< float >", &_trk_energy_proton_v);
   _tree->Branch("trk_energy_muon_v", "std::vector< float >", &_trk_energy_muon_v);
+  _tree->Branch("trk_calo_energy_u_v", "std::vector< float >", &_trk_calo_energy_u_v);
+  _tree->Branch("trk_calo_energy_v_v", "std::vector< float >", &_trk_calo_energy_v_v);
+  _tree->Branch("trk_calo_energy_y_v", "std::vector< float >", &_trk_calo_energy_y_v);
 
-  _tree->Branch("trk_llr_pid_u", "std::vector<float>", &_trk_llr_pid_u);
+  _tree->Branch("trk_llr_pid_u_v", "std::vector<float>", &_trk_llr_pid_u_v);
+  _tree->Branch("trk_llr_pid_v_v", "std::vector<float>", &_trk_llr_pid_v_v);
+  _tree->Branch("trk_llr_pid_y_v", "std::vector<float>", &_trk_llr_pid_y_v);
   _tree->Branch("trk_llr_pid_v", "std::vector<float>", &_trk_llr_pid_v);
-  _tree->Branch("trk_llr_pid_y", "std::vector<float>", &_trk_llr_pid_y);
-  _tree->Branch("trk_llr_pid", "std::vector<float>", &_trk_llr_pid);
+  _tree->Branch("trk_llr_pid_score_v", "std::vector<float>", &_trk_llr_pid_score_v);
 }
 
 void TrackAnalysis::resetTTree(TTree *_tree)
@@ -577,13 +597,18 @@ void TrackAnalysis::resetTTree(TTree *_tree)
 
   _trk_len_v.clear();
 
+  _trk_mcs_muon_mom_v.clear();
   _trk_energy_muon_v.clear();
   _trk_energy_proton_v.clear();
+  _trk_calo_energy_u_v.clear();
+  _trk_calo_energy_v_v.clear();
+  _trk_calo_energy_y_v.clear();
 
-  _trk_llr_pid_u.clear();
+  _trk_llr_pid_u_v.clear();
+  _trk_llr_pid_v_v.clear();
+  _trk_llr_pid_y_v.clear();
   _trk_llr_pid_v.clear();
-  _trk_llr_pid_y.clear();
-  _trk_llr_pid.clear();
+  _trk_llr_pid_score_v.clear();
 }
 
 DEFINE_ART_CLASS_TOOL(TrackAnalysis)
