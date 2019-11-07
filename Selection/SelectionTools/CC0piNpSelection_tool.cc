@@ -14,6 +14,8 @@
 #include "../CommonDefs/CalibrationFuncs.h"
 #include "../CommonDefs/PFPHitDistance.h"
 #include "../CommonDefs/ProximityClustering.h"
+//#include "../CommonDefs/PIDFuncs.h"
+//#include "../CommonDefs/LLR_PID.h"
 
 #include "larcore/Geometry/Geometry.h"
 #include "lardataobj/RecoBase/SpacePoint.h"
@@ -83,8 +85,11 @@ public:
     bool isFiducial(const double x[3]) const;
 
 private:
+
     const trkf::TrackMomentumCalculator _trkmom;
     const trkf::TrajectoryMCSFitter mcsfitter;
+
+  //searchingfornues::LLRPID LLR_PID;
 
     TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
     TParticlePDG *electron = TDatabasePDG::Instance()->GetParticle(11);
@@ -210,6 +215,9 @@ private:
     float _shrclusfrac0, _shrclusfrac1, _shrclusfrac2;        /**< what fraction of the total charge does the dominant shower sub-cluster carry? */
     float _trkshrhitdist0, _trkshrhitdist1, _trkshrhitdist2;  /**< distance between hits of shower and track in 2D on each palne based on hit-hit distances */
 
+  float _shrmoliereavg; /**< avg of moliere angle */
+  float _shrmoliererms; /**< rms of moliere angle */
+
     int _shr_tkfit_npoints;      // number of points associated to shower fitted track
     int _shr_tkfit_npointsvalid; // number of VALID points associated to shower fitted track
 
@@ -262,6 +270,26 @@ CC0piNpSelection::CC0piNpSelection(const fhicl::ParameterSet &pset)
     : mcsfitter(fhicl::Table<trkf::TrajectoryMCSFitter::Config>(pset.get<fhicl::ParameterSet>("mcsfitmu")))
 {
     configure(pset);
+
+    /*
+  LLR_PID.set_dedx_binning(0, dedx_num_bins_pl_0, dedx_edges_pl_0);
+  std::vector<size_t> parameters_num_bins_0 = {parameter_0_num_bins_pl_0, parameter_1_num_bins_pl_0};
+  std::vector<std::vector<float>> parameters_bin_edges_0 = {parameter_0_edges_pl_0, parameter_1_edges_pl_0};
+  LLR_PID.set_par_binning(0, parameters_num_bins_0, parameters_bin_edges_0);
+  LLR_PID.set_lookup_tables(0, dedx_pdf_pl_0);
+
+  LLR_PID.set_dedx_binning(1, dedx_num_bins_pl_1, dedx_edges_pl_1);
+  std::vector<size_t> parameters_num_bins_1 = {parameter_0_num_bins_pl_1, parameter_1_num_bins_pl_1};
+  std::vector<std::vector<float>> parameters_bin_edges_1 = {parameter_0_edges_pl_1, parameter_1_edges_pl_1};
+  LLR_PID.set_par_binning(1, parameters_num_bins_1, parameters_bin_edges_1);
+  LLR_PID.set_lookup_tables(1, dedx_pdf_pl_1);
+
+  LLR_PID.set_dedx_binning(2, dedx_num_bins_pl_2, dedx_edges_pl_2);
+  std::vector<size_t> parameters_num_bins_2 = {parameter_0_num_bins_pl_2, parameter_1_num_bins_pl_2};
+  std::vector<std::vector<float>> parameters_bin_edges_2 = {parameter_0_edges_pl_2, parameter_1_edges_pl_2};
+  LLR_PID.set_par_binning(2, parameters_num_bins_2, parameters_bin_edges_2);
+  LLR_PID.set_lookup_tables(2, dedx_pdf_pl_2);
+    */
 }
 
 bool CC0piNpSelection::isFiducial(const double x[3]) const
@@ -666,6 +694,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
                         _shr_trkfitmedangle = searchingfornues::GetTrackRMSDeflection(tk, 10.);
 
+			searchingfornues::GetMoliereRadius(pfp_pxy,_shrmoliereavg,_shrmoliererms);
+
                         _shr_tkfit_start_x = tk->Start().X();
                         _shr_tkfit_start_y = tk->Start().Y();
                         _shr_tkfit_start_z = tk->Start().Z();
@@ -1051,6 +1081,9 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
 
     _shr_trkfitmedangle = std::numeric_limits<float>::lowest();
 
+    _shrmoliereavg = std::numeric_limits<float>::lowest();
+    _shrmoliererms = std::numeric_limits<float>::lowest();
+
     _shr_tkfit_gap05_dedx_Y = std::numeric_limits<float>::lowest();
     _shr_tkfit_gap05_dedx_U = std::numeric_limits<float>::lowest();
     _shr_tkfit_gap05_dedx_V = std::numeric_limits<float>::lowest();
@@ -1123,6 +1156,8 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_tkfit_npoints", &_shr_tkfit_npoints, "shr_tkfit_npoints/i");
     _tree->Branch("shr_tkfit_npointsvalid", &_shr_tkfit_npointsvalid, "shr_tkfit_npointsvalid/i");
     _tree->Branch("shr_trkfitmedangle", &_shr_trkfitmedangle, "shr_trkfitmedangle/f");
+    _tree->Branch("shrmoliereavg", &_shrmoliereavg, "shrmoliereavg/f");
+    _tree->Branch("shrmoliererms", &_shrmoliererms, "shrmoliererms/f");
     if (fSaveMoreDedx)
     {
         _tree->Branch("shr_tkfit_gap05_dedx_Y", &_shr_tkfit_gap05_dedx_Y, "shr_tkfit_gap05_dedx_Y/F");
