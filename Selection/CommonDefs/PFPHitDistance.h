@@ -80,8 +80,7 @@ namespace searchingfornues
 	      auto hit2 = hits2[h2];
 
 	      float dt = (hit1->PeakTime()    - hit2->PeakTime()) * t2cm;
-	      float dw = (hit1->WireID().Wire - hit2->WireID().Wire) * w2cm;
-	      
+	      float dw = ((float)(hit1->WireID().Wire) - ((float)hit2->WireID().Wire)) * w2cm;
 	      float dhit = sqrt ( (dt*dt) + (dw*dw) );
 
 	      if (dhit < dmin) { dmin = dhit; }
