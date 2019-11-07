@@ -314,7 +314,6 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   _run = e.run();
 
   std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: " << _evt << std::endl;
-  std::cout << "DAVIDC Run: " << _run << ", SubRun: " << _sub << ", Event: " << _evt << std::endl;
 
   // storing trigger result output for software trigger
   art::InputTag swtrig_tag("TriggerResults", "", "DataOverlayOptical");
