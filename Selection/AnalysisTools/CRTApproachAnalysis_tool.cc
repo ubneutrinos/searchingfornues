@@ -319,10 +319,13 @@ namespace analysis
   
   void CRTApproachAnalysis::setBranches(TTree* _tree) {
 
+    /*
     _tree->Branch("_run"   ,&_run   ,"run/I"   );
     _tree->Branch("_sub"   ,&_sub   ,"sub/I"   );
     _tree->Branch("_evt"   ,&_evt   ,"evt/I"   );
+    */
 
+    /*
     _tree->Branch("_nAssnCosmics"     ,&_nAssnCosmics     ,"_nAssnCosmics/I");
     _tree->Branch("_kMaxCosm"         ,&_kMaxCosm          ,"_kMaxCosm/I");
     _tree->Branch("_t0Cosm_v"         ,_t0Cosm_v          ,"_t0Cosm_v[_kMaxCosm]/D");
@@ -333,8 +336,9 @@ namespace analysis
     _tree->Branch("_xEndCosm_v"       ,_xEndCosm_v        ,"_xEndCosm_v[_kMaxCosm]/D");
     _tree->Branch("_yEndCosm_v"       ,_yEndCosm_v        ,"_yEndCosm_v[_kMaxCosm]/D");
     _tree->Branch("_zEndCosm_v"       ,_zEndCosm_v        ,"_zEndCosm_v[_kMaxCosm]/D");
+    */
 
-
+    /*
     _tree->Branch("_recoNu_vtx_x"     ,&_recoNu_vtx_x     ,"reco_vtx_x/D");
     _tree->Branch("_recoNu_vtx_y"     ,&_recoNu_vtx_y     ,"reco_vtx_y/D");
     _tree->Branch("_recoNu_vtx_z"     ,&_recoNu_vtx_z     ,"reco_vtx_z/D");
@@ -350,8 +354,10 @@ namespace analysis
     _tree->Branch("_nu_cosmic_End_y"  ,&_nu_cosmic_End_y  ,"_nu_cosmic_End_y/D");
     _tree->Branch("_nu_cosmic_End_z"  ,&_nu_cosmic_End_z  ,"_nu_cosmic_End_z/D");
     _tree->Branch("_nu_cosmic_TrackID",&_nu_cosmic_TrackID,"_nu_cosmic_TrackID/D");
+    */
     _tree->Branch("_closestNuCosmicDist",&_closestNuCosmicDist,"_closestNuCosmicDist/D");
 
+    /*
     _tree->Branch("_rand_vtx_x"         ,&_rand_vtx_x         ,"rand_vtx_x/D");
     _tree->Branch("_rand_vtx_y"         ,&_rand_vtx_y         ,"rand_vtx_y/D");
     _tree->Branch("_rand_vtx_z"         ,&_rand_vtx_z         ,"rand_vtx_z/D");
@@ -368,6 +374,7 @@ namespace analysis
     _tree->Branch("_rand_cosmic_End_z"  ,&_rand_cosmic_End_z  ,"_rand_cosmic_End_z/D");
     _tree->Branch("_rand_cosmic_TrackID",&_rand_cosmic_TrackID,"_rand_cosmic_TrackID/D");
     _tree->Branch("_closestRandCosmicDist",&_closestRandCosmicDist,"_closestRandCosmicDist/D");
+    */
 
     return;
   }
