@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
-<!ENTITY name "bnb_nu_shr">
+<!ENTITY name "beam_off_acpt">
 <!ENTITY project_version "v02">
 <!ENTITY release "v08_00_00_25">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "foppiani">
-<!ENTITY dataset "prodgenie_bnb_nu_uboone_overlay_mcc9.1_run1_reco2">
+<!ENTITY dataset "data_extbnb_mcc9.1_v08_00_00_25_reco2_C2_all_reco2">
 <!ENTITY resilient "/pnfs/uboone/resilient/users">
 <!ENTITY scratch "/pnfs/uboone/scratch/users">
 <!ENTITY data "/uboone/data/users">
-<!ENTITY fcl_name "run_calorimetryanalysis_shower_run1_overlay.fcl">
+<!ENTITY fcl_name "run_acptcalo_data.fcl">
 <!ENTITY folder_name "calorimetry">
 <!ENTITY tar_name "local">
 ]>
@@ -50,8 +50,7 @@
 
     <memory>2000</memory>
     <disk>10GB</disk>
-    <numjobs>100</numjobs>
-    <!-- <numjobs>478</numjobs> -->
+    <numjobs>1164</numjobs>
     <maxfilesperjob>25</maxfilesperjob>
     <schema>root</schema>
     <jobsub>--expected-lifetime=12h -q --generate-email-summary --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub>

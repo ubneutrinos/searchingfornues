@@ -14,6 +14,7 @@
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "../CommonDefs/PIDFuncs.h"
 #include "../CommonDefs/LLR_PID.h"
+#include "../CommonDefs/SCECorrections.h"
 
 #include "ubana/ParticleID/Algorithms/uB_PlaneIDBitsetHelperFunctions.h"
 #include "larreco/RecoAlg/TrackMomentumCalculator.h"
@@ -105,6 +106,10 @@ private:
   std::vector<float> _trk_start_y_v;
   std::vector<float> _trk_start_z_v;
 
+  std::vector<float> _trk_sce_start_x_v;
+  std::vector<float> _trk_sce_start_y_v;
+  std::vector<float> _trk_sce_start_z_v;
+
   std::vector<float> _trk_distance_v;
 
   std::vector<float> _trk_theta_v;
@@ -117,6 +122,10 @@ private:
   std::vector<float> _trk_end_x_v;
   std::vector<float> _trk_end_y_v;
   std::vector<float> _trk_end_z_v;
+
+  std::vector<float> _trk_sce_end_x_v;
+  std::vector<float> _trk_sce_end_y_v;
+  std::vector<float> _trk_sce_end_z_v;
 
   std::vector<float> _trk_len_v;
 
@@ -361,9 +370,21 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       _trk_start_y_v.push_back(trk->Start().Y());
       _trk_start_z_v.push_back(trk->Start().Z());
 
+      float _trk_start_sce[3];
+      searchingfornues::ApplySCECorrectionXYZ(trk->Start().X(), trk->Start().Y(), trk->Start().Z(), _trk_start_sce);
+      _trk_sce_start_x_v.push_back(_trk_start_sce[0]);
+      _trk_sce_start_y_v.push_back(_trk_start_sce[1]);
+      _trk_sce_start_z_v.push_back(_trk_start_sce[2]);
+
       _trk_end_x_v.push_back(trk->End().X());
       _trk_end_y_v.push_back(trk->End().Y());
       _trk_end_z_v.push_back(trk->End().Z());
+
+      float _trk_end_sce[3];
+      searchingfornues::ApplySCECorrectionXYZ(trk->End().X(), trk->End().Y(), trk->End().Z(), _trk_end_sce);
+      _trk_sce_end_x_v.push_back(_trk_end_sce[0]);
+      _trk_sce_end_y_v.push_back(_trk_end_sce[1]);
+      _trk_sce_end_z_v.push_back(_trk_end_sce[2]);
 
       _trk_theta_v.push_back(trk->Theta());
       _trk_phi_v.push_back(trk->Phi());
@@ -383,7 +404,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       _trk_llr_pid_y_v.push_back(0);
       _trk_llr_pid_v.push_back(0);
       _trk_llr_pid_score_v.push_back(0);
-      
+
       auto calo_v = calo_proxy[trk.key()].get<anab::Calorimetry>();
       for (auto const& calo : calo_v)
       {
@@ -432,10 +453,6 @@ void TrackAnalysis::fillDefault()
 {
   _trk_pfp_id_v.push_back(std::numeric_limits<int>::lowest());
 
-  _trk_start_x_v.push_back(std::numeric_limits<float>::lowest());
-  _trk_start_y_v.push_back(std::numeric_limits<float>::lowest());
-  _trk_start_z_v.push_back(std::numeric_limits<float>::lowest());
-
   _trk_distance_v.push_back(std::numeric_limits<float>::lowest());
 
   _trk_theta_v.push_back(std::numeric_limits<float>::lowest());
@@ -445,9 +462,21 @@ void TrackAnalysis::fillDefault()
   _trk_dir_y_v.push_back(std::numeric_limits<float>::lowest());
   _trk_dir_z_v.push_back(std::numeric_limits<float>::lowest());
 
+  _trk_start_x_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_start_y_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_start_z_v.push_back(std::numeric_limits<float>::lowest());
+
+  _trk_sce_start_x_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_sce_start_y_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_sce_start_z_v.push_back(std::numeric_limits<float>::lowest());
+
   _trk_end_x_v.push_back(std::numeric_limits<float>::lowest());
   _trk_end_y_v.push_back(std::numeric_limits<float>::lowest());
   _trk_end_z_v.push_back(std::numeric_limits<float>::lowest());
+
+  _trk_sce_end_x_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_sce_end_y_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_sce_end_z_v.push_back(std::numeric_limits<float>::lowest());
 
   _trk_len_v.push_back(std::numeric_limits<float>::lowest());
 
@@ -530,11 +559,19 @@ void TrackAnalysis::setBranches(TTree *_tree)
   _tree->Branch("trk_start_y_v", "std::vector< float >", &_trk_start_y_v);
   _tree->Branch("trk_start_z_v", "std::vector< float >", &_trk_start_z_v);
 
+  _tree->Branch("trk_sce_start_x_v", "std::vector< float >", &_trk_sce_start_x_v);
+  _tree->Branch("trk_sce_start_y_v", "std::vector< float >", &_trk_sce_start_y_v);
+  _tree->Branch("trk_sce_start_z_v", "std::vector< float >", &_trk_sce_start_z_v);
+
   _tree->Branch("trk_end_x_v", "std::vector< float >", &_trk_end_x_v);
   _tree->Branch("trk_end_y_v", "std::vector< float >", &_trk_end_y_v);
   _tree->Branch("trk_end_z_v", "std::vector< float >", &_trk_end_z_v);
-  _tree->Branch("trk_distance_v", "std::vector< float >", &_trk_distance_v);
 
+  _tree->Branch("trk_sce_end_x_v", "std::vector< float >", &_trk_sce_end_x_v);
+  _tree->Branch("trk_sce_end_y_v", "std::vector< float >", &_trk_sce_end_y_v);
+  _tree->Branch("trk_sce_end_z_v", "std::vector< float >", &_trk_sce_end_z_v);
+
+  _tree->Branch("trk_distance_v", "std::vector< float >", &_trk_distance_v);
   _tree->Branch("trk_theta_v", "std::vector< float >", &_trk_theta_v);
   _tree->Branch("trk_phi_v", "std::vector< float >", &_trk_phi_v);
 
@@ -588,9 +625,17 @@ void TrackAnalysis::resetTTree(TTree *_tree)
   _trk_start_y_v.clear();
   _trk_start_z_v.clear();
 
+  _trk_sce_start_x_v.clear();
+  _trk_sce_start_y_v.clear();
+  _trk_sce_start_z_v.clear();
+
   _trk_end_x_v.clear();
   _trk_end_y_v.clear();
   _trk_end_z_v.clear();
+
+  _trk_sce_end_x_v.clear();
+  _trk_sce_end_y_v.clear();
+  _trk_sce_end_z_v.clear();
 
   _trk_dir_x_v.clear();
   _trk_dir_y_v.clear();

@@ -126,7 +126,6 @@ private:
   TTree* _calo_tree;
 
   int _run, _sub, _evt;
-  int _isprimary;
   // backtracking information
   int _backtracked_pdg;            // PDG code of backtracked particle
   float _backtracked_e;            // energy of backtracked particle
@@ -292,7 +291,7 @@ CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p)
 
   art::ServiceHandle<art::TFileService> tfs;
 
-  _calo_tree = tfs->make<TTree>("CalorimetryAnalyzer", "Calo Tree");
+  // _calo_tree = tfs->make<TTree>("CalorimetryAnalyzer", "Calo Tree");
 }
 
 //----------------------------------------------------------------------------
@@ -520,8 +519,6 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
 
 void CalorimetryAnalysis::fillDefault()
 {
-  _isprimary = std::numeric_limits<int>::lowest();
-
   // backtracking information
   _backtracked_pdg = std::numeric_limits<int>::lowest();            // PDG code of backtracked particle
   _backtracked_e = std::numeric_limits<float>::lowest();            // energy of backtracked particle
@@ -662,20 +659,16 @@ void CalorimetryAnalysis::fillDefault()
 
 void CalorimetryAnalysis::setBranches(TTree *_tree)
 {
+  _calo_tree = _tree;
   _calo_tree->Branch("run", &_run, "run/i");
   _calo_tree->Branch("sub", &_sub, "sub/i");
   _calo_tree->Branch("evt", &_evt, "evt/i");
-  _calo_tree->Branch("isprimary", &_isprimary, "isprimary/i");
   // backtracking information
   _calo_tree->Branch("backtracked_pdg", &_backtracked_pdg, "backtracked_pdg/I");            // PDG code of backtracked particle
   _calo_tree->Branch("backtracked_e", &_backtracked_e, "backtracked_e/f");            // energy of backtracked particle
   _calo_tree->Branch("backtracked_purity", &_backtracked_purity, "backtracked_purity/f");       // purity of backtracking
   _calo_tree->Branch("backtracked_completeness", &_backtracked_completeness, "backtracked_completeness/f"); // completeness of backtracking
   _calo_tree->Branch("backtracked_overlay_purity", &_backtracked_overlay_purity, "backtracked_overlay_purity/f"); // purity of overlay
-
-  _calo_tree->Branch("generation", &_generation, "generation/i");
-  _calo_tree->Branch("trk_daughters", &_trk_daughters, "trk_daughters/i");
-  _calo_tree->Branch("shr_daughters", &_shr_daughters, "shr_daughters/i");
 
   _calo_tree->Branch("backtracked_start_x", &_backtracked_start_x, "backtracked_start_x/f");
   _calo_tree->Branch("backtracked_start_y", &_backtracked_start_y, "backtracked_start_y/f");
@@ -693,9 +686,10 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
 
   _calo_tree->Branch("backtracked_end_process", &_backtracked_end_process);
   _calo_tree->Branch("backtracked_end_in_tpc", &_backtracked_end_in_tpc, "backtracked_end_in_tpc/O");
-  _calo_tree->Branch("backtracked_pdg", &_backtracked_pdg, "backtracked_pdg/I");            // PDG code of backtracked particle
-  _calo_tree->Branch("backtracked_pdg", &_backtracked_pdg, "backtracked_pdg/I");            // PDG code of backtracked particle
-  _calo_tree->Branch("backtracked_pdg", &_backtracked_pdg, "backtracked_pdg/I");            // PDG code of backtracked particle
+
+  _calo_tree->Branch("generation", &_generation, "generation/i");
+  _calo_tree->Branch("trk_daughters", &_trk_daughters, "trk_daughters/i");
+  _calo_tree->Branch("shr_daughters", &_shr_daughters, "shr_daughters/i");
 
   // track information
   _calo_tree->Branch("nplanehits_U", &_nplanehits_U, "nplanehits_U/I");
@@ -711,11 +705,11 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
   _calo_tree->Branch("trk_dir_y", &_trk_dir_y, "trk_dir_y/f");
   _calo_tree->Branch("trk_dir_z", &_trk_dir_z, "trk_dir_z/f");
 
+  _calo_tree->Branch("longest", &_longest, "longest/I");
+
   _calo_tree->Branch("trk_start_x", &_trk_start_x, "trk_start_x/f");
   _calo_tree->Branch("trk_start_y", &_trk_start_y, "trk_start_y/f");
   _calo_tree->Branch("trk_start_z", &_trk_start_z, "trk_start_z/f");
-
-  _calo_tree->Branch("longest", &_longest, "longest/I");
 
   _calo_tree->Branch("trk_sce_start_x", &_trk_sce_start_x, "trk_sce_start_x/f");
   _calo_tree->Branch("trk_sce_start_y", &_trk_sce_start_y, "trk_sce_start_y/f");
@@ -728,15 +722,6 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
   _calo_tree->Branch("trk_sce_end_x", &_trk_sce_end_x, "trk_sce_end_x/f");
   _calo_tree->Branch("trk_sce_end_y", &_trk_sce_end_y, "trk_sce_end_y/f");
   _calo_tree->Branch("trk_sce_end_z", &_trk_sce_end_z, "trk_sce_end_z/f");
-
-  _calo_tree->Branch("trk_bragg_p_y", &_trk_bragg_p_y, "trk_bragg_p_y/f");
-  _calo_tree->Branch("trk_bragg_mu_y", &_trk_bragg_mu_y, "trk_bragg_mu_y/f");
-  _calo_tree->Branch("trk_bragg_mip_y", &_trk_bragg_mip_y, "trk_bragg_mip_y/f");
-  _calo_tree->Branch("trk_pid_chipr_y", &_trk_pid_chipr_y, "trk_pid_chipr_y/f");
-  _calo_tree->Branch("trk_pid_chika_y", &_trk_pid_chika_y, "trk_pid_chika_y/f");
-  _calo_tree->Branch("trk_pid_chipi_y", &_trk_pid_chipi_y, "trk_pid_chipi_y/f");
-  _calo_tree->Branch("trk_pid_chimu_y", &_trk_pid_chimu_y, "trk_pid_chimu_y/f");
-  _calo_tree->Branch("trk_pida_y", &_trk_pida_y, "trk_pida_y/f");
 
   _calo_tree->Branch("trk_bragg_p_u", &_trk_bragg_p_u, "trk_bragg_p_u/f");
   _calo_tree->Branch("trk_bragg_mu_u", &_trk_bragg_mu_u, "trk_bragg_mu_u/f");
@@ -755,6 +740,15 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
   _calo_tree->Branch("trk_pid_chipi_v", &_trk_pid_chipi_v, "trk_pid_chipi_v/f");
   _calo_tree->Branch("trk_pid_chimu_v", &_trk_pid_chimu_v, "trk_pid_chimu_v/f");
   _calo_tree->Branch("trk_pida_v", &_trk_pida_v, "trk_pida_v/f");
+
+  _calo_tree->Branch("trk_bragg_p_y", &_trk_bragg_p_y, "trk_bragg_p_y/f");
+  _calo_tree->Branch("trk_bragg_mu_y", &_trk_bragg_mu_y, "trk_bragg_mu_y/f");
+  _calo_tree->Branch("trk_bragg_mip_y", &_trk_bragg_mip_y, "trk_bragg_mip_y/f");
+  _calo_tree->Branch("trk_pid_chipr_y", &_trk_pid_chipr_y, "trk_pid_chipr_y/f");
+  _calo_tree->Branch("trk_pid_chika_y", &_trk_pid_chika_y, "trk_pid_chika_y/f");
+  _calo_tree->Branch("trk_pid_chipi_y", &_trk_pid_chipi_y, "trk_pid_chipi_y/f");
+  _calo_tree->Branch("trk_pid_chimu_y", &_trk_pid_chimu_y, "trk_pid_chimu_y/f");
+  _calo_tree->Branch("trk_pida_y", &_trk_pida_y, "trk_pida_y/f");
 
   _calo_tree->Branch("trk_bragg_p_three_planes", &_trk_bragg_p_three_planes, "trk_bragg_p_three_planes/f");
 
