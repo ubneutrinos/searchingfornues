@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE project [
+<!ENTITY name "bnb_nu_cc0pinp">
+<!ENTITY project_version "v08_00_00_26">
+<!ENTITY release "v08_00_00_26">
+<!ENTITY qualifier "e17:prof">
+<!ENTITY user "wvdp">
+<!ENTITY dataset "prodgenie_bnb_nu_uboone_overlay_mcc9.1_run1_reco2">
+<!ENTITY resilient "/pnfs/uboone/resilient/users">
+<!ENTITY scratch "/pnfs/uboone/scratch/users">
+<!ENTITY data "/uboone/data/users">
+<!ENTITY fcl_name "run_neutrinoselectionfilter_run1_overlay_cc0pinp.fcl">
+<!ENTITY folder_name "searchingfornues">
+<!ENTITY tar_name "local">
+]>
+
+
+<project name="&name;">
+
+  <!-- Group -->
+  <group>uboone</group>
+
+  <!-- Operating System -->
+  <os>SL6</os>
+
+  <!--  Project size  -->
+  <numevents>1000000</numevents>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC,OFFSITE</resource>
+
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&release;</tag>
+    <qual>&qualifier;</qual>
+    <local>&resilient;/&user;/&folder_name;/&project_version;/&tar_name;.tar</local>
+  </larsoft>
+
+  <!-- Project stages -->
+
+  <stage name="&name;">
+    <fcl>&fcl_name;</fcl>
+    <inputdef>&dataset;</inputdef>
+
+    <outdir>&scratch;/&user;/&folder_name;/&project_version;/&name;/out/</outdir>
+    <logdir>&scratch;/&user;/&folder_name;/&project_version;/&name;/log/</logdir>
+    <workdir>&resilient;/&user;/&folder_name;/&project_version;/&name;/work/</workdir>
+    <bookdir>&data;/&user;/&folder_name;/&project_version;/&name;/book/</bookdir>
+
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <!-- <numjobs>50</numjobs>
+    <maxfilesperjob>15</maxfilesperjob> -->
+    <numjobs>957</numjobs>
+    <maxfilesperjob>25</maxfilesperjob>
+    <schema>root</schema>
+    <jobsub>--expected-lifetime=12h -q --generate-email-summary --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub>
+    <jobsub_start>--append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+</project>
