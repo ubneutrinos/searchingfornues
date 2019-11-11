@@ -50,7 +50,6 @@
 
     <memory>1800 </memory>
     <disk>5GB</disk>
-    <!-- <numjobs>50</numjobs> -->
     <numjobs>19</numjobs>
     <maxfilesperjob>25</maxfilesperjob>
     <schema>root</schema>
