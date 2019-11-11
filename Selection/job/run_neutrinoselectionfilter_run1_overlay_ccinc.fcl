@@ -1,3 +1,0 @@
-#include "run_neutrinoselectionfilter_run1_overlay.fcl"
-
-physics.filters.nuselection.SelectionTool: @local::CCincSelectionTool

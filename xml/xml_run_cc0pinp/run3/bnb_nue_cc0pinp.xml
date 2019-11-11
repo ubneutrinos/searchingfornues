@@ -42,19 +42,19 @@
   <stage name="&name;">
     <fcl>&fcl_name;</fcl>
     <inputdef>&dataset;</inputdef>
-
+    <initsource>/pnfs/uboone/resilient/users/davidc/jobs/v08_00_00_25/geniesetup.sh</initsource>
     <outdir>&scratch;/&user;/&folder_name;/&project_version;/&name;/out/</outdir>
     <logdir>&scratch;/&user;/&folder_name;/&project_version;/&name;/log/</logdir>
     <workdir>&resilient;/&user;/&folder_name;/&project_version;/&name;/work/</workdir>
     <bookdir>&data;/&user;/&folder_name;/&project_version;/&name;/book/</bookdir>
 
-    <memory>2000</memory>
-    <disk>10GB</disk>
+    <memory>1800 </memory>
+    <disk>5GB</disk>
     <!-- <numjobs>50</numjobs> -->
     <numjobs>122</numjobs>
     <maxfilesperjob>25</maxfilesperjob>
     <schema>root</schema>
-    <jobsub>--expected-lifetime=12h -q --generate-email-summary --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub>
+    <jobsub>--expected-lifetime=7h -q  --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub>
     <jobsub_start>--append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
   </stage>
 
