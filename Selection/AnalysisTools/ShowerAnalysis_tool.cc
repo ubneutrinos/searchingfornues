@@ -82,7 +82,6 @@ public:
   void resetTTree(TTree *_tree) override;
 
 private:
-
   int _run, _sub, _evt;
 
   // input variables for tool
@@ -109,7 +108,7 @@ private:
   std::vector<float> _shr_start_V_v;
   std::vector<float> _shr_dist_v;
 
-  std::vector<int>    _shr_nclus0_v, _shr_nclus1_v, _shr_nclus2_v;
+  std::vector<int> _shr_nclus0_v, _shr_nclus1_v, _shr_nclus2_v;
   std::vector<float> _shr_clushitfrac0_v, _shr_clushitfrac1_v, _shr_clushitfrac2_v;
 
   std::vector<float> _shr_px_v;
@@ -144,6 +143,10 @@ private:
   std::vector<float> _shr_tkfit_dedx_v_v;
   std::vector<float> _shr_tkfit_dedx_y_v;
 
+  std::vector<float> _shr_tkfit_gap10_dedx_u_v;
+  std::vector<float> _shr_tkfit_gap10_dedx_v_v;
+  std::vector<float> _shr_tkfit_gap10_dedx_y_v;
+
   std::vector<int> _shr_tkfit_dedx_nhits_u_v;
   std::vector<int> _shr_tkfit_dedx_nhits_v_v;
   std::vector<int> _shr_tkfit_dedx_nhits_y_v;
@@ -160,17 +163,15 @@ ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
 {
   fTRKproducer = p.get<art::InputTag>("TRKproducer", "");
   fCALproducer = p.get<art::InputTag>("CALproducer", "");
-  fdEdxcmSkip  = p.get<float>("dEdxcmSkip",0.0); // how many cm to skip @ vtx for dE/dx calculation
-  fdEdxcmLen   = p.get<float>("dEdxcmLen" ,4.0); // how long the dE/dx segment should be
-  fLocaldEdx   = p.get<bool >("LocaldEdx" , true); // use dE/dx from calo?
+  fdEdxcmSkip = p.get<float>("dEdxcmSkip", 0.0); // how many cm to skip @ vtx for dE/dx calculation
+  fdEdxcmLen = p.get<float>("dEdxcmLen", 4.0);   // how long the dE/dx segment should be
+  fLocaldEdx = p.get<bool>("LocaldEdx", true);   // use dE/dx from calo?
 
   // load proximity clustering algorithm
   //PrxyCluster = new searchingfornues::ProximityClustering();
   //PrxyCluster->initialize();
   //PrxyCluster->setRadius(2.0);
   //PrxyCluster->setCellSize(2.0);
-
-
 }
 
 //----------------------------------------------------------------------------
@@ -196,14 +197,14 @@ void ShowerAnalysis::analyzeEvent(art::Event const &e, bool fData)
   _evt = e.event();
   _sub = e.subRun();
   _run = e.run();
-  std::cout << "[ShowerAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: "<< _evt << std::endl;
+  std::cout << "[ShowerAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: " << _evt << std::endl;
 }
 
 void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
 {
 
   art::InputTag clusproducer("pandora");
-  ProxyClusColl_t const &clus_proxy = proxy::getCollection<std::vector<recob::Cluster>>(e, clusproducer,proxy::withAssociated<recob::Hit>(clusproducer));
+  ProxyClusColl_t const &clus_proxy = proxy::getCollection<std::vector<recob::Cluster>>(e, clusproducer, proxy::withAssociated<recob::Hit>(clusproducer));
 
   searchingfornues::ProxyCaloColl_t const *tkcalo_proxy = NULL;
   if (fTRKproducer != "")
@@ -298,6 +299,10 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_tkfit_dedx_v_v.push_back(std::numeric_limits<float>::lowest());
       _shr_tkfit_dedx_y_v.push_back(std::numeric_limits<float>::lowest());
 
+      _shr_tkfit_gap10_dedx_u_v.push_back(std::numeric_limits<float>::lowest());
+      _shr_tkfit_gap10_dedx_v_v.push_back(std::numeric_limits<float>::lowest());
+      _shr_tkfit_gap10_dedx_y_v.push_back(std::numeric_limits<float>::lowest());
+
       _shr_tkfit_dedx_nhits_u_v.push_back(std::numeric_limits<int>::lowest());
       _shr_tkfit_dedx_nhits_v_v.push_back(std::numeric_limits<int>::lowest());
       _shr_tkfit_dedx_nhits_y_v.push_back(std::numeric_limits<int>::lowest());
@@ -310,59 +315,63 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 
       // get hits from cluster
       auto clus_pxy_v = slice_pfp_v[i_pfp].get<recob::Cluster>();
-      
-      for (auto ass_clus : clus_pxy_v) {
-	
-	// store hits for each plane
-	std::vector< art::Ptr<recob::Hit> > cluster_hits_v;
-	
+
+      for (auto ass_clus : clus_pxy_v)
+      {
+
+        // store hits for each plane
+        std::vector<art::Ptr<recob::Hit>> cluster_hits_v;
+
         const auto &clus = clus_proxy[ass_clus.key()];
         auto clus_hit_v = clus.get<recob::Hit>();
         auto plane = clus->Plane().Plane;
         //if (plane != 2) continue;
         //if ( (plane >=0) && (plane < 3) ) {
         //cluster_hits_v[plane].clear();
-        for (size_t h=0; h < clus_hit_v.size(); h++)
-	  {
-	    cluster_hits_v.push_back( clus_hit_v[h] );
-	  }// for all hits in cluster
+        for (size_t h = 0; h < clus_hit_v.size(); h++)
+        {
+          cluster_hits_v.push_back(clus_hit_v[h]);
+        } // for all hits in cluster
         //}// if plane is ok
-	
-	
-	std::vector< std::vector< unsigned int> > out_cluster_v;
-	searchingfornues::cluster(cluster_hits_v, out_cluster_v, 2.0, 2.0);
-	
-	// find how many clusters above some # of hit threshold there are
-	int nclus = 0;
-	// find cluste with largest fraction of all hits
-	float hitfracmax = 0.;
-	float tothits = cluster_hits_v.size();
-	for (size_t nc=0; nc < out_cluster_v.size(); nc++)
-	  {
-	    auto clus_hit_idx_v = out_cluster_v.at(nc);
-	    int nhitclus = clus_hit_idx_v.size();
-	    if (nhitclus > 3.) nclus += 1;
-	    float hitfrac = nhitclus / tothits;
-	    if (hitfrac > hitfracmax)
-	      {
-		hitfracmax = hitfrac;
-	      }
-	  }// for all clusters
-	
-	if (plane == 0) {
-	  _shr_nclus0_v.push_back(nclus);
-	  _shr_clushitfrac0_v.push_back(hitfracmax);
-	}
-	if (plane == 1) {
-	  _shr_nclus1_v.push_back(nclus);
-	  _shr_clushitfrac1_v.push_back(hitfracmax);
-	}
-	if (plane == 2) {
-	  _shr_nclus2_v.push_back(nclus);
-	  _shr_clushitfrac2_v.push_back(hitfracmax);
-	}
-	
-      }// for all clusters for PFP 1
+
+        std::vector<std::vector<unsigned int>> out_cluster_v;
+        searchingfornues::cluster(cluster_hits_v, out_cluster_v, 2.0, 2.0);
+
+        // find how many clusters above some # of hit threshold there are
+        int nclus = 0;
+        // find cluste with largest fraction of all hits
+        float hitfracmax = 0.;
+        float tothits = cluster_hits_v.size();
+        for (size_t nc = 0; nc < out_cluster_v.size(); nc++)
+        {
+          auto clus_hit_idx_v = out_cluster_v.at(nc);
+          int nhitclus = clus_hit_idx_v.size();
+          if (nhitclus > 3.)
+            nclus += 1;
+          float hitfrac = nhitclus / tothits;
+          if (hitfrac > hitfracmax)
+          {
+            hitfracmax = hitfrac;
+          }
+        } // for all clusters
+
+        if (plane == 0)
+        {
+          _shr_nclus0_v.push_back(nclus);
+          _shr_clushitfrac0_v.push_back(hitfracmax);
+        }
+        if (plane == 1)
+        {
+          _shr_nclus1_v.push_back(nclus);
+          _shr_clushitfrac1_v.push_back(hitfracmax);
+        }
+        if (plane == 2)
+        {
+          _shr_nclus2_v.push_back(nclus);
+          _shr_clushitfrac2_v.push_back(hitfracmax);
+        }
+
+      } // for all clusters for PFP 1
 
       if (tkcalo_proxy == NULL)
         continue;
@@ -392,7 +401,7 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
         auto const tkcalos = tk.get<anab::Calorimetry>();
 
         float calodEdx; // dEdx computed for track-fitter
-        int   caloNpts; // number of track-fitter dE/dx hits
+        int caloNpts;   // number of track-fitter dE/dx hits
 
         for (const auto &tkcalo : tkcalos)
         {
@@ -401,22 +410,37 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 
           if (tkcalo->PlaneID().Plane == 0)
           {
-            _shr_tkfit_dedx_u_v.back()       = calodEdx;
+            _shr_tkfit_dedx_u_v.back() = calodEdx;
             _shr_tkfit_dedx_nhits_u_v.back() = caloNpts;
           }
 
           if (tkcalo->PlaneID().Plane == 1)
           {
-            _shr_tkfit_dedx_v_v.back()       = calodEdx;
+            _shr_tkfit_dedx_v_v.back() = calodEdx;
             _shr_tkfit_dedx_nhits_v_v.back() = caloNpts;
           }
 
           if (tkcalo->PlaneID().Plane == 2)
           {
-            _shr_tkfit_dedx_y_v.back()       = calodEdx;
+            _shr_tkfit_dedx_y_v.back() = calodEdx;
             _shr_tkfit_dedx_nhits_y_v.back() = caloNpts;
           }
-        }// for all calorimetry objects
+
+          // Gap 1.0 cm
+          searchingfornues::GetTrackFitdEdx(tkcalo, 1.0, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
+          if (tkcalo->PlaneID().Plane == 2)
+          {
+            _shr_tkfit_gap10_dedx_y_v.back() = caloNpts;
+          }
+          else if (tkcalo->PlaneID().Plane == 1)
+          {
+            _shr_tkfit_gap10_dedx_v_v.back() = caloNpts;
+          }
+          else if (tkcalo->PlaneID().Plane == 0)
+          {
+            _shr_tkfit_gap10_dedx_u_v.back() = caloNpts;
+          }
+        } // for all calorimetry objects
       }
     }
   }
@@ -442,11 +466,11 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_start_V_v", "std::vector< float >", &_shr_start_V_v);
 
   _tree->Branch("shr_dist_v", "std::vector< float >", &_shr_dist_v);
-  _tree->Branch("shr_nclus0_v", "std::vector< int >"  , &_shr_nclus0_v);
+  _tree->Branch("shr_nclus0_v", "std::vector< int >", &_shr_nclus0_v);
   _tree->Branch("shr_clushitfrac0_v", "std::vector< float >", &_shr_clushitfrac0_v);
-  _tree->Branch("shr_nclus1_v", "std::vector< int >"  , &_shr_nclus1_v);
+  _tree->Branch("shr_nclus1_v", "std::vector< int >", &_shr_nclus1_v);
   _tree->Branch("shr_clushitfrac1_v", "std::vector< float >", &_shr_clushitfrac1_v);
-  _tree->Branch("shr_nclus2_v", "std::vector< int >"  , &_shr_nclus2_v);
+  _tree->Branch("shr_nclus2_v", "std::vector< int >", &_shr_nclus2_v);
   _tree->Branch("shr_clushitfrac2_v", "std::vector< float >", &_shr_clushitfrac2_v);
 
   _tree->Branch("shr_px_v", "std::vector< float >", &_shr_px_v);
@@ -479,6 +503,11 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_tkfit_dedx_u_v", "std::vector< float >", &_shr_tkfit_dedx_u_v);
   _tree->Branch("shr_tkfit_dedx_v_v", "std::vector< float >", &_shr_tkfit_dedx_v_v);
   _tree->Branch("shr_tkfit_dedx_y_v", "std::vector< float >", &_shr_tkfit_dedx_y_v);
+
+  _tree->Branch("shr_tkfit_gap10_dedx_u_v", "std::vector< float >", &_shr_tkfit_gap10_dedx_u_v);
+  _tree->Branch("shr_tkfit_gap10_dedx_v_v", "std::vector< float >", &_shr_tkfit_gap10_dedx_v_v);
+  _tree->Branch("shr_tkfit_gap10_dedx_y_v", "std::vector< float >", &_shr_tkfit_gap10_dedx_y_v);
+
   _tree->Branch("shr_tkfit_dedx_nhits_u_v", "std::vector< int >", &_shr_tkfit_dedx_nhits_u_v);
   _tree->Branch("shr_tkfit_dedx_nhits_v_v", "std::vector< int >", &_shr_tkfit_dedx_nhits_v_v);
   _tree->Branch("shr_tkfit_dedx_nhits_y_v", "std::vector< int >", &_shr_tkfit_dedx_nhits_y_v);
@@ -536,11 +565,14 @@ void ShowerAnalysis::fillDefault()
   _shr_tkfit_dedx_v_v.push_back(std::numeric_limits<float>::lowest());
   _shr_tkfit_dedx_y_v.push_back(std::numeric_limits<float>::lowest());
 
+  _shr_tkfit_gap10_dedx_u_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_tkfit_gap10_dedx_v_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_tkfit_gap10_dedx_y_v.push_back(std::numeric_limits<float>::lowest());
+
   _shr_tkfit_dedx_nhits_u_v.push_back(std::numeric_limits<int>::lowest());
   _shr_tkfit_dedx_nhits_v_v.push_back(std::numeric_limits<int>::lowest());
   _shr_tkfit_dedx_nhits_y_v.push_back(std::numeric_limits<int>::lowest());
 }
-
 
 void ShowerAnalysis::resetTTree(TTree *_tree)
 {
@@ -601,13 +633,14 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
   _shr_tkfit_dedx_v_v.clear();
   _shr_tkfit_dedx_y_v.clear();
 
+  _shr_tkfit_gap10_dedx_u_v.clear();
+  _shr_tkfit_gap10_dedx_v_v.clear();
+  _shr_tkfit_gap10_dedx_y_v.clear();
+
   _shr_tkfit_dedx_nhits_u_v.clear();
   _shr_tkfit_dedx_nhits_v_v.clear();
   _shr_tkfit_dedx_nhits_y_v.clear();
 }
-
-
-
 
 DEFINE_ART_CLASS_TOOL(ShowerAnalysis)
 } // namespace analysis
