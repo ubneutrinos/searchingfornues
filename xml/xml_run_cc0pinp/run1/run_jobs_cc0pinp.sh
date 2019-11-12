@@ -21,7 +21,7 @@ project.py --xml bnb_ncpi0_cc0pinp.xml --stage bnb_ncpi0_cc0pinp --clean
 project.py --xml bnb_ncpi0_cc0pinp.xml --stage bnb_ncpi0_cc0pinp --submit
 project.py --xml bnb_elee_low_cc0pinp.xml --stage bnb_elee_low_cc0pinp --clean
 project.py --xml bnb_elee_low_cc0pinp.xml --stage bnb_elee_low_cc0pinp --submit
-project.py --xml bnb_elee_high_cc0pinp.xml --stage bnb_elee_high_cc0pinp --clean
-project.py --xml bnb_elee_high_cc0pinp.xml --stage bnb_elee_high_cc0pinp --submit
+#project.py --xml bnb_elee_high_cc0pinp.xml --stage bnb_elee_high_cc0pinp --clean
+#project.py --xml bnb_elee_high_cc0pinp.xml --stage bnb_elee_high_cc0pinp --submit
 
 

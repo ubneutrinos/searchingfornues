@@ -5,7 +5,7 @@
 <!ENTITY release "v08_00_00_26">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "wvdp">
-<!ENTITY dataset "prodgenie_bnb_nu_uboone_overlay_mcc9.1_run3_reco2">
+<!ENTITY dataset "prodgenie_bnb_nu_uboone_overlay_mcc9.1_run3_G_reco2">
 <!ENTITY resilient "/pnfs/uboone/resilient/users">
 <!ENTITY scratch "/pnfs/uboone/scratch/users">
 <!ENTITY data "/uboone/data/users">

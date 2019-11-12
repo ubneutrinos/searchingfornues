@@ -277,6 +277,7 @@ void ContainmentAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("dvtx", &_dvtx, "dvtx/F");
   _tree->Branch("dtrk", &_dtrk, "dtrk/F");
+  _tree->Branch("contained_sps_ratio", &contained_sps_ratio, "contained_sps_ratio/F");
 
   _tree->Branch("dtrk_x_boundary", "std::vector < double >", &_dtrk_x_boundary);
   _tree->Branch("dtrk_y_boundary", "std::vector < double >", &_dtrk_y_boundary);
