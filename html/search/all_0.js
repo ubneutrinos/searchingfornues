@@ -1,7 +1,7 @@
 var searchData=
 [
   ['_5fccnc',['_ccnc',['../classanalysis_1_1DefaultAnalysis.html#ac2df5c78c8d06e090d0b6cd195fa83d8',1,'analysis::DefaultAnalysis']]],
-  ['_5fcontained_5ffraction',['_contained_fraction',['../classselection_1_1NuMuSelection.html#a5d7cbf03836116170b56615ab3b073c2',1,'selection::NuMuSelection']]],
+  ['_5fcontained_5ffraction',['_contained_fraction',['../classselection_1_1CC0piNpSelection.html#a8e7933222bce1424aee24bae8dcf4864',1,'selection::CC0piNpSelection::_contained_fraction()'],['../classselection_1_1NuMuSelection.html#a5d7cbf03836116170b56615ab3b073c2',1,'selection::NuMuSelection::_contained_fraction()']]],
   ['_5fcrthitpe',['_crthitpe',['../classanalysis_1_1DefaultAnalysis.html#a900ec35e3ca4a00d4625a1e632bb6b40',1,'analysis::DefaultAnalysis']]],
   ['_5fcrtveto',['_crtveto',['../classanalysis_1_1DefaultAnalysis.html#a84ce9904fa527012a65c2be203a38d38',1,'analysis::DefaultAnalysis']]],
   ['_5felec_5fc',['_elec_c',['../classanalysis_1_1DefaultAnalysis.html#a5ce51cfe745fbf0327541a1877a99f87',1,'analysis::DefaultAnalysis']]],
@@ -10,7 +10,7 @@ var searchData=
   ['_5fendmuonprocess',['_endmuonprocess',['../classanalysis_1_1DefaultAnalysis.html#a8cbb24a231e167258d2914f92bc4af22',1,'analysis::DefaultAnalysis']]],
   ['_5fextra_5fenergy_5fy',['_extra_energy_y',['../classselection_1_1CC0piNpSelection.html#a2e386c361ecc27d22ff2642e80a629e4',1,'selection::CC0piNpSelection::_extra_energy_y()'],['../classselection_1_1NuMuSelection.html#a9bbe9a46450cfb58e3559d943a5822c8',1,'selection::NuMuSelection::_extra_energy_y()']]],
   ['_5fflashmatchtool',['_flashmatchTool',['../classACPTTrigFlashMatch.html#a12e3a8369411bc0e4608ec08d2cb56c5',1,'ACPTTrigFlashMatch::_flashmatchTool()'],['../classCosmicRejection.html#a89d060de9ac73f2847caf864c6eed691',1,'CosmicRejection::_flashmatchTool()'],['../classMuCSFlashMatch.html#ac7d7c6f36ada7a806d24854f30e68c54',1,'MuCSFlashMatch::_flashmatchTool()'],['../classanalysis_1_1ObviousCosmicFlashMatching.html#a6142bc3956c3c5463c7146a3053f9025',1,'analysis::ObviousCosmicFlashMatching::_flashmatchTool()']]],
-  ['_5fhits_5foutfv',['_hits_outfv',['../classselection_1_1NuMuSelection.html#ac2073c16d1ba83437d9fa66b0aa3ea38',1,'selection::NuMuSelection']]],
+  ['_5fhits_5foutfv',['_hits_outfv',['../classselection_1_1CC0piNpSelection.html#ac39ec79d190fb925f8d20b03cbeb0605',1,'selection::CC0piNpSelection::_hits_outfv()'],['../classselection_1_1NuMuSelection.html#ac2073c16d1ba83437d9fa66b0aa3ea38',1,'selection::NuMuSelection::_hits_outfv()']]],
   ['_5fhits_5fratio',['_hits_ratio',['../classselection_1_1CC0piNpSelection.html#a32b43003c9168115bc94544049e439a2',1,'selection::CC0piNpSelection::_hits_ratio()'],['../classselection_1_1NuMuSelection.html#a550c6e1bb4c959af5f5724b122b39999',1,'selection::NuMuSelection::_hits_ratio()']]],
   ['_5finteraction',['_interaction',['../classanalysis_1_1DefaultAnalysis.html#a35c01b4be6d678e89cada927ab2ba45c',1,'analysis::DefaultAnalysis']]],
   ['_5fisvtxinfiducial',['_isVtxInFiducial',['../classanalysis_1_1DefaultAnalysis.html#a3235e005677abb89da08d1668257bca3',1,'analysis::DefaultAnalysis']]],
@@ -106,6 +106,7 @@ var searchData=
   ['_5fshrmoliereavg',['_shrmoliereavg',['../classselection_1_1CC0piNpSelection.html#a12991c5dfa675422d48f75a1caeae3ea',1,'selection::CC0piNpSelection']]],
   ['_5fshrmoliererms',['_shrmoliererms',['../classselection_1_1CC0piNpSelection.html#a4fbd21a7fae1f01027cfe234e925c19a',1,'selection::CC0piNpSelection']]],
   ['_5fshrsubclusters2',['_shrsubclusters2',['../classselection_1_1CC0piNpSelection.html#af7e0f3d1bd6c4335353bd8d4054d4e1e',1,'selection::CC0piNpSelection']]],
+  ['_5fsps_5fcontained_5ffraction',['_sps_contained_fraction',['../classselection_1_1CC0piNpSelection.html#ac425fa284847d7cae95f21367ed4889e',1,'selection::CC0piNpSelection']]],
   ['_5ftheta',['_theta',['../classanalysis_1_1DefaultAnalysis.html#adb169ccacccada1a17b6699a25f3fd67',1,'analysis::DefaultAnalysis']]],
   ['_5ftksh_5fangle',['_tksh_angle',['../classselection_1_1CC0piNpSelection.html#a959adc6093ff4d2730dac8f75dd1245c',1,'selection::CC0piNpSelection::_tksh_angle()'],['../classselection_1_1NuMuSelection.html#a129f335453ed7ff4678f2e388ce17575',1,'selection::NuMuSelection::_tksh_angle()']]],
   ['_5ftksh_5fangle_5fmuon',['_tksh_angle_muon',['../classselection_1_1CC0piNpSelection.html#a8210028b7144d3dc078201257a1a8663',1,'selection::CC0piNpSelection::_tksh_angle_muon()'],['../classselection_1_1NuMuSelection.html#a683d563efffdd178b3fa5eaf7e8efeb7',1,'selection::NuMuSelection::_tksh_angle_muon()']]],

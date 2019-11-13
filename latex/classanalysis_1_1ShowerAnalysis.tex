@@ -18,8 +18,7 @@ void \hyperlink{classanalysis_1_1ShowerAnalysis_a973cb90e6fa423b88ca3a9667d467b1
 \item 
 void \hyperlink{classanalysis_1_1ShowerAnalysis_a5ae15109590ea737320bf13cefa5cc3f}{analyze\+Event} (art\+::\+Event const \&e, bool f\+Data) override
 \begin{DoxyCompactList}\small\item\em Analysis function. \end{DoxyCompactList}\item 
-void \hyperlink{classanalysis_1_1ShowerAnalysis_a957be06c08e5777cd684c84ca53bc45e}{analyze\+Slice} (art\+::\+Event const \&e, std\+::vector$<$ Proxy\+Pfp\+Elem\+\_\+t $>$ \&slice\+\_\+pfp\+\_\+v, bool f\+Data, bool selected) override\hypertarget{classanalysis_1_1ShowerAnalysis_a957be06c08e5777cd684c84ca53bc45e}{}\label{classanalysis_1_1ShowerAnalysis_a957be06c08e5777cd684c84ca53bc45e}
-
+void \hyperlink{classanalysis_1_1ShowerAnalysis_a957be06c08e5777cd684c84ca53bc45e}{analyze\+Slice} (art\+::\+Event const \&e, std\+::vector$<$ Proxy\+Pfp\+Elem\+\_\+t $>$ \&slice\+\_\+pfp\+\_\+v, bool f\+Data, bool selected) override
 \begin{DoxyCompactList}\small\item\em Analyze slice. \end{DoxyCompactList}\item 
 void \hyperlink{classanalysis_1_1ShowerAnalysis_a0753806916baaf34f1ab0efa0dc4f4cc}{Save\+Truth} (art\+::\+Event const \&e)\hypertarget{classanalysis_1_1ShowerAnalysis_a0753806916baaf34f1ab0efa0dc4f4cc}{}\label{classanalysis_1_1ShowerAnalysis_a0753806916baaf34f1ab0efa0dc4f4cc}
 
@@ -203,6 +202,12 @@ std\+::vector$<$ int $>$ {\bfseries \+\_\+shr\+\_\+tkfit\+\_\+dedx\+\_\+nhits\+\
 \item 
 std\+::vector$<$ int $>$ {\bfseries \+\_\+shr\+\_\+tkfit\+\_\+dedx\+\_\+nhits\+\_\+y\+\_\+v}\hypertarget{classanalysis_1_1ShowerAnalysis_a1f7e4d9da91d434c08823661bcb686eb}{}\label{classanalysis_1_1ShowerAnalysis_a1f7e4d9da91d434c08823661bcb686eb}
 
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+shr\+\_\+moliere\+\_\+avg\+\_\+v}\hypertarget{classanalysis_1_1ShowerAnalysis_adfc29a95b1304ec62a98966e05cd1523}{}\label{classanalysis_1_1ShowerAnalysis_adfc29a95b1304ec62a98966e05cd1523}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries \+\_\+shr\+\_\+moliere\+\_\+rms\+\_\+v}\hypertarget{classanalysis_1_1ShowerAnalysis_a643aeffeac0ade9da25237aaa28c6f7d}{}\label{classanalysis_1_1ShowerAnalysis_a643aeffeac0ade9da25237aaa28c6f7d}
+
 \end{DoxyCompactItemize}
 
 
@@ -247,6 +252,26 @@ Arguments\+:
 pset -\/ Fcl parameter set. 
 
 Implements \hyperlink{classanalysis_1_1AnalysisToolBase_ad5079f85c78e6c40f70ebf4ee31f5600}{analysis\+::\+Analysis\+Tool\+Base}.
+
+\index{analysis\+::\+Shower\+Analysis@{analysis\+::\+Shower\+Analysis}!analyze\+Slice@{analyze\+Slice}}
+\index{analyze\+Slice@{analyze\+Slice}!analysis\+::\+Shower\+Analysis@{analysis\+::\+Shower\+Analysis}}
+\subsubsection[{\texorpdfstring{analyze\+Slice(art\+::\+Event const \&e, std\+::vector$<$ Proxy\+Pfp\+Elem\+\_\+t $>$ \&slice\+\_\+pfp\+\_\+v, bool f\+Data, bool selected) override}{analyzeSlice(art::Event const &e, std::vector< ProxyPfpElem_t > &slice_pfp_v, bool fData, bool selected) override}}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\+::\+Shower\+Analysis\+::analyze\+Slice (
+\begin{DoxyParamCaption}
+\item[{art\+::\+Event const \&}]{e, }
+\item[{std\+::vector$<$ Proxy\+Pfp\+Elem\+\_\+t $>$ \&}]{slice\+\_\+pfp\+\_\+v, }
+\item[{bool}]{f\+Data, }
+\item[{bool}]{selected}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}\hypertarget{classanalysis_1_1ShowerAnalysis_a957be06c08e5777cd684c84ca53bc45e}{}\label{classanalysis_1_1ShowerAnalysis_a957be06c08e5777cd684c84ca53bc45e}
+
+
+Analyze slice. 
+
+$<$ avg of moliere angle
+
+$<$ rms of moliere angle 
+
+Implements \hyperlink{classanalysis_1_1AnalysisToolBase_ac1611ea1b1a5db62a6543709ec1d2e96}{analysis\+::\+Analysis\+Tool\+Base}.
 
 \index{analysis\+::\+Shower\+Analysis@{analysis\+::\+Shower\+Analysis}!configure@{configure}}
 \index{configure@{configure}!analysis\+::\+Shower\+Analysis@{analysis\+::\+Shower\+Analysis}}

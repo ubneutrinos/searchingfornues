@@ -118,9 +118,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5ae15109590ea737320bf13cefa5cc3f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1ShowerAnalysis.html#a5ae15109590ea737320bf13cefa5cc3f">analyzeEvent</a> (art::Event const &amp;e, bool fData) override</td></tr>
 <tr class="memdesc:a5ae15109590ea737320bf13cefa5cc3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Analysis function.  <a href="#a5ae15109590ea737320bf13cefa5cc3f">More...</a><br /></td></tr>
 <tr class="separator:a5ae15109590ea737320bf13cefa5cc3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a957be06c08e5777cd684c84ca53bc45e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a957be06c08e5777cd684c84ca53bc45e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1ShowerAnalysis.html#a957be06c08e5777cd684c84ca53bc45e">analyzeSlice</a> (art::Event const &amp;e, std::vector&lt; ProxyPfpElem_t &gt; &amp;slice_pfp_v, bool fData, bool selected) override</td></tr>
-<tr class="memdesc:a957be06c08e5777cd684c84ca53bc45e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Analyze slice. <br /></td></tr>
+<tr class="memitem:a957be06c08e5777cd684c84ca53bc45e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1ShowerAnalysis.html#a957be06c08e5777cd684c84ca53bc45e">analyzeSlice</a> (art::Event const &amp;e, std::vector&lt; ProxyPfpElem_t &gt; &amp;slice_pfp_v, bool fData, bool selected) override</td></tr>
+<tr class="memdesc:a957be06c08e5777cd684c84ca53bc45e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Analyze slice.  <a href="#a957be06c08e5777cd684c84ca53bc45e">More...</a><br /></td></tr>
 <tr class="separator:a957be06c08e5777cd684c84ca53bc45e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0753806916baaf34f1ab0efa0dc4f4cc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0753806916baaf34f1ab0efa0dc4f4cc"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1ShowerAnalysis.html#a0753806916baaf34f1ab0efa0dc4f4cc">SaveTruth</a> (art::Event const &amp;e)</td></tr>
@@ -317,6 +316,12 @@ std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_
 <tr class="memitem:a1f7e4d9da91d434c08823661bcb686eb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1f7e4d9da91d434c08823661bcb686eb"></a>
 std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_shr_tkfit_dedx_nhits_y_v</b></td></tr>
 <tr class="separator:a1f7e4d9da91d434c08823661bcb686eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfc29a95b1304ec62a98966e05cd1523"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="adfc29a95b1304ec62a98966e05cd1523"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_shr_moliere_avg_v</b></td></tr>
+<tr class="separator:adfc29a95b1304ec62a98966e05cd1523"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a643aeffeac0ade9da25237aaa28c6f7d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a643aeffeac0ade9da25237aaa28c6f7d"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_shr_moliere_rms_v</b></td></tr>
+<tr class="separator:a643aeffeac0ade9da25237aaa28c6f7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a6ea40aa403312ba7acc5434c1c66df63"></a>
@@ -384,6 +389,58 @@ std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_
 <p>pset - Fcl parameter set. </p>
 
 <p>Implements <a class="el" href="classanalysis_1_1AnalysisToolBase.html#ad5079f85c78e6c40f70ebf4ee31f5600">analysis::AnalysisToolBase</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a957be06c08e5777cd684c84ca53bc45e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void analysis::ShowerAnalysis::analyzeSlice </td>
+          <td>(</td>
+          <td class="paramtype">art::Event const &amp;&#160;</td>
+          <td class="paramname"><em>e</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::vector&lt; ProxyPfpElem_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>slice_pfp_v</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>fData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>selected</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Analyze slice. </p>
+<p>&lt; avg of moliere angle</p>
+<p>&lt; rms of moliere angle </p>
+
+<p>Implements <a class="el" href="classanalysis_1_1AnalysisToolBase.html#ac1611ea1b1a5db62a6543709ec1d2e96">analysis::AnalysisToolBase</a>.</p>
 
 </div>
 </div>

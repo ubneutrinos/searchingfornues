@@ -1275,7 +1275,9 @@ Generating docs f/home/travis/build/ubneutrinos/searchingfornues/Selection/Analy
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:150: warning: Member _shr_tkfit_dedx_nhits_u_v (variable) of class analysis::ShowerAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:151: warning: Member _shr_tkfit_dedx_nhits_v_v (variable) of class analysis::ShowerAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:152: warning: Member _shr_tkfit_dedx_nhits_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:156: warning: argument 'pset' of command @param is not found in the argument list of analysis::ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:154: warning: Member _shr_moliere_avg_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:155: warning: Member _shr_moliere_rms_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:159: warning: argument 'pset' of command @param is not found in the argument list of analysis::ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:44: warning: The following parameters of analysis::ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerStartPoint_tool.cc:80: warning: Member _run (variable) of class analysis::ShowerStartPoint is not documented.
@@ -1755,5 +1757,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 825/65536 hits=4451 misses=852
+lookup cache used 829/65536 hits=4462 misses=856
 finished...
