@@ -90,6 +90,12 @@ DefaultAnalysisTool: {
     SLCproducer: "pandora"
     MCPproducer: "largeant"
     ProtonThreshold: 0.04 # GeV
+    fidVolXstart: 5.
+    fidVolXend: 5.
+    fidVolYstart: 6.
+    fidVolYend: 6.
+    fidVolZstart: 20.
+    fidVolZend: 50.
 }
 
 Pi0TruthAnalysisTool: {
