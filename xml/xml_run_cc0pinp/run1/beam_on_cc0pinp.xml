@@ -5,7 +5,7 @@
 <!ENTITY release "v08_00_00_26">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "wvdp">
-<!ENTITY dataset "data_bnb_optfilter_C1_5e19_goodruns_mcc9.1_reco2">
+<!ENTITY dataset "data_bnb_mcc9.1_v08_00_00_25_reco2_C1_beam_good_reco2_5e19">
 <!ENTITY resilient "/pnfs/uboone/resilient/users">
 <!ENTITY scratch "/pnfs/uboone/scratch/users">
 <!ENTITY data "/uboone/data/users">
@@ -50,8 +50,8 @@
 
     <memory>1800 </memory>
     <disk>5GB</disk>
-    <numjobs>478</numjobs>
-    <maxfilesperjob>25</maxfilesperjob>
+    <numjobs>173</numjobs>
+    <maxfilesperjob>6</maxfilesperjob>
     <schema>root</schema>
     <jobsub>--expected-lifetime=7h -q  --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub>
     <jobsub_start>--append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>

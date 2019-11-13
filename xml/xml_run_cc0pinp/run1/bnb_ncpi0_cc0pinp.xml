@@ -5,7 +5,7 @@
 <!ENTITY release "v08_00_00_26">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "wvdp">
-<!ENTITY dataset "prodgenie_nc_pi0_uboone_overlay-v08_00_00_16_run1_reco2">
+<!ENTITY dataset "prodgenie_nc_pi0_uboone_overlay_mcc9.1_v08_00_00_26_run3_G_reco2">
 <!ENTITY resilient "/pnfs/uboone/resilient/users">
 <!ENTITY scratch "/pnfs/uboone/scratch/users">
 <!ENTITY data "/uboone/data/users">
@@ -53,7 +53,7 @@
     <numjobs>100</numjobs>
     <maxfilesperjob>25</maxfilesperjob>
     <schema>root</schema>
-    <jobsub>--expected-lifetime=7h -q  --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub>
+    <jobsub>--expected-lifetime=7h -q  --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600</jobsub>
     <jobsub_start>--append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
   </stage>
 

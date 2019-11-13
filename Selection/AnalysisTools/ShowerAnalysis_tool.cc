@@ -532,6 +532,13 @@ void ShowerAnalysis::fillDefault()
   _shr_start_U_v.push_back(std::numeric_limits<float>::lowest());
   _shr_start_V_v.push_back(std::numeric_limits<float>::lowest());
 
+  _shr_nclus0_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_clushitfrac0_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_nclus1_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_clushitfrac1_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_nclus2_v.push_back(std::numeric_limits<int>::lowest());
+  _shr_clushitfrac2_v.push_back(std::numeric_limits<float>::lowest());
+  
   _shr_openangle_v.push_back(std::numeric_limits<float>::lowest());
   _shr_theta_v.push_back(std::numeric_limits<float>::lowest());
   _shr_phi_v.push_back(std::numeric_limits<float>::lowest());
@@ -592,6 +599,13 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
 
   _shr_start_U_v.clear();
   _shr_start_V_v.clear();
+
+  _shr_nclus0_v.clear();
+  _shr_clushitfrac0_v.clear();
+  _shr_nclus1_v.clear();
+  _shr_clushitfrac1_v.clear();
+  _shr_nclus2_v.clear();
+  _shr_clushitfrac2_v.clear();
 
   _shr_openangle_v.clear();
   _shr_theta_v.clear();
