@@ -150,6 +150,9 @@ private:
   std::vector<int> _shr_tkfit_dedx_nhits_u_v;
   std::vector<int> _shr_tkfit_dedx_nhits_v_v;
   std::vector<int> _shr_tkfit_dedx_nhits_y_v;
+
+  std::vector<float> _shr_moliere_avg_v;
+  std::vector<float> _shr_moliere_rms_v;
 };
 
 //----------------------------------------------------------------------------
@@ -312,6 +315,12 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_pz_v.push_back(shr->Direction().Z());
 
       _shr_dist_v.push_back((shr->ShowerStart() - nuvtx).Mag());
+
+      float _shrmoliereavg; /**< avg of moliere angle */
+      float _shrmoliererms; /**< rms of moliere angle */
+      searchingfornues::GetMoliereRadius(slice_pfp_v[i_pfp], _shrmoliereavg, _shrmoliererms);
+      _shr_moliere_rms_v.push_back(_shrmoliererms);
+      _shr_moliere_avg_v.push_back(_shrmoliereavg);
 
       // get hits from cluster
       auto clus_pxy_v = slice_pfp_v[i_pfp].get<recob::Cluster>();
@@ -511,6 +520,9 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_tkfit_dedx_nhits_u_v", "std::vector< int >", &_shr_tkfit_dedx_nhits_u_v);
   _tree->Branch("shr_tkfit_dedx_nhits_v_v", "std::vector< int >", &_shr_tkfit_dedx_nhits_v_v);
   _tree->Branch("shr_tkfit_dedx_nhits_y_v", "std::vector< int >", &_shr_tkfit_dedx_nhits_y_v);
+
+  _tree->Branch("shr_moliere_avg_v", "std::vector< float >", &_shr_moliere_avg_v);
+  _tree->Branch("shr_moliere_rms_v", "std::vector< float >", &_shr_moliere_rms_v);
 }
 
 void ShowerAnalysis::fillDefault()
@@ -538,7 +550,7 @@ void ShowerAnalysis::fillDefault()
   _shr_clushitfrac1_v.push_back(std::numeric_limits<float>::lowest());
   _shr_nclus2_v.push_back(std::numeric_limits<int>::lowest());
   _shr_clushitfrac2_v.push_back(std::numeric_limits<float>::lowest());
-  
+
   _shr_openangle_v.push_back(std::numeric_limits<float>::lowest());
   _shr_theta_v.push_back(std::numeric_limits<float>::lowest());
   _shr_phi_v.push_back(std::numeric_limits<float>::lowest());
@@ -579,6 +591,9 @@ void ShowerAnalysis::fillDefault()
   _shr_tkfit_dedx_nhits_u_v.push_back(std::numeric_limits<int>::lowest());
   _shr_tkfit_dedx_nhits_v_v.push_back(std::numeric_limits<int>::lowest());
   _shr_tkfit_dedx_nhits_y_v.push_back(std::numeric_limits<int>::lowest());
+
+  _shr_moliere_rms_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_moliere_avg_v.push_back(std::numeric_limits<float>::lowest());
 }
 
 void ShowerAnalysis::resetTTree(TTree *_tree)
@@ -654,6 +669,9 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
   _shr_tkfit_dedx_nhits_u_v.clear();
   _shr_tkfit_dedx_nhits_v_v.clear();
   _shr_tkfit_dedx_nhits_y_v.clear();
+
+  _shr_moliere_rms_v.clear();
+  _shr_moliere_avg_v.clear();
 }
 
 DEFINE_ART_CLASS_TOOL(ShowerAnalysis)
