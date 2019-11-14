@@ -50,7 +50,7 @@
 
     <memory>1800 </memory>
     <disk>5GB</disk>
-    <numjobs>42</numjobs>
+    <numjobs>114</numjobs>
     <maxfilesperjob>25</maxfilesperjob>
     <schema>root</schema>
     <jobsub>--expected-lifetime=7h -q  --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600</jobsub>
