@@ -291,7 +291,7 @@ CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p)
 
   art::ServiceHandle<art::TFileService> tfs;
 
-  // _calo_tree = tfs->make<TTree>("CalorimetryAnalyzer", "Calo Tree");
+  _calo_tree = tfs->make<TTree>("CalorimetryAnalyzer", "Calo Tree");
 }
 
 //----------------------------------------------------------------------------
@@ -458,7 +458,6 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
   size_t idxmax = 0;
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
   {
-
     auto pfp = slice_pfp_v.at(i_pfp);
 
     if ( pfp->IsPrimary() )
@@ -659,7 +658,6 @@ void CalorimetryAnalysis::fillDefault()
 
 void CalorimetryAnalysis::setBranches(TTree *_tree)
 {
-  _calo_tree = _tree;
   _calo_tree->Branch("run", &_run, "run/i");
   _calo_tree->Branch("sub", &_sub, "sub/i");
   _calo_tree->Branch("evt", &_evt, "evt/i");

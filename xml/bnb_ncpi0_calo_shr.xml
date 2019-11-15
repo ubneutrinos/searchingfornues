@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
 <!ENTITY name "bnb_ncpi0_shr">
-<!ENTITY project_version "v02">
+<!ENTITY project_version "v03">
 <!ENTITY release "v08_00_00_25">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "foppiani">
-<!ENTITY dataset "prodgenie_nc_pi0_uboone_overlay_mcc9.1_v08_00_00_26_run3_G_reco2">
+<!ENTITY dataset "prodgenie_nc_pi0_uboone_overlay-v08_00_00_16_run1_reco2">
 <!ENTITY resilient "/pnfs/uboone/resilient/users">
 <!ENTITY scratch "/pnfs/uboone/scratch/users">
 <!ENTITY data "/uboone/data/users">
@@ -50,7 +50,7 @@
 
     <memory>2000</memory>
     <disk>10GB</disk>
-    <numjobs>72</numjobs>
+    <numjobs>94</numjobs>
     <maxfilesperjob>25</maxfilesperjob>
     <schema>root</schema>
     <jobsub>--expected-lifetime=12h -q --generate-email-summary --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub>

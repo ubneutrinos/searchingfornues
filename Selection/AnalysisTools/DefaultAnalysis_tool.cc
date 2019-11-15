@@ -135,7 +135,6 @@ private:
   float _reco_nu_vtx_x, _reco_nu_vtx_y, _reco_nu_vtx_z;
   float _reco_nu_vtx_sce_x, _reco_nu_vtx_sce_y, _reco_nu_vtx_sce_z;
 
-  int _run, _sub, _evt; // event info
   // has the swtrigger fired?
   int _swtrig;
   // neutrino information
@@ -309,11 +308,7 @@ void DefaultAnalysis::configure(fhicl::ParameterSet const &p)
 ///
 void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
-  _evt = e.event();
-  _sub = e.subRun();
-  _run = e.run();
-
-  std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: " << _evt << std::endl;
+  std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << e.run() << ", SubRun: " << e.subRun() << ", Event: " << e.event() << std::endl;
 
   // storing trigger result output for software trigger
   art::InputTag swtrig_tag("TriggerResults", "", "DataOverlayOptical");
@@ -848,9 +843,6 @@ void DefaultAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("lep_e", &_lep_e, "lep_e/F");
   _tree->Branch("pass", &_pass, "pass/I");
-  _tree->Branch("run", &_run, "run/I");
-  _tree->Branch("sub", &_sub, "sub/I");
-  _tree->Branch("evt", &_evt, "evt/I");
 
   _tree->Branch("swtrig", &_swtrig, "swtrig/I");
 
@@ -904,9 +896,6 @@ void DefaultAnalysis::setBranches(TTree *_tree)
 void DefaultAnalysis::resetTTree(TTree *_tree)
 {
   _leeweight = 0;
-  _run = std::numeric_limits<int>::lowest();
-  _sub = std::numeric_limits<int>::lowest();
-  _evt = std::numeric_limits<int>::lowest();
   _nu_e = std::numeric_limits<float>::lowest();
   _theta = std::numeric_limits<float>::lowest();
   _nu_pt = std::numeric_limits<float>::lowest();

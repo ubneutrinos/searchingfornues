@@ -1,4 +1,4 @@
-#include "run_calorimetryanalysis_run1_data.fcl"
+#include "run_calorimetryanalysis_run1_overlay.fcl"
 
 physics.filters.nuselection.AnalysisTools.calorimetry.TRKproducer: "shrreco3dKalmanShower"
 physics.filters.nuselection.AnalysisTools.calorimetry.CALOproducer: "shrreco3dKalmanShowercali"
