@@ -1,7 +1,7 @@
 #include "run_neutrinoselectionfilter_run3_dataON.fcl"
 
 
-physics.filters.crtveto: @local::UBCRTCosmicFilterBNBOFF
-physics.filters.crtveto.useAsFilter: false
-physics.filters.crtveto.CRTHitProducer: "merger"
-physics.filters.crtveto.DTOffset: 68600.
+#physics.filters.crtveto: @local::UBCRTCosmicFilterBNBOFF
+#physics.filters.crtveto.useAsFilter: false
+#physics.filters.crtveto.CRTHitProducer: "merger"
+#physics.filters.crtveto.DTOffset: 68600.
