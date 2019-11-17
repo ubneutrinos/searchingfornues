@@ -80,6 +80,7 @@ private:
 
   // TTree
   TTree *_tree;
+  int _run, _sub, _evt;
   int _selected;
 
   TTree *_subrun_tree;
@@ -146,7 +147,6 @@ NeutrinoSelectionFilter::NeutrinoSelectionFilter(fhicl::ParameterSet const &p)
     : EDFilter{p} // ,
 // More initializers here.
 {
-
   fPFPproducer = p.get<art::InputTag>("PFPproducer");
   fSHRproducer = p.get<art::InputTag>("SHRproducer");
   fHITproducer = p.get<art::InputTag>("HITproducer");
@@ -165,6 +165,9 @@ NeutrinoSelectionFilter::NeutrinoSelectionFilter(fhicl::ParameterSet const &p)
   art::ServiceHandle<art::TFileService> tfs;
   _tree = tfs->make<TTree>("NeutrinoSelectionFilter", "Neutrino Selection TTree");
   _tree->Branch("selected", &_selected, "selected/I");
+  _tree->Branch("run", &_run, "run/I");
+  _tree->Branch("sub", &_sub, "sub/I");
+  _tree->Branch("evt", &_evt, "evt/I");
 
   _subrun_tree = tfs->make<TTree>("SubRun", "SubRun TTree");
   _subrun_tree->Branch("run", &_run_sr, "run/I");
@@ -205,6 +208,9 @@ bool NeutrinoSelectionFilter::filter(art::Event &e)
   {
     std::cout << "new event : [run,event] : [" << e.run() << ", " << e.event() << "]" << std::endl;
   }
+  _evt = e.event();
+  _sub = e.subRun();
+  _run = e.run();
 
 
   // grab PFParticles in event
@@ -217,7 +223,7 @@ bool NeutrinoSelectionFilter::filter(art::Event &e)
 												    proxy::withAssociated<recob::PCAxis>(fPCAproducer),
 												    proxy::withAssociated<recob::Shower>(fSHRproducer),
 												    proxy::withAssociated<recob::SpacePoint>(fPFPproducer));
-  
+
   BuildPFPMap(pfp_proxy);
 
   for (size_t i = 0; i < _analysisToolsVec.size(); i++)
@@ -391,6 +397,9 @@ void NeutrinoSelectionFilter::ResetTTree()
 {
 
   _selected = 0;
+  _run = std::numeric_limits<int>::lowest();
+  _sub = std::numeric_limits<int>::lowest();
+  _evt = std::numeric_limits<int>::lowest();
 
   _selectionTool->resetTTree(_tree);
   for (size_t i = 0; i < _analysisToolsVec.size(); i++)

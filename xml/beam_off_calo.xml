@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
 <!ENTITY name "beam_off">
-<!ENTITY project_version "v02">
+<!ENTITY project_version "v03">
 <!ENTITY release "v08_00_00_25">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "foppiani">

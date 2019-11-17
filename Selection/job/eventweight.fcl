@@ -13,6 +13,8 @@ EventWeightTreeTool: {
     createSplineBranch: true
 }
 
+calotemp.p1: @local::physics.p1
+
 #Systematic weights
 physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeightTreeTool
 physics.producers.eventweight:        @local::microboone_eventweight
@@ -55,10 +57,10 @@ physics.producers.eventweight.weight_functions_genie: [
     genie_IntraNukeNmfp, genie_IntraNukeNcex,
     # genie_IntraNukeNel, #Channel removed in Genie v3
     genie_IntraNukeNinel, genie_IntraNukeNabs, genie_IntraNukeNpi,
-    genie_IntraNukePImfp, genie_IntraNukePIcex, 
+    genie_IntraNukePImfp, genie_IntraNukePIcex,
     # genie_IntraNukePIel, #Channel removed in Genie v3
-    genie_IntraNukePIinel, 
-    genie_IntraNukePIabs, 
+    genie_IntraNukePIinel,
+    genie_IntraNukePIabs,
     genie_IntraNukePIpi
 ]
 
