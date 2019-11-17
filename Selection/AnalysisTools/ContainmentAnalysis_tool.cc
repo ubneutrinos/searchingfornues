@@ -269,7 +269,7 @@ void ContainmentAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
     } // if not the neutrino PFP
 
   } // for all PFP
-  contained_sps_ratio = sps_fv / sps_all;
+  contained_sps_ratio = sps_fv / ((float) sps_all);
 }
 
 void ContainmentAnalysis::setBranches(TTree *_tree)

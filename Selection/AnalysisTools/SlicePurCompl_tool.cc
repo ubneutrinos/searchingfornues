@@ -356,8 +356,8 @@ void SlicePurCompl::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
     pfothnhits.push_back(npfothhits);
     nu_completeness_from_pfp += npfnuhits;
   }
-  nu_completeness_from_pfp /= evnunhits;
   nu_purity_from_pfp = nu_completeness_from_pfp / total_hits;
+  nu_completeness_from_pfp /= evnunhits;
 
   return;
 }
