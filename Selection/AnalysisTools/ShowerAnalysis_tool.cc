@@ -439,15 +439,15 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
           searchingfornues::GetTrackFitdEdx(tkcalo, 1.0, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
           if (tkcalo->PlaneID().Plane == 2)
           {
-            _shr_tkfit_gap10_dedx_y_v.back() = caloNpts;
+            _shr_tkfit_gap10_dedx_y_v.back() = calodEdx;
           }
           else if (tkcalo->PlaneID().Plane == 1)
           {
-            _shr_tkfit_gap10_dedx_v_v.back() = caloNpts;
+            _shr_tkfit_gap10_dedx_v_v.back() = calodEdx;
           }
           else if (tkcalo->PlaneID().Plane == 0)
           {
-            _shr_tkfit_gap10_dedx_u_v.back() = caloNpts;
+            _shr_tkfit_gap10_dedx_u_v.back() = calodEdx;
           }
         } // for all calorimetry objects
       }
