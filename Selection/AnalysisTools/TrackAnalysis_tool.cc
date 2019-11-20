@@ -440,7 +440,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
         }
         _trk_llr_pid_v.back() += llr_pid;
       }
-      _trk_llr_pid_score_v.back() = atan(_trk_llr_pid_v.back()/100.)*3.14159265/2.;
+      _trk_llr_pid_score_v.back() = atan(_trk_llr_pid_v.back()/100.)*2/3.14159266;
     }
     else
     {
