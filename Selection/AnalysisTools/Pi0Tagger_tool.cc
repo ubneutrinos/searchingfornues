@@ -244,7 +244,7 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
 	// if blank result, continue
 	if ( (vtxcompat.first == -1) && (vtxcompat.second == -1) ) continue;
 	// if too close to vertex or too mis-algined, continue
-	if ( (vtxcompat.second < _pi0_dmin) || (vtxcompat.first < _pi0_dotmin) ) continue;
+	//if ( (vtxcompat.second < _pi0_dmin) || (vtxcompat.first < _pi0_dotmin) ) continue;
 
 	shr_energy_v.push_back( energy );
 	pfp_idx_v.push_back( pfp_ctr - 1 );
