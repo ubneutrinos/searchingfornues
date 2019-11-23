@@ -108,9 +108,6 @@ private:
   std::vector<float> _shr_start_V_v;
   std::vector<float> _shr_dist_v;
 
-  std::vector<int> _shr_nclus0_v, _shr_nclus1_v, _shr_nclus2_v;
-  std::vector<float> _shr_clushitfrac0_v, _shr_clushitfrac1_v, _shr_clushitfrac2_v;
-
   std::vector<float> _shr_px_v;
   std::vector<float> _shr_py_v;
   std::vector<float> _shr_pz_v;
@@ -322,66 +319,6 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_moliere_rms_v.push_back(_shrmoliererms);
       _shr_moliere_avg_v.push_back(_shrmoliereavg);
 
-      // get hits from cluster
-      auto clus_pxy_v = slice_pfp_v[i_pfp].get<recob::Cluster>();
-
-      for (auto ass_clus : clus_pxy_v)
-      {
-
-        // store hits for each plane
-        std::vector<art::Ptr<recob::Hit>> cluster_hits_v;
-
-        const auto &clus = clus_proxy[ass_clus.key()];
-        auto clus_hit_v = clus.get<recob::Hit>();
-        auto plane = clus->Plane().Plane;
-        //if (plane != 2) continue;
-        //if ( (plane >=0) && (plane < 3) ) {
-        //cluster_hits_v[plane].clear();
-        for (size_t h = 0; h < clus_hit_v.size(); h++)
-        {
-          cluster_hits_v.push_back(clus_hit_v[h]);
-        } // for all hits in cluster
-        //}// if plane is ok
-
-        std::vector<std::vector<unsigned int>> out_cluster_v;
-        searchingfornues::cluster(cluster_hits_v, out_cluster_v, 2.0, 2.0);
-
-        // find how many clusters above some # of hit threshold there are
-        int nclus = 0;
-        // find cluste with largest fraction of all hits
-        float hitfracmax = 0.;
-        float tothits = cluster_hits_v.size();
-        for (size_t nc = 0; nc < out_cluster_v.size(); nc++)
-        {
-          auto clus_hit_idx_v = out_cluster_v.at(nc);
-          int nhitclus = clus_hit_idx_v.size();
-          if (nhitclus > 3.)
-            nclus += 1;
-          float hitfrac = nhitclus / tothits;
-          if (hitfrac > hitfracmax)
-          {
-            hitfracmax = hitfrac;
-          }
-        } // for all clusters
-
-        if (plane == 0)
-        {
-          _shr_nclus0_v.push_back(nclus);
-          _shr_clushitfrac0_v.push_back(hitfracmax);
-        }
-        if (plane == 1)
-        {
-          _shr_nclus1_v.push_back(nclus);
-          _shr_clushitfrac1_v.push_back(hitfracmax);
-        }
-        if (plane == 2)
-        {
-          _shr_nclus2_v.push_back(nclus);
-          _shr_clushitfrac2_v.push_back(hitfracmax);
-        }
-
-      } // for all clusters for PFP 1
-
       if (tkcalo_proxy == NULL)
         continue;
 
@@ -474,14 +411,6 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_start_U_v", "std::vector< float >", &_shr_start_U_v);
   _tree->Branch("shr_start_V_v", "std::vector< float >", &_shr_start_V_v);
 
-  _tree->Branch("shr_dist_v", "std::vector< float >", &_shr_dist_v);
-  _tree->Branch("shr_nclus0_v", "std::vector< int >", &_shr_nclus0_v);
-  _tree->Branch("shr_clushitfrac0_v", "std::vector< float >", &_shr_clushitfrac0_v);
-  _tree->Branch("shr_nclus1_v", "std::vector< int >", &_shr_nclus1_v);
-  _tree->Branch("shr_clushitfrac1_v", "std::vector< float >", &_shr_clushitfrac1_v);
-  _tree->Branch("shr_nclus2_v", "std::vector< int >", &_shr_nclus2_v);
-  _tree->Branch("shr_clushitfrac2_v", "std::vector< float >", &_shr_clushitfrac2_v);
-
   _tree->Branch("shr_px_v", "std::vector< float >", &_shr_px_v);
   _tree->Branch("shr_py_v", "std::vector< float >", &_shr_py_v);
   _tree->Branch("shr_pz_v", "std::vector< float >", &_shr_pz_v);
@@ -543,13 +472,6 @@ void ShowerAnalysis::fillDefault()
 
   _shr_start_U_v.push_back(std::numeric_limits<float>::lowest());
   _shr_start_V_v.push_back(std::numeric_limits<float>::lowest());
-
-  _shr_nclus0_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_clushitfrac0_v.push_back(std::numeric_limits<float>::lowest());
-  _shr_nclus1_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_clushitfrac1_v.push_back(std::numeric_limits<float>::lowest());
-  _shr_nclus2_v.push_back(std::numeric_limits<int>::lowest());
-  _shr_clushitfrac2_v.push_back(std::numeric_limits<float>::lowest());
 
   _shr_openangle_v.push_back(std::numeric_limits<float>::lowest());
   _shr_theta_v.push_back(std::numeric_limits<float>::lowest());
@@ -615,13 +537,6 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
   _shr_start_U_v.clear();
   _shr_start_V_v.clear();
 
-  _shr_nclus0_v.clear();
-  _shr_clushitfrac0_v.clear();
-  _shr_nclus1_v.clear();
-  _shr_clushitfrac1_v.clear();
-  _shr_nclus2_v.clear();
-  _shr_clushitfrac2_v.clear();
-
   _shr_openangle_v.clear();
   _shr_theta_v.clear();
   _shr_phi_v.clear();
@@ -635,13 +550,6 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
   _shr_px_v.clear();
   _shr_py_v.clear();
   _shr_pz_v.clear();
-
-  _shr_nclus0_v.clear();
-  _shr_clushitfrac0_v.clear();
-  _shr_nclus1_v.clear();
-  _shr_clushitfrac2_v.clear();
-  _shr_nclus2_v.clear();
-  _shr_clushitfrac2_v.clear();
 
   _shr_tkfit_nhits_v.clear();
   _shr_tkfit_start_x_v.clear();

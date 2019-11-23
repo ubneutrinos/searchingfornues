@@ -17,6 +17,7 @@
 #include "../CommonDefs/SCECorrections.h"
 #include "../CommonDefs/Containment.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
+#include "../CommonDefs/ProximityClustering.h"
 
 #include "canvas/Persistency/Common/TriggerResults.h"
 #include "larpandora/LArPandoraInterface/LArPandoraHelper.h"
@@ -83,7 +84,6 @@ public:
   void resetTTree(TTree *_tree) override;
 
 private:
-
   TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
   TParticlePDG *neutron = TDatabasePDG::Instance()->GetParticle(2112);
   TParticlePDG *electron = TDatabasePDG::Instance()->GetParticle(11);
@@ -142,11 +142,11 @@ private:
   float _nu_pt; /**< transverse momentum of interaction [GeV/c] */
   float _theta; /**< angle between incoming and outgoing leptons, in radians */
 
-  int _nu_pdg;                  /**< neutrino PDG code */
-  int _ccnc;                    /**< CC or NC tag from GENIE */
-  int _interaction;             /**< Interaction code from GENIE */
-  bool _isVtxInFiducial;        /**< true if neutrino in fiducial volume */
-  bool _truthFiducial;          /**< is the truth information contained. Require all track start/end point in FV and showers deposit > 60% of energy in TPC or deposit at least 100 MeV in TPC */
+  int _nu_pdg;           /**< neutrino PDG code */
+  int _ccnc;             /**< CC or NC tag from GENIE */
+  int _interaction;      /**< Interaction code from GENIE */
+  bool _isVtxInFiducial; /**< true if neutrino in fiducial volume */
+  bool _truthFiducial;   /**< is the truth information contained. Require all track start/end point in FV and showers deposit > 60% of energy in TPC or deposit at least 100 MeV in TPC */
 
   // final state particle information
   int _nmuon;                         /**< is there a final-state muon from the neutrino? [1=yes 0=no] */
@@ -201,8 +201,8 @@ private:
   std::vector<float> _backtracked_sce_start_V;
   std::vector<float> _backtracked_sce_start_Y;
 
-  float _lep_e;                                              // lepton energy (if one exists) [GeV]
-  int _pass;                                                 // does the slice pass the selection
+  float _lep_e; // lepton energy (if one exists) [GeV]
+  int _pass;    // does the slice pass the selection
 
   int evnhits;                     // number of hits in event
   int slpdg;                       // PDG code of primary pfp in slice
@@ -213,7 +213,13 @@ private:
   std::vector<int> pfnplanehits_U; // number of hits in pfp plane U
   std::vector<int> pfnplanehits_V; // number of hits in pfp plane V
   std::vector<int> pfnplanehits_Y; // number of hits in pfp plane Y
-  float slclustfrac;               //fraction of clustered hits in the slice
+  std::vector<int> pfpplanesubclusters_U;
+  std::vector<int> pfpplanesubclusters_V;
+  std::vector<int> pfpplanesubclusters_Y;
+  std::vector<float> pfpplanesubhitfracmax_U;
+  std::vector<float> pfpplanesubhitfracmax_V;
+  std::vector<float> pfpplanesubhitfracmax_Y;
+  float slclustfrac; //fraction of clustered hits in the slice
 
   std::vector<uint> _generation;    // generation, 1 is primary
   std::vector<uint> _shr_daughters; // number of shower daughters
@@ -350,11 +356,11 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 
     const std::vector<sim::MCShower> &inputMCShower = *(e.getValidHandle<std::vector<sim::MCShower>>(fMCRproducer));
     const std::vector<sim::MCTrack> &inputMCTrack = *(e.getValidHandle<std::vector<sim::MCTrack>>(fMCRproducer));
-    _truthFiducial = searchingfornues::TruthContained(fFidvolXstart,fFidvolYstart,fFidvolZstart,
-						      fFidvolXend  ,fFidvolYend  ,fFidvolZend  ,
-						      inputMCShower,inputMCTrack);
+    _truthFiducial = searchingfornues::TruthContained(fFidvolXstart, fFidvolYstart, fFidvolZstart,
+                                                      fFidvolXend, fFidvolYend, fFidvolZend,
+                                                      inputMCShower, inputMCTrack);
 
-  }// if MC
+  } // if MC
 
   // Grab CRT veto information if available - CRT should probably have its own tool?
   if (fCRTVetoproducer != "")
@@ -496,6 +502,12 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     pfnplanehits_U.push_back(0);
     pfnplanehits_V.push_back(0);
     pfnplanehits_Y.push_back(0);
+    pfpplanesubclusters_U.push_back(0);
+    pfpplanesubclusters_V.push_back(0);
+    pfpplanesubclusters_Y.push_back(0);
+    pfpplanesubhitfracmax_U.push_back(0);
+    pfpplanesubhitfracmax_V.push_back(0);
+    pfpplanesubhitfracmax_Y.push_back(0);
 
     for (auto ass_clus : clus_pxy_v)
     {
@@ -504,25 +516,58 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       auto clus_hit_v = clus.get<recob::Hit>();
       auto nhits = clus_hit_v.size();
 
+      std::vector<art::Ptr<recob::Hit>> cluster_hits_v;
+      for (size_t h = 0; h < clus_hit_v.size(); h++)
+      {
+        cluster_hits_v.push_back(clus_hit_v[h]);
+      }
+      int nclus = 0;
+      float hitfracmax = 0.;
+      std::vector<std::vector<unsigned int>> out_cluster_v;
+      if (nhits)
+      {
+        searchingfornues::cluster(cluster_hits_v, out_cluster_v, 2.0, 1.0);
+        // find how many clusters above some # of hit threshold there are
+        // find cluste with largest fraction of all hits
+        for (size_t nc = 0; nc < out_cluster_v.size(); nc++)
+        {
+          auto clus_hit_idx_v = out_cluster_v.at(nc);
+          int nhitclus = clus_hit_idx_v.size();
+          if (nhitclus > 3.)
+            nclus += 1;
+          float hitfrac = nhitclus / nhits;
+          if (hitfrac > hitfracmax)
+            hitfracmax = hitfrac;
+        } // for all sub-clusters
+      }   // if there are any hits on this plane
+
       if (clus->Plane().Plane == 0)
       {
         _hits_u += nhits;
+
         pfnplanehits_U.back() += nhits;
+        pfpplanesubclusters_U.back() += nclus;
+        pfpplanesubhitfracmax_U.back() = hitfracmax;
       }
       else if (clus->Plane().Plane == 1)
       {
         _hits_v += nhits;
         pfnplanehits_V.back() += nhits;
+        pfpplanesubclusters_V.back() += nclus;
+        pfpplanesubhitfracmax_V.back() = hitfracmax;
       }
       else if (clus->Plane().Plane == 2)
       {
         _hits_y += nhits;
         pfnplanehits_Y.back() += nhits;
+        pfpplanesubclusters_Y.back() += nclus;
+        pfpplanesubhitfracmax_Y.back() = hitfracmax;
       }
       for (const auto &hit : clus_hit_v)
       {
         hit_v.push_back(hit);
       }
+
     } // for all clusters associated to PFP
     pfnhits.push_back(hit_v.size());
 
@@ -864,6 +909,13 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("pfnplanehits_U", "std::vector<int>", &pfnplanehits_U);
   _tree->Branch("pfnplanehits_V", "std::vector<int>", &pfnplanehits_V);
   _tree->Branch("pfnplanehits_Y", "std::vector<int>", &pfnplanehits_Y);
+  _tree->Branch("pfpplanesubclusters_U", "std::vector<int>", &pfpplanesubclusters_U);
+  _tree->Branch("pfpplanesubclusters_V", "std::vector<int>", &pfpplanesubclusters_V);
+  _tree->Branch("pfpplanesubclusters_Y", "std::vector<int>", &pfpplanesubclusters_Y);
+  _tree->Branch("pfpplanesubhitfracmax_U", "std::vector<float>", &pfpplanesubhitfracmax_U);
+  _tree->Branch("pfpplanesubhitfracmax_V", "std::vector<float>", &pfpplanesubhitfracmax_V);
+  _tree->Branch("pfpplanesubhitfracmax_Y", "std::vector<float>", &pfpplanesubhitfracmax_Y);
+
   _tree->Branch("hits_u", &_hits_u, "hits_u/i");
   _tree->Branch("hits_v", &_hits_v, "hits_v/i");
   _tree->Branch("hits_y", &_hits_y, "hits_y/i");
@@ -1000,6 +1052,12 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   pfnplanehits_U.clear();
   pfnplanehits_V.clear();
   pfnplanehits_Y.clear();
+  pfpplanesubclusters_U.clear();
+  pfpplanesubclusters_V.clear();
+  pfpplanesubclusters_Y.clear();
+  pfpplanesubhitfracmax_U.clear();
+  pfpplanesubhitfracmax_V.clear();
+  pfpplanesubhitfracmax_Y.clear();
   _generation.clear();
   _shr_daughters.clear();
   _trk_daughters.clear();
@@ -1070,8 +1128,8 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
 
   double vtx[3] = {_true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z};
   _isVtxInFiducial = searchingfornues::isFiducial(vtx,
-						  fFidvolXstart, fFidvolYstart, fFidvolZstart,
-						  fFidvolXend, fFidvolYend, fFidvolZend);
+                                                  fFidvolXstart, fFidvolYstart, fFidvolZstart,
+                                                  fFidvolXend, fFidvolYend, fFidvolZend);
 
   _nelec = 0;
   _nmuon = 0;
@@ -1289,7 +1347,6 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
 
   return;
 }
-
 
 DEFINE_ART_CLASS_TOOL(DefaultAnalysis)
 } // namespace analysis
