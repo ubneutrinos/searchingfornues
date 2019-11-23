@@ -407,6 +407,7 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_start_x_v", "std::vector< float >", &_shr_start_x_v);
   _tree->Branch("shr_start_y_v", "std::vector< float >", &_shr_start_y_v);
   _tree->Branch("shr_start_z_v", "std::vector< float >", &_shr_start_z_v);
+  _tree->Branch("shr_dist_v", "std::vector< float >", &_shr_dist_v);
 
   _tree->Branch("shr_start_U_v", "std::vector< float >", &_shr_start_U_v);
   _tree->Branch("shr_start_V_v", "std::vector< float >", &_shr_start_V_v);
