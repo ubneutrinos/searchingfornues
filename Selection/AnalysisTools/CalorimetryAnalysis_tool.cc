@@ -99,6 +99,7 @@ private:
            const searchingfornues::ProxyPIDColl_t pid_proxy,
            const searchingfornues::ProxyClusColl_t clus_proxy,
            const bool fData,
+		       const bool fShrFit,
            const std::vector<searchingfornues::BtPart> btparts_v,
            const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart);
 
@@ -106,6 +107,7 @@ private:
                           float out[3]);
 
   trkf::TrackMomentumCalculator _trkmom;
+
 
   TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
   TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
@@ -122,6 +124,8 @@ private:
   art::InputTag fMCPproducer;
 
   bool fBacktrack; // do the backtracking needed for this module?
+  
+  bool fShrFit; // use shower track-fitter info?
 
   TTree* _calo_tree;
 
@@ -288,6 +292,7 @@ CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p)
   fMCPproducer = p.get<art::InputTag>("MCPproducer");
 
   fBacktrack = p.get<bool>("Backtrack", true);
+  fShrFit    = p.get<bool>("ShrFit"   , false);
 
   art::ServiceHandle<art::TFileService> tfs;
 
@@ -408,8 +413,9 @@ void CalorimetryAnalysis::analyzeEvent(art::Event const &e, bool fData)
           pid_proxy,
           clus_proxy,
           !fBacktrack,
+		      fShrFit,
           btparts_v,
-          assocMCPart);
+	  assocMCPart);
 
     }//  if T0 assocaition is found
   }// for all PFParticles
@@ -511,6 +517,7 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
         pid_proxy,
         clus_proxy,
         fData,
+		    fShrFit,
         btparts_v,
         assocMCPart);
   } // for all PFParticles
@@ -807,6 +814,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
             const searchingfornues::ProxyPIDColl_t pid_proxy,
             const searchingfornues::ProxyClusColl_t clus_proxy,
             const bool fData,
+					  const bool fShrFit,
             const std::vector<searchingfornues::BtPart> btparts_v,
             const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart)
 {
@@ -925,6 +933,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
     }
   }
 
+  /*
   // get trk proxy in order to fetch PID
   auto trkpxy2 = pid_proxy[trk.key()];
   auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
@@ -967,6 +976,8 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
 
   //three plane pid from Pip
   _trk_bragg_p_three_planes = searchingfornues::PID(pidpxy_v[0], "ThreePlaneProtonPID", anab::kLikelihood, anab::kForward, 2212, -1);
+  */
+
 
   // Kinetic energy using tabulated stopping power (GeV)
   float mcs_momentum_muon = _trkmom.GetTrackMomentum(trk->Length(), 13);
@@ -1006,10 +1017,26 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
   _trk_sce_end_z = _trk_end_sce[2];
 
   // fill Calorimetry
-  auto calo_v = calo_proxy[trk.key()].get<anab::Calorimetry>();
+
+  int key = trk.key();
+  
+  if (fShrFit) {
+    int caloctr = 0;
+    for (const searchingfornues::ProxyCaloElem_t tkcalo : calo_proxy) {
+      // find track with ID matching the pfp index (this convention apparently works only for shower fits...)
+      if (tkcalo->ID() == int(pfp.index())) {
+	key = caloctr;
+	break;
+      }
+      caloctr += 1;
+    }// for all calo-proxy objects
+  }// if we want to use the shower-fitted
+      
+  auto calo_v = calo_proxy[key].get<anab::Calorimetry>();
+  
   for (auto const& calo : calo_v)
-  {
-    auto const& plane = calo->PlaneID().Plane;
+    {
+      auto const& plane = calo->PlaneID().Plane;
     auto const& xyz_v = calo->XYZ();
 
     if (plane == 0)
@@ -1070,6 +1097,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
       }
     }
   }
+
   _calo_tree->Fill();
 }
 
