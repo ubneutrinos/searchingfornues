@@ -150,9 +150,9 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a281c73cffe78d4afcd9d34a8de7d04fa"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a281c73cffe78d4afcd9d34a8de7d04fa"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>FillCalorimetry</b> (art::Event const &amp;e, const searchingfornues::ProxyPfpElem_t pfp, const searchingfornues::ProxyCaloColl_t calo_proxy, const searchingfornues::ProxyPIDColl_t pid_proxy, const searchingfornues::ProxyClusColl_t clus_proxy, const bool fData, const std::vector&lt; <a class="el" href="structsearchingfornues_1_1BtPart.html">searchingfornues::BtPart</a> &gt; btparts_v, const std::unique_ptr&lt; art::FindManyP&lt; simb::MCParticle, anab::BackTrackerHitMatchingData &gt;&gt; &amp;assocMCPart)</td></tr>
-<tr class="separator:a281c73cffe78d4afcd9d34a8de7d04fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0f65a8080fbc0840646dcdd8761f806"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af0f65a8080fbc0840646dcdd8761f806"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>FillCalorimetry</b> (art::Event const &amp;e, const searchingfornues::ProxyPfpElem_t pfp, const searchingfornues::ProxyCaloColl_t calo_proxy, const searchingfornues::ProxyPIDColl_t pid_proxy, const searchingfornues::ProxyClusColl_t clus_proxy, const bool fData, const bool fShrFit, const std::vector&lt; <a class="el" href="structsearchingfornues_1_1BtPart.html">searchingfornues::BtPart</a> &gt; btparts_v, const std::unique_ptr&lt; art::FindManyP&lt; simb::MCParticle, anab::BackTrackerHitMatchingData &gt;&gt; &amp;assocMCPart)</td></tr>
+<tr class="separator:af0f65a8080fbc0840646dcdd8761f806"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9dda46fef9265f005050b3df5a5702c6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9dda46fef9265f005050b3df5a5702c6"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>TrkDirectionAtXYZ</b> (const recob::Track, const double x, const double y, const double z, float out[3])</td></tr>
 <tr class="separator:a9dda46fef9265f005050b3df5a5702c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -201,6 +201,9 @@ art::InputTag&#160;</td><td class="memItemRight" valign="bottom"><b>fMCPproducer
 <tr class="memitem:ac88146bcc5d598200c9dbaa007502c4a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac88146bcc5d598200c9dbaa007502c4a"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>fBacktrack</b></td></tr>
 <tr class="separator:ac88146bcc5d598200c9dbaa007502c4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af467ce848f82d3ef65b87ce822a44ec5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af467ce848f82d3ef65b87ce822a44ec5"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>fShrFit</b></td></tr>
+<tr class="separator:af467ce848f82d3ef65b87ce822a44ec5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a526525f4bbc864a47095143b6cce143e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a526525f4bbc864a47095143b6cce143e"></a>
 TTree *&#160;</td><td class="memItemRight" valign="bottom"><b>_calo_tree</b></td></tr>
 <tr class="separator:a526525f4bbc864a47095143b6cce143e"><td class="memSeparator" colspan="2">&#160;</td></tr>
