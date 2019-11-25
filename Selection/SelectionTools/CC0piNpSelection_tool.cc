@@ -239,6 +239,13 @@ private:
     unsigned int _shr_tkfit_nhits_V; /**< Number of hits in the 1x4 cm box on the V plane with the track fitting */
     unsigned int _shr_tkfit_nhits_U; /**< Number of hits in the 1x4 cm box on the U plane with the track fitting */
 
+    float _shr_tkfit_2cm_dedx_Y;         /**< dE/dx of the leading shower on the Y plane with the track fitting, use first 2 cm */
+    float _shr_tkfit_2cm_dedx_V;         /**< dE/dx of the leading shower on the V plane with the track fitting, use first 2 cm */
+    float _shr_tkfit_2cm_dedx_U;         /**< dE/dx of the leading shower on the U plane with the track fitting, use first 2 cm */
+    unsigned int _shr_tkfit_2cm_nhits_Y; /**< Number of hits in the 1x4 cm box on the Y plane with the track fitting, use first 2 cm */
+    unsigned int _shr_tkfit_2cm_nhits_V; /**< Number of hits in the 1x4 cm box on the V plane with the track fitting, use first 2 cm */
+    unsigned int _shr_tkfit_2cm_nhits_U; /**< Number of hits in the 1x4 cm box on the U plane with the track fitting, use first 2 cm */
+
     float _shr_tkfit_gap05_dedx_Y;         /**< dE/dx of the leading shower on the Y plane with the track fitting, skip first 5 mm */
     float _shr_tkfit_gap05_dedx_V;         /**< dE/dx of the leading shower on the V plane with the track fitting, skip first 5 mm */
     float _shr_tkfit_gap05_dedx_U;         /**< dE/dx of the leading shower on the U plane with the track fitting, skip first 5 mm */
@@ -682,6 +689,10 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         _shr_tkfit_dedx_V = std::numeric_limits<float>::lowest();
                         _shr_tkfit_dedx_U = std::numeric_limits<float>::lowest();
 
+                        _shr_tkfit_2cm_dedx_Y = std::numeric_limits<float>::lowest();
+                        _shr_tkfit_2cm_dedx_V = std::numeric_limits<float>::lowest();
+                        _shr_tkfit_2cm_dedx_U = std::numeric_limits<float>::lowest();
+
                         _shr_tkfit_gap05_dedx_Y = std::numeric_limits<float>::lowest();
                         _shr_tkfit_gap05_dedx_V = std::numeric_limits<float>::lowest();
                         _shr_tkfit_gap05_dedx_U = std::numeric_limits<float>::lowest();
@@ -744,6 +755,24 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
                             if (fSaveMoreDedx == false)
                                 continue;
+
+                            // use only first 2 cm
+                            searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, 2.0, fLocaldEdx, calodEdx, caloNpts);
+                            if (tkcalo->PlaneID().Plane == 2)
+                            {
+                                _shr_tkfit_2cm_dedx_Y = calodEdx;
+                                _shr_tkfit_2cm_nhits_Y = caloNpts;
+                            }
+                            else if (tkcalo->PlaneID().Plane == 1)
+                            {
+                                _shr_tkfit_2cm_dedx_V = calodEdx;
+                                _shr_tkfit_2cm_nhits_V = caloNpts;
+                            }
+                            else if (tkcalo->PlaneID().Plane == 0)
+                            {
+                                _shr_tkfit_2cm_dedx_U = calodEdx;
+                                _shr_tkfit_2cm_nhits_U = caloNpts;
+                            }
 
                             // Gap 0.5 cm
                             searchingfornues::GetTrackFitdEdx(tkcalo, 0.5, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
@@ -1106,6 +1135,13 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shrmoliereavg = std::numeric_limits<float>::lowest();
     _shrmoliererms = std::numeric_limits<float>::lowest();
 
+    _shr_tkfit_2cm_dedx_Y = std::numeric_limits<float>::lowest();
+    _shr_tkfit_2cm_dedx_U = std::numeric_limits<float>::lowest();
+    _shr_tkfit_2cm_dedx_V = std::numeric_limits<float>::lowest();
+    _shr_tkfit_2cm_nhits_Y = 0;
+    _shr_tkfit_2cm_nhits_U = 0;
+    _shr_tkfit_2cm_nhits_V = 0;
+
     _shr_tkfit_gap05_dedx_Y = std::numeric_limits<float>::lowest();
     _shr_tkfit_gap05_dedx_U = std::numeric_limits<float>::lowest();
     _shr_tkfit_gap05_dedx_V = std::numeric_limits<float>::lowest();
@@ -1185,6 +1221,12 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shrmoliererms", &_shrmoliererms, "shrmoliererms/f");
     if (fSaveMoreDedx)
     {
+        _tree->Branch("shr_tkfit_2cm_dedx_Y", &_shr_tkfit_2cm_dedx_Y, "shr_tkfit_2cm_dedx_Y/F");
+        _tree->Branch("shr_tkfit_2cm_dedx_V", &_shr_tkfit_2cm_dedx_V, "shr_tkfit_2cm_dedx_V/F");
+        _tree->Branch("shr_tkfit_2cm_dedx_U", &_shr_tkfit_2cm_dedx_U, "shr_tkfit_2cm_dedx_U/F");
+        _tree->Branch("shr_tkfit_2cm_nhits_Y", &_shr_tkfit_2cm_nhits_Y, "shr_tkfit_2cm_nhits_Y/i");
+        _tree->Branch("shr_tkfit_2cm_nhits_V", &_shr_tkfit_2cm_nhits_V, "shr_tkfit_2cm_nhits_V/i");
+        _tree->Branch("shr_tkfit_2cm_nhits_U", &_shr_tkfit_2cm_nhits_U, "shr_tkfit_2cm_nhits_U/i");
         _tree->Branch("shr_tkfit_gap05_dedx_Y", &_shr_tkfit_gap05_dedx_Y, "shr_tkfit_gap05_dedx_Y/F");
         _tree->Branch("shr_tkfit_gap05_dedx_V", &_shr_tkfit_gap05_dedx_V, "shr_tkfit_gap05_dedx_V/F");
         _tree->Branch("shr_tkfit_gap05_dedx_U", &_shr_tkfit_gap05_dedx_U, "shr_tkfit_gap05_dedx_U/F");
