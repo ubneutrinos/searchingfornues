@@ -89,6 +89,13 @@ public:
      */
   void resetTTree(TTree *_tree) override;
 
+  /**
+   * @brief get dEdx using constant MeV/cm value and ModBox recombination model, but accounting for local E-field variations
+   */
+  std::vector<float> GetdEdxfromdQdx(const std::vector<float>& dqdx_v, 
+				     const std::vector<float>& x_v,
+				     const std::vector<float>& y_v,
+				     const std::vector<float>& z_v);
 
 private:
 
@@ -1057,6 +1064,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _dir_y_u.push_back(_dir_u[1]);
         _dir_z_u.push_back(_dir_u[2]);
       }
+      if (fShrFit) { _dedx_u = GetdEdxfromdQdx(_dqdx_u,_x_u,_y_u,_z_u); }
     }
     else if (plane == 1)
     {
@@ -1076,6 +1084,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _dir_y_v.push_back(_dir_v[1]);
         _dir_z_v.push_back(_dir_v[2]);
       }
+      if (fShrFit) { _dedx_u = GetdEdxfromdQdx(_dqdx_v,_x_v,_y_v,_z_v); }
     }
     else if (plane == 2) //collection
     {
@@ -1095,10 +1104,36 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _dir_y_y.push_back(_dir_y[1]);
         _dir_z_y.push_back(_dir_y[2]);
       }
+      if (fShrFit) { _dedx_u = GetdEdxfromdQdx(_dqdx_y,_x_y,_y_y,_z_y); }
     }
   }
 
   _calo_tree->Fill();
+}
+
+std::vector<float> CalorimetryAnalysis::GetdEdxfromdQdx(const std::vector<float>& dqdx_v,
+							const std::vector<float>& x_v,
+							const std::vector<float>& y_v,
+							const std::vector<float>& z_v) {
+
+  std::vector<float> dedx_v;
+
+  if ( (x_v.size() < dqdx_v.size()) || (y_v.size() < dqdx_v.size()) || (z_v.size() < dqdx_v.size()) ) {
+    std::cout << "ERROR. Vector size does not match in CalorimetryAnalysis_tool [searchingfornues]" << std::endl;
+    return dedx_v;
+  }
+
+  for (size_t i=0; i < dqdx_v.size(); i++) {
+
+    auto efield = searchingfornues::GetLocalEFieldMag(x_v[i],y_v[i],z_v[i]); // kV / cm
+    
+    float B = 1.383 * efield;
+    float r = log( 2.1 * B * 0.93 ) / (2.1 * B);
+    dedx_v.push_back( dqdx_v[i] * 240. * (23.6/1e6) / (1-r) ); // this factor is what dQ/dx must be divided by to get dE/dx (with calibration factors too!)
+    
+  }// for all points in track
+  
+  return dedx_v;
 }
 
 void CalorimetryAnalysis::TrkDirectionAtXYZ(const recob::Track trk, const double x, const double y, const double z, float out[3])
