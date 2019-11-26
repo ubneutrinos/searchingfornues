@@ -1,9 +1,11 @@
 #ifndef SCECORRECTIONSFUNCS_H
 #define SCECORRECTIONSFUNCS_H
 
+#include "larevt/SpaceCharge/SpaceCharge.h"
 #include "larevt/SpaceChargeServices/SpaceChargeService.h"
 #include "lardata/DetectorInfoServices/DetectorPropertiesService.h"
 #include "lardata/DetectorInfoServices/DetectorClocksService.h"
+
 
 namespace searchingfornues
 {
@@ -13,6 +15,7 @@ namespace searchingfornues
   // e.g. used for resolution plots
   void ApplySCEMappingXYZ(float& x, float& y, float& z)
   {
+
     auto const *SCE = lar::providerFrom<spacecharge::SpaceChargeService>();
 
     if (SCE->EnableSimSpatialSCE() == true)
@@ -111,6 +114,23 @@ namespace searchingfornues
     float _xoffset = x_offset(t);
     out[0] += _xoffset;
   }
+
+  float GetLocalEFieldMag(const float x, const float y, const float z) {
+    
+    const detinfo::DetectorProperties* detprop = art::ServiceHandle<detinfo::DetectorPropertiesService>()->provider();
+    auto const *sce = lar::providerFrom<spacecharge::SpaceChargeService>();
+    
+    double E_field_nominal = detprop->Efield();        // Electric Field in the drift region in KV/cm
+
+    //correct Efield for SCE
+    geo::Vector_t E_field_offsets = {0.,0.,0.};
+    E_field_offsets = sce->GetCalEfieldOffsets(geo::Point_t{x,y, z});
+    TVector3 E_field_vector = {E_field_nominal*(1 + E_field_offsets.X()), E_field_nominal*E_field_offsets.Y(), E_field_nominal*E_field_offsets.Z()};
+    float E_field = E_field_vector.Mag();
+
+    return E_field;
+  }
+
 } // namespace searchingfornues
 
 #endif
