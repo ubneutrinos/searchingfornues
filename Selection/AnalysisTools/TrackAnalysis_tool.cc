@@ -15,6 +15,7 @@
 #include "../CommonDefs/PIDFuncs.h"
 #include "../CommonDefs/LLR_PID.h"
 #include "../CommonDefs/SCECorrections.h"
+#include "../CommonDefs/Geometry.h"
 
 #include "ubana/ParticleID/Algorithms/uB_PlaneIDBitsetHelperFunctions.h"
 #include "larreco/RecoAlg/TrackMomentumCalculator.h"
@@ -421,6 +422,19 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
         {
           calo_energy += dedx_values[i]*pitch[i];
         }
+
+        // std::vector<float> direction_x, direction_y, direction_z;
+        // auto const& xyz_v = calo->XYZ();
+        // for (auto xyz : xyz_v)
+        // {
+        //   float _dir[3];
+        //   searchingfornues::TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir);
+        //   // std::cout << "_dir[0], _dir[1], _dir[2] = " << _dir[0] << " , " << _dir[1] << " , " << _dir[2] << std::endl;
+        //   // std::cout << "_dir_norm = " << _dir[0]*_dir[0] + _dir[1]*_dir[1] + _dir[2]*_dir[2] << std::endl;
+        //   direction_x.push_back(_dir[0]);
+        //   direction_y.push_back(_dir[1]);
+        //   direction_z.push_back(_dir[2]);
+        // }
 
         float llr_pid = llr_pid_calculator.LLR_many_hits_one_plane(dedx_values, par_values, plane);
         if (plane == 0)

@@ -1,0 +1,11 @@
+#include "run_neutrinoselectionfilter_run1_overlay.fcl"
+
+physics.filters.nuselection.AnalysisTools : {
+  track:         @local::TrackAnalysisTool
+}
+
+physics.filters.nuselection.SelectionTool : {
+  tool_type: "EmptySelection"
+}
+
+physics.p1: [ @sequence::calotemp.p1 ]
