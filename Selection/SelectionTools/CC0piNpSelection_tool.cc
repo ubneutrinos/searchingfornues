@@ -14,6 +14,7 @@
 #include "../CommonDefs/CalibrationFuncs.h"
 #include "../CommonDefs/PFPHitDistance.h"
 #include "../CommonDefs/ProximityClustering.h"
+#include "../CommonDefs/SCECorrections.h"
 //#include "../CommonDefs/PIDFuncs.h"
 //#include "../CommonDefs/LLR_PID.h"
 
@@ -235,9 +236,17 @@ private:
     float _shr_tkfit_dedx_V;  /**< dE/dx of the leading shower on the V plane with the track fitting */
     float _shr_tkfit_dedx_U;  /**< dE/dx of the leading shower on the U plane with the track fitting */
 
+    float _shr_tkfit_dedx_Y_alt;  /**< dE/dx of the leading shower on the Y plane with the track fitting  [calculated using XYZ instead of RR]  */
+    float _shr_tkfit_dedx_V_alt;  /**< dE/dx of the leading shower on the V plane with the track fitting  [calculated using XYZ instead of RR]  */
+    float _shr_tkfit_dedx_U_alt;  /**< dE/dx of the leading shower on the U plane with the track fitting  [calculated using XYZ instead of RR]  */
+
     unsigned int _shr_tkfit_nhits_Y; /**< Number of hits in the 1x4 cm box on the Y plane with the track fitting */
     unsigned int _shr_tkfit_nhits_V; /**< Number of hits in the 1x4 cm box on the V plane with the track fitting */
     unsigned int _shr_tkfit_nhits_U; /**< Number of hits in the 1x4 cm box on the U plane with the track fitting */
+
+    unsigned int _shr_tkfit_nhits_Y_alt; /**< Number of hits in the 1x4 cm box on the Y plane with the track fitting [calculated using XYZ instead of RR] */
+    unsigned int _shr_tkfit_nhits_V_alt; /**< Number of hits in the 1x4 cm box on the V plane with the track fitting  [calculated using XYZ instead of RR] */
+    unsigned int _shr_tkfit_nhits_U_alt; /**< Number of hits in the 1x4 cm box on the U plane with the track fitting [calculated using XYZ instead of RR] */
 
     float _shr_tkfit_2cm_dedx_Y;         /**< dE/dx of the leading shower on the Y plane with the track fitting, use first 2 cm */
     float _shr_tkfit_2cm_dedx_V;         /**< dE/dx of the leading shower on the V plane with the track fitting, use first 2 cm */
@@ -721,6 +730,13 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         _shr_tkfit_start_y = tk->Start().Y();
                         _shr_tkfit_start_z = tk->Start().Z();
 
+			// SCE corrected shower start point
+			float shr_tkfit_start_sce[3];
+			searchingfornues::ApplySCECorrectionXYZ(_shr_tkfit_start_x,
+								_shr_tkfit_start_y,
+								_shr_tkfit_start_z,
+								shr_tkfit_start_sce);
+
                         _shr_tkfit_phi = tk->StartDirection().Phi();
                         _shr_tkfit_theta = tk->StartDirection().Theta();
 
@@ -728,6 +744,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
                         float calodEdx; // dEdx computed for track-fitter
                         int caloNpts;   // number of track-fitter dE/dx hits
+                        float calodEdxXYZ; // dEdx computed for track-fitter [with XYZ and not RR]
+                        int caloNptsXYZ;   // number of track-fitter dE/dx hits [with XYZ and not RR]
 
                         for (const auto &tkcalo : tkcalos)
                         {
@@ -737,20 +755,31 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
                             // using function from CommonDefs/TrackFitterFunctions.h
                             searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
+			    // use xyz coordinates instead of RR to calculate distance
+                            searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx,
+							      shr_tkfit_start_sce[0],shr_tkfit_start_sce[1],shr_tkfit_start_sce[2],
+							      calodEdxXYZ, caloNptsXYZ);
+			    
                             if (tkcalo->PlaneID().Plane == 2)
                             {
                                 _shr_tkfit_dedx_Y = calodEdx;
                                 _shr_tkfit_nhits_Y = caloNpts;
+                                _shr_tkfit_dedx_Y_alt = calodEdxXYZ;
+                                _shr_tkfit_nhits_Y_alt = caloNptsXYZ;
                             }
                             else if (tkcalo->PlaneID().Plane == 1)
                             {
                                 _shr_tkfit_dedx_V = calodEdx;
                                 _shr_tkfit_nhits_V = caloNpts;
+                                _shr_tkfit_dedx_V_alt = calodEdxXYZ;
+                                _shr_tkfit_nhits_V_alt = caloNptsXYZ;
                             }
                             else if (tkcalo->PlaneID().Plane == 0)
                             {
                                 _shr_tkfit_dedx_U = calodEdx;
                                 _shr_tkfit_nhits_U = caloNpts;
+                                _shr_tkfit_dedx_U_alt = calodEdxXYZ;
+                                _shr_tkfit_nhits_U_alt = caloNptsXYZ;
                             }
 
                             if (fSaveMoreDedx == false)
@@ -1126,6 +1155,13 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_tkfit_nhits_Y = 0;
     _shr_tkfit_nhits_U = 0;
     _shr_tkfit_nhits_V = 0;
+    _shr_tkfit_dedx_Y_alt = std::numeric_limits<float>::lowest();
+    _shr_tkfit_dedx_U_alt = std::numeric_limits<float>::lowest();
+    _shr_tkfit_dedx_V_alt = std::numeric_limits<float>::lowest();
+    _shr_tkfit_nhits_Y_alt = 0;
+    _shr_tkfit_nhits_U_alt = 0;
+    _shr_tkfit_nhits_V_alt = 0;
+
 
     _shr_tkfit_npoints = std::numeric_limits<int>::lowest();
     _shr_tkfit_npointsvalid = std::numeric_limits<int>::lowest();
@@ -1213,7 +1249,12 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_tkfit_nhits_Y", &_shr_tkfit_nhits_Y, "shr_tkfit_nhits_Y/i");
     _tree->Branch("shr_tkfit_nhits_V", &_shr_tkfit_nhits_V, "shr_tkfit_nhits_V/i");
     _tree->Branch("shr_tkfit_nhits_U", &_shr_tkfit_nhits_U, "shr_tkfit_nhits_U/i");
-    _tree->Branch("shr_tkfit_nhits_U", &_shr_tkfit_nhits_U, "shr_tkfit_nhits_U/i");
+    _tree->Branch("shr_tkfit_dedx_Y_alt", &_shr_tkfit_dedx_Y_alt, "shr_tkfit_dedx_Y_alt/F");
+    _tree->Branch("shr_tkfit_dedx_V_alt", &_shr_tkfit_dedx_V_alt, "shr_tkfit_dedx_V_alt/F");
+    _tree->Branch("shr_tkfit_dedx_U_alt", &_shr_tkfit_dedx_U_alt, "shr_tkfit_dedx_U_alt/F");
+    _tree->Branch("shr_tkfit_nhits_Y_alt", &_shr_tkfit_nhits_Y_alt, "shr_tkfit_nhits_Y_alt/i");
+    _tree->Branch("shr_tkfit_nhits_V_alt", &_shr_tkfit_nhits_V_alt, "shr_tkfit_nhits_V_alt/i");
+    _tree->Branch("shr_tkfit_nhits_U_alt", &_shr_tkfit_nhits_U_alt, "shr_tkfit_nhits_U_alt/i");
     _tree->Branch("shr_tkfit_npoints", &_shr_tkfit_npoints, "shr_tkfit_npoints/i");
     _tree->Branch("shr_tkfit_npointsvalid", &_shr_tkfit_npointsvalid, "shr_tkfit_npointsvalid/i");
     _tree->Branch("shr_trkfitmedangle", &_shr_trkfitmedangle, "shr_trkfitmedangle/f");

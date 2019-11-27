@@ -65,6 +65,72 @@ namespace searchingfornues
 
 
   /**
+   * @brief Return dE/dx in MeV/cm for shower track-fit
+   * @input tkcalo     : calorimetry object associated to fitted track
+   * @input cmskip     : centimeters to skip from vertex for dE/dx calculation
+   * @input cmlen      : centimeters over which dE/dx should be calculated (starting from cmskip)
+   * @input localdEdx  : use local dE/dx from calorimetry? True -> yes. False: constant Q -> MeV conversion
+   * @input shrstartx  : start x coordinate [with SCE corrections!]
+   * @input shrstarty  : start y coordinate [with SCE corrections!]
+   * @input shrstartz  : start z coordinate [with SCE corrections!]
+   * @output dE/dx in MeV/cm
+   * @output number of hits used for dE/dx calculation
+   */
+  void GetTrackFitdEdx(const art::Ptr<anab::Calorimetry>& tkcalo,
+		       const float& cmskip, const float& cmlen, const bool& localdEdx,
+		       const float& shrstartx, const float& shrstarty, const float& shrstartz,
+		       float& dedx, int& nhits) {
+
+    
+    if (tkcalo->ResidualRange().size() == 0) {
+      dedx  = std::numeric_limits<float>::lowest();
+      nhits = std::numeric_limits<int>::lowest();
+      return;
+    }// if no points with which to calculate dE/dx
+
+    // vector where to store dE/dx
+    std::vector<float> dedxNcm;
+
+    for (size_t ic = 0; ic < tkcalo->XYZ().size(); ++ic) {
+
+      // calculate 3D distance to start point
+      float d3d = sqrt( ( pow(tkcalo->XYZ()[ic].X() - shrstartx, 2) ) +
+			( pow(tkcalo->XYZ()[ic].Y() - shrstarty, 2) ) +
+			( pow(tkcalo->XYZ()[ic].Z() - shrstartz, 2) ) );
+
+      // check that at least cmskip cm away from vertex
+      if ( d3d >= cmskip) {
+	// check that no more then cmskip + cmlen away from vertex
+	if ( d3d < (cmskip + cmlen) ) {
+	  if (localdEdx) 
+	    dedxNcm.push_back(tkcalo->dEdx()[ic]); // if we want to use local dEdx from calo
+	  else
+	    dedxNcm.push_back(tkcalo->dQdx()[ic]); // if we should use Q and convert to MeV
+	}
+      }
+    }
+
+    float dedxNcm_med = -1.;
+    
+    if (dedxNcm.size() > 0) {
+      
+      std::sort(dedxNcm.begin(), dedxNcm.end());
+      
+      if (dedxNcm.size() % 2 == 1)
+	dedxNcm_med = dedxNcm[dedxNcm.size() / 2];
+      else
+	dedxNcm_med = 0.5 * (dedxNcm[dedxNcm.size() / 2] + dedxNcm[dedxNcm.size() / 2 - 1]);
+    }// if dedx vector has at least one netry
+
+    dedx  = dedxNcm_med;
+    nhits = dedxNcm.size();
+
+    return;
+  }
+
+
+
+  /**
    * @brief Return rms angular deviation of a track in a given cm interval
    * @input trk  : track being provided as input
    * @input dmax : distance from track start point over which to calculate the angular deviations
