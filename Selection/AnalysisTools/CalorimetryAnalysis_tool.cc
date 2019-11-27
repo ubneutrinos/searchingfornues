@@ -1084,7 +1084,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _dir_y_v.push_back(_dir_v[1]);
         _dir_z_v.push_back(_dir_v[2]);
       }
-      if (fShrFit) { _dedx_u = GetdEdxfromdQdx(_dqdx_v,_x_v,_y_v,_z_v); }
+      if (fShrFit) { _dedx_v = GetdEdxfromdQdx(_dqdx_v,_x_v,_y_v,_z_v); }
     }
     else if (plane == 2) //collection
     {
@@ -1104,7 +1104,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _dir_y_y.push_back(_dir_y[1]);
         _dir_z_y.push_back(_dir_y[2]);
       }
-      if (fShrFit) { _dedx_u = GetdEdxfromdQdx(_dqdx_y,_x_y,_y_y,_z_y); }
+      if (fShrFit) { _dedx_y = GetdEdxfromdQdx(_dqdx_y,_x_y,_y_y,_z_y); }
     }
   }
 
@@ -1127,10 +1127,11 @@ std::vector<float> CalorimetryAnalysis::GetdEdxfromdQdx(const std::vector<float>
 
     auto efield = searchingfornues::GetLocalEFieldMag(x_v[i],y_v[i],z_v[i]); // kV / cm
     
-    float B = 1.383 * efield;
-    float r = log( 2.1 * B * 0.93 ) / (2.1 * B);
-    dedx_v.push_back( dqdx_v[i] * 240. * (23.6/1e6) / (1-r) ); // this factor is what dQ/dx must be divided by to get dE/dx (with calibration factors too!)
-    
+    float B = 0.212 / (1.383 * efield);
+    float r = log( 2.1 * B + 0.93 ) / (2.1 * B);
+    //std::cout << "DAVIDC R factor is " << r << std::endl;
+    dedx_v.push_back( dqdx_v[i] * 240. * (23.6/1e6) / r ); // this factor is what dQ/dx must be divided by to get dE/dx (with calibration factors too!)
+    //std::cout << "DAVIDC dQdx : " << dqdx_v[i] << " -> dEdx : " << dedx_v[dedx_v.size()-1] << std::endl;
   }// for all points in track
   
   return dedx_v;
