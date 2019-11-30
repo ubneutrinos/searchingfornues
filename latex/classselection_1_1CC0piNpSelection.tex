@@ -21,9 +21,7 @@ bool \hyperlink{classselection_1_1CC0piNpSelection_aee88d296a2ebad59acadfd919139
 void \hyperlink{classselection_1_1CC0piNpSelection_a6a14e4d0ff713ed2c75055019d278422}{set\+Branches} (T\+Tree $\ast$\+\_\+tree)
 \begin{DoxyCompactList}\small\item\em Set branches for T\+Tree. \end{DoxyCompactList}\item 
 void \hyperlink{classselection_1_1CC0piNpSelection_a3d7a6aa0fbd41f4a77390a160ee64e35}{reset\+T\+Tree} (T\+Tree $\ast$\+\_\+tree)
-\begin{DoxyCompactList}\small\item\em Reset T\+Tree branches. \end{DoxyCompactList}\item 
-bool \hyperlink{classselection_1_1CC0piNpSelection_ac3f55283ce26e2af8d5ba86a9faf0d23}{is\+Fiducial} (const double x\mbox{[}3\mbox{]}) const 
-\begin{DoxyCompactList}\small\item\em Check if point is inside fiducial volume. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Reset T\+Tree branches. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -102,6 +100,12 @@ art\+::\+Input\+Tag {\bfseries f\+C\+A\+Lproducer}\hypertarget{classselection_1_
 
 \item 
 art\+::\+Input\+Tag {\bfseries f\+C\+A\+Lproducer\+Trk\+Fit}\hypertarget{classselection_1_1CC0piNpSelection_af4b580a7c372a5e42b268618a320d600}{}\label{classselection_1_1CC0piNpSelection_af4b580a7c372a5e42b268618a320d600}
+
+\item 
+float {\bfseries \+\_\+wire2cm}\hypertarget{classselection_1_1CC0piNpSelection_a07f72f946488ee47d99be315e699ba63}{}\label{classselection_1_1CC0piNpSelection_a07f72f946488ee47d99be315e699ba63}
+
+\item 
+float {\bfseries \+\_\+time2cm}\hypertarget{classselection_1_1CC0piNpSelection_a558b5565d41a4c34a61880faf7ffcf94}{}\label{classselection_1_1CC0piNpSelection_a558b5565d41a4c34a61880faf7ffcf94}
 
 \item 
 unsigned int \hyperlink{classselection_1_1CC0piNpSelection_aebf4a69b8d7f3171ad90c382668c22ec}{\+\_\+n\+\_\+showers\+\_\+contained}
@@ -282,6 +286,14 @@ float {\bfseries \+\_\+shrclusfrac1}\hypertarget{classselection_1_1CC0piNpSelect
 \item 
 float \hyperlink{classselection_1_1CC0piNpSelection_acf870c688a80fa995ed5c6245fa02608}{\+\_\+shrclusfrac2}
 \item 
+float {\bfseries \+\_\+shrclusdir0}\hypertarget{classselection_1_1CC0piNpSelection_a1ccc28969441aa1b7de365478b05c3fe}{}\label{classselection_1_1CC0piNpSelection_a1ccc28969441aa1b7de365478b05c3fe}
+
+\item 
+float {\bfseries \+\_\+shrclusdir1}\hypertarget{classselection_1_1CC0piNpSelection_acc14b83bf73bf93c36ef304906261f1b}{}\label{classselection_1_1CC0piNpSelection_acc14b83bf73bf93c36ef304906261f1b}
+
+\item 
+float \hyperlink{classselection_1_1CC0piNpSelection_a62af9f6d72d725a3109705e27e635d29}{\+\_\+shrclusdir2}
+\item 
 float {\bfseries \+\_\+trkshrhitdist0}\hypertarget{classselection_1_1CC0piNpSelection_a758b9b329d305e59e8c53592da8b53a7}{}\label{classselection_1_1CC0piNpSelection_a758b9b329d305e59e8c53592da8b53a7}
 
 \item 
@@ -432,23 +444,7 @@ Reconfigure method.
 
 Arguments\+:
 
-pset -\/ Fcl parameter set. \index{selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}!is\+Fiducial@{is\+Fiducial}}
-\index{is\+Fiducial@{is\+Fiducial}!selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}}
-\subsubsection[{\texorpdfstring{is\+Fiducial(const double x[3]) const }{isFiducial(const double x[3]) const }}]{\setlength{\rightskip}{0pt plus 5cm}bool selection\+::\+C\+C0pi\+Np\+Selection\+::is\+Fiducial (
-\begin{DoxyParamCaption}
-\item[{const double}]{x\mbox{[}3\mbox{]}}
-\end{DoxyParamCaption}
-) const}\hypertarget{classselection_1_1CC0piNpSelection_ac3f55283ce26e2af8d5ba86a9faf0d23}{}\label{classselection_1_1CC0piNpSelection_ac3f55283ce26e2af8d5ba86a9faf0d23}
-
-
-Check if point is inside fiducial volume. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em x} & array of coordinates \\
-\hline
-\end{DoxyParams}
-\index{selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}!reset\+T\+Tree@{reset\+T\+Tree}}
+pset -\/ Fcl parameter set. \index{selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}!reset\+T\+Tree@{reset\+T\+Tree}}
 \index{reset\+T\+Tree@{reset\+T\+Tree}!selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}}
 \subsubsection[{\texorpdfstring{reset\+T\+Tree(\+T\+Tree $\ast$\+\_\+tree)}{resetTTree(TTree *_tree)}}]{\setlength{\rightskip}{0pt plus 5cm}void selection\+::\+C\+C0pi\+Np\+Selection\+::reset\+T\+Tree (
 \begin{DoxyParamCaption}
@@ -779,7 +775,10 @@ Start y coordinate of the leading shower obtained with the track fitting \index{
 Start z coordinate of the leading shower obtained with the track fitting \index{selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}!\+\_\+shr\+\_\+tkfit\+\_\+theta@{\+\_\+shr\+\_\+tkfit\+\_\+theta}}
 \index{\+\_\+shr\+\_\+tkfit\+\_\+theta@{\+\_\+shr\+\_\+tkfit\+\_\+theta}!selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}}
 \subsubsection[{\texorpdfstring{\+\_\+shr\+\_\+tkfit\+\_\+theta}{_shr_tkfit_theta}}]{\setlength{\rightskip}{0pt plus 5cm}float selection\+::\+C\+C0pi\+Np\+Selection\+::\+\_\+shr\+\_\+tkfit\+\_\+theta\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classselection_1_1CC0piNpSelection_a11df391e482434665c389423bbb9ec5d}{}\label{classselection_1_1CC0piNpSelection_a11df391e482434665c389423bbb9ec5d}
-Track angle of the leading shower obtained with the track fitting \index{selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}!\+\_\+shrclusfrac2@{\+\_\+shrclusfrac2}}
+Track angle of the leading shower obtained with the track fitting \index{selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}!\+\_\+shrclusdir2@{\+\_\+shrclusdir2}}
+\index{\+\_\+shrclusdir2@{\+\_\+shrclusdir2}!selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}}
+\subsubsection[{\texorpdfstring{\+\_\+shrclusdir2}{_shrclusdir2}}]{\setlength{\rightskip}{0pt plus 5cm}float selection\+::\+C\+C0pi\+Np\+Selection\+::\+\_\+shrclusdir2\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classselection_1_1CC0piNpSelection_a62af9f6d72d725a3109705e27e635d29}{}\label{classselection_1_1CC0piNpSelection_a62af9f6d72d725a3109705e27e635d29}
+2D charge-\/weighted direction of shower hits calculated from neutrino vertex w.\+r.\+t. vertical in plane \index{selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}!\+\_\+shrclusfrac2@{\+\_\+shrclusfrac2}}
 \index{\+\_\+shrclusfrac2@{\+\_\+shrclusfrac2}!selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}}
 \subsubsection[{\texorpdfstring{\+\_\+shrclusfrac2}{_shrclusfrac2}}]{\setlength{\rightskip}{0pt plus 5cm}float selection\+::\+C\+C0pi\+Np\+Selection\+::\+\_\+shrclusfrac2\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classselection_1_1CC0piNpSelection_acf870c688a80fa995ed5c6245fa02608}{}\label{classselection_1_1CC0piNpSelection_acf870c688a80fa995ed5c6245fa02608}
 what fraction of the total charge does the dominant shower sub-\/cluster carry? \index{selection\+::\+C\+C0pi\+Np\+Selection@{selection\+::\+C\+C0pi\+Np\+Selection}!\+\_\+shrmoliereavg@{\+\_\+shrmoliereavg}}

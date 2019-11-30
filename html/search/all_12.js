@@ -20,6 +20,7 @@ var searchData=
   ['_7epi0tagger',['~Pi0Tagger',['../classanalysis_1_1Pi0Tagger.html#af054b6d41d9454f6ecc1891fcea24bca',1,'analysis::Pi0Tagger']]],
   ['_7epi0truthanalysis',['~Pi0TruthAnalysis',['../classanalysis_1_1Pi0TruthAnalysis.html#aacb1da6bc05c5af7d13e6699c1b9112d',1,'analysis::Pi0TruthAnalysis']]],
   ['_7epmtnoise',['~PMTNoise',['../classanalysis_1_1PMTNoise.html#a10c11f2bd8fd9a55ff8cb816ae23bf33',1,'analysis::PMTNoise']]],
+  ['_7esecondshowertagger',['~SecondShowerTagger',['../classanalysis_1_1SecondShowerTagger.html#aac1de8ff2a94eb16002fe31e443142fe',1,'analysis::SecondShowerTagger']]],
   ['_7eselectionexample',['~SelectionExample',['../classselection_1_1SelectionExample.html#a23080e1af959ccac8b922ebae7dd1d73',1,'selection::SelectionExample']]],
   ['_7eselectiontoolbase',['~SelectionToolBase',['../classselection_1_1SelectionToolBase.html#a79885af9ff5ab77d239d8484c22ac87e',1,'selection::SelectionToolBase']]],
   ['_7eshoweranalysis',['~ShowerAnalysis',['../classanalysis_1_1ShowerAnalysis.html#af16c1759f0122ba30f7839c4003c0df7',1,'analysis::ShowerAnalysis']]],
