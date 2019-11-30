@@ -10,6 +10,7 @@
 #include "TParticlePDG.h"
 #include "../CommonDefs/Typedefs.h"
 #include "../CommonDefs/PIDFuncs.h"
+#include "../CommonDefs/Containment.h"
 #include "../CommonDefs/TrackFitterFunctions.h"
 #include "../CommonDefs/CalibrationFuncs.h"
 #include "../CommonDefs/PFPHitDistance.h"
@@ -78,13 +79,6 @@ public:
      * @param _tree ROOT TTree with the selection information
      */
     void resetTTree(TTree *_tree);
-
-    /**
-     * @brief Check if point is inside fiducial volume
-     *
-     * @param x array of coordinates
-     */
-    bool isFiducial(const double x[3]) const;
 
 private:
 
@@ -358,24 +352,6 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
     fLocaldEdx = pset.get<bool>("LocaldEdx", true);       // use dE/dx from calo?
 }
 
-bool CC0piNpSelection::isFiducial(const double x[3]) const
-{
-
-  art::ServiceHandle<geo::Geometry> geo;
-  std::vector<double> bnd = {
-    0., 2. * geo->DetHalfWidth(), -geo->DetHalfHeight(), geo->DetHalfHeight(),
-    0., geo->DetLength()};
-
-    bool is_x =
-      x[0] > (bnd[0] + fFidvolXstart) && x[0] < (bnd[1] - fFidvolXend);
-    bool is_y =
-      x[1] > (bnd[2] + fFidvolYstart) && x[1] < (bnd[3] - fFidvolYend);
-    bool is_z =
-      x[2] > (bnd[4] + fFidvolZstart) && x[2] < (bnd[5] - fFidvolZend);
-
-    return is_x && is_y && is_z;
-}
-
 //----------------------------------------------------------------------------
 /// Reconfigure method.
 ///
@@ -482,7 +458,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
             else
             {
                 vtx.at(0)->XYZ(nu_vtx);
-                if (!isFiducial(nu_vtx))
+                if (!searchingfornues::isFiducial(nu_vtx,fFidvolXstart,fFidvolYstart,fFidvolZstart,fFidvolXend,fFidvolYend,fFidvolZend))
                 {
                     return false;
                 }
@@ -521,14 +497,14 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         sps_all += spcpnts.size();
         for (auto &sp : spcpnts)
         {
-            if (isFiducial(sp->XYZ()))
+	  if (searchingfornues::isFiducial(sp->XYZ(),fFidvolXstart,fFidvolYstart,fFidvolZstart,fFidvolXend,fFidvolYend,fFidvolZend))
                 sps_fv++;
         }
 
         auto trkshrscore = searchingfornues::GetTrackShowerScore(pfp_pxy);
         if (trkshrscore < fTrkShrscore)
         {
-            unsigned int shr_hits = 0;
+	  unsigned int shr_hits = 0;
 
             for (const auto &shr : pfp_pxy.get<recob::Shower>())
             {
@@ -537,7 +513,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 auto clus_pxy_v = pfp_pxy.get<recob::Cluster>();
                 std::vector<art::Ptr<recob::Hit>> hit_v;
 
-                if (!isFiducial(shr_vertex))
+                if (!searchingfornues::isFiducial(shr_vertex,fFidvolXstart,fFidvolYstart,fFidvolZstart,fFidvolXend,fFidvolYend,fFidvolZend))
                 {
                     for (auto ass_clus : clus_pxy_v)
                     {
@@ -899,10 +875,11 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
             {
                 double trk_start[3] = {trk->Start().X(), trk->Start().Y(), trk->Start().Z()};
                 double trk_end[3] = {trk->End().X(), trk->End().Y(), trk->End().Z()};
-
+		
                 auto clus_pxy_v = pfp_pxy.get<recob::Cluster>();
 
-                if (!isFiducial(trk_start) || !isFiducial(trk_end))
+                if (!searchingfornues::isFiducial(trk_start,fFidvolXstart,fFidvolYstart,fFidvolZstart,fFidvolXend,fFidvolYend,fFidvolZend) || 
+		    !searchingfornues::isFiducial(trk_end,fFidvolXstart,fFidvolYstart,fFidvolZstart,fFidvolXend,fFidvolYend,fFidvolZend) )
                 {
                     for (auto ass_clus : clus_pxy_v)
                     {
