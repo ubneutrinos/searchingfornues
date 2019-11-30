@@ -60,6 +60,11 @@ physics:
 {
  producers:
  {
+
+        # collect un-clustered hits in slice and cluster them by proximity
+        nuslicehits: @local::NeutrinoSliceHits
+        proximity: @local::ProximityClustering
+
         shrreco3dKalmanShower:            @local::shrreco3dKalmanShower
         shrreco3dKalmanShowercalo:        @local::shrreco3dKalmanShowercalodata
         shrreco3dKalmanShowercali:        @local::shrreco3dKalmanShowercalidata
@@ -81,7 +86,7 @@ physics:
  #define the producer and filter modules for this path, order matters,
  ana:  [ ]
 
- p1: [ shrreco3dKalmanShower, shrreco3dKalmanShowercalo, shrreco3dKalmanShowercali, pandoraTrack, pandoraTrackcalo, pandoraTrackpid, pandoraTrackcali, pandoraTrackcalipid, nuselection]
+ p1: [ nuslicehits, proximity, shrreco3dKalmanShower, shrreco3dKalmanShowercalo, shrreco3dKalmanShowercali, pandoraTrack, pandoraTrackcalo, pandoraTrackpid, pandoraTrackcali, pandoraTrackcalipid, nuselection]
 
  e1: [ rootout ]
 
@@ -124,3 +129,6 @@ physics.producers.pandoraTrackcalipid.ProducerLabels.CalorimetryLabel:          
 physics.producers.pandoraTrackcalipid.ProducerLabels.HitTrackAssn:                             "pandoraTrack"
 physics.producers.pandoraTrackcalipid.ProducerLabels.TrackLabel:                               "pandoraTrack"
 physics.producers.pandoraTrackcalipid.Chi2PIDAlg.UseMedian:                                    true
+
+physics.producers.proximity.VtxProducer: "pandora"
+physics.producers.proximity.HitProducer: "nuslicehits"

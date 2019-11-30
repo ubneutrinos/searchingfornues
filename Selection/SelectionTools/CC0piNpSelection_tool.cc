@@ -15,6 +15,7 @@
 #include "../CommonDefs/PFPHitDistance.h"
 #include "../CommonDefs/ProximityClustering.h"
 #include "../CommonDefs/SCECorrections.h"
+#include "../CommonDefs/ShowerBranchTagger.h"
 //#include "../CommonDefs/PIDFuncs.h"
 //#include "../CommonDefs/LLR_PID.h"
 
@@ -121,6 +122,9 @@ private:
     art::InputTag fCALproducer;
     art::InputTag fCALproducerTrkFit;
 
+  float _wire2cm, _time2cm;
+
+
     unsigned int _n_showers_contained; /**< Number of showers with a starting point within the fiducial volume */
     unsigned int _n_tracks_contained;  /**< Number of tracks fully contained in the fiducial volume */
     unsigned int _shr_hits_max;        /**< Number of hits of the leading shower */
@@ -214,6 +218,7 @@ private:
 
     int _shrsubclusters0, _shrsubclusters1, _shrsubclusters2; /**< in how many sub-clusters can the shower be broken based on proximity clustering? */
     float _shrclusfrac0, _shrclusfrac1, _shrclusfrac2;        /**< what fraction of the total charge does the dominant shower sub-cluster carry? */
+    float _shrclusdir0, _shrclusdir1, _shrclusdir2;        /**< 2D charge-weighted direction of shower hits calculated from neutrino vertex w.r.t. vertical in plane */
     float _trkshrhitdist0, _trkshrhitdist1, _trkshrhitdist2;  /**< distance between hits of shower and track in 2D on each palne based on hit-hit distances */
 
   float _shrmoliereavg; /**< avg of moliere angle */
@@ -291,6 +296,12 @@ CC0piNpSelection::CC0piNpSelection(const fhicl::ParameterSet &pset)
 {
     configure(pset);
 
+    // get detector specific properties
+    auto const* geom = ::lar::providerFrom<geo::Geometry>();
+    auto const* detp = lar::providerFrom<detinfo::DetectorPropertiesService>();
+    _wire2cm = geom->WirePitch(0,0,0);
+    _time2cm = detp->SamplingRate() / 1000.0 * detp->DriftVelocity( detp->Efield(), detp->Temperature() );
+
     /*
   LLR_PID.set_dedx_binning(0, dedx_num_bins_pl_0, dedx_edges_pl_0);
   std::vector<size_t> parameters_num_bins_0 = {parameter_0_num_bins_pl_0, parameter_1_num_bins_pl_0};
@@ -310,24 +321,6 @@ CC0piNpSelection::CC0piNpSelection(const fhicl::ParameterSet &pset)
   LLR_PID.set_par_binning(2, parameters_num_bins_2, parameters_bin_edges_2);
   LLR_PID.set_lookup_tables(2, dedx_pdf_pl_2);
     */
-}
-
-bool CC0piNpSelection::isFiducial(const double x[3]) const
-{
-
-    art::ServiceHandle<geo::Geometry> geo;
-    std::vector<double> bnd = {
-        0., 2. * geo->DetHalfWidth(), -geo->DetHalfHeight(), geo->DetHalfHeight(),
-        0., geo->DetLength()};
-
-    bool is_x =
-        x[0] > (bnd[0] + fFidvolXstart) && x[0] < (bnd[1] - fFidvolXend);
-    bool is_y =
-        x[1] > (bnd[2] + fFidvolYstart) && x[1] < (bnd[3] - fFidvolYend);
-    bool is_z =
-        x[2] > (bnd[4] + fFidvolZstart) && x[2] < (bnd[5] - fFidvolZend);
-
-    return is_x && is_y && is_z;
 }
 
 //----------------------------------------------------------------------------
@@ -363,6 +356,24 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
     fdEdxcmLen = pset.get<float>("dEdxcmLen", 4.0);       // how long the dE/dx segment should be
     fSaveMoreDedx = pset.get<bool>("SaveMoreDedx", true); // save additional track fit dedx definitions
     fLocaldEdx = pset.get<bool>("LocaldEdx", true);       // use dE/dx from calo?
+}
+
+bool CC0piNpSelection::isFiducial(const double x[3]) const
+{
+
+  art::ServiceHandle<geo::Geometry> geo;
+  std::vector<double> bnd = {
+    0., 2. * geo->DetHalfWidth(), -geo->DetHalfHeight(), geo->DetHalfHeight(),
+    0., geo->DetLength()};
+
+    bool is_x =
+      x[0] > (bnd[0] + fFidvolXstart) && x[0] < (bnd[1] - fFidvolXend);
+    bool is_y =
+      x[1] > (bnd[2] + fFidvolYstart) && x[1] < (bnd[3] - fFidvolYend);
+    bool is_z =
+      x[2] > (bnd[4] + fFidvolZstart) && x[2] < (bnd[5] - fFidvolZend);
+
+    return is_x && is_y && is_z;
 }
 
 //----------------------------------------------------------------------------
@@ -453,6 +464,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         }
     }
 
+    // START checking if vertex is in the fiducial volume
     double nu_vtx[3] = {};
     TVector3 nuvtx;
     for (size_t i_pfp = 0; i_pfp < pfp_pxy_v.size(); i_pfp++)
@@ -479,7 +491,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
             break;
         }
-    }
+    }// for all PFParticles
+    // DONE checking if vertex is in the fiducial volume
 
     TVector3 total_p;
     TVector3 total_p_mu;
@@ -490,6 +503,10 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     TVector3 shr_p;
     std::vector<float> matched_energies;
 
+    // NEXT STEP : find showers
+    // all showers will be merged in order to determine the shower energy
+    // the largest shower (by number of hits) will be the primry electron
+    // used to compute vertex, dE/dx, direction, ...
     size_t sps_fv = 0, sps_all = 0;
     for (size_t i_pfp = 0; i_pfp < pfp_pxy_v.size(); i_pfp++)
     {
@@ -581,10 +598,13 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 {
                     int nclus = 0;
                     float hitfracmax = 0.;
+		    // store direction of 2Dhits in cluster w.r.t. vertical on plane
+		    float clusterdir = 0;
                     std::vector<std::vector<unsigned int>> out_cluster_v;
                     if (cluster_hits_v_v[pl].size())
                     {
-                        searchingfornues::cluster(cluster_hits_v_v[pl], out_cluster_v, 2.0, 1.0);
+		      searchingfornues::cluster(cluster_hits_v_v[pl], out_cluster_v, 2.0, 1.0);
+		      clusterdir = searchingfornues::ClusterVtxDirection(nuvtx,cluster_hits_v_v[pl],_wire2cm,_time2cm);
                         // find how many clusters above some # of hit threshold there are
                         // find cluste with largest fraction of all hits
                         float tothits = cluster_hits_v_v[pl].size();
@@ -603,16 +623,19 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     {
                         _shrsubclusters0 = nclus;
                         _shrclusfrac0 = hitfracmax;
+			_shrclusdir0  = clusterdir;
                     }
                     if (pl == 1)
                     {
                         _shrsubclusters1 = nclus;
                         _shrclusfrac1 = hitfracmax;
+			_shrclusdir1  = clusterdir;
                     }
                     if (pl == 2)
                     {
                         _shrsubclusters2 = nclus;
                         _shrclusfrac2 = hitfracmax;
+			_shrclusdir2  = clusterdir;
                     }
                 } // for all planes
 
@@ -623,6 +646,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 _shr_energy_tot_cali += shr->Energy()[2] / 1000 * cali_corr[2];
 
                 _shr_hits_tot += shr_hits;
+		
+		// if this is the shower with most hits, take as the main shower
                 if (shr_hits > _shr_hits_max)
                 {
                     if (!fData)
@@ -865,8 +890,9 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     }
                 }
             }
-        }
+        }// if shower-like PFParticle
 
+	// if track-like PFParticle
         for (const auto &trk : pfp_pxy.get<recob::Track>())
         {
             if (trkshrscore > fTrkShrscore)
@@ -1012,7 +1038,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
             }
         }
     }
-
+    
     auto trkshrhitdist_v = searchingfornues::GetPFPHitDistance(pfp_pxy_v[_trk_pfp_id], pfp_pxy_v[_shr_pfp_id], clus_proxy);
     _trkshrhitdist0 = trkshrhitdist_v[0];
     _trkshrhitdist1 = trkshrhitdist_v[1];
@@ -1041,6 +1067,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         return false;
     return true;
 }
+
+
 
 void CC0piNpSelection::resetTTree(TTree *_tree)
 {
@@ -1146,6 +1174,10 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shrclusfrac0 = std::numeric_limits<float>::lowest();
     _shrclusfrac1 = std::numeric_limits<float>::lowest();
     _shrclusfrac2 = std::numeric_limits<float>::lowest();
+
+    _shrclusdir0 = std::numeric_limits<float>::lowest();
+    _shrclusdir1 = std::numeric_limits<float>::lowest();
+    _shrclusdir2 = std::numeric_limits<float>::lowest();
 
     _shr_tkfit_phi = std::numeric_limits<float>::lowest();
     _shr_tkfit_theta = std::numeric_limits<float>::lowest();
@@ -1344,6 +1376,10 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shrclusfrac0", &_shrclusfrac0, "shrclusfrac0/f");
     _tree->Branch("shrclusfrac1", &_shrclusfrac1, "shrclusfrac1/f");
     _tree->Branch("shrclusfrac2", &_shrclusfrac2, "shrclusfrac2/f");
+
+    _tree->Branch("shrclusdir0", &_shrclusdir0, "shrclusdir0/f");
+    _tree->Branch("shrclusdir1", &_shrclusdir1, "shrclusdir1/f");
+    _tree->Branch("shrclusdir2", &_shrclusdir2, "shrclusdir2/f");
 
     _tree->Branch("shr_hits_tot", &_shr_hits_tot, "shr_hits_tot/i");
     _tree->Branch("shr_hits_y_tot", &_shr_hits_y_tot, "shr_hits_y_tot/i");

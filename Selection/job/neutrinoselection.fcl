@@ -1,5 +1,12 @@
 #include "reco_uboone_data_mcc9_8.fcl"
 #include "mcreco.fcl"
+#include "proximityclustering.fcl"
+
+SecondShowerTaggerTool: {
+    tool_type: "SecondShowerTagger"
+    Clusterproducer: "proximity"
+    Hitproducer: "gaushit"
+}
 
 CalorimetryAnalysisTool: {
     tool_type: "CalorimetryAnalysis"
@@ -210,6 +217,7 @@ NuSelectionFilter:{
         flashmatchid:  @local::FlashMatchingTool
         pi0tagger:     @local::Pi0TaggerTool
         zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
+        secondshower:  @local::SecondShowerTaggerTool
     }
 }
 
@@ -263,3 +271,12 @@ NuSelectionFilterRun3.AnalysisTools: {
         crtApproach:@local::CRTApproachAnalysisTool
         }
 NuSelectionFilterRun3.AnalysisTools.default.CRTVetoproducer: "crtveto"
+
+# neutrino slice clustering
+NeutrinoSliceHits: {
+    module_type: "SaveSliceHits"
+    Hitproducer: "gaushit"
+    Clusterproducer: "pandora"
+    Pfpproducer: "pandora"
+    Sliceproducer: "pandora"
+}
