@@ -133,6 +133,9 @@ private:
   bool fBacktrack; // do the backtracking needed for this module?
   
   bool fShrFit; // use shower track-fitter info?
+  
+  bool fGetCaloID; // get the index of the calorimetry object manually. Needs to be true unless object produced by Pandora hierarchy
+  // (This is at least what I foudn empirically)
 
   TTree* _calo_tree;
 
@@ -300,6 +303,7 @@ CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p)
 
   fBacktrack = p.get<bool>("Backtrack", true);
   fShrFit    = p.get<bool>("ShrFit"   , false);
+  fGetCaloID = p.get<bool>("GetCaloID", false);
 
   art::ServiceHandle<art::TFileService> tfs;
 
@@ -1026,18 +1030,18 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
   // fill Calorimetry
 
   int key = trk.key();
-  
-  if (fShrFit) {
-    int caloctr = 0;
-    for (const searchingfornues::ProxyCaloElem_t tkcalo : calo_proxy) {
-      // find track with ID matching the pfp index (this convention apparently works only for shower fits...)
-      if (tkcalo->ID() == int(pfp.index())) {
-	key = caloctr;
-	break;
-      }
-      caloctr += 1;
-    }// for all calo-proxy objects
-  }// if we want to use the shower-fitted
+
+  if (fGetCaloID) {
+  int caloctr = 0;
+  for (const searchingfornues::ProxyCaloElem_t tkcalo : calo_proxy) {
+    // find track with ID matching the pfp index (this convention apparently works only for shower fits...)
+    if (tkcalo->ID() == int(pfp.index())) {
+      key = caloctr;
+      break;
+    }
+    caloctr += 1;
+  }// for all calo-proxy objects
+  }// if we want to get the calo object index manually
       
   auto calo_v = calo_proxy[key].get<anab::Calorimetry>();
   
@@ -1141,6 +1145,7 @@ void CalorimetryAnalysis::TrkDirectionAtXYZ(const recob::Track trk, const double
 {
   float min_dist = 100;
   size_t i_min = -1;
+  //std::cout << "DAVIDC min dist is " << min_dist << std::endl;
   for(size_t i=0; i < trk.NumberTrajectoryPoints(); i++)
   {
     if (trk.HasValidPoint(i))
@@ -1148,6 +1153,7 @@ void CalorimetryAnalysis::TrkDirectionAtXYZ(const recob::Track trk, const double
       auto point_i = trk.LocationAtPoint(i);
       float distance = searchingfornues::distance3d((double)point_i.X(), (double)point_i.Y(), (double)point_i.Z(),
                 x, y, z);
+      //std::cout << "\t DAVIDC found valid point [" << point_i.X() << ", " << point_i.Y() << "," << point_i.Z() <<  " ] w/ distance " << distance << std::endl;
       if (distance < min_dist)
       {
         min_dist = distance;
@@ -1156,6 +1162,7 @@ void CalorimetryAnalysis::TrkDirectionAtXYZ(const recob::Track trk, const double
     }// if point is valid
   }// for all track points
   // std::cout << "minimum distance = " << min_dist << std::endl;
+  //std::cout << "DAVIDC min dist after loop is is " << min_dist << " and i_min is " << i_min << std::endl;
 
   auto direction = trk.DirectionAtPoint(i_min);
   out[0] = (float)direction.X();

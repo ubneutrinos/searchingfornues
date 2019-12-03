@@ -2,3 +2,8 @@
 
 physics.filters.nuselection.AnalysisTools.calorimetry.T0producer: "acpttrigtagger"
 physics.filters.nuselection.AnalysisTools.calorimetry.Backtrack: false
+physics.filters.nuselection.AnalysisTools.calorimetry.GetCaloID: true
+
+#physics.filters.nuselection.AnalysisTools.calorimetry.TRKproducer: "pandora"
+#physics.filters.nuselection.AnalysisTools.calorimetry.CALOproducer: "pandoracaliSCE"
+#physics.filters.nuselection.AnalysisTools.calorimetry.PIDproducer: "pandoracalipidSCE"
