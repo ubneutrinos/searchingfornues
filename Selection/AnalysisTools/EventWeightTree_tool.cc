@@ -117,10 +117,6 @@ namespace analysis
                 
                 if(evtwgt_map.find("splines_general_Spline") != evtwgt_map.end()) _weightSpline = evtwgt_map.find("splines_general_Spline")->second[0];
                 evtwgt_map.erase("splines_general_Spline");
-                if(evtwgt_map.find("genie_all_Genie") != evtwgt_map.end()) _vecWeightsGenie = evtwgt_map.find("genie_all_Genie")->second;
-                evtwgt_map.erase("genie_all_Genie");
-                if(evtwgt_map.find("reinteractions_all_Reinteraction") != evtwgt_map.end()) _vecWeightsReint = evtwgt_map.find("reinteractions_all_Reinteraction")->second;
-                evtwgt_map.erase("reinteractions_all_Reinteraction");
 
                 _mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
                 
