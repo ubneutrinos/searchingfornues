@@ -195,7 +195,7 @@ Searching for members imported via using declar/home/travis/build/ubneutrinos/se
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ShowerMerger_module.cc:36: warning: Compound ShowerMerger is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonHitPurity_module.cc:38: warning: Compound ProtonHitPurity is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:29: warning: Compound analysis::BDT is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:34: warning: Compound analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:35: warning: Compound analysis::Pi0TruthAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/CosmicRejection_module.cc:46: warning: Compound CosmicRejection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:36: warning: Compound analysis::ShowerAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SaveSliceHits_module.cc:36: warning: Compound SaveSliceHits is not documented.
@@ -1194,27 +1194,27 @@ Generating docs for compou/home/travis/build/ubneutrinos/searchingfornues/Select
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:118: warning: Member _pi0_trkshrscore (variable) of class analysis::Pi0Tagger is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:120: warning: Member fTRKproducer (variable) of class analysis::Pi0Tagger is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:121: warning: Member fCALproducer (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:79: warning: Member fMCTproducer (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:80: warning: Member fMCSproducer (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:82: warning: Member _pi0truth_gamma1_edep (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:83: warning: Member _pi0truth_gamma1_etot (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:84: warning: Member _pi0truth_gamma1_dist (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:85: warning: Member _pi0truth_gamma2_edep (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:86: warning: Member _pi0truth_gamma2_etot (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:87: warning: Member _pi0truth_gamma2_dist (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:88: warning: Member _pi0truth_gammadot (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:90: warning: Member dir1 (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:90: warning: Member dir2 (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:92: warning: Member _pi0truth_gamma_parent (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:93: warning: Member _pi0truth_gamma_edep (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:94: warning: Member _pi0truth_gamma_etot (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:95: warning: Member _pi0truth_gamma_dist (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:97: warning: Member _pi0truth_elec_parent (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:98: warning: Member _pi0truth_elec_edep (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:99: warning: Member _pi0truth_elec_etot (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:100: warning: Member _pi0truth_elec_dist (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:105: warning: argument 'pset' of command @param is not found in the argument list of analysis::Pi0TruthAnalysis::Pi0TruthAnalysis(const fhicl::ParameterSet &p)
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:42: warning: The following parameters of analysis::Pi0TruthAnalysis::Pi0TruthAnalysis(const fhicl::ParameterSet &p) are not documented:
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:80: warning: Member fMCTproducer (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:81: warning: Member fMCSproducer (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:83: warning: Member _pi0truth_gamma1_edep (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:84: warning: Member _pi0truth_gamma1_etot (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:85: warning: Member _pi0truth_gamma1_dist (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:86: warning: Member _pi0truth_gamma2_edep (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:87: warning: Member _pi0truth_gamma2_etot (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:88: warning: Member _pi0truth_gamma2_dist (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:89: warning: Member _pi0truth_gammadot (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:91: warning: Member dir1 (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:91: warning: Member dir2 (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:93: warning: Member _pi0truth_gamma_parent (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:94: warning: Member _pi0truth_gamma_edep (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:95: warning: Member _pi0truth_gamma_etot (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:96: warning: Member _pi0truth_gamma_dist (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:98: warning: Member _pi0truth_elec_parent (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:99: warning: Member _pi0truth_elec_edep (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:100: warning: Member _pi0truth_elec_etot (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:101: warning: Member _pi0truth_elec_dist (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:106: warning: argument 'pset' of command @param is not found in the argument list of analysis::Pi0TruthAnalysis::Pi0TruthAnalysis(const fhicl::ParameterSet &p)
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:43: warning: The following parameters of analysis::Pi0TruthAnalysis::Pi0TruthAnalysis(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/PMTNoise_tool.cc:107: warning: Member _run (variable) of class analysis::PMTNoise is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/PMTNoise_tool.cc:107: warning: Member _sub (variable) of class analysis::PMTNoise is not documented.
