@@ -1566,9 +1566,16 @@ Generating docs for compou/home/travis/build/ubneutrinos/searchingfornues/Select
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:215: warning: Member _shrclusdir1 (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:216: warning: Member _trkshrhitdist0 (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:216: warning: Member _trkshrhitdist1 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:221: warning: Member _shr_tkfit_npoints (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:222: warning: Member _shr_tkfit_npointsvalid (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:224: warning: Member _shr_trkfitmedangle (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:221: warning: Member _ismerged (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:223: warning: Member _merge_bestdot (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:224: warning: Member _merge_bestdist (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:226: warning: Member _merge_vtx_x (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:227: warning: Member _merge_vtx_y (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:228: warning: Member _merge_vtx_z (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:230: warning: Member _merge_tk_ipfp (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:232: warning: Member _shr_tkfit_npoints (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:233: warning: Member _shr_tkfit_npointsvalid (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:235: warning: Member _shr_trkfitmedangle (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:82: warning: Member fData (variable) of class selection::SelectionToolBase is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CRTApproachSelection_tool.cc:79: warning: Member Point2PointDistance(const TVector3 &nuvtx, TVector3 &taggedTrackSpt) (function) of class selection::CRTApproachSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CRTApproachSelection_tool.cc:80: warning: Member Reset() (function) of class selection::CRTApproachSelection is not documented.
@@ -1797,5 +1804,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 875/65536 hits=4714 misses=903
+lookup cache used 873/65536 hits=4710 misses=901
 finished...
