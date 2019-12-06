@@ -218,6 +218,17 @@ private:
   float _shrmoliereavg; /**< avg of moliere angle */
   float _shrmoliererms; /**< rms of moliere angle */
 
+  bool _ismerged;
+
+  float _merge_bestdot;
+  float _merge_bestdist;
+
+  float _merge_vtx_x;
+  float _merge_vtx_y;
+  float _merge_vtx_z;
+
+  size_t _merge_tk_ipfp;
+
     int _shr_tkfit_npoints;      // number of points associated to shower fitted track
     int _shr_tkfit_npointsvalid; // number of VALID points associated to shower fitted track
 
@@ -686,7 +697,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr_py = shr_p.Y();
                     _shr_pz = shr_p.Z();
                     _shr_openangle = shr->OpenAngle();
-
+		    
                     if (tkcalo_proxy == NULL)
                     {
                         _shr_tkfit_start_x = std::numeric_limits<float>::lowest();
@@ -844,6 +855,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     }
                 }
             }
+
             for (const auto &trk : pfp_pxy.get<recob::Track>())
             {
                 if (shr_hits == _shr_hits_max)
@@ -1016,6 +1028,13 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         }
     }
     
+    TVector3 _merge_vtx;
+
+    _ismerged = searchingfornues::FindShowerTrunk(_shr_pfp_id,pfp_pxy_v,_merge_vtx,_merge_tk_ipfp, _merge_bestdot, _merge_bestdist);
+    _merge_vtx_x = _merge_vtx.X();
+    _merge_vtx_y = _merge_vtx.Y();
+    _merge_vtx_z = _merge_vtx.Z();
+    
     auto trkshrhitdist_v = searchingfornues::GetPFPHitDistance(pfp_pxy_v[_trk_pfp_id], pfp_pxy_v[_shr_pfp_id], clus_proxy);
     _trkshrhitdist0 = trkshrhitdist_v[0];
     _trkshrhitdist1 = trkshrhitdist_v[1];
@@ -1180,6 +1199,14 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shrmoliereavg = std::numeric_limits<float>::lowest();
     _shrmoliererms = std::numeric_limits<float>::lowest();
 
+    _ismerged = false;
+    _merge_bestdot = std::numeric_limits<float>::lowest();
+    _merge_bestdist = std::numeric_limits<float>::lowest();
+    _merge_vtx_x = std::numeric_limits<float>::lowest();
+    _merge_vtx_y = std::numeric_limits<float>::lowest();
+    _merge_vtx_z = std::numeric_limits<float>::lowest();
+    _merge_tk_ipfp = 0;
+
     _shr_tkfit_2cm_dedx_Y = std::numeric_limits<float>::lowest();
     _shr_tkfit_2cm_dedx_U = std::numeric_limits<float>::lowest();
     _shr_tkfit_2cm_dedx_V = std::numeric_limits<float>::lowest();
@@ -1269,6 +1296,14 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_trkfitmedangle", &_shr_trkfitmedangle, "shr_trkfitmedangle/f");
     _tree->Branch("shrmoliereavg", &_shrmoliereavg, "shrmoliereavg/f");
     _tree->Branch("shrmoliererms", &_shrmoliererms, "shrmoliererms/f");
+    _tree->Branch("ismerged", &_ismerged, "ismerged/b");
+    _tree->Branch("merge_bestdot",&_merge_bestdot, "merge_bestdot/f");
+    _tree->Branch("merge_bestdist",&_merge_bestdist, "merge_bestdist/f");
+    _tree->Branch("merge_vtx_x", &_merge_vtx_x, "merge_vtx_x/f");
+    _tree->Branch("merge_vtx_y", &_merge_vtx_y, "merge_vtx_y/f");
+    _tree->Branch("merge_vtx_z", &_merge_vtx_z, "merge_vtx_z/f");
+    _tree->Branch("merge_tk_ipfp", &_merge_tk_ipfp, "merge_tk_ipfp/i");
+
     if (fSaveMoreDedx)
     {
         _tree->Branch("shr_tkfit_2cm_dedx_Y", &_shr_tkfit_2cm_dedx_Y, "shr_tkfit_2cm_dedx_Y/F");

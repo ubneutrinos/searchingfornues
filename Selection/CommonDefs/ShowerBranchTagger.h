@@ -432,10 +432,12 @@ namespace searchingfornues
   bool FindShowerTrunk(const size_t shr_pfp_idx,
 		       const std::vector<searchingfornues::ProxyPfpElem_t>& slice_pfp_v,
 		       TVector3& vtxcandidate,
-		       size_t& trktrunk_pfp_idx) {
+		       size_t& trktrunk_pfp_idx,
+		       float& bestmgdot,
+		       float& bestmgdist) {
 
-    float fShrVtxTrkDistMax = 0; // ToDo -> add as input
-    float fShrTrkDotMin     = 0; // ToDo -> add as input
+    //    float fShrVtxTrkDistMax = 0; // ToDo -> add as input
+    //float fShrTrkDotMin     = 0; // ToDo -> add as input
 
     // do any of the slices have a track-like segment aligned with the shower?
     
@@ -455,7 +457,7 @@ namespace searchingfornues
     // keep track of possible matching track
     // track with best alignment in dot product is the candidate
     float bestdot = 0.;
-    //float bestdist = 1e6;
+    float bestdist = 1e6;
     
     for (size_t p=0; p < slice_pfp_v.size(); p++) {
       
@@ -488,13 +490,13 @@ namespace searchingfornues
       std::cout << "TrkShr Dot  is " << TrkShrDot << std::endl;
       std::cout << std::endl;
       
-      if ( (TrkShrDist < fShrVtxTrkDistMax) && (fabs(TrkShrDot) > fShrTrkDotMin) ) {
+      //      if ( (TrkShrDist < fShrVtxTrkDistMax) && (fabs(TrkShrDot) > fShrTrkDotMin) ) {
 	
 	// if this is the most aligned track
 	if ( fabs(TrkShrDot) > fabs(bestdot) ) {
 	  trktrunk_pfp_idx = p;
 	  bestdot  = TrkShrDot;
-	  //bestdist = TrkShrDist;
+	  bestdist = TrkShrDist;
 	  // vertex candidate is track start/end depending on sign
 	  // of dot-product.
 	  if (bestdot > 0) { vtxcandidate = trkVtx; }
@@ -502,11 +504,12 @@ namespace searchingfornues
 	  // also save index of track to be mergd
 	}
 	
-      }// if agrees within user-defined specs
+	// }// if agrees within user-defined specs
       
     }// for all PFParticles
     
-    
+    bestmgdot=bestdot;
+    bestmgdist = bestdist;
     // if bestdot != 0 -> means we found a compatible match
     if (bestdot == 0)
       return false;
