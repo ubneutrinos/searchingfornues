@@ -12,6 +12,7 @@
 // backtracking tools
 #include "../CommonDefs/BacktrackingFuncs.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
+#include "../CommonDefs/SCECorrections.h"
 
 namespace analysis
 {
@@ -152,6 +153,13 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
   float vtx_x = nu.EndX();
   float vtx_y = nu.EndY();
   float vtx_z = nu.EndZ();
+  float vtx_t = nu.T();
+
+  float vtx_sce[3];
+  searchingfornues::True2RecoMappingXYZ(vtx_t, vtx_x, vtx_y, vtx_z, vtx_sce);
+  vtx_x = vtx_sce[0];
+  vtx_y = vtx_sce[1];
+  vtx_z = vtx_sce[2];
 
   // nucleus induced pi0 gammas
   _pi0truth_gamma1_edep = 0;
