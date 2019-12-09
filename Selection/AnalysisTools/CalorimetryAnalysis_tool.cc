@@ -89,6 +89,13 @@ public:
      */
   void resetTTree(TTree *_tree) override;
 
+  /**
+   * @brief get dEdx using constant MeV/cm value and ModBox recombination model, but accounting for local E-field variations
+   */
+  std::vector<float> GetdEdxfromdQdx(const std::vector<float>& dqdx_v, 
+				     const std::vector<float>& x_v,
+				     const std::vector<float>& y_v,
+				     const std::vector<float>& z_v);
 
 private:
 
@@ -99,6 +106,7 @@ private:
            const searchingfornues::ProxyPIDColl_t pid_proxy,
            const searchingfornues::ProxyClusColl_t clus_proxy,
            const bool fData,
+		       const bool fShrFit,
            const std::vector<searchingfornues::BtPart> btparts_v,
            const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart);
 
@@ -106,6 +114,7 @@ private:
                           float out[3]);
 
   trkf::TrackMomentumCalculator _trkmom;
+
 
   TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
   TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
@@ -122,6 +131,11 @@ private:
   art::InputTag fMCPproducer;
 
   bool fBacktrack; // do the backtracking needed for this module?
+  
+  bool fShrFit; // use shower track-fitter info?
+  
+  bool fGetCaloID; // get the index of the calorimetry object manually. Needs to be true unless object produced by Pandora hierarchy
+  // (This is at least what I foudn empirically)
 
   TTree* _calo_tree;
 
@@ -288,6 +302,8 @@ CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p)
   fMCPproducer = p.get<art::InputTag>("MCPproducer");
 
   fBacktrack = p.get<bool>("Backtrack", true);
+  fShrFit    = p.get<bool>("ShrFit"   , false);
+  fGetCaloID = p.get<bool>("GetCaloID", false);
 
   art::ServiceHandle<art::TFileService> tfs;
 
@@ -408,8 +424,9 @@ void CalorimetryAnalysis::analyzeEvent(art::Event const &e, bool fData)
           pid_proxy,
           clus_proxy,
           !fBacktrack,
+		      fShrFit,
           btparts_v,
-          assocMCPart);
+	  assocMCPart);
 
     }//  if T0 assocaition is found
   }// for all PFParticles
@@ -511,6 +528,7 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
         pid_proxy,
         clus_proxy,
         fData,
+		    fShrFit,
         btparts_v,
         assocMCPart);
   } // for all PFParticles
@@ -807,6 +825,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
             const searchingfornues::ProxyPIDColl_t pid_proxy,
             const searchingfornues::ProxyClusColl_t clus_proxy,
             const bool fData,
+					  const bool fShrFit,
             const std::vector<searchingfornues::BtPart> btparts_v,
             const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart)
 {
@@ -925,6 +944,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
     }
   }
 
+  /*
   // get trk proxy in order to fetch PID
   auto trkpxy2 = pid_proxy[trk.key()];
   auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
@@ -967,6 +987,8 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
 
   //three plane pid from Pip
   _trk_bragg_p_three_planes = searchingfornues::PID(pidpxy_v[0], "ThreePlaneProtonPID", anab::kLikelihood, anab::kForward, 2212, -1);
+  */
+
 
   // Kinetic energy using tabulated stopping power (GeV)
   float mcs_momentum_muon = _trkmom.GetTrackMomentum(trk->Length(), 13);
@@ -1006,10 +1028,26 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
   _trk_sce_end_z = _trk_end_sce[2];
 
   // fill Calorimetry
-  auto calo_v = calo_proxy[trk.key()].get<anab::Calorimetry>();
+
+  int key = trk.key();
+
+  if (fGetCaloID) {
+  int caloctr = 0;
+  for (const searchingfornues::ProxyCaloElem_t tkcalo : calo_proxy) {
+    // find track with ID matching the pfp index (this convention apparently works only for shower fits...)
+    if (tkcalo->ID() == int(pfp.index())) {
+      key = caloctr;
+      break;
+    }
+    caloctr += 1;
+  }// for all calo-proxy objects
+  }// if we want to get the calo object index manually
+      
+  auto calo_v = calo_proxy[key].get<anab::Calorimetry>();
+  
   for (auto const& calo : calo_v)
-  {
-    auto const& plane = calo->PlaneID().Plane;
+    {
+      auto const& plane = calo->PlaneID().Plane;
     auto const& xyz_v = calo->XYZ();
 
     if (plane == 0)
@@ -1030,6 +1068,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _dir_y_u.push_back(_dir_u[1]);
         _dir_z_u.push_back(_dir_u[2]);
       }
+      if (fShrFit) { _dedx_u = GetdEdxfromdQdx(_dqdx_u,_x_u,_y_u,_z_u); }
     }
     else if (plane == 1)
     {
@@ -1049,6 +1088,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _dir_y_v.push_back(_dir_v[1]);
         _dir_z_v.push_back(_dir_v[2]);
       }
+      if (fShrFit) { _dedx_v = GetdEdxfromdQdx(_dqdx_v,_x_v,_y_v,_z_v); }
     }
     else if (plane == 2) //collection
     {
@@ -1068,15 +1108,44 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _dir_y_y.push_back(_dir_y[1]);
         _dir_z_y.push_back(_dir_y[2]);
       }
+      if (fShrFit) { _dedx_y = GetdEdxfromdQdx(_dqdx_y,_x_y,_y_y,_z_y); }
     }
   }
+
   _calo_tree->Fill();
+}
+
+std::vector<float> CalorimetryAnalysis::GetdEdxfromdQdx(const std::vector<float>& dqdx_v,
+							const std::vector<float>& x_v,
+							const std::vector<float>& y_v,
+							const std::vector<float>& z_v) {
+
+  std::vector<float> dedx_v;
+
+  if ( (x_v.size() < dqdx_v.size()) || (y_v.size() < dqdx_v.size()) || (z_v.size() < dqdx_v.size()) ) {
+    std::cout << "ERROR. Vector size does not match in CalorimetryAnalysis_tool [searchingfornues]" << std::endl;
+    return dedx_v;
+  }
+
+  for (size_t i=0; i < dqdx_v.size(); i++) {
+
+    auto efield = searchingfornues::GetLocalEFieldMag(x_v[i],y_v[i],z_v[i]); // kV / cm
+    
+    float B = 0.212 / (1.383 * efield);
+    float r = log( 2.1 * B + 0.93 ) / (2.1 * B);
+    //std::cout << "DAVIDC R factor is " << r << std::endl;
+    dedx_v.push_back( dqdx_v[i] * 240. * (23.6/1e6) / r ); // this factor is what dQ/dx must be divided by to get dE/dx (with calibration factors too!)
+    //std::cout << "DAVIDC dQdx : " << dqdx_v[i] << " -> dEdx : " << dedx_v[dedx_v.size()-1] << std::endl;
+  }// for all points in track
+  
+  return dedx_v;
 }
 
 void CalorimetryAnalysis::TrkDirectionAtXYZ(const recob::Track trk, const double x, const double y, const double z, float out[3])
 {
   float min_dist = 100;
   size_t i_min = -1;
+  //std::cout << "DAVIDC min dist is " << min_dist << std::endl;
   for(size_t i=0; i < trk.NumberTrajectoryPoints(); i++)
   {
     if (trk.HasValidPoint(i))
@@ -1084,6 +1153,7 @@ void CalorimetryAnalysis::TrkDirectionAtXYZ(const recob::Track trk, const double
       auto point_i = trk.LocationAtPoint(i);
       float distance = searchingfornues::distance3d((double)point_i.X(), (double)point_i.Y(), (double)point_i.Z(),
                 x, y, z);
+      //std::cout << "\t DAVIDC found valid point [" << point_i.X() << ", " << point_i.Y() << "," << point_i.Z() <<  " ] w/ distance " << distance << std::endl;
       if (distance < min_dist)
       {
         min_dist = distance;
@@ -1092,6 +1162,7 @@ void CalorimetryAnalysis::TrkDirectionAtXYZ(const recob::Track trk, const double
     }// if point is valid
   }// for all track points
   // std::cout << "minimum distance = " << min_dist << std::endl;
+  //std::cout << "DAVIDC min dist after loop is is " << min_dist << " and i_min is " << i_min << std::endl;
 
   auto direction = trk.DirectionAtPoint(i_min);
   out[0] = (float)direction.X();

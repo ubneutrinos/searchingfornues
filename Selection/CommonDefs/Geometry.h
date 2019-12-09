@@ -69,6 +69,41 @@ namespace searchingfornues
     return 0.3/aux_cos;
   }
 
+  void TrkDirectionAtXYZ(const recob::Track trk, const double x, const double y, const double z, float out[3])
+  {
+    float min_dist = 100;
+    size_t i_min = -1;
+    for(size_t i=0; i < trk.NumberTrajectoryPoints(); i++)
+    {
+      if (trk.HasValidPoint(i))
+      { // check this point is valid
+        auto point_i = trk.LocationAtPoint(i);
+        float distance = searchingfornues::distance3d((double)point_i.X(), (double)point_i.Y(), (double)point_i.Z(),
+                  x, y, z);
+        if (distance < min_dist)
+        {
+          min_dist = distance;
+          i_min = i;
+        }
+      }// if point is valid
+    }// for all track points
+
+    auto direction = trk.DirectionAtPoint(i_min);
+    out[0] = (float)direction.X();
+    out[1] = (float)direction.Y();
+    out[2] = (float)direction.Z();
+
+    float norm;
+    norm = out[0]*out[0] + out[1]*out[1] + out[2]*out[2];
+    if (fabs(norm -1) > 0.001)
+    {
+      std::cout << "i_min = " << i_min << std::endl;
+      std::cout << "minimum distance = " << min_dist << std::endl;
+      std::cout << "out[0], out[1], out[2] = " << out[0] << " , " << out[1] << " , " << out[2] << std::endl;
+      std::cout << "norm = " << norm << std::endl;
+    }
+  }
+
 } // namespace searchingfornues
 
 #endif

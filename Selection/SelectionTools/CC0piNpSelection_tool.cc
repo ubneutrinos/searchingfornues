@@ -10,10 +10,13 @@
 #include "TParticlePDG.h"
 #include "../CommonDefs/Typedefs.h"
 #include "../CommonDefs/PIDFuncs.h"
+#include "../CommonDefs/Containment.h"
 #include "../CommonDefs/TrackFitterFunctions.h"
 #include "../CommonDefs/CalibrationFuncs.h"
 #include "../CommonDefs/PFPHitDistance.h"
 #include "../CommonDefs/ProximityClustering.h"
+#include "../CommonDefs/SCECorrections.h"
+#include "../CommonDefs/ShowerBranchTagger.h"
 //#include "../CommonDefs/PIDFuncs.h"
 //#include "../CommonDefs/LLR_PID.h"
 
@@ -77,13 +80,6 @@ public:
      */
     void resetTTree(TTree *_tree);
 
-    /**
-     * @brief Check if point is inside fiducial volume
-     *
-     * @param x array of coordinates
-     */
-    bool isFiducial(const double x[3]) const;
-
 private:
 
     const trkf::TrackMomentumCalculator _trkmom;
@@ -119,6 +115,9 @@ private:
     art::InputTag fMCPproducer;
     art::InputTag fCALproducer;
     art::InputTag fCALproducerTrkFit;
+
+  float _wire2cm, _time2cm;
+
 
     unsigned int _n_showers_contained; /**< Number of showers with a starting point within the fiducial volume */
     unsigned int _n_tracks_contained;  /**< Number of tracks fully contained in the fiducial volume */
@@ -213,10 +212,22 @@ private:
 
     int _shrsubclusters0, _shrsubclusters1, _shrsubclusters2; /**< in how many sub-clusters can the shower be broken based on proximity clustering? */
     float _shrclusfrac0, _shrclusfrac1, _shrclusfrac2;        /**< what fraction of the total charge does the dominant shower sub-cluster carry? */
+    float _shrclusdir0, _shrclusdir1, _shrclusdir2;        /**< 2D charge-weighted direction of shower hits calculated from neutrino vertex w.r.t. vertical in plane */
     float _trkshrhitdist0, _trkshrhitdist1, _trkshrhitdist2;  /**< distance between hits of shower and track in 2D on each palne based on hit-hit distances */
 
   float _shrmoliereavg; /**< avg of moliere angle */
   float _shrmoliererms; /**< rms of moliere angle */
+
+  bool _ismerged;
+
+  float _merge_bestdot;
+  float _merge_bestdist;
+
+  float _merge_vtx_x;
+  float _merge_vtx_y;
+  float _merge_vtx_z;
+
+  size_t _merge_tk_ipfp;
 
     int _shr_tkfit_npoints;      // number of points associated to shower fitted track
     int _shr_tkfit_npointsvalid; // number of VALID points associated to shower fitted track
@@ -235,9 +246,24 @@ private:
     float _shr_tkfit_dedx_V;  /**< dE/dx of the leading shower on the V plane with the track fitting */
     float _shr_tkfit_dedx_U;  /**< dE/dx of the leading shower on the U plane with the track fitting */
 
+    float _shr_tkfit_dedx_Y_alt;  /**< dE/dx of the leading shower on the Y plane with the track fitting  [calculated using XYZ instead of RR]  */
+    float _shr_tkfit_dedx_V_alt;  /**< dE/dx of the leading shower on the V plane with the track fitting  [calculated using XYZ instead of RR]  */
+    float _shr_tkfit_dedx_U_alt;  /**< dE/dx of the leading shower on the U plane with the track fitting  [calculated using XYZ instead of RR]  */
+
     unsigned int _shr_tkfit_nhits_Y; /**< Number of hits in the 1x4 cm box on the Y plane with the track fitting */
     unsigned int _shr_tkfit_nhits_V; /**< Number of hits in the 1x4 cm box on the V plane with the track fitting */
     unsigned int _shr_tkfit_nhits_U; /**< Number of hits in the 1x4 cm box on the U plane with the track fitting */
+
+    unsigned int _shr_tkfit_nhits_Y_alt; /**< Number of hits in the 1x4 cm box on the Y plane with the track fitting [calculated using XYZ instead of RR] */
+    unsigned int _shr_tkfit_nhits_V_alt; /**< Number of hits in the 1x4 cm box on the V plane with the track fitting  [calculated using XYZ instead of RR] */
+    unsigned int _shr_tkfit_nhits_U_alt; /**< Number of hits in the 1x4 cm box on the U plane with the track fitting [calculated using XYZ instead of RR] */
+
+    float _shr_tkfit_2cm_dedx_Y;         /**< dE/dx of the leading shower on the Y plane with the track fitting, use first 2 cm */
+    float _shr_tkfit_2cm_dedx_V;         /**< dE/dx of the leading shower on the V plane with the track fitting, use first 2 cm */
+    float _shr_tkfit_2cm_dedx_U;         /**< dE/dx of the leading shower on the U plane with the track fitting, use first 2 cm */
+    unsigned int _shr_tkfit_2cm_nhits_Y; /**< Number of hits in the 1x4 cm box on the Y plane with the track fitting, use first 2 cm */
+    unsigned int _shr_tkfit_2cm_nhits_V; /**< Number of hits in the 1x4 cm box on the V plane with the track fitting, use first 2 cm */
+    unsigned int _shr_tkfit_2cm_nhits_U; /**< Number of hits in the 1x4 cm box on the U plane with the track fitting, use first 2 cm */
 
     float _shr_tkfit_gap05_dedx_Y;         /**< dE/dx of the leading shower on the Y plane with the track fitting, skip first 5 mm */
     float _shr_tkfit_gap05_dedx_V;         /**< dE/dx of the leading shower on the V plane with the track fitting, skip first 5 mm */
@@ -275,6 +301,12 @@ CC0piNpSelection::CC0piNpSelection(const fhicl::ParameterSet &pset)
 {
     configure(pset);
 
+    // get detector specific properties
+    auto const* geom = ::lar::providerFrom<geo::Geometry>();
+    auto const* detp = lar::providerFrom<detinfo::DetectorPropertiesService>();
+    _wire2cm = geom->WirePitch(0,0,0);
+    _time2cm = detp->SamplingRate() / 1000.0 * detp->DriftVelocity( detp->Efield(), detp->Temperature() );
+
     /*
   LLR_PID.set_dedx_binning(0, dedx_num_bins_pl_0, dedx_edges_pl_0);
   std::vector<size_t> parameters_num_bins_0 = {parameter_0_num_bins_pl_0, parameter_1_num_bins_pl_0};
@@ -294,24 +326,6 @@ CC0piNpSelection::CC0piNpSelection(const fhicl::ParameterSet &pset)
   LLR_PID.set_par_binning(2, parameters_num_bins_2, parameters_bin_edges_2);
   LLR_PID.set_lookup_tables(2, dedx_pdf_pl_2);
     */
-}
-
-bool CC0piNpSelection::isFiducial(const double x[3]) const
-{
-
-    art::ServiceHandle<geo::Geometry> geo;
-    std::vector<double> bnd = {
-        0., 2. * geo->DetHalfWidth(), -geo->DetHalfHeight(), geo->DetHalfHeight(),
-        0., geo->DetLength()};
-
-    bool is_x =
-        x[0] > (bnd[0] + fFidvolXstart) && x[0] < (bnd[1] - fFidvolXend);
-    bool is_y =
-        x[1] > (bnd[2] + fFidvolYstart) && x[1] < (bnd[3] - fFidvolYend);
-    bool is_z =
-        x[2] > (bnd[4] + fFidvolZstart) && x[2] < (bnd[5] - fFidvolZend);
-
-    return is_x && is_y && is_z;
 }
 
 //----------------------------------------------------------------------------
@@ -437,6 +451,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         }
     }
 
+    // START checking if vertex is in the fiducial volume
     double nu_vtx[3] = {};
     TVector3 nuvtx;
     for (size_t i_pfp = 0; i_pfp < pfp_pxy_v.size(); i_pfp++)
@@ -454,7 +469,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
             else
             {
                 vtx.at(0)->XYZ(nu_vtx);
-                if (!isFiducial(nu_vtx))
+                if (!searchingfornues::isFiducial(nu_vtx,fFidvolXstart,fFidvolYstart,fFidvolZstart,fFidvolXend,fFidvolYend,fFidvolZend))
                 {
                     return false;
                 }
@@ -463,7 +478,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
             break;
         }
-    }
+    }// for all PFParticles
+    // DONE checking if vertex is in the fiducial volume
 
     TVector3 total_p;
     TVector3 total_p_mu;
@@ -474,6 +490,10 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     TVector3 shr_p;
     std::vector<float> matched_energies;
 
+    // NEXT STEP : find showers
+    // all showers will be merged in order to determine the shower energy
+    // the largest shower (by number of hits) will be the primry electron
+    // used to compute vertex, dE/dx, direction, ...
     size_t sps_fv = 0, sps_all = 0;
     for (size_t i_pfp = 0; i_pfp < pfp_pxy_v.size(); i_pfp++)
     {
@@ -488,14 +508,14 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         sps_all += spcpnts.size();
         for (auto &sp : spcpnts)
         {
-            if (isFiducial(sp->XYZ()))
+	  if (searchingfornues::isFiducial(sp->XYZ(),fFidvolXstart,fFidvolYstart,fFidvolZstart,fFidvolXend,fFidvolYend,fFidvolZend))
                 sps_fv++;
         }
 
         auto trkshrscore = searchingfornues::GetTrackShowerScore(pfp_pxy);
         if (trkshrscore < fTrkShrscore)
         {
-            unsigned int shr_hits = 0;
+	  unsigned int shr_hits = 0;
 
             for (const auto &shr : pfp_pxy.get<recob::Shower>())
             {
@@ -504,7 +524,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 auto clus_pxy_v = pfp_pxy.get<recob::Cluster>();
                 std::vector<art::Ptr<recob::Hit>> hit_v;
 
-                if (!isFiducial(shr_vertex))
+                if (!searchingfornues::isFiducial(shr_vertex,fFidvolXstart,fFidvolYstart,fFidvolZstart,fFidvolXend,fFidvolYend,fFidvolZend))
                 {
                     for (auto ass_clus : clus_pxy_v)
                     {
@@ -565,10 +585,13 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 {
                     int nclus = 0;
                     float hitfracmax = 0.;
+		    // store direction of 2Dhits in cluster w.r.t. vertical on plane
+		    float clusterdir = 0;
                     std::vector<std::vector<unsigned int>> out_cluster_v;
                     if (cluster_hits_v_v[pl].size())
                     {
-                        searchingfornues::cluster(cluster_hits_v_v[pl], out_cluster_v, 2.0, 1.0);
+		      searchingfornues::cluster(cluster_hits_v_v[pl], out_cluster_v, 2.0, 1.0);
+		      clusterdir = searchingfornues::ClusterVtxDirection(nuvtx,cluster_hits_v_v[pl],_wire2cm,_time2cm);
                         // find how many clusters above some # of hit threshold there are
                         // find cluste with largest fraction of all hits
                         float tothits = cluster_hits_v_v[pl].size();
@@ -587,16 +610,19 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     {
                         _shrsubclusters0 = nclus;
                         _shrclusfrac0 = hitfracmax;
+			_shrclusdir0  = clusterdir;
                     }
                     if (pl == 1)
                     {
                         _shrsubclusters1 = nclus;
                         _shrclusfrac1 = hitfracmax;
+			_shrclusdir1  = clusterdir;
                     }
                     if (pl == 2)
                     {
                         _shrsubclusters2 = nclus;
                         _shrclusfrac2 = hitfracmax;
+			_shrclusdir2  = clusterdir;
                     }
                 } // for all planes
 
@@ -607,6 +633,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 _shr_energy_tot_cali += shr->Energy()[2] / 1000 * cali_corr[2];
 
                 _shr_hits_tot += shr_hits;
+		
+		// if this is the shower with most hits, take as the main shower
                 if (shr_hits > _shr_hits_max)
                 {
                     if (!fData)
@@ -669,7 +697,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr_py = shr_p.Y();
                     _shr_pz = shr_p.Z();
                     _shr_openangle = shr->OpenAngle();
-
+		    
                     if (tkcalo_proxy == NULL)
                     {
                         _shr_tkfit_start_x = std::numeric_limits<float>::lowest();
@@ -681,6 +709,10 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         _shr_tkfit_dedx_Y = std::numeric_limits<float>::lowest();
                         _shr_tkfit_dedx_V = std::numeric_limits<float>::lowest();
                         _shr_tkfit_dedx_U = std::numeric_limits<float>::lowest();
+
+                        _shr_tkfit_2cm_dedx_Y = std::numeric_limits<float>::lowest();
+                        _shr_tkfit_2cm_dedx_V = std::numeric_limits<float>::lowest();
+                        _shr_tkfit_2cm_dedx_U = std::numeric_limits<float>::lowest();
 
                         _shr_tkfit_gap05_dedx_Y = std::numeric_limits<float>::lowest();
                         _shr_tkfit_gap05_dedx_V = std::numeric_limits<float>::lowest();
@@ -710,6 +742,13 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         _shr_tkfit_start_y = tk->Start().Y();
                         _shr_tkfit_start_z = tk->Start().Z();
 
+			// SCE corrected shower start point
+			float shr_tkfit_start_sce[3];
+			searchingfornues::ApplySCECorrectionXYZ(_shr_tkfit_start_x,
+								_shr_tkfit_start_y,
+								_shr_tkfit_start_z,
+								shr_tkfit_start_sce);
+
                         _shr_tkfit_phi = tk->StartDirection().Phi();
                         _shr_tkfit_theta = tk->StartDirection().Theta();
 
@@ -717,6 +756,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
                         float calodEdx; // dEdx computed for track-fitter
                         int caloNpts;   // number of track-fitter dE/dx hits
+                        float calodEdxXYZ; // dEdx computed for track-fitter [with XYZ and not RR]
+                        int caloNptsXYZ;   // number of track-fitter dE/dx hits [with XYZ and not RR]
 
                         for (const auto &tkcalo : tkcalos)
                         {
@@ -726,24 +767,53 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
                             // using function from CommonDefs/TrackFitterFunctions.h
                             searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
+			    // use xyz coordinates instead of RR to calculate distance
+                            searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx,
+							      shr_tkfit_start_sce[0],shr_tkfit_start_sce[1],shr_tkfit_start_sce[2],
+							      calodEdxXYZ, caloNptsXYZ);
+			    
                             if (tkcalo->PlaneID().Plane == 2)
                             {
                                 _shr_tkfit_dedx_Y = calodEdx;
                                 _shr_tkfit_nhits_Y = caloNpts;
+                                _shr_tkfit_dedx_Y_alt = calodEdxXYZ;
+                                _shr_tkfit_nhits_Y_alt = caloNptsXYZ;
                             }
                             else if (tkcalo->PlaneID().Plane == 1)
                             {
                                 _shr_tkfit_dedx_V = calodEdx;
                                 _shr_tkfit_nhits_V = caloNpts;
+                                _shr_tkfit_dedx_V_alt = calodEdxXYZ;
+                                _shr_tkfit_nhits_V_alt = caloNptsXYZ;
                             }
                             else if (tkcalo->PlaneID().Plane == 0)
                             {
                                 _shr_tkfit_dedx_U = calodEdx;
                                 _shr_tkfit_nhits_U = caloNpts;
+                                _shr_tkfit_dedx_U_alt = calodEdxXYZ;
+                                _shr_tkfit_nhits_U_alt = caloNptsXYZ;
                             }
 
                             if (fSaveMoreDedx == false)
                                 continue;
+
+                            // use only first 2 cm
+                            searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, 2.0, fLocaldEdx, calodEdx, caloNpts);
+                            if (tkcalo->PlaneID().Plane == 2)
+                            {
+                                _shr_tkfit_2cm_dedx_Y = calodEdx;
+                                _shr_tkfit_2cm_nhits_Y = caloNpts;
+                            }
+                            else if (tkcalo->PlaneID().Plane == 1)
+                            {
+                                _shr_tkfit_2cm_dedx_V = calodEdx;
+                                _shr_tkfit_2cm_nhits_V = caloNpts;
+                            }
+                            else if (tkcalo->PlaneID().Plane == 0)
+                            {
+                                _shr_tkfit_2cm_dedx_U = calodEdx;
+                                _shr_tkfit_2cm_nhits_U = caloNpts;
+                            }
 
                             // Gap 0.5 cm
                             searchingfornues::GetTrackFitdEdx(tkcalo, 0.5, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
@@ -785,6 +855,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     }
                 }
             }
+
             for (const auto &trk : pfp_pxy.get<recob::Track>())
             {
                 if (shr_hits == _shr_hits_max)
@@ -807,18 +878,20 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     }
                 }
             }
-        }
+        }// if shower-like PFParticle
 
+	// if track-like PFParticle
         for (const auto &trk : pfp_pxy.get<recob::Track>())
         {
             if (trkshrscore > fTrkShrscore)
             {
                 double trk_start[3] = {trk->Start().X(), trk->Start().Y(), trk->Start().Z()};
                 double trk_end[3] = {trk->End().X(), trk->End().Y(), trk->End().Z()};
-
+		
                 auto clus_pxy_v = pfp_pxy.get<recob::Cluster>();
 
-                if (!isFiducial(trk_start) || !isFiducial(trk_end))
+                if (!searchingfornues::isFiducial(trk_start,fFidvolXstart,fFidvolYstart,fFidvolZstart,fFidvolXend,fFidvolYend,fFidvolZend) || 
+		    !searchingfornues::isFiducial(trk_end,fFidvolXstart,fFidvolYstart,fFidvolZstart,fFidvolXend,fFidvolYend,fFidvolZend) )
                 {
                     for (auto ass_clus : clus_pxy_v)
                     {
@@ -954,7 +1027,14 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
             }
         }
     }
+    
+    TVector3 _merge_vtx;
 
+    _ismerged = searchingfornues::FindShowerTrunk(_shr_pfp_id,pfp_pxy_v,_merge_vtx,_merge_tk_ipfp, _merge_bestdot, _merge_bestdist);
+    _merge_vtx_x = _merge_vtx.X();
+    _merge_vtx_y = _merge_vtx.Y();
+    _merge_vtx_z = _merge_vtx.Z();
+    
     auto trkshrhitdist_v = searchingfornues::GetPFPHitDistance(pfp_pxy_v[_trk_pfp_id], pfp_pxy_v[_shr_pfp_id], clus_proxy);
     _trkshrhitdist0 = trkshrhitdist_v[0];
     _trkshrhitdist1 = trkshrhitdist_v[1];
@@ -983,6 +1063,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         return false;
     return true;
 }
+
+
 
 void CC0piNpSelection::resetTTree(TTree *_tree)
 {
@@ -1089,6 +1171,10 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shrclusfrac1 = std::numeric_limits<float>::lowest();
     _shrclusfrac2 = std::numeric_limits<float>::lowest();
 
+    _shrclusdir0 = std::numeric_limits<float>::lowest();
+    _shrclusdir1 = std::numeric_limits<float>::lowest();
+    _shrclusdir2 = std::numeric_limits<float>::lowest();
+
     _shr_tkfit_phi = std::numeric_limits<float>::lowest();
     _shr_tkfit_theta = std::numeric_limits<float>::lowest();
     _shr_tkfit_dedx_Y = std::numeric_limits<float>::lowest();
@@ -1097,6 +1183,13 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_tkfit_nhits_Y = 0;
     _shr_tkfit_nhits_U = 0;
     _shr_tkfit_nhits_V = 0;
+    _shr_tkfit_dedx_Y_alt = std::numeric_limits<float>::lowest();
+    _shr_tkfit_dedx_U_alt = std::numeric_limits<float>::lowest();
+    _shr_tkfit_dedx_V_alt = std::numeric_limits<float>::lowest();
+    _shr_tkfit_nhits_Y_alt = 0;
+    _shr_tkfit_nhits_U_alt = 0;
+    _shr_tkfit_nhits_V_alt = 0;
+
 
     _shr_tkfit_npoints = std::numeric_limits<int>::lowest();
     _shr_tkfit_npointsvalid = std::numeric_limits<int>::lowest();
@@ -1105,6 +1198,21 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
 
     _shrmoliereavg = std::numeric_limits<float>::lowest();
     _shrmoliererms = std::numeric_limits<float>::lowest();
+
+    _ismerged = false;
+    _merge_bestdot = std::numeric_limits<float>::lowest();
+    _merge_bestdist = std::numeric_limits<float>::lowest();
+    _merge_vtx_x = std::numeric_limits<float>::lowest();
+    _merge_vtx_y = std::numeric_limits<float>::lowest();
+    _merge_vtx_z = std::numeric_limits<float>::lowest();
+    _merge_tk_ipfp = 0;
+
+    _shr_tkfit_2cm_dedx_Y = std::numeric_limits<float>::lowest();
+    _shr_tkfit_2cm_dedx_U = std::numeric_limits<float>::lowest();
+    _shr_tkfit_2cm_dedx_V = std::numeric_limits<float>::lowest();
+    _shr_tkfit_2cm_nhits_Y = 0;
+    _shr_tkfit_2cm_nhits_U = 0;
+    _shr_tkfit_2cm_nhits_V = 0;
 
     _shr_tkfit_gap05_dedx_Y = std::numeric_limits<float>::lowest();
     _shr_tkfit_gap05_dedx_U = std::numeric_limits<float>::lowest();
@@ -1177,14 +1285,33 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_tkfit_nhits_Y", &_shr_tkfit_nhits_Y, "shr_tkfit_nhits_Y/i");
     _tree->Branch("shr_tkfit_nhits_V", &_shr_tkfit_nhits_V, "shr_tkfit_nhits_V/i");
     _tree->Branch("shr_tkfit_nhits_U", &_shr_tkfit_nhits_U, "shr_tkfit_nhits_U/i");
-    _tree->Branch("shr_tkfit_nhits_U", &_shr_tkfit_nhits_U, "shr_tkfit_nhits_U/i");
+    _tree->Branch("shr_tkfit_dedx_Y_alt", &_shr_tkfit_dedx_Y_alt, "shr_tkfit_dedx_Y_alt/F");
+    _tree->Branch("shr_tkfit_dedx_V_alt", &_shr_tkfit_dedx_V_alt, "shr_tkfit_dedx_V_alt/F");
+    _tree->Branch("shr_tkfit_dedx_U_alt", &_shr_tkfit_dedx_U_alt, "shr_tkfit_dedx_U_alt/F");
+    _tree->Branch("shr_tkfit_nhits_Y_alt", &_shr_tkfit_nhits_Y_alt, "shr_tkfit_nhits_Y_alt/i");
+    _tree->Branch("shr_tkfit_nhits_V_alt", &_shr_tkfit_nhits_V_alt, "shr_tkfit_nhits_V_alt/i");
+    _tree->Branch("shr_tkfit_nhits_U_alt", &_shr_tkfit_nhits_U_alt, "shr_tkfit_nhits_U_alt/i");
     _tree->Branch("shr_tkfit_npoints", &_shr_tkfit_npoints, "shr_tkfit_npoints/i");
     _tree->Branch("shr_tkfit_npointsvalid", &_shr_tkfit_npointsvalid, "shr_tkfit_npointsvalid/i");
     _tree->Branch("shr_trkfitmedangle", &_shr_trkfitmedangle, "shr_trkfitmedangle/f");
     _tree->Branch("shrmoliereavg", &_shrmoliereavg, "shrmoliereavg/f");
     _tree->Branch("shrmoliererms", &_shrmoliererms, "shrmoliererms/f");
+    _tree->Branch("ismerged", &_ismerged, "ismerged/b");
+    _tree->Branch("merge_bestdot",&_merge_bestdot, "merge_bestdot/f");
+    _tree->Branch("merge_bestdist",&_merge_bestdist, "merge_bestdist/f");
+    _tree->Branch("merge_vtx_x", &_merge_vtx_x, "merge_vtx_x/f");
+    _tree->Branch("merge_vtx_y", &_merge_vtx_y, "merge_vtx_y/f");
+    _tree->Branch("merge_vtx_z", &_merge_vtx_z, "merge_vtx_z/f");
+    _tree->Branch("merge_tk_ipfp", &_merge_tk_ipfp, "merge_tk_ipfp/i");
+
     if (fSaveMoreDedx)
     {
+        _tree->Branch("shr_tkfit_2cm_dedx_Y", &_shr_tkfit_2cm_dedx_Y, "shr_tkfit_2cm_dedx_Y/F");
+        _tree->Branch("shr_tkfit_2cm_dedx_V", &_shr_tkfit_2cm_dedx_V, "shr_tkfit_2cm_dedx_V/F");
+        _tree->Branch("shr_tkfit_2cm_dedx_U", &_shr_tkfit_2cm_dedx_U, "shr_tkfit_2cm_dedx_U/F");
+        _tree->Branch("shr_tkfit_2cm_nhits_Y", &_shr_tkfit_2cm_nhits_Y, "shr_tkfit_2cm_nhits_Y/i");
+        _tree->Branch("shr_tkfit_2cm_nhits_V", &_shr_tkfit_2cm_nhits_V, "shr_tkfit_2cm_nhits_V/i");
+        _tree->Branch("shr_tkfit_2cm_nhits_U", &_shr_tkfit_2cm_nhits_U, "shr_tkfit_2cm_nhits_U/i");
         _tree->Branch("shr_tkfit_gap05_dedx_Y", &_shr_tkfit_gap05_dedx_Y, "shr_tkfit_gap05_dedx_Y/F");
         _tree->Branch("shr_tkfit_gap05_dedx_V", &_shr_tkfit_gap05_dedx_V, "shr_tkfit_gap05_dedx_V/F");
         _tree->Branch("shr_tkfit_gap05_dedx_U", &_shr_tkfit_gap05_dedx_U, "shr_tkfit_gap05_dedx_U/F");
@@ -1261,6 +1388,10 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shrclusfrac0", &_shrclusfrac0, "shrclusfrac0/f");
     _tree->Branch("shrclusfrac1", &_shrclusfrac1, "shrclusfrac1/f");
     _tree->Branch("shrclusfrac2", &_shrclusfrac2, "shrclusfrac2/f");
+
+    _tree->Branch("shrclusdir0", &_shrclusdir0, "shrclusdir0/f");
+    _tree->Branch("shrclusdir1", &_shrclusdir1, "shrclusdir1/f");
+    _tree->Branch("shrclusdir2", &_shrclusdir2, "shrclusdir2/f");
 
     _tree->Branch("shr_hits_tot", &_shr_hits_tot, "shr_hits_tot/i");
     _tree->Branch("shr_hits_y_tot", &_shr_hits_y_tot, "shr_hits_y_tot/i");
