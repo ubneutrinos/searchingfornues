@@ -15,8 +15,8 @@ project.py --xml bnb_dirt_cc0pinp.xml --stage run3_bnb_dirt_cc0pinp --clean
 project.py --xml bnb_dirt_cc0pinp.xml --stage run3_bnb_dirt_cc0pinp --submit
 
 # Additional samples
-project.py --xml bnb_ncpi0_cc0pinp.xml --stage bnb_ncpi0_cc0pinp --clean
-project.py --xml bnb_ncpi0_cc0pinp.xml --stage bnb_ncpi0_cc0pinp --submit
+project.py --xml bnb_ncpi0_cc0pinp.xml --stage run3_bnb_ncpi0_cc0pinp --clean
+project.py --xml bnb_ncpi0_cc0pinp.xml --stage run3_bnb_ncpi0_cc0pinp --submit
 project.py --xml bnb_elee_low_cc0pinp.xml --stage run3_bnb_elee_low_cc0pinp --clean
 project.py --xml bnb_elee_low_cc0pinp.xml --stage run3_bnb_elee_low_cc0pinp --submit
 project.py --xml bnb_elee_high_cc0pinp.xml --stage run3_bnb_elee_high_cc0pinp --clean
