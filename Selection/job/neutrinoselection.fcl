@@ -57,6 +57,7 @@ TrackAnalysisTool: {
     TRKproducer: "pandoraTrack"
     CALOproducer: "pandoraTrackcali"     # "pandoraKalmanShower"     #remove or leave empty of there are no track fits of the shower
     PIDproducer: "pandoraTrackcalipid" # "pandoraKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
+    mcsfitmu: @local::microboone_reco_data_producers.pandoraMCSMu.fitter
 }
 
 
@@ -257,10 +258,6 @@ CC0PiNpSelectionTool: {
     CALproducerTrkFit: "shrreco3dKalmanShowercali"
     TRKproducerTrkFit: "shrreco3dKalmanShower"
     mcsfitmu: @local::microboone_reco_data_producers.pandoraMCSMu.fitter
-}
-
-CCincSelectionTool: {
-    tool_type: "CCincSelection"
 }
 
 # run 3 neutrino selection [ w/ crt veto ]

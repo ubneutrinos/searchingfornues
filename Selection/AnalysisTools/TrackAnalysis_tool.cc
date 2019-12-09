@@ -17,6 +17,7 @@
 #include "../CommonDefs/SCECorrections.h"
 #include "../CommonDefs/Geometry.h"
 
+#include "larreco/RecoAlg/TrajectoryMCSFitter.h"
 #include "ubana/ParticleID/Algorithms/uB_PlaneIDBitsetHelperFunctions.h"
 #include "larreco/RecoAlg/TrackMomentumCalculator.h"
 
@@ -86,9 +87,9 @@ public:
      */
   void resetTTree(TTree *_tree) override;
 
-
 private:
-  trkf::TrackMomentumCalculator _trkmom;
+  const trkf::TrackMomentumCalculator _trkmom;
+  const trkf::TrajectoryMCSFitter _mcsfitter;
 
   TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
   TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
@@ -165,6 +166,7 @@ private:
   std::vector<float> _trk_llr_pid_score_v;
 
   std::vector<float> _trk_mcs_muon_mom_v;
+  std::vector<float> _trk_range_muon_mom_v;
   std::vector<float> _trk_energy_proton_v;
   std::vector<float> _trk_energy_muon_v;
   std::vector<float> _trk_calo_energy_u_v;
@@ -179,12 +181,12 @@ private:
 ///
 /// pset - Fcl parameters.
 ///
-TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p)
+TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p) : _mcsfitter(fhicl::Table<trkf::TrajectoryMCSFitter::Config>(p.get<fhicl::ParameterSet>("mcsfitmu")))
 {
 
-  fCALOproducer = p.get< art::InputTag > ("CALOproducer");
-  fPIDproducer  = p.get< art::InputTag > ("PIDproducer" );
-  fTRKproducer  = p.get< art::InputTag > ("TRKproducer" );
+  fCALOproducer = p.get<art::InputTag>("CALOproducer");
+  fPIDproducer = p.get<art::InputTag>("PIDproducer");
+  fTRKproducer = p.get<art::InputTag>("TRKproducer");
 
   llr_pid_calculator.set_dedx_binning(0, dedx_num_bins_pl_0, dedx_edges_pl_0);
   std::vector<size_t> parameters_num_bins_0 = {parameter_0_num_bins_pl_0, parameter_1_num_bins_pl_0};
@@ -228,16 +230,16 @@ void TrackAnalysis::analyzeEvent(art::Event const &e, bool fData)
   _evt = e.event();
   _sub = e.subRun();
   _run = e.run();
-  std::cout << "[TrackAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: "<< _evt << std::endl;
+  std::cout << "[TrackAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: " << _evt << std::endl;
 }
 
 void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
 {
-  searchingfornues::ProxyCaloColl_t const& calo_proxy = proxy::getCollection<std::vector<recob::Track> >(e, fTRKproducer,
-                          proxy::withAssociated<anab::Calorimetry>(fCALOproducer));
+  searchingfornues::ProxyCaloColl_t const &calo_proxy = proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer,
+                                                                                                        proxy::withAssociated<anab::Calorimetry>(fCALOproducer));
 
-  searchingfornues::ProxyPIDColl_t const& pid_proxy = proxy::getCollection<std::vector<recob::Track> >(e, fTRKproducer,
-                           proxy::withAssociated<anab::ParticleID>(fPIDproducer));
+  searchingfornues::ProxyPIDColl_t const &pid_proxy = proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer,
+                                                                                                      proxy::withAssociated<anab::ParticleID>(fPIDproducer));
 
   TVector3 nuvtx;
   for (auto pfp : slice_pfp_v)
@@ -278,10 +280,10 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 
       //collection plane
       float bragg_p = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 2),
-                                searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 2));
+                               searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 2));
 
       float bragg_mu = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 2),
-                                  searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 2));
+                                searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 2));
 
       float bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
 
@@ -303,7 +305,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 
       //u plane
       float bragg_p_u = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 0),
-                                searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 0));
+                                 searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 0));
 
       float bragg_mu_u = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 0),
                                   searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 0));
@@ -328,7 +330,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 
       //v plane
       float bragg_p_v = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 1),
-                                searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 1));
+                                 searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 1));
 
       float bragg_mu_v = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 1),
                                   searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 1));
@@ -352,11 +354,13 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       _trk_pida_v_v.push_back(pida_mean_v);
 
       // Kinetic energy using tabulated stopping power (GeV)
-      float mcs_momentum_muon = _trkmom.GetTrackMomentum(trk->Length(), 13);
+      float mcs_momentum_muon = _mcsfitter.fitMcs(trk->Trajectory(), 13).bestMomentum();
+      float range_momentum_muon = _trkmom.GetTrackMomentum(trk->Length(), 13);
       float energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), 2212), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
       float energy_muon = std::sqrt(std::pow(mcs_momentum_muon, 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
 
       _trk_mcs_muon_mom_v.push_back(mcs_momentum_muon);
+      _trk_range_muon_mom_v.push_back(range_momentum_muon);
       _trk_energy_proton_v.push_back(energy_proton);
       _trk_energy_muon_v.push_back(energy_muon);
       _trk_calo_energy_u_v.push_back(-1);
@@ -407,20 +411,20 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       _trk_llr_pid_score_v.push_back(0);
 
       auto calo_v = calo_proxy[trk.key()].get<anab::Calorimetry>();
-      for (auto const& calo : calo_v)
+      for (auto const &calo : calo_v)
       {
-        auto const& plane = calo->PlaneID().Plane;
-        auto const& dedx_values = calo->dEdx();
-        auto const& rr = calo->ResidualRange();
-        auto const& pitch = calo->TrkPitchVec();
+        auto const &plane = calo->PlaneID().Plane;
+        auto const &dedx_values = calo->dEdx();
+        auto const &rr = calo->ResidualRange();
+        auto const &pitch = calo->TrkPitchVec();
         std::vector<std::vector<float>> par_values;
         par_values.push_back(rr);
         par_values.push_back(pitch);
 
         float calo_energy = 0;
-        for (size_t i=0; i<dedx_values.size(); i++)
+        for (size_t i = 0; i < dedx_values.size(); i++)
         {
-          calo_energy += dedx_values[i]*pitch[i];
+          calo_energy += dedx_values[i] * pitch[i];
         }
 
         // std::vector<float> direction_x, direction_y, direction_z;
@@ -454,7 +458,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
         }
         _trk_llr_pid_v.back() += llr_pid;
       }
-      _trk_llr_pid_score_v.back() = atan(_trk_llr_pid_v.back()/100.)*2/3.14159266;
+      _trk_llr_pid_score_v.back() = atan(_trk_llr_pid_v.back() / 100.) * 2 / 3.14159266;
     }
     else
     {
@@ -522,6 +526,7 @@ void TrackAnalysis::fillDefault()
   _trk_pida_v_v.push_back(std::numeric_limits<float>::lowest());
 
   _trk_mcs_muon_mom_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_range_muon_mom_v.push_back(std::numeric_limits<float>::lowest());
   _trk_energy_proton_v.push_back(std::numeric_limits<float>::lowest());
   _trk_energy_muon_v.push_back(std::numeric_limits<float>::lowest());
   _trk_calo_energy_u_v.push_back(std::numeric_limits<float>::lowest());
@@ -591,6 +596,7 @@ void TrackAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("trk_len_v", "std::vector< float >", &_trk_len_v);
   _tree->Branch("trk_mcs_muon_mom_v", "std::vector< float >", &_trk_mcs_muon_mom_v);
+  _tree->Branch("trk_range_muon_mom_v", "std::vector< float >", &_trk_range_muon_mom_v);
   _tree->Branch("trk_energy_proton_v", "std::vector< float >", &_trk_energy_proton_v);
   _tree->Branch("trk_energy_muon_v", "std::vector< float >", &_trk_energy_muon_v);
   _tree->Branch("trk_calo_energy_u_v", "std::vector< float >", &_trk_calo_energy_u_v);
@@ -662,6 +668,7 @@ void TrackAnalysis::resetTTree(TTree *_tree)
   _trk_len_v.clear();
 
   _trk_mcs_muon_mom_v.clear();
+  _trk_range_muon_mom_v.clear();
   _trk_energy_muon_v.clear();
   _trk_energy_proton_v.clear();
   _trk_calo_energy_u_v.clear();
