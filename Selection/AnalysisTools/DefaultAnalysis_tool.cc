@@ -1110,6 +1110,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _interaction = neutrino.Mode();
   _nu_pdg = nu.PdgCode();
   _nu_e = nu.Trajectory().E(0);
+  _lep_e = neutrino.Lepton().E();
 
   _true_nu_vtx_t = nu.T();
   _true_nu_vtx_x = nu.Vx();
