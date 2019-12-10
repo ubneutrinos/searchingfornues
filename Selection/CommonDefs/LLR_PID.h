@@ -2,6 +2,7 @@
 #define LLRPID_H
 
 #include "LLRPID_proton_muon_lookup.h"
+#include "LLRPID_recalibration.h"
 
 namespace searchingfornues
 {
@@ -24,9 +25,20 @@ namespace searchingfornues
       parameters_bin_edges[plane] = bin_edges;
     }
 
+    void set_angle_binning(size_t plane, std::vector<size_t> num_bins, std::vector<std::vector<float>> bin_edges)
+    {
+      angles_num_bins[plane] = num_bins;
+      angles_bin_edges[plane] = bin_edges;
+    }
+
     void set_lookup_tables(size_t plane, std::vector<float> tables)
     {
       lookup_tables[plane] = tables;
+    }
+
+    void set_correction_tables(size_t plane, std::vector<float> tables)
+    {
+      correction_tables[plane] = tables;
     }
 
     size_t digitize(float value, std::vector<float> bin_edges)
@@ -73,10 +85,39 @@ namespace searchingfornues
       return lookup_index;
     }
 
+
+    // look-up in which angle bin we should be
+    size_t findLookupAngleIndex(float dedx_value, std::vector<float> angle_value, size_t plane)
+    {
+      //findParameterBin
+      std::vector<size_t> this_angles_bins;
+      for(size_t i=0; i<angle_value.size(); i++)
+      {
+        size_t aux_index = digitize(angle_value[i], angles_bin_edges[plane][i]);
+        this_angles_bins.push_back(aux_index);
+      }
+
+      //findLookUpRow
+      size_t lookup_index=0, accumulator_par_bins=1;
+      for(size_t i=this_angles_bins.size(); i-- > 0; )
+      {
+        lookup_index += (accumulator_par_bins * this_angles_bins[i]);
+        accumulator_par_bins *= angles_num_bins[plane][i];
+      }
+
+      return lookup_index;
+    }
+
     float LLR_one_hit_one_plane(float dedx_value, std::vector<float> par_value, size_t plane)
     {
       size_t index = findLookupIndex(dedx_value, par_value, plane);
       return lookup_tables[plane][index];
+    }
+
+    float Correction_hit_one_plane(float dedx_value, std::vector<float> angle_value, size_t plane)
+    {
+      size_t index = findLookupAngleIndex(dedx_value, angle_value, plane);
+      return correction_tables[plane][index];
     }
 
     float LLR_many_hits_one_plane(std::vector<float> dedx_values, std::vector<std::vector<float>> par_values, size_t plane)
@@ -101,7 +142,11 @@ namespace searchingfornues
     std::vector<size_t> parameters_num_bins[3];
     std::vector<std::vector<float>> parameters_bin_edges[3];
 
+    std::vector<size_t> angles_num_bins[3];
+    std::vector<std::vector<float>> angles_bin_edges[3];
+
     std::vector<float> lookup_tables[3];
+    std::vector<float> correction_tables[3];
   };
 }
 
