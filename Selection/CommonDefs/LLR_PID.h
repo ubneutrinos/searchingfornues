@@ -2,6 +2,7 @@
 #define LLRPID_H
 
 #include "LLRPID_proton_muon_lookup.h"
+#include "LLRPID_recalibration.h"
 
 namespace searchingfornues
 {
