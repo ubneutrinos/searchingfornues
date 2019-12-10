@@ -103,18 +103,30 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>set_dedx_binning</b> 
 <tr class="memitem:a9823701e9059de54a55cf8d180a3c42d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9823701e9059de54a55cf8d180a3c42d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>set_par_binning</b> (size_t plane, std::vector&lt; size_t &gt; num_bins, std::vector&lt; std::vector&lt; float &gt;&gt; bin_edges)</td></tr>
 <tr class="separator:a9823701e9059de54a55cf8d180a3c42d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46046b89a9e7c92b58eb162561c8acc9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a46046b89a9e7c92b58eb162561c8acc9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_angle_binning</b> (size_t plane, std::vector&lt; size_t &gt; num_bins, std::vector&lt; std::vector&lt; float &gt;&gt; bin_edges)</td></tr>
+<tr class="separator:a46046b89a9e7c92b58eb162561c8acc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8596d9156bc1771641c3245e9cd71a94"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8596d9156bc1771641c3245e9cd71a94"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>set_lookup_tables</b> (size_t plane, std::vector&lt; float &gt; tables)</td></tr>
 <tr class="separator:a8596d9156bc1771641c3245e9cd71a94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6abcb27f30a4e5086ecc60a0e944d9a0"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6abcb27f30a4e5086ecc60a0e944d9a0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_correction_tables</b> (size_t plane, std::vector&lt; float &gt; tables)</td></tr>
+<tr class="separator:a6abcb27f30a4e5086ecc60a0e944d9a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af605394ef38223a1600904c181828486"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af605394ef38223a1600904c181828486"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>digitize</b> (float value, std::vector&lt; float &gt; bin_edges)</td></tr>
 <tr class="separator:af605394ef38223a1600904c181828486"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a891182e0af5e60e975e86ea5d2973e11"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a891182e0af5e60e975e86ea5d2973e11"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>findLookupIndex</b> (float dedx_value, std::vector&lt; float &gt; par_value, size_t plane)</td></tr>
 <tr class="separator:a891182e0af5e60e975e86ea5d2973e11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad85ee79b59b2eb15b28ffcadb2618510"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad85ee79b59b2eb15b28ffcadb2618510"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>findLookupAngleIndex</b> (float dedx_value, std::vector&lt; float &gt; angle_value, size_t plane)</td></tr>
+<tr class="separator:ad85ee79b59b2eb15b28ffcadb2618510"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a615612fe3657b51e18bf1e514399363a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a615612fe3657b51e18bf1e514399363a"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>LLR_one_hit_one_plane</b> (float dedx_value, std::vector&lt; float &gt; par_value, size_t plane)</td></tr>
 <tr class="separator:a615612fe3657b51e18bf1e514399363a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b7e9cd794dd86cbe175830986716a11"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1b7e9cd794dd86cbe175830986716a11"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>Correction_hit_one_plane</b> (float dedx_value, std::vector&lt; float &gt; angle_value, size_t plane)</td></tr>
+<tr class="separator:a1b7e9cd794dd86cbe175830986716a11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8090da570daccff827fa96685b54f1e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac8090da570daccff827fa96685b54f1e"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>LLR_many_hits_one_plane</b> (std::vector&lt; float &gt; dedx_values, std::vector&lt; std::vector&lt; float &gt;&gt; par_values, size_t plane)</td></tr>
 <tr class="separator:ac8090da570daccff827fa96685b54f1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -133,9 +145,18 @@ std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><
 <tr class="memitem:a5fbeb32743ce2b01d944ceaf19086bb5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5fbeb32743ce2b01d944ceaf19086bb5"></a>
 std::vector&lt; std::vector&lt; float &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>parameters_bin_edges</b> [3]</td></tr>
 <tr class="separator:a5fbeb32743ce2b01d944ceaf19086bb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecb908df1325d9c73c05d6ad6877883b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aecb908df1325d9c73c05d6ad6877883b"></a>
+std::vector&lt; size_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>angles_num_bins</b> [3]</td></tr>
+<tr class="separator:aecb908df1325d9c73c05d6ad6877883b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a146de7098062abefcaeee0c181f94c38"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a146de7098062abefcaeee0c181f94c38"></a>
+std::vector&lt; std::vector&lt; float &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>angles_bin_edges</b> [3]</td></tr>
+<tr class="separator:a146de7098062abefcaeee0c181f94c38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33cb1049caaa153b9bc181983e89d7ea"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a33cb1049caaa153b9bc181983e89d7ea"></a>
 std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>lookup_tables</b> [3]</td></tr>
 <tr class="separator:a33cb1049caaa153b9bc181983e89d7ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f1bfbcd22dfd1b47d2bde8407eebc90"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2f1bfbcd22dfd1b47d2bde8407eebc90"></a>
+std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>correction_tables</b> [3]</td></tr>
+<tr class="separator:a2f1bfbcd22dfd1b47d2bde8407eebc90"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/<a class="el" href="LLR__PID_8h_source.html">LLR_PID.h</a></li>

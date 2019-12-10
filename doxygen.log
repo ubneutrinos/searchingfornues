@@ -1523,16 +1523,23 @@ Generati/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/GammaTruthStu
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/BacktrackingFuncs.h:138: warning: Member start_t (variable) of class searchingfornues::BtPart is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:16: warning: Member set_dedx_binning(size_t plane, size_t num_bins, std::vector< float > bin_edges) (function) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:22: warning: Member set_par_binning(size_t plane, std::vector< size_t > num_bins, std::vector< std::vector< float >> bin_edges) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:28: warning: Member set_lookup_tables(size_t plane, std::vector< float > tables) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:33: warning: Member digitize(float value, std::vector< float > bin_edges) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:47: warning: Member findLookupIndex(float dedx_value, std::vector< float > par_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:77: warning: Member LLR_one_hit_one_plane(float dedx_value, std::vector< float > par_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:83: warning: Member LLR_many_hits_one_plane(std::vector< float > dedx_values, std::vector< std::vector< float >> par_values, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:99: warning: Member dedx_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:100: warning: Member dedx_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:102: warning: Member parameters_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:103: warning: Member parameters_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:105: warning: Member lookup_tables[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:28: warning: Member set_angle_binning(size_t plane, std::vector< size_t > num_bins, std::vector< std::vector< float >> bin_edges) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:34: warning: Member set_lookup_tables(size_t plane, std::vector< float > tables) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:39: warning: Member set_correction_tables(size_t plane, std::vector< float > tables) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:44: warning: Member digitize(float value, std::vector< float > bin_edges) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:58: warning: Member findLookupIndex(float dedx_value, std::vector< float > par_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:90: warning: Member findLookupAngleIndex(float dedx_value, std::vector< float > angle_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:111: warning: Member LLR_one_hit_one_plane(float dedx_value, std::vector< float > par_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:117: warning: Member Correction_hit_one_plane(float dedx_value, std::vector< float > angle_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:123: warning: Member LLR_many_hits_one_plane(std::vector< float > dedx_values, std::vector< std::vector< float >> par_values, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:139: warning: Member dedx_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:140: warning: Member dedx_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:142: warning: Member parameters_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:143: warning: Member parameters_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:145: warning: Member angles_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:146: warning: Member angles_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:148: warning: Member lookup_tables[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:149: warning: Member correction_tables[3] (variable) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:85: warning: Member _trkmom (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:86: warning: Member mcsfitter (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:90: warning: Member proton (variable) of class selection::CC0piNpSelection is not documented.
@@ -1809,5 +1816,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 888/65536 hits=4725 misses=916
+lookup cache used 895/65536 hits=4762 misses=923
 finished...

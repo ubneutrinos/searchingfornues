@@ -9,7 +9,13 @@ void {\bfseries set\+\_\+dedx\+\_\+binning} (size\+\_\+t plane, size\+\_\+t num\
 void {\bfseries set\+\_\+par\+\_\+binning} (size\+\_\+t plane, std\+::vector$<$ size\+\_\+t $>$ num\+\_\+bins, std\+::vector$<$ std\+::vector$<$ float $>$$>$ bin\+\_\+edges)\hypertarget{classsearchingfornues_1_1LLRPID_a9823701e9059de54a55cf8d180a3c42d}{}\label{classsearchingfornues_1_1LLRPID_a9823701e9059de54a55cf8d180a3c42d}
 
 \item 
+void {\bfseries set\+\_\+angle\+\_\+binning} (size\+\_\+t plane, std\+::vector$<$ size\+\_\+t $>$ num\+\_\+bins, std\+::vector$<$ std\+::vector$<$ float $>$$>$ bin\+\_\+edges)\hypertarget{classsearchingfornues_1_1LLRPID_a46046b89a9e7c92b58eb162561c8acc9}{}\label{classsearchingfornues_1_1LLRPID_a46046b89a9e7c92b58eb162561c8acc9}
+
+\item 
 void {\bfseries set\+\_\+lookup\+\_\+tables} (size\+\_\+t plane, std\+::vector$<$ float $>$ tables)\hypertarget{classsearchingfornues_1_1LLRPID_a8596d9156bc1771641c3245e9cd71a94}{}\label{classsearchingfornues_1_1LLRPID_a8596d9156bc1771641c3245e9cd71a94}
+
+\item 
+void {\bfseries set\+\_\+correction\+\_\+tables} (size\+\_\+t plane, std\+::vector$<$ float $>$ tables)\hypertarget{classsearchingfornues_1_1LLRPID_a6abcb27f30a4e5086ecc60a0e944d9a0}{}\label{classsearchingfornues_1_1LLRPID_a6abcb27f30a4e5086ecc60a0e944d9a0}
 
 \item 
 size\+\_\+t {\bfseries digitize} (float value, std\+::vector$<$ float $>$ bin\+\_\+edges)\hypertarget{classsearchingfornues_1_1LLRPID_af605394ef38223a1600904c181828486}{}\label{classsearchingfornues_1_1LLRPID_af605394ef38223a1600904c181828486}
@@ -18,7 +24,13 @@ size\+\_\+t {\bfseries digitize} (float value, std\+::vector$<$ float $>$ bin\+\
 size\+\_\+t {\bfseries find\+Lookup\+Index} (float dedx\+\_\+value, std\+::vector$<$ float $>$ par\+\_\+value, size\+\_\+t plane)\hypertarget{classsearchingfornues_1_1LLRPID_a891182e0af5e60e975e86ea5d2973e11}{}\label{classsearchingfornues_1_1LLRPID_a891182e0af5e60e975e86ea5d2973e11}
 
 \item 
+size\+\_\+t {\bfseries find\+Lookup\+Angle\+Index} (float dedx\+\_\+value, std\+::vector$<$ float $>$ angle\+\_\+value, size\+\_\+t plane)\hypertarget{classsearchingfornues_1_1LLRPID_ad85ee79b59b2eb15b28ffcadb2618510}{}\label{classsearchingfornues_1_1LLRPID_ad85ee79b59b2eb15b28ffcadb2618510}
+
+\item 
 float {\bfseries L\+L\+R\+\_\+one\+\_\+hit\+\_\+one\+\_\+plane} (float dedx\+\_\+value, std\+::vector$<$ float $>$ par\+\_\+value, size\+\_\+t plane)\hypertarget{classsearchingfornues_1_1LLRPID_a615612fe3657b51e18bf1e514399363a}{}\label{classsearchingfornues_1_1LLRPID_a615612fe3657b51e18bf1e514399363a}
+
+\item 
+float {\bfseries Correction\+\_\+hit\+\_\+one\+\_\+plane} (float dedx\+\_\+value, std\+::vector$<$ float $>$ angle\+\_\+value, size\+\_\+t plane)\hypertarget{classsearchingfornues_1_1LLRPID_a1b7e9cd794dd86cbe175830986716a11}{}\label{classsearchingfornues_1_1LLRPID_a1b7e9cd794dd86cbe175830986716a11}
 
 \item 
 float {\bfseries L\+L\+R\+\_\+many\+\_\+hits\+\_\+one\+\_\+plane} (std\+::vector$<$ float $>$ dedx\+\_\+values, std\+::vector$<$ std\+::vector$<$ float $>$$>$ par\+\_\+values, size\+\_\+t plane)\hypertarget{classsearchingfornues_1_1LLRPID_ac8090da570daccff827fa96685b54f1e}{}\label{classsearchingfornues_1_1LLRPID_ac8090da570daccff827fa96685b54f1e}
@@ -39,7 +51,16 @@ std\+::vector$<$ size\+\_\+t $>$ {\bfseries parameters\+\_\+num\+\_\+bins} \mbox
 std\+::vector$<$ std\+::vector$<$ float $>$ $>$ {\bfseries parameters\+\_\+bin\+\_\+edges} \mbox{[}3\mbox{]}\hypertarget{classsearchingfornues_1_1LLRPID_a5fbeb32743ce2b01d944ceaf19086bb5}{}\label{classsearchingfornues_1_1LLRPID_a5fbeb32743ce2b01d944ceaf19086bb5}
 
 \item 
+std\+::vector$<$ size\+\_\+t $>$ {\bfseries angles\+\_\+num\+\_\+bins} \mbox{[}3\mbox{]}\hypertarget{classsearchingfornues_1_1LLRPID_aecb908df1325d9c73c05d6ad6877883b}{}\label{classsearchingfornues_1_1LLRPID_aecb908df1325d9c73c05d6ad6877883b}
+
+\item 
+std\+::vector$<$ std\+::vector$<$ float $>$ $>$ {\bfseries angles\+\_\+bin\+\_\+edges} \mbox{[}3\mbox{]}\hypertarget{classsearchingfornues_1_1LLRPID_a146de7098062abefcaeee0c181f94c38}{}\label{classsearchingfornues_1_1LLRPID_a146de7098062abefcaeee0c181f94c38}
+
+\item 
 std\+::vector$<$ float $>$ {\bfseries lookup\+\_\+tables} \mbox{[}3\mbox{]}\hypertarget{classsearchingfornues_1_1LLRPID_a33cb1049caaa153b9bc181983e89d7ea}{}\label{classsearchingfornues_1_1LLRPID_a33cb1049caaa153b9bc181983e89d7ea}
+
+\item 
+std\+::vector$<$ float $>$ {\bfseries correction\+\_\+tables} \mbox{[}3\mbox{]}\hypertarget{classsearchingfornues_1_1LLRPID_a2f1bfbcd22dfd1b47d2bde8407eebc90}{}\label{classsearchingfornues_1_1LLRPID_a2f1bfbcd22dfd1b47d2bde8407eebc90}
 
 \end{DoxyCompactItemize}
 
