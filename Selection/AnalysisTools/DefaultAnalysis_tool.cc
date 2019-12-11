@@ -316,6 +316,7 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
   std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << e.run() << ", SubRun: " << e.subRun() << ", Event: " << e.event() << std::endl;
 
+  /*
   // storing trigger result output for software trigger
   art::InputTag swtrig_tag("TriggerResults", "", "DataOverlayOptical");
   art::Handle<art::TriggerResults> swtrig_handle;
@@ -327,6 +328,7 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
     else
       _swtrig = 0;
   } // if software trigger run by this producer
+  */
 
   if (!fData)
   {
@@ -380,6 +382,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
 {
   ProxyClusColl_t const &clus_proxy = proxy::getCollection<std::vector<recob::Cluster>>(e, fCLSproducer,
                                                                                         proxy::withAssociated<recob::Hit>(fCLSproducer));
+
   // somehow proxies don't work for the slice-hit association, so go back to old assns
   art::ValidHandle<std::vector<recob::Slice>> inputSlice = e.getValidHandle<std::vector<recob::Slice>>(fSLCproducer);
   auto assocSliceHit = std::unique_ptr<art::FindManyP<recob::Hit>>(new art::FindManyP<recob::Hit>(inputSlice, e, fSLCproducer));
@@ -388,7 +391,8 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
   lar_pandora::LArPandoraHelper larpandora;
   lar_pandora::PFParticleVector pfparticles;
   lar_pandora::PFParticleMap particleMap;
-  larpandora.CollectPFParticles(e, "pandora", pfparticles);
+  //larpandora.CollectPFParticles(e, "pandora", pfparticles);
+  larpandora.CollectPFParticles(e, "wcphybridNu", pfparticles);
   larpandora.BuildPFParticleMap(pfparticles, particleMap);
 
   // load backtrack information

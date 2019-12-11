@@ -10,9 +10,12 @@ SecondShowerTaggerTool: {
 
 CalorimetryAnalysisTool: {
     tool_type: "CalorimetryAnalysis"
-    TRKproducer: "pandoraTrack"
-    CALOproducer: "pandoraTrackcali"
-    PIDproducer: "pandoraTrackcalipid"
+    #TRKproducer: "pandoraTrack"
+    #CALOproducer: "pandoraTrackcali"
+    #PIDproducer: "pandoraTrackcalipid"
+    TRKproducer: "pandora"
+    CALOproducer: "pandoracaliSCE"
+    PIDproducer: "pandoracalipidSCE"
 
     CLSproducer: "pandora"
     Hproducer: "gaushit"
@@ -91,12 +94,12 @@ Pi0TaggerTool: {
 DefaultAnalysisTool: {
     tool_type: "DefaultAnalysis"
     CRTVetoproducer: ""
-    CLSproducer: "pandora"
+    CLSproducer: "wcphybridNu"
     MCTproducer: "generator"
-    Hproducer: "gaushit"
-    BacktrackTag: "gaushitTruthMatch"
+    Hproducer: "wcphybridGaushit"
+    BacktrackTag: "wcphybridTruthMatch"
     MCRproducer: "mcreco"
-    SLCproducer: "pandora"
+    SLCproducer: "wcphybridNu"
     MCPproducer: "largeant"
     ProtonThreshold: 0.04 # GeV
     fidvolXstart: 5.
@@ -190,36 +193,47 @@ NuSelectionFilter:{
     Filter: true
     BDT_branch: ""
     BDT_cut: -1
-    PFPproducer: "pandora"
-    SHRproducer: "shrreco3d" #"pandora" #if you change this, remember to change also the inputs to ShowerAnalysisTool!
-    HITproducer: "pandora"
-    CLSproducer: "pandora"
-    SLCproducer: "pandora"
-    VTXproducer: "pandora"
-    PCAproducer: "pandora"
-    TRKproducer: "pandoraTrack"
+    #PFPproducer: "pandora"
+    #SHRproducer: "shrreco3d" #"pandora" #if you change this, remember to change also the inputs to ShowerAnalysisTool!
+    #HITproducer: "pandora"
+    #CLSproducer: "pandora"
+    #SLCproducer: "pandora"
+    #VTXproducer: "pandora"
+    #PCAproducer: "pandora"
+    #TRKproducer: "pandoraTrack"
+    #MCTproducer: "generator"
+
+    PFPproducer: "wcphybridNu"
+    SHRproducer: "wcphybridShower" #"pandora" #if you change this, remember to change also the inputs to ShowerAnalysisTool!
+    HITproducer: "wcphybridNu"
+    CLSproducer: "wcphybridNu"
+    SLCproducer: "wcphybridNu"
+    VTXproducer: "wcphybridNu"
+    PCAproducer: "wcphybridShower"
+    TRKproducer: "wcphybridTrack"
     MCTproducer: "generator"
+
     SelectionTool: {
         tool_type: "EmptySelection"
     }
     AnalysisTools: {
         default: @local::DefaultAnalysisTool
         # you can add more analysis tools here
-        slicepurcompl: @local::SlicePurComplTool
-        containment:   @local::ContainmentAnalysis
-        shower:        @local::ShowerAnalysisTool
-        showerstart:        @local::ShowerStartPointTool
-        track:         @local::TrackAnalysisTool
+        #slicepurcompl: @local::SlicePurComplTool
+        #containment:   @local::ContainmentAnalysis
+        #shower:        @local::ShowerAnalysisTool
+        #showerstart:        @local::ShowerStartPointTool
+        #track:         @local::TrackAnalysisTool
         #vertex:         @local::VertexAnalysisTool
         #calorimetry:   @local::CalorimetryAnalysisTool
-        pmtnoise:      @local::PMTNoiseTool
-        pi0truth:      @local::Pi0TruthAnalysisTool
-        cosmicip:      @local::CosmicIPTool
-        nuenergy:      @local::NeutrinoEnergyTool
-        flashmatchid:  @local::FlashMatchingTool
-        pi0tagger:     @local::Pi0TaggerTool
-        zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
-        secondshower:  @local::SecondShowerTaggerTool
+        #pmtnoise:      @local::PMTNoiseTool
+        #pi0truth:      @local::Pi0TruthAnalysisTool
+        #cosmicip:      @local::CosmicIPTool
+        #nuenergy:      @local::NeutrinoEnergyTool
+        #flashmatchid:  @local::FlashMatchingTool
+        #pi0tagger:     @local::Pi0TaggerTool
+        #zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
+        #secondshower:  @local::SecondShowerTaggerTool
     }
 }
 
