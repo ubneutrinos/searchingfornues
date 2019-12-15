@@ -107,57 +107,63 @@ namespace analysis
         _subRun = evt.subRun();
         _evt = evt.event();
         
+        std::vector<art::InputTag> vecTag;
         art::InputTag eventweight_tag("eventweight");
-        art::Handle<std::vector<evwgh::MCEventWeight>> eventweights_handle;
-        evt.getByLabel(eventweight_tag, eventweights_handle);
+        art::InputTag eventweight_spline_tag("eventweightSplines");
+        vecTag.push_back(eventweight_tag);
+        vecTag.push_back(eventweight_spline_tag);
 
-        if(eventweights_handle.isValid()){
-            std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
-            art::fill_ptr_vector(eventweights, eventweights_handle);
-            std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
-            
-            if(evtwgt_map.find("splines_general_Spline") != evtwgt_map.end()) _weightSpline = evtwgt_map.find("splines_general_Spline")->second[0];
-            evtwgt_map.erase("splines_general_Spline");
-            
-            if(evtwgt_map.find("TunedCentralValue_Genie") != evtwgt_map.end()) _weightTune = evtwgt_map.find("TunedCentralValue_Genie")->second[0];
-            evtwgt_map.erase("TunedCentralValue_Genie");
+        for(auto& thisTag : vecTag){
+            art::Handle<std::vector<evwgh::MCEventWeight>> eventweights_handle;
+            evt.getByLabel(thisTag, eventweights_handle);
 
-            _weightSplineTimesTune = _weightSpline * _weightTune;
-            
-            _mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
-            
-            if(_createFluxBranch || _createGenieBranch || _createReintBranch){
-                bool isFirstVector = true;
+            if(eventweights_handle.isValid()){
+                std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
+                art::fill_ptr_vector(eventweights, eventweights_handle);
+                std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
+                
+                if(evtwgt_map.find("splines_general_Spline") != evtwgt_map.end()) _weightSpline = evtwgt_map.find("splines_general_Spline")->second[0];
+                evtwgt_map.erase("splines_general_Spline");
+                
+                if(evtwgt_map.find("TunedCentralValue_Genie") != evtwgt_map.end()) _weightTune = evtwgt_map.find("TunedCentralValue_Genie")->second[0];
+                evtwgt_map.erase("TunedCentralValue_Genie");
+                
+                if(_weightSpline != -1 && _weightTune != -1) _weightSplineTimesTune = _weightSpline * _weightTune;
+                
+                _mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
+                
+                if(_createFluxBranch || _createGenieBranch || _createReintBranch){
+                    bool isFirstVector = true;
 
-                for(std::map<std::string, std::vector<double>>::iterator it=evtwgt_map.begin(); it!=evtwgt_map.end(); ++it){
-                    std::string keyname = it->first;
-                    if(keyname.find("horncurrent") != std::string::npos ||
-                        keyname.find("expskin") != std::string::npos ||
-                        keyname.find("piplus") != std::string::npos ||
-                        keyname.find("piminus") != std::string::npos ||
-                        keyname.find("kplus") != std::string::npos ||
-                        keyname.find("kzero") != std::string::npos ||
-                        keyname.find("kminus") != std::string::npos ||
-                        keyname.find("pioninexsec") != std::string::npos ||
-                        keyname.find("pionqexsec") != std::string::npos ||
-                        keyname.find("piontotxsec") != std::string::npos ||
-                        keyname.find("nucleontotxsec") != std::string::npos ||
-                        keyname.find("nucleonqexsec") != std::string::npos ||
-                        keyname.find("nucleoninexsec") != std::string::npos){
-                        if(isFirstVector){
-                            _vecWeightFlux = it->second;
-                            isFirstVector = false;
-                        }
-                        else{
-                            for(unsigned int i = 0; i < it->second.size(); ++i){
-                                _vecWeightFlux[i] *= it->second[i];
+                    for(std::map<std::string, std::vector<double>>::iterator it=evtwgt_map.begin(); it!=evtwgt_map.end(); ++it){
+                        std::string keyname = it->first;
+                        if(keyname.find("horncurrent") != std::string::npos ||
+                            keyname.find("expskin") != std::string::npos ||
+                            keyname.find("piplus") != std::string::npos ||
+                            keyname.find("piminus") != std::string::npos ||
+                            keyname.find("kplus") != std::string::npos ||
+                            keyname.find("kzero") != std::string::npos ||
+                            keyname.find("kminus") != std::string::npos ||
+                            keyname.find("pioninexsec") != std::string::npos ||
+                            keyname.find("pionqexsec") != std::string::npos ||
+                            keyname.find("piontotxsec") != std::string::npos ||
+                            keyname.find("nucleontotxsec") != std::string::npos ||
+                            keyname.find("nucleonqexsec") != std::string::npos ||
+                            keyname.find("nucleoninexsec") != std::string::npos){
+                            if(isFirstVector){
+                                _vecWeightFlux = it->second;
+                                isFirstVector = false;
+                            }
+                            else{
+                                for(unsigned int i = 0; i < it->second.size(); ++i){
+                                    _vecWeightFlux[i] *= it->second[i];
+                                }
                             }
                         }
                     }
                 }
             }
         }
-
         if(_createDedicatedTree) _weightstree->Fill();
     }
     
