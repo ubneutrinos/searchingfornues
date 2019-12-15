@@ -105,6 +105,8 @@ private:
     bool fSaveMoreDedx;            // save more track fit dedx definitions (currently with 0.5 and 1.0 cm gap at start)
     bool fLocaldEdx;               // use local dE/dx from calorimetry (true) or globally convert Q -> MeV (false)
 
+  std::vector<float> fADCtoE; // vector of ADC to # of e- conversion [to be taken from production reco2 fhicl files]
+
     art::InputTag fCLSproducer;
     art::InputTag fPIDproducer;
     art::InputTag fTRKproducer;
@@ -349,6 +351,8 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
     fMCRproducer = pset.get<art::InputTag>("MCRproducer", "mcreco");
     fBacktrackTag = pset.get<art::InputTag>("BacktrackTag", "gaushitTruthMatch");
     fMCPproducer = pset.get<art::InputTag>("MCPproducer", "largeant");
+
+    fADCtoE = pset.get<std::vector<float>>("ADCtoE");
 
     fFidvolZstart = pset.get<float>("FidvolZstart", 10);
     fFidvolZend = pset.get<float>("FidvolZend", 50);
@@ -758,9 +762,17 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         int caloNpts;   // number of track-fitter dE/dx hits
                         float calodEdxXYZ; // dEdx computed for track-fitter [with XYZ and not RR]
                         int caloNptsXYZ;   // number of track-fitter dE/dx hits [with XYZ and not RR]
+                        float calodEdx2cm; // dEdx computed for track-fitter only using first 2 cm
+                        int caloNpts2cm;   // number of track-fitter dE/dx hits only using first 2 cm
+                        float calodEdxgap05; // dEdx computed for track-fitter with 5 mm gap @ vtx
+                        int caloNptsgap05;   // number of track-fitter with 5 mm gap @ vtx
+                        float calodEdxgap10; // dEdx computed for track-fitter with 10 mm gap @ vtx
+                        int caloNptsgap10;   // number of track-fitter with 10 mm gap @ vtx
 
                         for (const auto &tkcalo : tkcalos)
                         {
+
+			  auto plane = tkcalo->PlaneID().Plane;
 
                             if (tkcalo->ResidualRange().size() == 0)
                                 continue;
@@ -771,86 +783,65 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                             searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx,
 							      shr_tkfit_start_sce[0],shr_tkfit_start_sce[1],shr_tkfit_start_sce[2],
 							      calodEdxXYZ, caloNptsXYZ);
+                            // use only first 2 cm
+                            searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, 2.0, fLocaldEdx, calodEdx2cm, caloNpts2cm);
+                            // Gap 0.5 cm
+                            searchingfornues::GetTrackFitdEdx(tkcalo, 0.5, fdEdxcmLen, fLocaldEdx, calodEdxgap05, caloNptsgap05);
+                            // Gap 1.0 cm
+                            searchingfornues::GetTrackFitdEdx(tkcalo, 1.0, fdEdxcmLen, fLocaldEdx, calodEdxgap10, caloNptsgap10);
+
+			    calodEdx = searchingfornues::GetdEdxfromdQdx(calodEdx,_shr_start_x, _shr_start_y, _shr_start_z, 2.1, fADCtoE[plane] );
+			    calodEdxXYZ = searchingfornues::GetdEdxfromdQdx(calodEdxXYZ,_shr_start_x, _shr_start_y, _shr_start_z, 2.1, fADCtoE[plane] );
+			    calodEdx2cm = searchingfornues::GetdEdxfromdQdx(calodEdx2cm, _shr_start_x, _shr_start_y, _shr_start_z, 2.1, fADCtoE[plane] );
+			    calodEdxgap05 = searchingfornues::GetdEdxfromdQdx(calodEdxgap05, _shr_start_x, _shr_start_y, _shr_start_z, 2.1, fADCtoE[plane] );
+			    calodEdxgap10 = searchingfornues::GetdEdxfromdQdx(calodEdxgap10, _shr_start_x, _shr_start_y, _shr_start_z, 2.1, fADCtoE[plane] );
 			    
-                            if (tkcalo->PlaneID().Plane == 2)
+                            if (plane == 2)
                             {
                                 _shr_tkfit_dedx_Y = calodEdx;
                                 _shr_tkfit_nhits_Y = caloNpts;
                                 _shr_tkfit_dedx_Y_alt = calodEdxXYZ;
                                 _shr_tkfit_nhits_Y_alt = caloNptsXYZ;
+				if (fSaveMoreDedx == true) {
+				  _shr_tkfit_2cm_dedx_Y = calodEdx2cm;
+				  _shr_tkfit_2cm_nhits_Y = caloNpts2cm;
+				  _shr_tkfit_gap05_dedx_Y = calodEdxgap05;
+				  _shr_tkfit_gap05_nhits_Y = caloNptsgap05;
+				  _shr_tkfit_gap10_dedx_Y = calodEdxgap10;
+				  _shr_tkfit_gap10_nhits_Y = caloNptsgap10;
+				}
                             }
-                            else if (tkcalo->PlaneID().Plane == 1)
+                            else if (plane == 1)
                             {
                                 _shr_tkfit_dedx_V = calodEdx;
                                 _shr_tkfit_nhits_V = caloNpts;
                                 _shr_tkfit_dedx_V_alt = calodEdxXYZ;
                                 _shr_tkfit_nhits_V_alt = caloNptsXYZ;
+				if (fSaveMoreDedx == true) {
+				  _shr_tkfit_2cm_dedx_V = calodEdx2cm;
+				  _shr_tkfit_2cm_nhits_V = caloNpts2cm;
+				  _shr_tkfit_gap05_dedx_V = calodEdxgap05;
+				  _shr_tkfit_gap05_nhits_V = caloNptsgap05;
+				  _shr_tkfit_gap10_dedx_V = calodEdxgap10;
+				  _shr_tkfit_gap10_nhits_V = caloNptsgap10;
+				}
                             }
-                            else if (tkcalo->PlaneID().Plane == 0)
+                            else if (plane == 0)
                             {
                                 _shr_tkfit_dedx_U = calodEdx;
                                 _shr_tkfit_nhits_U = caloNpts;
                                 _shr_tkfit_dedx_U_alt = calodEdxXYZ;
                                 _shr_tkfit_nhits_U_alt = caloNptsXYZ;
+				if (fSaveMoreDedx == true) {
+				  _shr_tkfit_2cm_dedx_U = calodEdx2cm;
+				  _shr_tkfit_2cm_nhits_U = caloNpts2cm;
+                                _shr_tkfit_gap05_dedx_U = calodEdxgap05;
+                                _shr_tkfit_gap05_nhits_U = caloNptsgap05;
+                                _shr_tkfit_gap10_dedx_U = calodEdxgap10;
+                                _shr_tkfit_gap10_nhits_U = caloNptsgap10;
+				}
                             }
-
-                            if (fSaveMoreDedx == false)
-                                continue;
-
-                            // use only first 2 cm
-                            searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, 2.0, fLocaldEdx, calodEdx, caloNpts);
-                            if (tkcalo->PlaneID().Plane == 2)
-                            {
-                                _shr_tkfit_2cm_dedx_Y = calodEdx;
-                                _shr_tkfit_2cm_nhits_Y = caloNpts;
-                            }
-                            else if (tkcalo->PlaneID().Plane == 1)
-                            {
-                                _shr_tkfit_2cm_dedx_V = calodEdx;
-                                _shr_tkfit_2cm_nhits_V = caloNpts;
-                            }
-                            else if (tkcalo->PlaneID().Plane == 0)
-                            {
-                                _shr_tkfit_2cm_dedx_U = calodEdx;
-                                _shr_tkfit_2cm_nhits_U = caloNpts;
-                            }
-
-                            // Gap 0.5 cm
-                            searchingfornues::GetTrackFitdEdx(tkcalo, 0.5, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
-                            if (tkcalo->PlaneID().Plane == 2)
-                            {
-                                _shr_tkfit_gap05_dedx_Y = calodEdx;
-                                _shr_tkfit_gap05_nhits_Y = caloNpts;
-                            }
-                            else if (tkcalo->PlaneID().Plane == 1)
-                            {
-                                _shr_tkfit_gap05_dedx_V = calodEdx;
-                                _shr_tkfit_gap05_nhits_V = caloNpts;
-                            }
-                            else if (tkcalo->PlaneID().Plane == 0)
-                            {
-                                _shr_tkfit_gap05_dedx_U = calodEdx;
-                                _shr_tkfit_gap05_nhits_U = caloNpts;
-                            }
-
-                            // Gap 1.0 cm
-                            searchingfornues::GetTrackFitdEdx(tkcalo, 1.0, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
-                            if (tkcalo->PlaneID().Plane == 2)
-                            {
-                                _shr_tkfit_gap10_dedx_Y = calodEdx;
-                                _shr_tkfit_gap10_nhits_Y = caloNpts;
-                            }
-                            else if (tkcalo->PlaneID().Plane == 1)
-                            {
-                                _shr_tkfit_gap10_dedx_V = calodEdx;
-                                _shr_tkfit_gap10_nhits_V = caloNpts;
-                            }
-                            else if (tkcalo->PlaneID().Plane == 0)
-                            {
-                                _shr_tkfit_gap10_dedx_U = calodEdx;
-                                _shr_tkfit_gap10_nhits_U = caloNpts;
-                            }
-
+			    
                         } // for all calo objects
                     }
                 }

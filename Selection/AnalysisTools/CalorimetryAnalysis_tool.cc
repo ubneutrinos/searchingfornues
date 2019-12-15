@@ -95,7 +95,8 @@ public:
   std::vector<float> GetdEdxfromdQdx(const std::vector<float>& dqdx_v, 
 				     const std::vector<float>& x_v,
 				     const std::vector<float>& y_v,
-				     const std::vector<float>& z_v);
+				     const std::vector<float>& z_v,
+				     const int plane);
 
 private:
 
@@ -133,6 +134,8 @@ private:
   bool fBacktrack; // do the backtracking needed for this module?
   
   bool fShrFit; // use shower track-fitter info?
+
+  std::vector<float> fADCtoE; // vector of ADC to # of e- conversion [to be taken from production reco2 fhicl files]
   
   bool fGetCaloID; // get the index of the calorimetry object manually. Needs to be true unless object produced by Pandora hierarchy
   // (This is at least what I foudn empirically)
@@ -304,6 +307,8 @@ CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p)
   fBacktrack = p.get<bool>("Backtrack", true);
   fShrFit    = p.get<bool>("ShrFit"   , false);
   fGetCaloID = p.get<bool>("GetCaloID", false);
+
+  fADCtoE = p.get<std::vector<float>>("ADCtoE");
 
   art::ServiceHandle<art::TFileService> tfs;
 
@@ -1068,7 +1073,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _dir_y_u.push_back(_dir_u[1]);
         _dir_z_u.push_back(_dir_u[2]);
       }
-      if (fShrFit) { _dedx_u = GetdEdxfromdQdx(_dqdx_u,_x_u,_y_u,_z_u); }
+      if (fShrFit) { _dedx_u = GetdEdxfromdQdx(_dqdx_u,_x_u,_y_u,_z_u, plane); }
     }
     else if (plane == 1)
     {
@@ -1088,7 +1093,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _dir_y_v.push_back(_dir_v[1]);
         _dir_z_v.push_back(_dir_v[2]);
       }
-      if (fShrFit) { _dedx_v = GetdEdxfromdQdx(_dqdx_v,_x_v,_y_v,_z_v); }
+      if (fShrFit) { _dedx_v = GetdEdxfromdQdx(_dqdx_v,_x_v,_y_v,_z_v, plane); }
     }
     else if (plane == 2) //collection
     {
@@ -1108,7 +1113,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _dir_y_y.push_back(_dir_y[1]);
         _dir_z_y.push_back(_dir_y[2]);
       }
-      if (fShrFit) { _dedx_y = GetdEdxfromdQdx(_dqdx_y,_x_y,_y_y,_z_y); }
+      if (fShrFit) { _dedx_y = GetdEdxfromdQdx(_dqdx_y,_x_y,_y_y,_z_y, plane); }
     }
   }
 
@@ -1118,7 +1123,8 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
 std::vector<float> CalorimetryAnalysis::GetdEdxfromdQdx(const std::vector<float>& dqdx_v,
 							const std::vector<float>& x_v,
 							const std::vector<float>& y_v,
-							const std::vector<float>& z_v) {
+							const std::vector<float>& z_v,
+							const int plane) {
 
   std::vector<float> dedx_v;
 
@@ -1129,13 +1135,8 @@ std::vector<float> CalorimetryAnalysis::GetdEdxfromdQdx(const std::vector<float>
 
   for (size_t i=0; i < dqdx_v.size(); i++) {
 
-    auto efield = searchingfornues::GetLocalEFieldMag(x_v[i],y_v[i],z_v[i]); // kV / cm
+    dedx_v.push_back( searchingfornues::GetdEdxfromdQdx(dqdx_v[i], x_v[i], y_v[i], z_v[i], 2.1, fADCtoE[plane]) );
     
-    float B = 0.212 / (1.383 * efield);
-    float r = log( 2.1 * B + 0.93 ) / (2.1 * B);
-    //std::cout << "DAVIDC R factor is " << r << std::endl;
-    dedx_v.push_back( dqdx_v[i] * 240. * (23.6/1e6) / r ); // this factor is what dQ/dx must be divided by to get dE/dx (with calibration factors too!)
-    //std::cout << "DAVIDC dQdx : " << dqdx_v[i] << " -> dEdx : " << dedx_v[dedx_v.size()-1] << std::endl;
   }// for all points in track
   
   return dedx_v;

@@ -21,6 +21,7 @@ CalorimetryAnalysisTool: {
     MCRproducer: "mcreco"
     MCPproducer: "largeant"
     GetCaloID: false
+    ADCtoE:  @local::microboone_reco_data_producers.pandoracalo.CaloAlg.CalAreaConstants
 }
 
 VertexAnalysisTool: {
@@ -86,6 +87,7 @@ Pi0TaggerTool: {
     trkshrscore: 0.8
     TRKproducer: "shrreco3dKalmanShower"     # "pandoraKalmanShower"     #remove or leave empty of there are no track fits of the shower
     CALproducer: "shrreco3dKalmanShowercali" # "pandoraKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
+    ADCtoE: @local::microboone_reco_data_producers.shrreco3d.ADCtoE
 }
 
 DefaultAnalysisTool: {
@@ -210,7 +212,7 @@ NuSelectionFilter:{
         shower:        @local::ShowerAnalysisTool
         showerstart:        @local::ShowerStartPointTool
         track:         @local::TrackAnalysisTool
-        #vertex:         @local::VertexAnalysisTool
+        vertex:         @local::VertexAnalysisTool
         #calorimetry:   @local::CalorimetryAnalysisTool
         pmtnoise:      @local::PMTNoiseTool
         pi0truth:      @local::Pi0TruthAnalysisTool
@@ -258,6 +260,9 @@ CC0PiNpSelectionTool: {
     CALproducerTrkFit: "shrreco3dKalmanShowercali"
     TRKproducerTrkFit: "shrreco3dKalmanShower"
     mcsfitmu: @local::microboone_reco_data_producers.pandoraMCSMu.fitter
+    LocaldEdx: false # use dQdx and convert to dEdx with fixed conversion
+    # ADC to E conversion taken from reco2 production fhicl file
+    ADCtoE: @local::microboone_reco_data_producers.shrreco3d.ADCtoE
 }
 
 # run 3 neutrino selection [ w/ crt veto ]

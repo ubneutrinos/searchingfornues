@@ -131,6 +131,26 @@ namespace searchingfornues
     return E_field;
   }
 
+  /**
+   * @brief return dE/dx from recomb. mod box model given dQ/dx
+   * @input dqdx in ADC/cm
+   * @input x/y/z coordinates to be able to calculate local field
+   * @input dedxfixed (for what value of dE/dx should the recomb. factor be computed
+   * @input adctoe to convert to e- (different for every plane)
+   * @return dedx
+   */
+  float GetdEdxfromdQdx(const float dqdx, const float x, const float y, const float z,
+			const float dedxfixed, const float adctoe) {
+
+    auto efield = searchingfornues::GetLocalEFieldMag(x,y,z); // kV / cm
+    
+    float B = 0.212 / (1.383 * efield);
+    float r = log( dedxfixed * B + 0.93 ) / (dedxfixed * B);
+    return dqdx * adctoe * (23.6/1e6) / r; 
+  }
+
+
+
 } // namespace searchingfornues
 
 #endif

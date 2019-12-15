@@ -7,6 +7,7 @@
 #include "nusimdata/SimulationBase/MCTruth.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "../CommonDefs/TrackFitterFunctions.h"
+#include "../CommonDefs/SCECorrections.h"
 
 namespace analysis
 {
@@ -117,6 +118,8 @@ namespace analysis
     float _pi0_dotmin;      // maximum dot product between shower direction and vtx->start vector
     float _pi0_trkshrscore; // score on which to cut for track/shower classification
 
+  std::vector<float> fADCtoE; // vector of ADC to # of e- conversion [to be taken from production reco2 fhicl files]
+
     art::InputTag fTRKproducer;
     art::InputTag fCALproducer;
     
@@ -147,6 +150,8 @@ namespace analysis
     _pi0_dotmin      = pset.get< float > ("dotmin"     );
     _pi0_dmin        = pset.get< float > ("dmin"       );
     _pi0_trkshrscore = pset.get< float > ("trkshrscore");
+
+    fADCtoE = pset.get<std::vector<float>>("ADCtoE");
 
     fTRKproducer = pset.get< art::InputTag > ("TRKproducer", "");
     fCALproducer = pset.get< art::InputTag > ("CALproducer", "");
@@ -315,12 +320,18 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
 	  int nhits = 0;
 
 	  for (const auto& tkcalo : trkcalos) {
-	    if (tkcalo->PlaneID().Plane == 0) 
+	    if (tkcalo->PlaneID().Plane == 0) {
 	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx1_fit_U, nhits);
-	    if (tkcalo->PlaneID().Plane == 1) 
+	      _pi0_dedx1_fit_U = searchingfornues::GetdEdxfromdQdx(_pi0_dedx1_fit_U, shr1->ShowerStart()[0], shr1->ShowerStart()[2], shr1->ShowerStart()[2], 2.1, fADCtoE[0] );
+	    }
+	    if (tkcalo->PlaneID().Plane == 1) {
 	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx1_fit_V, nhits);
-	    if (tkcalo->PlaneID().Plane == 2) 
+	      _pi0_dedx1_fit_V = searchingfornues::GetdEdxfromdQdx(_pi0_dedx1_fit_V, shr1->ShowerStart()[0], shr1->ShowerStart()[2], shr1->ShowerStart()[2], 2.1, fADCtoE[1] );
+	    }
+	    if (tkcalo->PlaneID().Plane == 2) {
 	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx1_fit_Y, nhits);
+	      _pi0_dedx1_fit_Y = searchingfornues::GetdEdxfromdQdx(_pi0_dedx1_fit_Y, shr1->ShowerStart()[0], shr1->ShowerStart()[2], shr1->ShowerStart()[2], 2.1, fADCtoE[2] );
+	    }
 
 	  }// for all calorimetry objects
 	}// if track matches shower index -> this is the track-fitted to the shower
@@ -348,12 +359,19 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
 	  int nhits = 0;
 	  
 	  for (const auto& tkcalo : trkcalos) {
-	    if (tkcalo->PlaneID().Plane == 0) 
+
+	    if (tkcalo->PlaneID().Plane == 0) {
 	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx2_fit_U, nhits);
-	    if (tkcalo->PlaneID().Plane == 1)
+	      _pi0_dedx2_fit_U = searchingfornues::GetdEdxfromdQdx(_pi0_dedx2_fit_U, shr2->ShowerStart()[0], shr2->ShowerStart()[2], shr2->ShowerStart()[2], 2.1, fADCtoE[0] );
+	    }
+	    if (tkcalo->PlaneID().Plane == 1) {
 	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx2_fit_V, nhits);
-	    if (tkcalo->PlaneID().Plane == 2) 
+	      _pi0_dedx2_fit_V = searchingfornues::GetdEdxfromdQdx(_pi0_dedx2_fit_V, shr2->ShowerStart()[0], shr2->ShowerStart()[2], shr2->ShowerStart()[2], 2.1, fADCtoE[1] );
+	    }
+	    if (tkcalo->PlaneID().Plane == 2) {
 	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx2_fit_Y, nhits);
+	      _pi0_dedx2_fit_Y = searchingfornues::GetdEdxfromdQdx(_pi0_dedx2_fit_Y, shr2->ShowerStart()[0], shr2->ShowerStart()[2], shr2->ShowerStart()[2], 2.1, fADCtoE[2] );
+	    }
 
 	  }// for all calorimetry objects
 	  
