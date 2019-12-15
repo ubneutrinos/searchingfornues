@@ -2,7 +2,7 @@ var searchData=
 [
   ['getbeamflash',['GetBeamFlash',['../classflashmatch_1_1FlashMatchingTool.html#a55eb0441a37240344fc893857aabda28',1,'flashmatch::FlashMatchingTool']]],
   ['getchargeweightedcenter',['GetChargeWeightedCenter',['../classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate.html#ad7fc44d86307d95f09e6c0a4b9803f13',1,'flashmatch::FlashMatchingTool::SliceCandidate']]],
-  ['getdedxfromdqdx',['GetdEdxfromdQdx',['../classanalysis_1_1CalorimetryAnalysis.html#a7b067721e72e1d26e570b4527d6267c0',1,'analysis::CalorimetryAnalysis']]],
+  ['getdedxfromdqdx',['GetdEdxfromdQdx',['../classanalysis_1_1CalorimetryAnalysis.html#ab72088b2e18ac6bc69ac2f4cda07b1a9',1,'analysis::CalorimetryAnalysis']]],
   ['getdepositionvector',['GetDepositionVector',['../classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate.html#a86c84dbe03676ae04a64a45e7c449b0e',1,'flashmatch::FlashMatchingTool::SliceCandidate']]],
   ['getflashcandidates',['GetFlashCandidates',['../classflashmatch_1_1FlashMatchingTool.html#a68229bfc94d94e91513fefe60a3b43d6',1,'flashmatch::FlashMatchingTool']]],
   ['getflashmatchscore',['GetFlashMatchScore',['../classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate.html#a7c1f2eedf7f2fc763cd7d738a5ac32af',1,'flashmatch::FlashMatchingTool::SliceCandidate']]],
