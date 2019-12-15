@@ -15,6 +15,7 @@ EventWeightTreeTool: {
     createSplineTimesTuneBranch: true
 }
 
+#For Nicolo
 calotemp.p1: @local::physics.p1
 
 #Systematic weights
@@ -23,9 +24,9 @@ physics.producers.eventweight:        @local::microboone_eventweight
 physics.p1: [ eventweight, @sequence::physics.p1] #Uncomment line to run systematic weights, or comment line to not run them
 
 #Genie spline weights
-# physics.producers.eventweightSplines: @local::microboone_eventweight_justSplines
-# physics.p1: [ eventweightSplines, @sequence::physics.p1]
-# microboone_eventweight_justSplines.weight_functions: [ splines_general ]
+physics.producers.eventweightSplines: @local::microboone_eventweight_justSplines
+physics.p1: [ eventweightSplines, @sequence::physics.p1]
+microboone_eventweight_justSplines.weight_functions: [ splines_general ]
 
 
 
@@ -37,63 +38,6 @@ physics.p1: [ eventweight, @sequence::physics.p1] #Uncomment line to run systema
 
 #Fixes flux weight
 physics.producers.eventweight.kminus.weight_calculator: "MiniBooNE"
-
-#Fixes Genie weights
-#For more details, see /pnfs/uboone/resilient/users/gardiner/eventweight_microboone_genie_test.fcl
-# physics.producers.eventweight.weight_functions_genie: [
-#     # genie_qema, #To be included in future Genie patch
-#     # genie_qevec, #To be included in future Genie patch
-#     genie_ncelAxial, genie_ncelEta,
-#     genie_ccresAxial, genie_ccresVector,
-#     genie_ncresAxial, genie_ncresVector,
-#     #genie_cohMA, genie_cohR0, #To be included in future Genie patch
-#     genie_NonResRvp1pi, genie_NonResRvbarp1pi,
-#     genie_NonResRvp2pi, genie_NonResRvbarp2pi,
-#     genie_ResDecayGamma, genie_ResDecayEta, genie_ResDecayTheta,
-#     genie_NC,
-#     genie_DISAth, genie_DISBth, genie_DISCv1u, genie_DISCv2u,
-#     genie_AGKYxF, genie_AGKYpT,
-#     #genie_FormZone, #To be included in future Genie patch
-#     genie_FermiGasModelKf,
-#     #genie_FermiGasModelSf, #To be included in future Genie patch
-#     genie_IntraNukeNmfp, genie_IntraNukeNcex,
-#     # genie_IntraNukeNel, #Channel removed in Genie v3
-#     genie_IntraNukeNinel, genie_IntraNukeNabs, genie_IntraNukeNpi,
-#     genie_IntraNukePImfp, genie_IntraNukePIcex,
-#     # genie_IntraNukePIel, #Channel removed in Genie v3
-#     genie_IntraNukePIinel,
-#     genie_IntraNukePIabs,
-#     genie_IntraNukePIpi
-# ]
-
-#Fixes genie_all weights
-# physics.producers.eventweight.genie_all.parameter_list: [
-#     # "QEMA", #To be included in future Genie patch
-#     # "QEVec", #To be included in future Genie patch, usually not listed in central genie_all
-#     "NCELaxial", "NCELeta", "CCResAxial", "CCResVector",
-#     "NCResAxial", "NCResVector",
-#     #"CohMA", "CohR0", #To be included in future Genie patch
-#     "NonResRvp1pi", "NonResRvbarp1pi", "NonResRvp2pi", "NonResRvbarp2pi",
-#     "ResDecayGamma",
-#     "ResDecayEta", #Usually not listed in genie_all
-#     "ResDecayTheta", "NC",
-#     "DISAth", "DISBth", "DISCv1u", "DISCv2u", "AGKYxF", "AGKYpT",
-#     #"FormZone", #To be included in future Genie patch
-#     "FermiGasModelKf",
-#     #"FermiGasModelSf", #To be included in future Genie patch, usually not listed in genie_all
-#     "IntraNukeNmfp", "IntraNukeNcex",
-#     # "IntraNukeNel", #Channel removed in Genie v3
-#     "IntraNukeNinel",
-#     "IntraNukeNabs", "IntraNukeNpi", "IntraNukePImfp", "IntraNukePIcex",
-#     # "IntraNukePIel", #Channel removed in Genie v3
-#     "IntraNukePIinel",
-#     "IntraNukePIabs",
-#     "IntraNukePIpi"
-# ]
-# physics.producers.eventweight.genie_all.parameter_sigma: [
-#     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-#     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1#, 1, 1, 1, 1, 1
-# ]
 
 #Change number of universes
 physics.producers.eventweight.piplus.number_of_multisims: 50
@@ -110,7 +54,7 @@ physics.producers.eventweight.pionqexsec.number_of_multisims: @local::physics.pr
 physics.producers.eventweight.piontotxsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
 physics.producers.eventweight.expskin.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
 
-physics.producers.eventweight.MaCCQE.number_of_multisims: 4
+physics.producers.eventweight.MaCCQE.number_of_multisims: 50
 # physics.producers.eventweight.RPA_CCQE.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
 physics.producers.eventweight.NormCCMEC.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
 # physics.producers.eventweight.XSecShape_CCMEC.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
@@ -174,14 +118,7 @@ physics.producers.eventweight.reinteractions_piplus.number_of_multisims: @local:
 physics.producers.eventweight.reinteractions_piminus.number_of_multisims: @local::physics.producers.eventweight.reinteractions_proton.number_of_multisims
 physics.producers.eventweight.reinteractions_all.number_of_multisims: @local::physics.producers.eventweight.reinteractions_proton.number_of_multisims
 
-#Run weights individually
-#physics.producers.eventweight.weight_functions: [
-#    @sequence::microboone_eventweight.weight_functions_flux,
-#    @sequence::physics.producers.eventweight.weight_functions_genie,
-#    @sequence::microboone_eventweight.weight_functions_reint
-#]
-
-#Run all weights of a given category simultaneously
+#Weights to run
 physics.producers.eventweight.weight_functions: [
     @sequence::microboone_eventweight.weight_functions_flux,
     @sequence::physics.producers.eventweight.weight_functions_genie,
