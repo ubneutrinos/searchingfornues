@@ -154,6 +154,7 @@ private:
   int _nelec;                         /**< is there a final-state electron from the neutrino? [1=yes 0=no] */
   float _elec_e, _elec_p, _elec_c;    /**< energy, purity, completeness. */
   float _elec_vx, _elec_vy, _elec_vz; /**< electron vertex. */
+  float _elec_px, _elec_py, _elec_pz; /**< electron momentum vector [normalized] */
   int _npi0;                          /**< how many pi0s are there? */
   //int _pi0;                              /**< is there a final-state pi0 from the neutrino? [1=yes 0=no] */
   float _pi0_e, _pi0_p, _pi0_c; /**< energy, purity, completeness. */
@@ -830,6 +831,9 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("elec_vx", &_elec_vx, "elec_vx/F");
   _tree->Branch("elec_vy", &_elec_vy, "elec_vy/F");
   _tree->Branch("elec_vz", &_elec_vz, "elec_vz/F");
+  _tree->Branch("elec_px", &_elec_px, "elec_px/F");
+  _tree->Branch("elec_py", &_elec_py, "elec_py/F");
+  _tree->Branch("elec_pz", &_elec_pz, "elec_pz/F");
   // pi0
   _tree->Branch("npi0", &_npi0, "npi0/I");
   _tree->Branch("pi0_e", &_pi0_e, "pi0_e/F");
@@ -993,6 +997,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _elec_vx = std::numeric_limits<float>::lowest();
   _elec_vy = std::numeric_limits<float>::lowest();
   _elec_vz = std::numeric_limits<float>::lowest();
+  _elec_px = std::numeric_limits<float>::lowest();
+  _elec_py = std::numeric_limits<float>::lowest();
+  _elec_pz = std::numeric_limits<float>::lowest();
   _npi0 = 0;
   _pi0_e = 0;
   _pi0_p = 0;
@@ -1255,6 +1262,16 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
       _elec_vx = mcp.Vx();
       _elec_vy = mcp.Vy();
       _elec_vz = mcp.Vz();
+
+      _elec_px = mcp.Px();
+      _elec_py = mcp.Py();
+      _elec_pz = mcp.Pz();
+
+      float elecmom = sqrt( _elec_px * _elec_px + _elec_py * _elec_py + _elec_pz * _elec_pz );
+      _elec_px /= elecmom;
+      _elec_py /= elecmom;
+      _elec_pz /= elecmom;
+
     }
 
     _mc_E.push_back(mcp.E());
