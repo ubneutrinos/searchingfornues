@@ -1,5 +1,4 @@
 #Two things need to be specified below to get event weights: 1) which to calculate, via the physics.p1 parameter, and 2) how to store them, via the EventWeightTreeTool parameters
-
 #Force loading ubsim EventWeight calculator libraries instead of larsim default
 services.UBEventWeight: @local::microboone_eventweight_service
 services.NuRandomService: @local::microboone_seedservice #might not be necessary
@@ -15,113 +14,30 @@ EventWeightTreeTool: {
     createSplineTimesTuneBranch: true
 }
 
+
+#event weighting for switching between splines                                                                                                                                                              
+microboone_eventweight_justSplines: {
+  module_type: "EventWeight"
+
+  min_weight: 0.0
+  max_weight: 100
+
+  genie_module_label: "generator"
+  @table::microboone_eventweight_spline
+}
+
+microboone_eventweight_justSplines.weight_functions: [ splines_general ]
+
 #For Nicolo
 calotemp.p1: @local::physics.p1
 
 #Systematic weights
 physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeightTreeTool
-physics.producers.eventweight:        @local::microboone_eventweight
+physics.producers.eventweight:        @local::microboone_eventweight_dec20
 physics.p1: [ eventweight, @sequence::physics.p1] #Uncomment line to run systematic weights, or comment line to not run them
 
 #Genie spline weights
 physics.producers.eventweightSplines: @local::microboone_eventweight_justSplines
 physics.p1: [ eventweightSplines, @sequence::physics.p1]
-microboone_eventweight_justSplines.weight_functions: [ splines_general ]
 
 
-
-
-###########################
-#Systematic weight customization
-#Requires patched version of Genie v3 as of release v25
-###########################
-
-#Fixes flux weight
-physics.producers.eventweight.kminus.weight_calculator: "MiniBooNE"
-
-#Change number of universes
-physics.producers.eventweight.piplus.number_of_multisims: 50
-physics.producers.eventweight.piminus.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.kplus.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.kzero.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.kminus.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.horncurrent.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.pioninexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.nucleontotxsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.nucleonqexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.nucleoninexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.pionqexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.piontotxsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.expskin.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-
-physics.producers.eventweight.MaCCQE.number_of_multisims: 50
-# physics.producers.eventweight.RPA_CCQE.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NormCCMEC.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-# physics.producers.eventweight.XSecShape_CCMEC.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-# physics.producers.eventweight.AxFFCCQEshape.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-# physics.producers.eventweight.VecFFCCQEshape.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-# physics.producers.eventweight.DecayAngMEC.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.MaNCEL.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.EtaNCEL.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NormNCMEC.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.FracPN_CCMEC.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.FracDelta_CCMEC.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NormCCRES.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.MaCCRESshape.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.MvCCRESshape.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NormNCRES.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.MaNCRESshape.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.MvNCRESshape.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.MaCOHpi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.R0COHpi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvpCC1pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvpCC2pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvpNC1pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvpNC2pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvnCC1pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvnCC2pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvnNC1pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvnNC2pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvbarpCC1pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvbarpCC2pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvbarpNC1pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvbarpNC2pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvbarnCC1pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvbarnCC2pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvbarnNC1pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.NonRESBGvbarnNC2pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.AhtBY.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.BhtBY.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.CV1uBY.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.CV2uBY.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.AGKYxF1pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.AGKYpT1pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.MFP_pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.MFP_N.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.FrCEx_pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.FrInel_pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.FrAbs_pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.FrCEx_N.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.FrInel_N.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.FrAbs_N.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.RDecBR1gamma.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.RDecBR1eta.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-# physics.producers.eventweight.Theta_Delta2Npi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.FrPiProd_pi.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.FrPiProd_N.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-# physics.producers.eventweight.TunedCentralValue.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-physics.producers.eventweight.All.number_of_multisims: @local::physics.producers.eventweight.MaCCQE.number_of_multisims
-
-
-physics.producers.eventweight.reinteractions_proton.number_of_multisims: 50
-physics.producers.eventweight.reinteractions_piplus.number_of_multisims: @local::physics.producers.eventweight.reinteractions_proton.number_of_multisims
-physics.producers.eventweight.reinteractions_piminus.number_of_multisims: @local::physics.producers.eventweight.reinteractions_proton.number_of_multisims
-physics.producers.eventweight.reinteractions_all.number_of_multisims: @local::physics.producers.eventweight.reinteractions_proton.number_of_multisims
-
-#Weights to run
-physics.producers.eventweight.weight_functions: [
-    @sequence::microboone_eventweight.weight_functions_flux,
-    @sequence::physics.producers.eventweight.weight_functions_genie,
-    @sequence::microboone_eventweight.weight_functions_reint,
-    reinteractions_all
-]
