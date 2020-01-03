@@ -259,6 +259,8 @@ CC0PiNpSelectionTool: {
     PIDproducer: "pandoraTrackcalipid"
     CALproducerTrkFit: "shrreco3dKalmanShowercali"
     TRKproducerTrkFit: "shrreco3dKalmanShower"
+    Clusterproducer: "proximity"
+    Hitproducer: "gaushit"
     mcsfitmu: @local::microboone_reco_data_producers.pandoraMCSMu.fitter
     LocaldEdx: false # use dQdx and convert to dEdx with fixed conversion
     # ADC to E conversion taken from reco2 production fhicl file

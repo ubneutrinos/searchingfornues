@@ -33,6 +33,24 @@ namespace searchingfornues
   }
 
   /**
+   * @brief get hit wire/time in cm
+   * @input recob::hit 
+   * @output hitwire -> hit wire coordinate in cm
+   * @output hittime -> hit time coordinate in cm
+   */
+  void GetHitWireTime(const art::Ptr<recob::Hit> &hit, 
+		      const float& wire2cm, const float& time2cm,		      
+		      float& hitwire, float& hittime) {
+
+    auto const* detp = lar::providerFrom<detinfo::DetectorPropertiesService>();
+
+    hitwire = hit->WireID().Wire * wire2cm;
+    hittime = (hit->PeakTime() - detp->TriggerOffset())  * time2cm;
+
+    return;
+  }
+
+  /**
    * @brief given a 3D pt and a 2D hit get their distance in 2D on the plane
    * @input pt3d -> 3d point to be projected
    * @input hit -> hit
@@ -227,19 +245,11 @@ namespace searchingfornues
 		const float wire2cm,
 		float &dot, float& d2d) {
     
-    auto const* geom = ::lar::providerFrom<geo::Geometry>();
-    
-    auto Vtxwire = geom->WireCoordinate(showerVtx[1],showerVtx[2],geo::PlaneID(0,0,pl)) * wire2cm;
-    auto Vtxtime = showerVtx[0];
-    
-    auto Dirwire = geom->WireCoordinate(showerDir[1],showerDir[2],geo::PlaneID(0,0,pl)) * wire2cm;
-    auto Dirtime = showerDir[0];
-    
-    std::cout << "Shower Dir [x,y,z] -> [ " << showerDir[0] << ", " << showerDir[1] << ", " << showerDir[2] << " ]"  << std::endl;
-    std::cout << "Shower Vtx [x,y,z] -> [ " << showerVtx[0] << ", " << showerVtx[1] << ", " << showerVtx[2] << " ]"  << std::endl;
-    
-    std::cout << "Shower Dir [wire,time] -> [ " << Dirwire << ", " << Dirtime << " ]"  << std::endl;
-    std::cout << "Shower Vtx [wire,time] -> [ " << Vtxwire << ", " << Vtxtime << " ]"  << std::endl;
+    float Vtxwire, Vtxtime;
+    Project3Dto2D(showerVtx,pl,wire2cm,0.,Vtxwire,Vtxtime);
+
+    float Dirwire, Dirtime;
+    Project3Dto2D(showerVtx,pl,wire2cm,0.,Dirwire,Dirtime);
     
     TVector3 showerDir2D(Dirwire,Dirtime,0.);
     TVector3 gammaDir2D(gammaWire-Vtxwire,gammaTime-Vtxtime,0.);
@@ -250,9 +260,6 @@ namespace searchingfornues
     dot = showerDir2D.Dot(gammaDir2D);
     dot /= showerDir2D.Mag();
     dot /= gammaDir2D.Mag();
-    
-    std::cout << "dot product : " << dot << std::endl;
-    std::cout << std::endl;
     
     return;
   }
