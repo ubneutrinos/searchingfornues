@@ -155,11 +155,13 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
   float vtx_z = nu.EndZ();
   float vtx_t = nu.T();
 
+  float vtx_sce_x, vtx_sce_y, vtx_sce_z;
+
   float vtx_sce[3];
   searchingfornues::True2RecoMappingXYZ(vtx_t, vtx_x, vtx_y, vtx_z, vtx_sce);
-  vtx_x = vtx_sce[0];
-  vtx_y = vtx_sce[1];
-  vtx_z = vtx_sce[2];
+  vtx_sce_x = vtx_sce[0];
+  vtx_sce_y = vtx_sce[1];
+  vtx_sce_z = vtx_sce[2];
 
   // nucleus induced pi0 gammas
   _pi0truth_gamma1_edep = 0;
@@ -193,9 +195,9 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
     double xg = mcs.DetProfile().X();
     double yg = mcs.DetProfile().Y();
     double zg = mcs.DetProfile().Z();
-    double dg = sqrt( ( (vtx_x - xg) * (vtx_x - xg) ) +
-		      ( (vtx_y - yg) * (vtx_y - yg) ) +
-		      ( (vtx_z - zg) * (vtx_z - zg) ) );
+    double dg = sqrt( ( (vtx_sce_x - xg) * (vtx_sce_x - xg) ) +
+		      ( (vtx_sce_y - yg) * (vtx_sce_y - yg) ) +
+		      ( (vtx_sce_z - zg) * (vtx_sce_z - zg) ) );
 
     auto dir = mcs.Start().Momentum().Vect().Unit();
 
@@ -205,6 +207,7 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
     // if originating from the nucleus
     if ( d < 0.01 ){
 
+      // gamma1 is the larger energy photon
       if (etot > _pi0truth_gamma1_etot) {
 	_pi0truth_gamma2_etot = _pi0truth_gamma1_etot;
 	_pi0truth_gamma2_edep = _pi0truth_gamma1_edep;
@@ -219,6 +222,7 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
 	_pi0truth_gammadot = dir1.Dot(dir2) / (dir1.Mag() * dir2.Mag());
       }
 
+      // gamma2 is the sub-leading photon
       else if (etot > _pi0truth_gamma2_etot) {
 	_pi0truth_gamma2_etot = etot;
 	_pi0truth_gamma2_edep = edep;
