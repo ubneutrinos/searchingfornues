@@ -23,8 +23,8 @@ microboone_eventweight_dec20: {
   }
   # Load calculator configurations
   @table::microboone_eventweight_flux
-  #@table::microboone_eventweight_genie_dec20 # genie_all
-  @table::microboone_eventweight_genie_knobs  # individual knobs one-by-one
+  @table::microboone_eventweight_genie_dec20 # genie_all
+  #@table::microboone_eventweight_genie_knobs  # individual knobs one-by-one
   @table::microboone_eventweight_spline
 }
 
