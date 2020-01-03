@@ -1,4 +1,4 @@
-#include "eventweight_microboone.fcl"
+#include "eventweight_microboone_dec20.fcl"
 #include "seedservice_microboone.fcl"
 #include "microboone_eventweight_service.fcl"
 #include "run_neutrinoselectionfilter_run1_data.fcl"
