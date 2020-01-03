@@ -1076,15 +1076,19 @@ Generati/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/GammaTruthStu
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:68: warning: Member _vecWeightsGenie (variable) of class analysis::EventWeightTree is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:69: warning: Member _vecWeightsReint (variable) of class analysis::EventWeightTree is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:70: warning: Member _weightSpline (variable) of class analysis::EventWeightTree is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:71: warning: Member _createDedicatedTree (variable) of class analysis::EventWeightTree is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:72: warning: Member _createMapBranch (variable) of class analysis::EventWeightTree is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:73: warning: Member _createFluxBranch (variable) of class analysis::EventWeightTree is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:74: warning: Member _createGenieBranch (variable) of class analysis::EventWeightTree is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:75: warning: Member _createReintBranch (variable) of class analysis::EventWeightTree is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:76: warning: Member _createSplineBranch (variable) of class analysis::EventWeightTree is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:77: warning: Member _run (variable) of class analysis::EventWeightTree is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:78: warning: Member _subRun (variable) of class analysis::EventWeightTree is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:79: warning: Member _evt (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:71: warning: Member _weightTune (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:72: warning: Member _weightSplineTimesTune (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:73: warning: Member _createDedicatedTree (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:74: warning: Member _createMapBranch (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:75: warning: Member _createFluxBranch (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:76: warning: Member _createGenieBranch (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:77: warning: Member _createReintBranch (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:78: warning: Member _createSplineBranch (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:79: warning: Member _createTuneBranch (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:80: warning: Member _createSplineTimesTuneBranch (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:81: warning: Member _run (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:82: warning: Member _subRun (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:83: warning: Member _evt (variable) of class analysis::EventWeightTree is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:77: warning: Member fPFPproducer (variable) of class analysis::FlashMatching is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:78: warning: Member fT0producer (variable) of class analysis::FlashMatching is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:79: warning: Member fFLASHproducer (variable) of class analysis::FlashMatching is not documented.
@@ -1566,34 +1570,26 @@ Generati/home/travis/build/ubneutrinos/searchingfornues/ShowerReco/GammaTruthStu
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:117: warning: Member fMCPproducer (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:118: warning: Member fCALproducer (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:119: warning: Member fCALproducerTrkFit (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:121: warning: Member fClusterproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:122: warning: Member fHitproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:124: warning: Member _wire2cm (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:124: warning: Member _time2cm (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:218: warning: Member _shrsubclusters0 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:218: warning: Member _shrsubclusters1 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:219: warning: Member _shrclusfrac0 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:219: warning: Member _shrclusfrac1 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:220: warning: Member _shrclusdir0 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:220: warning: Member _shrclusdir1 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:221: warning: Member _trkshrhitdist0 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:221: warning: Member _trkshrhitdist1 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:226: warning: Member _ismerged (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:228: warning: Member _merge_bestdot (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:229: warning: Member _merge_bestdist (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:232: warning: Member _elecclusters_U_charge (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:232: warning: Member _elecclusters_V_charge (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:232: warning: Member _elecclusters_Y_charge (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:233: warning: Member _elecclusters_U_N (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:233: warning: Member _elecclusters_V_N (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:233: warning: Member _elecclusters_Y_N (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:235: warning: Member _merge_vtx_x (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:236: warning: Member _merge_vtx_y (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:237: warning: Member _merge_vtx_z (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:239: warning: Member _merge_tk_ipfp (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:241: warning: Member _shr_tkfit_npoints (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:242: warning: Member _shr_tkfit_npointsvalid (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:244: warning: Member _shr_trkfitmedangle (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:121: warning: Member _wire2cm (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:121: warning: Member _time2cm (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:215: warning: Member _shrsubclusters0 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:215: warning: Member _shrsubclusters1 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:216: warning: Member _shrclusfrac0 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:216: warning: Member _shrclusfrac1 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:217: warning: Member _shrclusdir0 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:217: warning: Member _shrclusdir1 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:218: warning: Member _trkshrhitdist0 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:218: warning: Member _trkshrhitdist1 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:223: warning: Member _ismerged (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:225: warning: Member _merge_bestdot (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:226: warning: Member _merge_bestdist (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:228: warning: Member _merge_vtx_x (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:229: warning: Member _merge_vtx_y (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:230: warning: Member _merge_vtx_z (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:232: warning: Member _merge_tk_ipfp (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:234: warning: Member _shr_tkfit_npoints (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:235: warning: Member _shr_tkfit_npointsvalid (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:237: warning: Member _shr_trkfitmedangle (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:82: warning: Member fData (variable) of class selection::SelectionToolBase is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CRTApproachSelection_tool.cc:79: warning: Member Point2PointDistance(const TVector3 &nuvtx, TVector3 &taggedTrackSpt) (function) of class selection::CRTApproachSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CRTApproachSelection_tool.cc:80: warning: Member Reset() (function) of class selection::CRTApproachSelection is not documented.
@@ -1829,5 +1825,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 899/65536 hits=4773 misses=927
+lookup cache used 898/65536 hits=4768 misses=926
 finished...
