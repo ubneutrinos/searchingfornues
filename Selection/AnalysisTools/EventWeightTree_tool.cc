@@ -68,12 +68,16 @@ namespace analysis
             std::vector<double> _vecWeightsGenie;
             std::vector<double> _vecWeightsReint;
             float _weightSpline;
+            float _weightTune;
+            float _weightSplineTimesTune;
             bool _createDedicatedTree;
             bool _createMapBranch;
             bool _createFluxBranch;
             bool _createGenieBranch;
             bool _createReintBranch;
             bool _createSplineBranch;
+            bool _createTuneBranch;
+            bool _createSplineTimesTuneBranch;
             int _run;
             int _subRun;
             int _evt;
@@ -86,6 +90,8 @@ namespace analysis
         _createGenieBranch = p.get<bool>("createGenieBranch");
         _createReintBranch = p.get<bool>("createReintBranch");
         _createSplineBranch = p.get<bool>("createSplineBranch");
+        _createTuneBranch = p.get<bool>("createTuneBranch");
+        _createSplineTimesTuneBranch = p.get<bool>("createSplineTimesTuneBranch");
         
         if(_createDedicatedTree){
             art::ServiceHandle<art::TFileService> tfs;
@@ -106,10 +112,11 @@ namespace analysis
         art::InputTag eventweight_spline_tag("eventweightSplines");
         vecTag.push_back(eventweight_tag);
         vecTag.push_back(eventweight_spline_tag);
-        
+
         for(auto& thisTag : vecTag){
             art::Handle<std::vector<evwgh::MCEventWeight>> eventweights_handle;
             evt.getByLabel(thisTag, eventweights_handle);
+
             if(eventweights_handle.isValid()){
                 std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
                 art::fill_ptr_vector(eventweights, eventweights_handle);
@@ -117,7 +124,12 @@ namespace analysis
                 
                 if(evtwgt_map.find("splines_general_Spline") != evtwgt_map.end()) _weightSpline = evtwgt_map.find("splines_general_Spline")->second[0];
                 evtwgt_map.erase("splines_general_Spline");
-
+                
+                if(evtwgt_map.find("TunedCentralValue_Genie") != evtwgt_map.end()) _weightTune = evtwgt_map.find("TunedCentralValue_Genie")->second[0];
+                evtwgt_map.erase("TunedCentralValue_Genie");
+                
+                if(_weightSpline != -1 && _weightTune != -1) _weightSplineTimesTune = _weightSpline * _weightTune;
+                
                 _mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
                 
                 if(_createFluxBranch || _createGenieBranch || _createReintBranch){
@@ -126,18 +138,18 @@ namespace analysis
                     for(std::map<std::string, std::vector<double>>::iterator it=evtwgt_map.begin(); it!=evtwgt_map.end(); ++it){
                         std::string keyname = it->first;
                         if(keyname.find("horncurrent") != std::string::npos ||
-                           keyname.find("expskin") != std::string::npos ||
-                           keyname.find("piplus") != std::string::npos ||
-                           keyname.find("piminus") != std::string::npos ||
-                           keyname.find("kplus") != std::string::npos ||
-                           keyname.find("kzero") != std::string::npos ||
-                           keyname.find("kminus") != std::string::npos ||
-                           keyname.find("pioninexsec") != std::string::npos ||
-                           keyname.find("pionqexsec") != std::string::npos ||
-                           keyname.find("piontotxsec") != std::string::npos ||
-                           keyname.find("nucleontotxsec") != std::string::npos ||
-                           keyname.find("nucleonqexsec") != std::string::npos ||
-                           keyname.find("nucleoninexsec") != std::string::npos){
+                            keyname.find("expskin") != std::string::npos ||
+                            keyname.find("piplus") != std::string::npos ||
+                            keyname.find("piminus") != std::string::npos ||
+                            keyname.find("kplus") != std::string::npos ||
+                            keyname.find("kzero") != std::string::npos ||
+                            keyname.find("kminus") != std::string::npos ||
+                            keyname.find("pioninexsec") != std::string::npos ||
+                            keyname.find("pionqexsec") != std::string::npos ||
+                            keyname.find("piontotxsec") != std::string::npos ||
+                            keyname.find("nucleontotxsec") != std::string::npos ||
+                            keyname.find("nucleonqexsec") != std::string::npos ||
+                            keyname.find("nucleoninexsec") != std::string::npos){
                             if(isFirstVector){
                                 _vecWeightFlux = it->second;
                                 isFirstVector = false;
@@ -152,7 +164,6 @@ namespace analysis
                 }
             }
         }
-
         if(_createDedicatedTree) _weightstree->Fill();
     }
     
@@ -171,6 +182,8 @@ namespace analysis
         if(_createGenieBranch) _tree->Branch("weightsGenie", "std::vector<double>", &_vecWeightsGenie);
         if(_createReintBranch) _tree->Branch("weightsReint", "std::vector<double>", &_vecWeightsReint);
         if(_createSplineBranch) _tree->Branch("weightSpline",&_weightSpline,"weightSpline/F");
+        if(_createTuneBranch) _tree->Branch("weightTune",&_weightTune,"weightTune/F");
+        if(_createSplineTimesTuneBranch) _tree->Branch("weightSplineTimesTune",&_weightSplineTimesTune,"weightSplineTimesTune/F");
     }
     
     void EventWeightTree::resetTTree(TTree *_tree){
@@ -179,6 +192,8 @@ namespace analysis
         _vecWeightsGenie.clear();
         _vecWeightsReint.clear();
         _weightSpline = -1;
+        _weightTune = -1;
+        _weightSplineTimesTune = -1;
         _run = -1;
         _subRun = -1;
         _evt = -1;
