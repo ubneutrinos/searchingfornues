@@ -1,0 +1,541 @@
+microboone_eventweight_genie_knobs: {
+
+  weight_functions_genie: [
+    MaCCQE, RPA_CCQE, NormCCMEC, XSecShape_CCMEC, AxFFCCQEshape,
+    VecFFCCQEshape, DecayAngMEC, MaNCEL, EtaNCEL, NormNCMEC, FracPN_CCMEC,
+    FracDelta_CCMEC, NormCCRES, MaCCRESshape, MvCCRESshape, NormNCRES,
+    MaNCRESshape, MvNCRESshape, MaCOHpi, R0COHpi, NonRESBGvpCC1pi,
+    NonRESBGvpCC2pi, NonRESBGvpNC1pi, NonRESBGvpNC2pi, NonRESBGvnCC1pi,
+    NonRESBGvnCC2pi, NonRESBGvnNC1pi, NonRESBGvnNC2pi, NonRESBGvbarpCC1pi,
+    NonRESBGvbarpCC2pi, NonRESBGvbarpNC1pi, NonRESBGvbarpNC2pi,
+    NonRESBGvbarnCC1pi, NonRESBGvbarnCC2pi, NonRESBGvbarnNC1pi,
+    NonRESBGvbarnNC2pi, AhtBY, BhtBY, CV1uBY, CV2uBY, AGKYxF1pi, AGKYpT1pi,
+    MFP_pi, MFP_N, FrCEx_pi, FrInel_pi, FrAbs_pi, FrCEx_N, FrInel_N, FrAbs_N,
+    RDecBR1gamma, RDecBR1eta, Theta_Delta2Npi, FrPiProd_pi, FrPiProd_N,
+    TunedCentralValue
+  ]
+
+  MaCCQE: {
+    type: Genie
+    random_seed: 1
+    parameter_list: [ "MaCCQE" ]
+    parameter_sigma: [ 4.16128 ] # +/- 0.12 GeV
+    mode: multisim
+    number_of_multisims: 30
+  }
+
+  RPA_CCQE: {
+    type: Genie
+    random_seed: 2
+    parameter_list: [ "RPA_CCQE" ]
+    parameter_sigma: [ 0.4 ]
+    parameter_min: [ 0.0 ]
+    parameter_max: [ 0.8 ]
+    mode: minmax 
+    number_of_multisims: 2
+  }
+
+  NormCCMEC: {
+    type: Genie
+    random_seed: 3
+    parameter_list: [ "NormCCMEC" ]
+    parameter_sigma: [ 1.4 ] # +/- 70%
+    mode: multisim
+    number_of_multisims: 30
+  }
+
+  XSecShape_CCMEC: {
+    type: Genie
+    random_seed: 4
+    parameter_list: [ "XSecShape_CCMEC" ]
+    parameter_sigma: [ 1 ]
+    parameter_min: [ 0.0 ]
+    parameter_max: [ 1.0 ]
+    mode: minmax
+    number_of_multisims: 2
+  }
+
+  AxFFCCQEshape: {
+    type: Genie
+    random_seed: 5
+    parameter_list: [ "AxFFCCQEshape" ]
+    parameter_sigma: [ 1 ]
+    parameter_min: [ 0.0 ]
+    parameter_max: [ 1.0 ]
+    mode: minmax
+    number_of_multisims: 2
+  }
+
+  VecFFCCQEshape: {
+    type: Genie
+    random_seed: 6
+    parameter_list: [ "VecFFCCQEshape" ]
+    parameter_sigma: [ 1 ]
+    parameter_min: [ 0.0 ]
+    parameter_max: [ 1.0 ]
+    mode: minmax
+    number_of_multisims: 2
+  }
+
+  DecayAngMEC: {
+    type: Genie
+    random_seed: 7
+    parameter_list: [ "DecayAngMEC" ]
+    parameter_sigma: [ 1 ]
+    parameter_min: [ 0.0 ]
+    parameter_max: [ 1.0 ]
+    mode: minmax
+    number_of_multisims: 30
+  }
+
+  MaNCEL: {
+    type: Genie
+    random_seed: 8
+    parameter_list: [ "MaNCEL" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+
+  EtaNCEL: {
+    type: Genie
+    random_seed: 9
+    parameter_list: [ "EtaNCEL" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+
+  NormNCMEC: {
+    type: Genie
+    random_seed: 10
+    parameter_list: [ "NormNCMEC" ]
+    parameter_sigma: [ 2 ] # +/-100%
+    mode: multisim
+    number_of_multisims: 30
+  }
+
+  FracPN_CCMEC: {
+    type: Genie
+    random_seed: 11
+    parameter_list: [ "FracPN_CCMEC" ]
+    parameter_sigma: [ 1 ] # +/-20%
+    mode: multisim
+    number_of_multisims: 30
+  }
+
+  FracDelta_CCMEC: {
+    type: Genie
+    random_seed: 12
+    parameter_list: [ "FracDelta_CCMEC" ]
+    parameter_sigma: [ 1.5 ] # +/-30%
+    mode: multisim
+    number_of_multisims: 30
+  }
+
+  NormCCRES: {
+    type: Genie
+    random_seed: 13
+    parameter_list: [ "NormCCRES" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  MaCCRESshape: {
+    type: Genie
+    random_seed: 14
+    parameter_list: [ "MaCCRESshape" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  MvCCRESshape: {
+    type: Genie
+    random_seed: 15
+    parameter_list: [ "MvCCRESshape" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NormNCRES: {
+    type: Genie
+    random_seed: 16
+    parameter_list: [ "NormNCRES" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  MaNCRESshape: {
+    type: Genie
+    random_seed: 17
+    parameter_list: [ "MaNCRESshape" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  MvNCRESshape: {
+    type: Genie
+    random_seed: 18
+    parameter_list: [ "MvNCRESshape" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  MaCOHpi: {
+    type: Genie
+    random_seed: 19
+    parameter_list: [ "MaCOHpi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  R0COHpi: {
+    type: Genie
+    random_seed: 20
+    parameter_list: [ "R0COHpi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvpCC1pi: {
+    type: Genie
+    random_seed: 21
+    parameter_list: [ "NonRESBGvpCC1pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvpCC2pi: {
+    type: Genie
+    random_seed: 22
+    parameter_list: [ "NonRESBGvpCC2pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvpNC1pi: {
+    type: Genie
+    random_seed: 23
+    parameter_list: [ "NonRESBGvpNC1pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvpNC2pi: {
+    type: Genie
+    random_seed: 24
+    parameter_list: [ "NonRESBGvpNC2pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvnCC1pi: {
+    type: Genie
+    random_seed: 25
+    parameter_list: [ "NonRESBGvnCC1pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvnCC2pi: {
+    type: Genie
+    random_seed: 26
+    parameter_list: [ "NonRESBGvnCC2pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvnNC1pi: {
+    type: Genie
+    random_seed: 27
+    parameter_list: [ "NonRESBGvnNC1pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvnNC2pi: {
+    type: Genie
+    random_seed: 28
+    parameter_list: [ "NonRESBGvnNC2pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvbarpCC1pi: {
+    type: Genie
+    random_seed: 29
+    parameter_list: [ "NonRESBGvbarpCC1pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvbarpCC2pi: {
+    type: Genie
+    random_seed: 30
+    parameter_list: [ "NonRESBGvbarpCC2pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvbarpNC1pi: {
+    type: Genie
+    random_seed: 31
+    parameter_list: [ "NonRESBGvbarpNC1pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvbarpNC2pi: {
+    type: Genie
+    random_seed: 32
+    parameter_list: [ "NonRESBGvbarpNC2pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvbarnCC1pi: {
+    type: Genie
+    random_seed: 33
+    parameter_list: [ "NonRESBGvbarnCC1pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvbarnCC2pi: {
+    type: Genie
+    random_seed: 34
+    parameter_list: [ "NonRESBGvbarnCC2pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvbarnNC1pi: {
+    type: Genie
+    random_seed: 35
+    parameter_list: [ "NonRESBGvbarnNC1pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  NonRESBGvbarnNC2pi: {
+    type: Genie
+    random_seed: 36
+    parameter_list: [ "NonRESBGvbarnNC2pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  AhtBY: {
+    type: Genie
+    random_seed: 37
+    parameter_list: [ "AhtBY" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  BhtBY: {
+    type: Genie
+    random_seed: 38
+    parameter_list: [ "BhtBY" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  CV1uBY: {
+    type: Genie
+    random_seed: 39
+    parameter_list: [ "CV1uBY" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  CV2uBY: {
+    type: Genie
+    random_seed: 40
+    parameter_list: [ "CV2uBY" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  AGKYxF1pi: {
+    type: Genie
+    random_seed: 41
+    parameter_list: [ "AGKYxF1pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  AGKYpT1pi: {
+    type: Genie
+    random_seed: 42
+    parameter_list: [ "AGKYpT1pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  MFP_pi: {
+    type: Genie
+    random_seed: 43
+    parameter_list: [ "MFP_pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  MFP_N: {
+    type: Genie
+    random_seed: 44
+    parameter_list: [ "MFP_N" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  FrCEx_pi: {
+    type: Genie
+    random_seed: 45
+    parameter_list: [ "FrCEx_pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  FrInel_pi: {
+    type: Genie
+    random_seed: 46
+    parameter_list: [ "FrInel_pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  FrAbs_pi: {
+    type: Genie
+    random_seed: 47
+    parameter_list: [ "FrAbs_pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  FrCEx_N: {
+    type: Genie
+    random_seed: 48
+    parameter_list: [ "FrCEx_N" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  FrInel_N: {
+    type: Genie
+    random_seed: 49
+    parameter_list: [ "FrInel_N" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  FrAbs_N: {
+    type: Genie
+    random_seed: 50
+    parameter_list: [ "FrAbs_N" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  RDecBR1gamma: {
+    type: Genie
+    random_seed: 51
+    parameter_list: [ "RDecBR1gamma" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  RDecBR1eta: {
+    type: Genie
+    random_seed: 52
+    parameter_list: [ "RDecBR1eta" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+  
+  Theta_Delta2Npi: {
+    type: Genie
+    random_seed: 53
+    parameter_list: [ "Theta_Delta2Npi" ]
+    parameter_sigma: [ 1 ]
+    parameter_min: [ 0.0 ]
+    parameter_max: [ 1.0 ]
+    mode: minmax
+    number_of_multisims: 2
+  }
+
+  FrPiProd_pi: {
+    type: Genie
+    random_seed: 54
+    parameter_list: [ "FrPiProd_pi" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+
+  FrPiProd_N: {
+    type: Genie
+    random_seed: 55
+    parameter_list: [ "FrPiProd_N" ]
+    parameter_sigma: [ 1 ]
+    mode: multisim
+    number_of_multisims: 30
+  }
+
+  # Single function that applies all weights needed to obtain
+  # a new tuned central value
+  # NOTE: For samples generated with GENIE v3.0.4 splines, the
+  # spline weight to convert v3.0.4 --> v3.0.4a cross sections
+  # still needs to be applied as well.
+  TunedCentralValue: {
+    type: Genie
+    random_seed: 99
+    parameter_list: [ "MaCCQE", "RPA_CCQE", "NormCCMEC", "XSecShape_CCMEC" ]
+    # Dummy sigmas (central values are specified in EventWeight module configuration
+    # to ensure consistency across all weight calculators)
+    parameter_sigma: [ 1, 1, 1, 1 ]
+    mode: central_value
+    number_of_multisims: 1
+  }
+
+}
