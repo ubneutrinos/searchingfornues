@@ -44,6 +44,41 @@ namespace searchingfornues
     }// if spatial offset calibrations are enabled
   }
 
+  // given a recob::Track, get updated length accounting for SCE corrections
+  float GetSCECorrTrackLength(const art::Ptr<recob::Track>& trk) {
+
+    float SCElength = 0.;
+    int previousvalidpoint = -1;
+
+    for(size_t i=0; i < trk->NumberTrajectoryPoints(); i++) {
+      if (trk->HasValidPoint(i)) { // check this point is valid
+	// is there a previous valid point? if so calculate distance to it
+	if (previousvalidpoint >= 0) {
+	  auto point1 = trk->LocationAtPoint(i);
+	  auto point0 = trk->LocationAtPoint(previousvalidpoint);
+	  
+	  // SCE correct both points
+	  float point1X = point1.X();
+	  float point1Y = point1.Y();
+	  float point1Z = point1.Z();
+	  ApplySCECorrectionXYZ(point1X,point1Y,point1Z);
+	  float point0X = point0.X();
+	  float point0Y = point0.Y();
+	  float point0Z = point0.Z();
+	  ApplySCECorrectionXYZ(point0X,point0Y,point0Z);
+	  
+	  float distance3D =  sqrt( (point1X-point0X)*(point1X-point0X) + (point1Y-point0Y)*(point1Y-point0Y) + (point1Z-point0Z)*(point1Z-point0Z) );
+	  
+	  SCElength += distance3D;
+	  
+	}// if there is a previous valid point
+	previousvalidpoint = i;
+      }// if point is valid
+    }// for all track points
+    
+    return SCElength; 
+  }
+
   // apply the mapping of XYZ true -> XYZ position as it would be recosntructed.
   // takes into account SCE, trigger time offset, and wirecell-pandora offset.
   // to be applied to truth xyz in order to compare to reconstructed variables
