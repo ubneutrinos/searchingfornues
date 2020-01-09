@@ -19,6 +19,9 @@
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "../CommonDefs/ProximityClustering.h"
 
+// save info associated to common optical filter
+#include "ubobj/Optical/UbooneOpticalFilter.h"
+
 #include "canvas/Persistency/Common/TriggerResults.h"
 #include "larpandora/LArPandoraInterface/LArPandoraHelper.h"
 
@@ -137,6 +140,9 @@ private:
 
   // has the swtrigger fired?
   int _swtrig;
+  // common optical filter decision
+  float  _opfilter_pe_beam, _opfilter_pe_veto;
+
   // neutrino information
   float _nu_e;  /**< neutrino energy [GeV] */
   float _nu_pt; /**< transverse momentum of interaction [GeV/c] */
@@ -317,6 +323,16 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
   std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << e.run() << ", SubRun: " << e.subRun() << ", Event: " << e.event() << std::endl;
 
+  // store common optical filter tag
+  if (!fData) {
+    art::Handle<uboone::UbooneOpticalFilter> CommonOpticalFilter_h;
+    art::InputTag fCommonOpFiltTag("opfiltercommon");
+    e.getByLabel(fCommonOpFiltTag, CommonOpticalFilter_h);
+    
+    _opfilter_pe_beam = CommonOpticalFilter_h->PE_Beam();
+    _opfilter_pe_veto = CommonOpticalFilter_h->PE_Veto();
+  }
+  
   // storing trigger result output for software trigger
   art::InputTag swtrig_tag("TriggerResults", "", "DataOverlayOptical");
   art::Handle<art::TriggerResults> swtrig_handle;
@@ -788,6 +804,10 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("true_p_visible", &_true_p_visible, "true_p_visible/F");
 
   _tree->Branch("true_e_visible", &_true_e_visible, "true_e_visible/F");
+  
+  // common optical filter output (useful for overlay -> EXT)
+  _tree->Branch("_opfilter_pe_beam",&_opfilter_pe_beam,"opfilter_pe_beam/F");
+  _tree->Branch("_opfilter_pe_veto",&_opfilter_pe_veto,"opfilter_pe_veto/F");
 
   // neutrino information
   _tree->Branch("nu_pdg", &_nu_pdg, "nu_pdg/I");
@@ -962,6 +982,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _ccnc = std::numeric_limits<int>::lowest();
   _interaction = std::numeric_limits<int>::lowest();
   _pass = 0;
+
+  _opfilter_pe_beam = 0.;
+  _opfilter_pe_veto = 0.;
 
   _category = 0;
 
