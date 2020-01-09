@@ -5,7 +5,7 @@
 %%For: 
 %Magnification: 1.00
 %%Orientation: Portrait
-%%BoundingBox: 0 0 500 864.197531
+%%BoundingBox: 0 0 500 823.045267
 %%Pages: 0
 %%BeginSetup
 %%EndSetup
@@ -19,12 +19,12 @@
 /marginwidth 10 def
 /distx 20 def
 /disty 40 def
-/boundaspect 0.578571 def  % aspect ratio of the BoundingBox (width/height)
+/boundaspect 0.607500 def  % aspect ratio of the BoundingBox (width/height)
 /boundx 500 def
 /boundy boundx boundaspect div def
 /xspacing 0 def
 /yspacing 0 def
-/rows 21 def
+/rows 20 def
 /cols 2 def
 /scalefactor 0 def
 /boxfont /Times-Roman findfont fontheight scalefont def
@@ -180,7 +180,6 @@ boxfont setfont
 (analysis::CosmicIP) cw
 (analysis::CRTApproachAnalysis) cw
 (analysis::DefaultAnalysis) cw
-(analysis::EventFilter) cw
 (analysis::EventWeightTree) cw
 (analysis::FlashMatching) cw
 (analysis::NeutrinoEnergy) cw
@@ -205,14 +204,13 @@ boundx scalefactor div boundy scalefactor div scale
 
 % ----- classes -----
 
- (analysis::AnalysisToolBase) 0.000000 20.000000 box
- (analysis::BDT) 1.000000 19.000000 box
- (analysis::CalorimetryAnalysis) 1.000000 18.000000 box
- (analysis::ContainmentAnalysis) 1.000000 17.000000 box
- (analysis::CosmicIP) 1.000000 16.000000 box
- (analysis::CRTApproachAnalysis) 1.000000 15.000000 box
- (analysis::DefaultAnalysis) 1.000000 14.000000 box
- (analysis::EventFilter) 1.000000 13.000000 box
+ (analysis::AnalysisToolBase) 0.000000 19.000000 box
+ (analysis::BDT) 1.000000 18.000000 box
+ (analysis::CalorimetryAnalysis) 1.000000 17.000000 box
+ (analysis::ContainmentAnalysis) 1.000000 16.000000 box
+ (analysis::CosmicIP) 1.000000 15.000000 box
+ (analysis::CRTApproachAnalysis) 1.000000 14.000000 box
+ (analysis::DefaultAnalysis) 1.000000 13.000000 box
  (analysis::EventWeightTree) 1.000000 12.000000 box
  (analysis::FlashMatching) 1.000000 11.000000 box
  (analysis::NeutrinoEnergy) 1.000000 10.000000 box
@@ -230,9 +228,7 @@ boundx scalefactor div boundy scalefactor div scale
 % ----- relations -----
 
 solid
-1 0.000000 19.250000 out
-solid
-0 0.000000 19.500000 hedge
+1 0.000000 18.250000 out
 solid
 0 0.000000 18.500000 hedge
 solid
@@ -272,4 +268,4 @@ solid
 solid
 0 0.000000 0.500000 hedge
 solid
-0.000000 20.000000 0.500000 vedge
+0.000000 19.000000 0.500000 vedge
