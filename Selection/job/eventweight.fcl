@@ -28,6 +28,7 @@ microboone_eventweight_justSplines: {
 
 microboone_eventweight_justSplines.weight_functions: [ splines_general ]
 
+
 #For Nicolo
 calotemp.p1: @local::physics.p1
 
@@ -41,3 +42,17 @@ physics.producers.eventweightSplines: @local::microboone_eventweight_justSplines
 physics.p1: [ eventweightSplines, @sequence::physics.p1]
 
 
+#Change number of universes
+physics.producers.eventweight.piplus.number_of_multisims: 50
+physics.producers.eventweight.piminus.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.kplus.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.kzero.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.kminus.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.horncurrent.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.pioninexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.nucleontotxsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.nucleonqexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.nucleoninexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.pionqexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.piontotxsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+physics.producers.eventweight.expskin.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
