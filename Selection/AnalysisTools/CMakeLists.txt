@@ -23,6 +23,7 @@ art_make( TOOL_LIBRARIES lardataobj_RecoBase
                          art_Persistency_Provenance
                          art_Utilities
                          canvas
+			 hep_concurrency
                          ${MF_MESSAGELOGGER}
                          ${MF_UTILITIES}
                          ${FHICLCPP}

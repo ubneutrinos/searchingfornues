@@ -2,6 +2,10 @@
 #include "mcreco.fcl"
 #include "proximityclustering.fcl"
 
+EventFilterTool: {
+    tool_type: "EventFilter"
+}
+
 SecondShowerTaggerTool: {
     tool_type: "SecondShowerTagger"
     Clusterproducer: "proximity"
@@ -222,6 +226,7 @@ NuSelectionFilter:{
         pi0tagger:     @local::Pi0TaggerTool
         zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
         secondshower:  @local::SecondShowerTaggerTool
+        eventfilter:   @local::EventFilterTool
     }
 }
 
