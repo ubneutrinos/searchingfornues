@@ -355,8 +355,8 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 
       // Kinetic energy using tabulated stopping power (GeV)
       float mcs_momentum_muon = _mcsfitter.fitMcs(trk->Trajectory(), 13).bestMomentum();
-      float range_momentum_muon = _trkmom.GetTrackMomentum(trk->Length(), 13);
-      float energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), 2212), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
+      float range_momentum_muon = _trkmom.GetTrackMomentum(searchingfornues::GetSCECorrTrackLength(trk), 13);
+      float energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(searchingfornues::GetSCECorrTrackLength(trk), 2212), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
       float energy_muon = std::sqrt(std::pow(mcs_momentum_muon, 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
 
       _trk_mcs_muon_mom_v.push_back(mcs_momentum_muon);
