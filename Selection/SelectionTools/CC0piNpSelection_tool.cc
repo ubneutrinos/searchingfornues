@@ -172,9 +172,9 @@ private:
 
     float _trk_len;             /**< Length of the longest track */
     float _trk_energy;          /**< Energy of the longest track assuming it's a proton and using stopping power in LAr */
-    float _trk_energy_sce;      /**< Energy of the longest track assuming it's a proton and using stopping power in LAr (with SCE corrections) */
+  //float _trk_energy_sce;      /**< Energy of the longest track assuming it's a proton and using stopping power in LAr (with SCE corrections) */
     float _trk_energy_muon;     /**< Energy of the longest track assuming it's a muon and using stopping power in LAr */
-    float _trk_energy_muon_sce; /**< Energy of the longest track assuming it's a muon and using stopping power in LAr (with SCE corrections) */
+  //float _trk_energy_muon_sce; /**< Energy of the longest track assuming it's a muon and using stopping power in LAr (with SCE corrections) */
     float _trk_energy_muon_mcs; /**< Energy of the longest track assuming it's a muon and using MCS */
     float _trk_energy_tot;      /**< Sum of the track energies assuming they are protons and using stopping power in LAr */
     float _trk_energy_muon_tot; /**< Sum of the track energies assuming they are muons and using stopping power in LAr */
@@ -941,13 +941,13 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 }
 
                 // Kinetic energy from stopping power of proton in LAr
-                float energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), proton->PdgCode()), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
-                float energy_proton_sce = std::sqrt(std::pow(_trkmom.GetTrackMomentum(searchingfornues::GetSCECorrTrackLength(trk), proton->PdgCode()), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
+                //float energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), proton->PdgCode()), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
+                float energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(searchingfornues::GetSCECorrTrackLength(trk), proton->PdgCode()), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
                 _trk_energy_tot += energy_proton;
                 _trk_hits_tot += trk_hits;
 
-                float energy_muon     = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), muon->PdgCode()), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
-                float energy_muon_sce = std::sqrt(std::pow(_trkmom.GetTrackMomentum(searchingfornues::GetSCECorrTrackLength(trk), muon->PdgCode()), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
+                //float energy_muon     = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), muon->PdgCode()), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
+                float energy_muon = std::sqrt(std::pow(_trkmom.GetTrackMomentum(searchingfornues::GetSCECorrTrackLength(trk), muon->PdgCode()), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
                 _trk_energy_muon_tot += energy_muon;
 
                 auto trkpxy2 = pid_proxy[trk.key()];
@@ -1005,9 +1005,9 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _trk_distance = (trk_vtx - nu_vtx).Mag();
                     _trk_len = trk->Length();
                     _trk_energy = energy_proton;
-                    _trk_energy_sce = energy_proton_sce;
+                    //_trk_energy_sce = energy_proton_sce;
                     _trk_energy_muon = energy_muon;
-                    _trk_energy_muon_sce = energy_muon_sce;
+                    //_trk_energy_muon_sce = energy_muon_sce;
                     _trk_energy_muon_mcs = std::sqrt(std::pow(mcsfitter.fitMcs(trk->Trajectory(), muon->PdgCode()).bestMomentum(), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
                     _trk_pfp_id = i_pfp;
                     _trk_hits_max = trk_hits;
@@ -1211,9 +1211,9 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _trk_distance = std::numeric_limits<float>::lowest();
     _trk_len = std::numeric_limits<float>::lowest();
     _trk_energy = 0;
-    _trk_energy_sce = 0;
+    //_trk_energy_sce = 0;
     _trk_energy_muon = 0;
-    _trk_energy_muon_sce = 0;
+    //_trk_energy_muon_sce = 0;
     _trk_energy_muon_mcs = 0;
     _trk_energy_tot = 0;
     _trk_energy_muon_tot = 0;
@@ -1471,9 +1471,9 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("trk_theta", &_trk_theta, "trk_theta/F");
     _tree->Branch("trk_phi", &_trk_phi, "trk_phi/F");
     _tree->Branch("trk_energy", &_trk_energy, "trk_energy/F");
-    _tree->Branch("trk_energy_sce", &_trk_energy_sce, "trk_energy_sce/F");
+    //_tree->Branch("trk_energy_sce", &_trk_energy_sce, "trk_energy_sce/F");
     _tree->Branch("trk_energy_muon", &_trk_energy_muon, "trk_energy_muon/F");
-    _tree->Branch("trk_energy_muon_sce", &_trk_energy_muon_sce, "trk_energy_muon_sce/F");
+    //_tree->Branch("trk_energy_muon_sce", &_trk_energy_muon_sce, "trk_energy_muon_sce/F");
     _tree->Branch("trk_energy_muon_mcs", &_trk_energy_muon_mcs, "trk_energy_muon_mcs/F");
     _tree->Branch("trk_energy_tot", &_trk_energy_tot, "trk_energy_tot/F");
     _tree->Branch("trk_energy_muon_tot", &_trk_energy_muon_tot, "trk_energy_muon_tot/F");
