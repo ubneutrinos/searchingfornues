@@ -10,6 +10,7 @@ var searchData=
   ['_7ecrtapproachselection',['~CRTApproachSelection',['../classselection_1_1CRTApproachSelection.html#a1ea085fa9ab18fdecbb863a25cea5eb1',1,'selection::CRTApproachSelection']]],
   ['_7edefaultanalysis',['~DefaultAnalysis',['../classanalysis_1_1DefaultAnalysis.html#ad4be6c0a18f97e1d02a5c1e905ac5786',1,'analysis::DefaultAnalysis']]],
   ['_7eemptyselection',['~EmptySelection',['../classselection_1_1EmptySelection.html#a62d52a58d6da0c8ae7723a405848bd5d',1,'selection::EmptySelection']]],
+  ['_7eeventfilter',['~EventFilter',['../classanalysis_1_1EventFilter.html#acc52a30ff7c1798ec736dae1956338a4',1,'analysis::EventFilter']]],
   ['_7eeventweighttree',['~EventWeightTree',['../classanalysis_1_1EventWeightTree.html#ac4c13dc05b4378d910f25afdd410475b',1,'analysis::EventWeightTree']]],
   ['_7efailuremode',['~FailureMode',['../classflashmatch_1_1FlashMatchingTool_1_1FailureMode.html#ab6ee2b8304974614e71440359a068acd',1,'flashmatch::FlashMatchingTool::FailureMode']]],
   ['_7eflashmatching',['~FlashMatching',['../classanalysis_1_1FlashMatching.html#ab2647643c3420bac36afe949ac252f20',1,'analysis::FlashMatching']]],
