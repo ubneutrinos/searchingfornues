@@ -106,17 +106,20 @@ private:
     bool fLocaldEdx;               // use local dE/dx from calorimetry (true) or globally convert Q -> MeV (false)
 
   std::vector<float> fADCtoE; // vector of ADC to # of e- conversion [to be taken from production reco2 fhicl files]
-
-    art::InputTag fCLSproducer;
-    art::InputTag fPIDproducer;
-    art::InputTag fTRKproducer;
-    art::InputTag fTRKproducerTrkFit;
-    art::InputTag fBacktrackTag;
-    art::InputTag fHproducer;
-    art::InputTag fMCRproducer;
-    art::InputTag fMCPproducer;
-    art::InputTag fCALproducer;
-    art::InputTag fCALproducerTrkFit;
+  
+  art::InputTag fCLSproducer;
+  art::InputTag fPIDproducer;
+  art::InputTag fTRKproducer;
+  art::InputTag fTRKproducerTrkFit;
+  art::InputTag fBacktrackTag;
+  art::InputTag fHproducer;
+  art::InputTag fMCRproducer;
+  art::InputTag fMCPproducer;
+  art::InputTag fCALproducer;
+  art::InputTag fCALproducerTrkFit;
+  // for 2D input
+  art::InputTag fClusterproducer;
+  art::InputTag fHitproducer;
 
   float _wire2cm, _time2cm;
 
@@ -169,7 +172,9 @@ private:
 
     float _trk_len;             /**< Length of the longest track */
     float _trk_energy;          /**< Energy of the longest track assuming it's a proton and using stopping power in LAr */
+    float _trk_energy_sce;      /**< Energy of the longest track assuming it's a proton and using stopping power in LAr (with SCE corrections) */
     float _trk_energy_muon;     /**< Energy of the longest track assuming it's a muon and using stopping power in LAr */
+    float _trk_energy_muon_sce; /**< Energy of the longest track assuming it's a muon and using stopping power in LAr (with SCE corrections) */
     float _trk_energy_muon_mcs; /**< Energy of the longest track assuming it's a muon and using MCS */
     float _trk_energy_tot;      /**< Sum of the track energies assuming they are protons and using stopping power in LAr */
     float _trk_energy_muon_tot; /**< Sum of the track energies assuming they are muons and using stopping power in LAr */
@@ -224,6 +229,10 @@ private:
 
   float _merge_bestdot;
   float _merge_bestdist;
+
+  // ELECTRON-CLUSTER tagger
+  float _elecclusters_U_charge, _elecclusters_V_charge, _elecclusters_Y_charge;
+  int _elecclusters_U_N, _elecclusters_V_N, _elecclusters_Y_N;
 
   float _merge_vtx_x;
   float _merge_vtx_y;
@@ -351,6 +360,9 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
     fMCRproducer = pset.get<art::InputTag>("MCRproducer", "mcreco");
     fBacktrackTag = pset.get<art::InputTag>("BacktrackTag", "gaushitTruthMatch");
     fMCPproducer = pset.get<art::InputTag>("MCPproducer", "largeant");
+    // for 2D tagging
+    fClusterproducer = pset.get<art::InputTag>("Clusterproducer");
+    fHitproducer     = pset.get<art::InputTag>("Hitproducer");
 
     fADCtoE = pset.get<std::vector<float>>("ADCtoE");
 
@@ -485,14 +497,18 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     }// for all PFParticles
     // DONE checking if vertex is in the fiducial volume
 
+    // store electron-candidate and proton-candidate 3d vertex and direction
     TVector3 total_p;
     TVector3 total_p_mu;
     TVector3 trk_vtx;
-    TVector3 shr_vtx;
+    TVector3 elec_vtx;
+    TVector3 elec_dir;
     TVector3 trk_p;
     TVector3 trk_p_mu;
     TVector3 shr_p;
     std::vector<float> matched_energies;
+
+
 
     // NEXT STEP : find showers
     // all showers will be merged in order to determine the shower energy
@@ -672,7 +688,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     }
 
                     _shr_distance = (shr->ShowerStart() - nuvtx).Mag();
-                    shr_vtx = shr->ShowerStart();
+                    elec_vtx = shr->ShowerStart();
+                    elec_dir = shr->Direction();
                     shr_p.SetXYZ(shr->Direction().X(), shr->Direction().Y(), shr->Direction().Z());
                     shr_p.SetMag(sqrt(pow(shr->Energy()[2] / 1000. + electron->Mass(), 2) - pow(electron->Mass(), 2)));
                     total_p += shr_p;
@@ -925,10 +942,12 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
                 // Kinetic energy from stopping power of proton in LAr
                 float energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), proton->PdgCode()), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
+                float energy_proton_sce = std::sqrt(std::pow(_trkmom.GetTrackMomentum(searchingfornues::GetSCECorrTrackLength(trk), proton->PdgCode()), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
                 _trk_energy_tot += energy_proton;
                 _trk_hits_tot += trk_hits;
 
-                float energy_muon = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), muon->PdgCode()), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
+                float energy_muon     = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), muon->PdgCode()), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
+                float energy_muon_sce = std::sqrt(std::pow(_trkmom.GetTrackMomentum(searchingfornues::GetSCECorrTrackLength(trk), muon->PdgCode()), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
                 _trk_energy_muon_tot += energy_muon;
 
                 auto trkpxy2 = pid_proxy[trk.key()];
@@ -986,7 +1005,9 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _trk_distance = (trk_vtx - nu_vtx).Mag();
                     _trk_len = trk->Length();
                     _trk_energy = energy_proton;
+                    _trk_energy_sce = energy_proton_sce;
                     _trk_energy_muon = energy_muon;
+                    _trk_energy_muon_sce = energy_muon_sce;
                     _trk_energy_muon_mcs = std::sqrt(std::pow(mcsfitter.fitMcs(trk->Trajectory(), muon->PdgCode()).bestMomentum(), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
                     _trk_pfp_id = i_pfp;
                     _trk_hits_max = trk_hits;
@@ -1018,6 +1039,107 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
             }
         }
     }
+
+    // BEGIN CLUSTER-TAGGING
+    // search for shower-branches in slice but not reconstructed as 3D pfparticles
+    // grab clusters themselves
+    auto const& cluster_h = e.getValidHandle<std::vector<recob::Cluster> >(fClusterproducer);
+    // get hits associated to clusters
+    art::FindManyP<recob::Hit> clus_hit_assn_v(cluster_h, e, fClusterproducer);
+    // grab hits themselves
+    auto const& hit_h = e.getValidHandle<std::vector<recob::Hit> >(fHitproducer);
+
+    for (unsigned int pl=0; pl < 3; pl++) {
+    
+      // reset plane variables
+      float mosthits = 0;
+      float charge = 0.;
+      float vtxdistancemin = 1e6; // min distance to neutrino vertex
+      
+      TVectorD eigenVal(2);
+      TMatrixD eigenVec(2,2);
+
+      // loop through clusters
+      for (size_t c=0; c < cluster_h->size(); c++) {
+	auto clus = cluster_h->at(c);
+	
+	// get associated hits
+	auto clus_hit_v = clus_hit_assn_v.at( c );
+	
+	// create vector of gaushits corresponding to new proton hits
+	auto gaushit_hit_v = searchingfornues::getGaussHits(clus_hit_v, hit_h);
+	
+	// no hits associated to the cluster? weird...skip...
+	if (gaushit_hit_v.size() == 0) continue;
+	
+	unsigned int PLANE = (gaushit_hit_v.at(0))->WireID().Plane;
+	
+	// focus one plane at a time
+	if (PLANE != pl) continue;
+	
+	int clushits = clus_hit_v.size();
+
+	// we are focusing on the largest cluster per plane
+	// continue if not this one
+	if (clushits <= mosthits) continue;
+
+	mosthits = clushits;
+	
+	// reset variables
+	charge = 0;
+	vtxdistancemin = 1e6;
+	// and store the wire-tick closest to the vertex
+	float clusStartW, clusStartT;
+	
+	for (size_t hi=0; hi < gaushit_hit_v.size(); hi++) {
+	  auto hit = gaushit_hit_v.at(hi);
+	  //gammaWire += hit->WireID().Wire * _wire2cm * hit->Integral();
+	  //gammaTime += (hit->PeakTime() - detp->TriggerOffset())  * _time2cm * hit->Integral();
+	  charge += hit->Integral();
+	  auto vtxdistance = searchingfornues::HitPtDistance(nuvtx,hit,_wire2cm,_time2cm);
+	  if (vtxdistance < vtxdistancemin) { 
+	    vtxdistancemin = vtxdistance; 
+	    searchingfornues::GetHitWireTime(hit,_wire2cm, _time2cm, clusStartW,clusStartT);
+	  }
+	}
+
+	searchingfornues::PCA(clus_hit_v, _wire2cm, _time2cm, eigenVal, eigenVec);
+
+	// get dot-product with 3D shower direction
+	float nuedot, nuedist;
+	searchingfornues::GammaDot(clusStartW,clusStartT,pl,
+				  elec_vtx,elec_dir,_wire2cm,nuedot,nuedist);
+
+	// apply cut on dot-product
+	if (nuedot < 0.9) continue;
+	
+	/*
+	// measure alignment between cluster direction and vtx -> cluster start
+	dot = searchingfornues::ClusterVtxAlignment(nuvtx, clus_hit_v,_wire2cm,_time2cm);
+
+	// save charge-weieghted 2D direction of cluster hits to neutrino vertex 
+	// this will be used to compare the direction with the candidate shower direction
+	angle = searchingfornues::ClusterVtxDirection(nuvtx, clus_hit_v,_wire2cm,_time2cm);
+	*/
+
+	if (pl==0) {
+	  _elecclusters_U_charge  += charge;
+	  _elecclusters_U_N       += 1;
+	}
+	if (pl==1) {
+	  _elecclusters_V_charge  += charge;
+	  _elecclusters_V_N       += 1;
+	}
+	if (pl==2) {
+	  _elecclusters_Y_charge  += charge;
+	  _elecclusters_Y_N       += 1;
+	}// for all 2D clusters
+	
+      }
+      
+    }// for all planes
+
+    // END CLUSTER-TAGGING
     
     TVector3 _merge_vtx;
 
@@ -1031,6 +1153,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     _trkshrhitdist1 = trkshrhitdist_v[1];
     _trkshrhitdist2 = trkshrhitdist_v[2];
 
+
     _extra_energy_y -= (_trk_energy_hits_tot + _shr_energy_tot);
     _pt = total_p.Perp();
     _p = total_p.Mag();
@@ -1038,7 +1161,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     _p_assume_muon = total_p_mu.Mag();
     if (_trk_hits_tot + _shr_hits_tot > 0)
         _hits_ratio = (float)_shr_hits_tot / (_trk_hits_tot + _shr_hits_tot);
-    _tksh_distance = (trk_vtx - shr_vtx).Mag();
+    _tksh_distance = (trk_vtx - elec_vtx).Mag();
     if (trk_p.Mag() * shr_p.Mag() > 0)
         _tksh_angle = trk_p.Dot(shr_p) / (trk_p.Mag() * shr_p.Mag());
     if (trk_p_mu.Mag() * shr_p.Mag() > 0)
@@ -1052,6 +1175,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
     if (!(_n_showers_contained > 0))
         return false;
+
     return true;
 }
 
@@ -1087,7 +1211,9 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _trk_distance = std::numeric_limits<float>::lowest();
     _trk_len = std::numeric_limits<float>::lowest();
     _trk_energy = 0;
+    _trk_energy_sce = 0;
     _trk_energy_muon = 0;
+    _trk_energy_muon_sce = 0;
     _trk_energy_muon_mcs = 0;
     _trk_energy_tot = 0;
     _trk_energy_muon_tot = 0;
@@ -1180,6 +1306,14 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_tkfit_nhits_Y_alt = 0;
     _shr_tkfit_nhits_U_alt = 0;
     _shr_tkfit_nhits_V_alt = 0;
+
+    _elecclusters_U_charge = 0;
+    _elecclusters_V_charge = 0;
+    _elecclusters_Y_charge = 0;
+    
+    _elecclusters_U_N = 0;
+    _elecclusters_V_N = 0;
+    _elecclusters_Y_N = 0;
 
 
     _shr_tkfit_npoints = std::numeric_limits<int>::lowest();
@@ -1337,7 +1471,9 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("trk_theta", &_trk_theta, "trk_theta/F");
     _tree->Branch("trk_phi", &_trk_phi, "trk_phi/F");
     _tree->Branch("trk_energy", &_trk_energy, "trk_energy/F");
+    _tree->Branch("trk_energy_sce", &_trk_energy_sce, "trk_energy_sce/F");
     _tree->Branch("trk_energy_muon", &_trk_energy_muon, "trk_energy_muon/F");
+    _tree->Branch("trk_energy_muon_sce", &_trk_energy_muon_sce, "trk_energy_muon_sce/F");
     _tree->Branch("trk_energy_muon_mcs", &_trk_energy_muon_mcs, "trk_energy_muon_mcs/F");
     _tree->Branch("trk_energy_tot", &_trk_energy_tot, "trk_energy_tot/F");
     _tree->Branch("trk_energy_muon_tot", &_trk_energy_muon_tot, "trk_energy_muon_tot/F");
@@ -1393,6 +1529,14 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("trk_hits_y_tot", &_trk_hits_y_tot, "trk_hits_y_tot/i");
     _tree->Branch("trk_hits_u_tot", &_trk_hits_u_tot, "trk_hits_u_tot/i");
     _tree->Branch("trk_hits_v_tot", &_trk_hits_v_tot, "trk_hits_v_tot/i");
+
+    _tree->Branch("_elecclusters_U_charge",&_elecclusters_U_charge,"elecclusters_U_charge/F");
+    _tree->Branch("_elecclusters_V_charge",&_elecclusters_V_charge,"elecclusters_V_charge/F");
+    _tree->Branch("_elecclusters_Y_charge",&_elecclusters_Y_charge,"elecclusters_Y_charge/F");
+
+    _tree->Branch("_elecclusters_U_N",&_elecclusters_U_N,"elecclusters_U_N/I");
+    _tree->Branch("_elecclusters_V_N",&_elecclusters_V_N,"elecclusters_V_N/I");
+    _tree->Branch("_elecclusters_Y_N",&_elecclusters_Y_N,"elecclusters_Y_N/I");
 
     _tree->Branch("n_tracks_contained", &_n_tracks_contained, "n_tracks_contained/i");
     _tree->Branch("n_showers_contained", &_n_showers_contained, "n_showers_contained/i");
