@@ -184,8 +184,9 @@ private:
   // reco PFParticle backtracking. One entry for PFParticle in the slice
   // std::vector<int>   _backtracked_idx;    // index of PFP [key]
   // std::vector<int>   _backtracked_tid;    // TrackID of backtracked MCParticle
-  std::vector<int> _backtracked_pdg;              // PDG code of backtracked particle
+  std::vector<int>   _backtracked_pdg;            // PDG code of backtracked particle
   std::vector<float> _backtracked_e;              // energy of backtracked particle
+  std::vector<int>   _backtracked_tid;            // track-id of backtracked particle
   std::vector<float> _backtracked_purity;         // purity of backtracking
   std::vector<float> _backtracked_completeness;   // completeness of backtracking
   std::vector<float> _backtracked_overlay_purity; // purity of overlay
@@ -602,6 +603,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           //_backtracked_idx.push_back(pfp->Self());
           //_backtracked_tid.push_back(mcp->TrackId());
           _backtracked_e.push_back(mcp.e);
+          _backtracked_tid.push_back(mcp.tids.at(0));
           _backtracked_pdg.push_back(PDG);
           _backtracked_purity.push_back(purity);
           _backtracked_completeness.push_back(completeness);
@@ -678,6 +680,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           // _backtracked_idx.push_back(0);
           // _backtracked_tid.push_back(0);
           _backtracked_e.push_back(std::numeric_limits<float>::lowest());
+          _backtracked_tid.push_back(std::numeric_limits<int>::lowest());
           _backtracked_pdg.push_back(0);
           _backtracked_purity.push_back(std::numeric_limits<float>::lowest());
           _backtracked_completeness.push_back(std::numeric_limits<float>::lowest());
@@ -888,6 +891,7 @@ void DefaultAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("backtracked_pdg", "std::vector<int>", &_backtracked_pdg);
   _tree->Branch("backtracked_e", "std::vector<float>", &_backtracked_e);
+  _tree->Branch("backtracked_tid", "std::vector<int>", &_backtracked_tid);
   _tree->Branch("backtracked_purity", "std::vector<float>", &_backtracked_purity);
   _tree->Branch("backtracked_completeness", "std::vector<float>", &_backtracked_completeness);
   _tree->Branch("backtracked_overlay_purity", "std::vector<float>", &_backtracked_overlay_purity);
@@ -1050,6 +1054,7 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   // _backtracked_idx.clear();
   // _backtracked_tid.clear();
   _backtracked_e.clear();
+  _backtracked_tid.clear();
   _backtracked_pdg.clear();
   _backtracked_purity.clear();
   _backtracked_completeness.clear();

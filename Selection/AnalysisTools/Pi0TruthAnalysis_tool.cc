@@ -81,11 +81,14 @@ private:
   art::InputTag fMCSproducer;
   art::InputTag fMCPproducer;
 
+  int   _pi0truth_gamma1_tid; // track-id of the gamma
   float _pi0truth_gamma1_edep;
   float _pi0truth_gamma1_etot;
   float _pi0truth_gamma1_dist;
   float _pi0truth_gamma1_elec1; // truth energy of 1st daughter electron
   float _pi0truth_gamma1_elec2; // truth energy of 2nd daughter electron
+
+  int   _pi0truth_gamma2_tid;
   float _pi0truth_gamma2_edep;
   float _pi0truth_gamma2_etot;
   float _pi0truth_gamma2_dist;
@@ -188,11 +191,14 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
   vtx_sce_z = vtx_sce[2];
 
   // nucleus induced pi0 gammas
+  _pi0truth_gamma1_tid  = 0;
   _pi0truth_gamma1_edep = 0;
   _pi0truth_gamma1_etot = 0;
   _pi0truth_gamma2_edep = 0;
   _pi0truth_gamma1_elec1 = 0;
   _pi0truth_gamma1_elec2 = 0;
+
+  _pi0truth_gamma2_tid  = 0;
   _pi0truth_gamma2_etot = 0;
   _pi0truth_gamma1_dist = -1;
   _pi0truth_gamma2_dist = -1;
@@ -254,6 +260,7 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
 
       // gamma1 is the larger energy photon
       if (etot > _pi0truth_gamma1_etot) {
+	_pi0truth_gamma2_tid  = _pi0truth_gamma1_tid;
 	_pi0truth_gamma2_etot = _pi0truth_gamma1_etot;
 	_pi0truth_gamma2_edep = _pi0truth_gamma1_edep;
 	_pi0truth_gamma2_elec1 = _pi0truth_gamma1_elec1;
@@ -261,6 +268,7 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
 	if (_pi0truth_gamma2_edep > 0)
 	  _pi0truth_gamma2_dist = _pi0truth_gamma1_dist;
 	dir2 = dir1;
+	_pi0truth_gamma1_tid  = MCSID;
 	_pi0truth_gamma1_etot = etot;
 	_pi0truth_gamma1_edep = edep;
 	_pi0truth_gamma1_elec1 = d0.E(0);
@@ -273,6 +281,7 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
 
       // gamma2 is the sub-leading photon
       else if (etot > _pi0truth_gamma2_etot) {
+	_pi0truth_gamma2_tid  = MCSID;
 	_pi0truth_gamma2_etot = etot;
 	_pi0truth_gamma2_edep = edep;
 	_pi0truth_gamma2_elec1 = d0.E(0);
@@ -325,12 +334,14 @@ void Pi0TruthAnalysis::setBranches(TTree *_tree)
   _tree->Branch("pi0truth_elec_dist",   &_pi0truth_elec_dist,   "pi0truth_elec_dist/F");
   _tree->Branch("pi0truth_elec_parent", &_pi0truth_elec_parent, "pi0truth_elec_parent/I");
 
+  _tree->Branch("pi0truth_gamma1_tid" , &_pi0truth_gamma1_tid , "pi0truth_gamma1_tid/I" );
   _tree->Branch("pi0truth_gamma1_edep", &_pi0truth_gamma1_edep, "pi0truth_gamma1_edep/F");
   _tree->Branch("pi0truth_gamma1_etot", &_pi0truth_gamma1_etot, "pi0truth_gamma1_etot/F");
   _tree->Branch("pi0truth_gamma1_dist", &_pi0truth_gamma1_dist, "pi0truth_gamma1_dist/F");
   _tree->Branch("pi0truth_gamma1_elec1", &_pi0truth_gamma1_elec1, "pi0truth_gamma1_elec1/F");
   _tree->Branch("pi0truth_gamma1_elec2", &_pi0truth_gamma1_elec2, "pi0truth_gamma1_elec2/F");
 
+  _tree->Branch("pi0truth_gamma2_tid" , &_pi0truth_gamma2_tid , "pi0truth_gamma2_tid/I" );
   _tree->Branch("pi0truth_gamma2_edep", &_pi0truth_gamma2_edep, "pi0truth_gamma2_edep/F");
   _tree->Branch("pi0truth_gamma2_etot", &_pi0truth_gamma2_etot, "pi0truth_gamma2_etot/F");
   _tree->Branch("pi0truth_gamma2_dist", &_pi0truth_gamma2_dist, "pi0truth_gamma2_dist/F");
@@ -344,8 +355,15 @@ void Pi0TruthAnalysis::setBranches(TTree *_tree)
 void Pi0TruthAnalysis::resetTTree(TTree *_tree)
 {
 
+  _pi0truth_gamma1_tid = 0;
+  _pi0truth_gamma1_elec1 = 0;
+  _pi0truth_gamma1_elec2 = 0;
   _pi0truth_gamma1_edep = 0;
   _pi0truth_gamma1_etot = 0;
+
+  _pi0truth_gamma2_tid = 0;
+  _pi0truth_gamma2_elec1 = 0;
+  _pi0truth_gamma2_elec2 = 0;
   _pi0truth_gamma2_edep = 0;
   _pi0truth_gamma2_etot = 0;
   
