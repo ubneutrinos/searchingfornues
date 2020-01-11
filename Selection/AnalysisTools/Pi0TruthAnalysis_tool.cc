@@ -79,13 +79,18 @@ private:
 
   art::InputTag fMCTproducer;
   art::InputTag fMCSproducer;
+  art::InputTag fMCPproducer;
 
   float _pi0truth_gamma1_edep;
   float _pi0truth_gamma1_etot;
   float _pi0truth_gamma1_dist;
+  float _pi0truth_gamma1_elec1; // truth energy of 1st daughter electron
+  float _pi0truth_gamma1_elec2; // truth energy of 2nd daughter electron
   float _pi0truth_gamma2_edep;
   float _pi0truth_gamma2_etot;
   float _pi0truth_gamma2_dist;
+  float _pi0truth_gamma2_elec1; // truth energy of 1st daughter electron
+  float _pi0truth_gamma2_elec2; // truth energy of 2nd daughter electron
   float _pi0truth_gammadot;
 
   TVector3 dir1, dir2;
@@ -113,6 +118,7 @@ Pi0TruthAnalysis::Pi0TruthAnalysis(const fhicl::ParameterSet &p)
 {
   fMCTproducer = p.get<art::InputTag>("MCTproducer", "");
   fMCSproducer = p.get<art::InputTag>("MCSproducer", "");
+  fMCPproducer = p.get<art::InputTag>("MCPproducer", "");
 }
 
 //----------------------------------------------------------------------------
@@ -146,6 +152,24 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
   // load MCShowers
   auto const &mcs_h = e.getValidHandle<std::vector<sim::MCShower>>(fMCSproducer);
 
+  // load MCParticles
+  auto const &mcp_h = e.getValidHandle<std::vector<simb::MCParticle>>(fMCPproducer);
+
+  // map mcp track-id to index
+  std::map<int,int> MCPmap;
+  // map mcp track-id to daughter track-ids
+  std::map<int,std::vector<int>> MCPdaughterMap;
+  for (size_t p=0; p < mcp_h->size(); p++) {
+    auto mcp = mcp_h->at(p);
+    MCPmap[mcp.TrackId()] = p;
+    size_t ndaughters = mcp.NumberDaughters();
+    std::vector<int> daughter_v;
+    for (size_t d=0; d < ndaughters; d++) {
+      daughter_v.push_back( mcp.Daughter(d) );
+    }// for all daughter particles
+    MCPdaughterMap[mcp.TrackId()] = daughter_v;
+  }
+
   auto mct = mct_h->at(0);
   auto neutrino = mct.GetNeutrino();
   auto nu = neutrino.Nu();
@@ -167,9 +191,14 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
   _pi0truth_gamma1_edep = 0;
   _pi0truth_gamma1_etot = 0;
   _pi0truth_gamma2_edep = 0;
+  _pi0truth_gamma1_elec1 = 0;
+  _pi0truth_gamma1_elec2 = 0;
   _pi0truth_gamma2_etot = 0;
   _pi0truth_gamma1_dist = -1;
   _pi0truth_gamma2_dist = -1;
+  _pi0truth_gamma2_elec1 = 0;
+  _pi0truth_gamma2_elec2 = 0;
+
   _pi0truth_gammadot = -2;
   
   _pi0truth_gamma_parent = 0;
@@ -204,6 +233,22 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
     auto etot = mcs.Start().E();
     auto edep = mcs.DetProfile().E();
 
+    // get track-ID of shower
+    auto MCSID = mcs.TrackID();
+    // link this back to MCParticle from which it comes
+    auto gammaMCP = mcp_h->at( MCPmap[MCSID] );
+    // find daughters of gamma
+    auto GAMMAdaughters = MCPdaughterMap[ MCSID ];
+    //std::cout << "[Pi0TruthAnalysis] photon has " << GAMMAdaughters.size() << " daughter particles" << std::endl;
+    simb::MCParticle d0; // first daughter
+    simb::MCParticle d1; // second daughter
+    if (GAMMAdaughters.size() == 2) {
+      d0 = mcp_h->at( MCPmap[ GAMMAdaughters[0] ] );
+      d1 = mcp_h->at( MCPmap[ GAMMAdaughters[1] ] );
+      //std::cout << "[Pi0TruthAnalysis] \t gamma [ " << etot << " MeV ] -> electron (" << d0.PdgCode() << ") of [ " << d0.E(0) * 1000. << " MeV ] and "
+      //	<< " electron (" << d1.PdgCode() << ") of [ " << d1.E(0) * 1000. << " MeV ]" << std::endl;
+    }
+
     // if originating from the nucleus
     if ( d < 0.01 ){
 
@@ -211,11 +256,15 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
       if (etot > _pi0truth_gamma1_etot) {
 	_pi0truth_gamma2_etot = _pi0truth_gamma1_etot;
 	_pi0truth_gamma2_edep = _pi0truth_gamma1_edep;
+	_pi0truth_gamma2_elec1 = _pi0truth_gamma1_elec1;
+	_pi0truth_gamma2_elec2 = _pi0truth_gamma1_elec2;;
 	if (_pi0truth_gamma2_edep > 0)
 	  _pi0truth_gamma2_dist = _pi0truth_gamma1_dist;
 	dir2 = dir1;
 	_pi0truth_gamma1_etot = etot;
 	_pi0truth_gamma1_edep = edep;
+	_pi0truth_gamma1_elec1 = d0.E(0);
+	_pi0truth_gamma1_elec2 = d1.E(0);
 	if (_pi0truth_gamma1_edep > 0)
 	  _pi0truth_gamma1_dist = dg;
 	dir1 = dir;
@@ -226,6 +275,8 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
       else if (etot > _pi0truth_gamma2_etot) {
 	_pi0truth_gamma2_etot = etot;
 	_pi0truth_gamma2_edep = edep;
+	_pi0truth_gamma2_elec1 = d0.E(0);
+	_pi0truth_gamma2_elec2 = d1.E(0);
 	if (_pi0truth_gamma2_edep > 0)
 	  _pi0truth_gamma2_dist = dg;
 	dir2 = dir;
@@ -277,10 +328,14 @@ void Pi0TruthAnalysis::setBranches(TTree *_tree)
   _tree->Branch("pi0truth_gamma1_edep", &_pi0truth_gamma1_edep, "pi0truth_gamma1_edep/F");
   _tree->Branch("pi0truth_gamma1_etot", &_pi0truth_gamma1_etot, "pi0truth_gamma1_etot/F");
   _tree->Branch("pi0truth_gamma1_dist", &_pi0truth_gamma1_dist, "pi0truth_gamma1_dist/F");
+  _tree->Branch("pi0truth_gamma1_elec1", &_pi0truth_gamma1_elec1, "pi0truth_gamma1_elec1/F");
+  _tree->Branch("pi0truth_gamma1_elec2", &_pi0truth_gamma1_elec2, "pi0truth_gamma1_elec2/F");
 
   _tree->Branch("pi0truth_gamma2_edep", &_pi0truth_gamma2_edep, "pi0truth_gamma2_edep/F");
   _tree->Branch("pi0truth_gamma2_etot", &_pi0truth_gamma2_etot, "pi0truth_gamma2_etot/F");
   _tree->Branch("pi0truth_gamma2_dist", &_pi0truth_gamma2_dist, "pi0truth_gamma2_dist/F");
+  _tree->Branch("pi0truth_gamma2_elec1", &_pi0truth_gamma2_elec1, "pi0truth_gamma2_elec1/F");
+  _tree->Branch("pi0truth_gamma2_elec2", &_pi0truth_gamma2_elec2, "pi0truth_gamma2_elec2/F");
 
   _tree->Branch("pi0truth_gammadot", &_pi0truth_gammadot, "pi0truth_gammadot/F");
 
