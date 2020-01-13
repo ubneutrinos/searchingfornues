@@ -115,19 +115,21 @@ void EventFilter::analyzeEvent(art::Event const &e, bool fData)
   if (!fData) {
     
     art::InputTag trigResInputTag("TriggerResults","","OverlayFiltersPostStage2"); // the last is the name of process where the filters were run
-    art::ValidHandle<art::TriggerResults> trigRes = e.getValidHandle<art::TriggerResults>(trigResInputTag);
-    fhicl::ParameterSet pset;
-    if (!fhicl::ParameterSetRegistry::get(trigRes->parameterSetID(), pset)) { throw cet::exception("PSet Not Found???"); }
-    std::vector<std::string> trigger_path_names = pset.get<std::vector<std::string> >("trigger_paths", {});
-    if (trigger_path_names.size()!=trigRes->size()) { throw cet::exception("Size mismatch???"); }
-    for (size_t itp=0;itp<trigRes->size();itp++) {
-      //
-      if (trigger_path_names.at(itp)=="NuCC")    { _filter_ccinclusive = trigRes->at(itp).accept(); }
-      if (trigger_path_names.at(itp)=="antibdt") { _filter_antibdt     = trigRes->at(itp).accept(); }
-      if (trigger_path_names.at(itp)=="ncpi0")   { _filter_ncpi0       = trigRes->at(itp).accept(); }
-      if (trigger_path_names.at(itp)=="pi0")     { _filter_pi0         = trigRes->at(itp).accept(); }
+    art::Handle<art::TriggerResults> trigRes;
+    e.getByLabel(trigResInputTag,trigRes);
+    if (trigRes.isValid()){
+      fhicl::ParameterSet pset;
+      if (!fhicl::ParameterSetRegistry::get(trigRes->parameterSetID(), pset)) { throw cet::exception("PSet Not Found???"); }
+      std::vector<std::string> trigger_path_names = pset.get<std::vector<std::string> >("trigger_paths", {});
+      if (trigger_path_names.size()!=trigRes->size()) { throw cet::exception("Size mismatch???"); }
+      for (size_t itp=0;itp<trigRes->size();itp++) {
+	//
+	if (trigger_path_names.at(itp)=="NuCC")    { _filter_ccinclusive = trigRes->at(itp).accept(); }
+	if (trigger_path_names.at(itp)=="antibdt") { _filter_antibdt     = trigRes->at(itp).accept(); }
+	if (trigger_path_names.at(itp)=="ncpi0")   { _filter_ncpi0       = trigRes->at(itp).accept(); }
+	if (trigger_path_names.at(itp)=="pi0")     { _filter_pi0         = trigRes->at(itp).accept(); }
+      }
     }
-  
   }// if not data
   
 }
