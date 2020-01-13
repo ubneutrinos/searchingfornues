@@ -287,8 +287,10 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
 	_pi0truth_gamma1_tid  = MCSID;
 	_pi0truth_gamma1_etot = etot;
 	_pi0truth_gamma1_edep = edep;
-	_pi0truth_gamma1_elec1 = d0.E(0);
-	_pi0truth_gamma1_elec2 = d1.E(0);
+	if (d0.NumberTrajectoryPoints() > 0) 
+	  _pi0truth_gamma1_elec1 = d0.E(0);
+	if (d1.NumberTrajectoryPoints() > 0)
+	  _pi0truth_gamma1_elec2 = d1.E(0);
 	_pi0truth_gamma1_xpos = xg;
 	_pi0truth_gamma1_ypos = yg;
 	_pi0truth_gamma1_zpos = zg;
@@ -303,7 +305,9 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
 	_pi0truth_gamma2_tid  = MCSID;
 	_pi0truth_gamma2_etot = etot;
 	_pi0truth_gamma2_edep = edep;
+	if (d0.NumberTrajectoryPoints() > 0) 
 	_pi0truth_gamma2_elec1 = d0.E(0);
+	if (d1.NumberTrajectoryPoints() > 0) 
 	_pi0truth_gamma2_elec2 = d1.E(0);
 	_pi0truth_gamma2_xpos = xg;
 	_pi0truth_gamma2_ypos = yg;
