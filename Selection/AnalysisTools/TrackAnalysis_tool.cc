@@ -394,7 +394,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       _trk_theta_v.push_back(trk->Theta());
       _trk_phi_v.push_back(trk->Phi());
 
-      _trk_len_v.push_back(trk->Length());
+      _trk_len_v.push_back(searchingfornues::GetSCECorrTrackLength(trk));
 
       TVector3 trk_vtx_v;
       trk_vtx_v.SetXYZ(trk->Start().X(), trk->Start().Y(), trk->Start().Z());
