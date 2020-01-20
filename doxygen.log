@@ -1236,7 +1236,10 @@ Generating docs for compound CommonOptical/home/travis/build/ubneutrinos/searchi
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:113: warning: Member _pi0truth_elec_edep (variable) of class analysis::Pi0TruthAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:114: warning: Member _pi0truth_elec_etot (variable) of class analysis::Pi0TruthAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:115: warning: Member _pi0truth_elec_dist (variable) of class analysis::Pi0TruthAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:120: warning: argument 'pset' of command @param is not found in the argument list of analysis::Pi0TruthAnalysis::Pi0TruthAnalysis(const fhicl::ParameterSet &p)
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:117: warning: Member _pi0truth_run (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:117: warning: Member _pi0truth_sub (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:117: warning: Member _pi0truth_evt (variable) of class analysis::Pi0TruthAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:122: warning: argument 'pset' of command @param is not found in the argument list of analysis::Pi0TruthAnalysis::Pi0TruthAnalysis(const fhicl::ParameterSet &p)
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:43: warning: The following parameters of analysis::Pi0TruthAnalysis::Pi0TruthAnalysis(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/PMTNoise_tool.cc:107: warning: Member _run (variable) of class analysis::PMTNoise is not documented.
