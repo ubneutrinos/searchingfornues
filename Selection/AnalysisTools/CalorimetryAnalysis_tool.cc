@@ -92,7 +92,7 @@ public:
   /**
    * @brief get dEdx using constant MeV/cm value and ModBox recombination model, but accounting for local E-field variations
    */
-  std::vector<float> GetdEdxfromdQdx(const std::vector<float>& dqdx_v, 
+  std::vector<float> GetdEdxfromdQdx(const std::vector<float>& dqdx_v,
 				     const std::vector<float>& x_v,
 				     const std::vector<float>& y_v,
 				     const std::vector<float>& z_v,
@@ -132,11 +132,11 @@ private:
   art::InputTag fMCPproducer;
 
   bool fBacktrack; // do the backtracking needed for this module?
-  
+
   bool fShrFit; // use shower track-fitter info?
 
   std::vector<float> fADCtoE; // vector of ADC to # of e- conversion [to be taken from production reco2 fhicl files]
-  
+
   bool fGetCaloID; // get the index of the calorimetry object manually. Needs to be true unless object produced by Pandora hierarchy
   // (This is at least what I foudn empirically)
 
@@ -1006,7 +1006,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
 
   _trk_theta = trk->Theta();
   _trk_phi = trk->Phi();
-  _trk_len = trk->Length();
+  _trk_len = searchingfornues::GetSCECorrTrackLength(trk); 
 
   _trk_dir_x = trk->StartDirection().X();
   _trk_dir_y = trk->StartDirection().Y();
@@ -1047,9 +1047,9 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
     caloctr += 1;
   }// for all calo-proxy objects
   }// if we want to get the calo object index manually
-      
+
   auto calo_v = calo_proxy[key].get<anab::Calorimetry>();
-  
+
   for (auto const& calo : calo_v)
     {
       auto const& plane = calo->PlaneID().Plane;
@@ -1136,9 +1136,9 @@ std::vector<float> CalorimetryAnalysis::GetdEdxfromdQdx(const std::vector<float>
   for (size_t i=0; i < dqdx_v.size(); i++) {
 
     dedx_v.push_back( searchingfornues::GetdEdxfromdQdx(dqdx_v[i], x_v[i], y_v[i], z_v[i], 2.1, fADCtoE[plane]) );
-    
+
   }// for all points in track
-  
+
   return dedx_v;
 }
 
