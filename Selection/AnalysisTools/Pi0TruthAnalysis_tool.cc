@@ -114,6 +114,8 @@ private:
   float _pi0truth_elec_etot;
   float _pi0truth_elec_dist;
 
+  int _pi0truth_run, _pi0truth_sub, _pi0truth_evt;
+
 };
 
 //----------------------------------------------------------------------------
@@ -155,6 +157,10 @@ void Pi0TruthAnalysis::analyzeEvent(art::Event const &e, bool fData)
     return;
   }
 
+  _pi0truth_evt = e.event();
+  _pi0truth_sub = e.subRun();
+  _pi0truth_run = e.run();
+  
   // load MCTruth
   auto const &mct_h = e.getValidHandle<std::vector<simb::MCTruth>>(fMCTproducer);
 
@@ -381,6 +387,10 @@ void Pi0TruthAnalysis::setBranches(TTree *_tree)
   _tree->Branch("pi0truth_gamma2_zpos" , &_pi0truth_gamma2_zpos , "pi0truth_gamma2_zpos/F" );
 
   _tree->Branch("pi0truth_gammadot", &_pi0truth_gammadot, "pi0truth_gammadot/F");
+
+  _tree->Branch("pi0truth_run", &_pi0truth_run, "pi0truth_run/I");
+  _tree->Branch("pi0truth_sub", &_pi0truth_sub, "pi0truth_sub/I");
+  _tree->Branch("pi0truth_evt", &_pi0truth_evt, "pi0truth_evt/I");
 
 }
 

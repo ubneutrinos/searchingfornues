@@ -1,0 +1,28 @@
+# Subset of the full MCC9 GENIE configuration to use for first-pass LEE
+# sensitivities to be presented on 20 December 2019
+#
+# Maintainer: Steven Gardiner <gardiner@fnal.gov>
+microboone_eventweight_genie_dec20: {
+
+  weight_functions_genie: [
+    TunedCentralValue
+  ]
+
+
+  # Single function that applies all weights needed to obtain
+  # a new tuned central value
+  # NOTE: For samples generated with GENIE v3.0.4 splines, the
+  # spline weight to convert v3.0.4 --> v3.0.4a cross sections
+  # still needs to be applied as well.
+  TunedCentralValue: {
+    type: Genie
+    random_seed: 99
+    parameter_list: [ "MaCCQE", "RPA_CCQE", "NormCCMEC", "XSecShape_CCMEC" ]
+    # Dummy sigmas (central values are specified in EventWeight module configuration
+    # to ensure consistency across all weight calculators)
+    parameter_sigma: [ 1, 1, 1, 1 ]
+    mode: central_value
+    number_of_multisims: 1
+  }
+
+}
