@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
 <!ENTITY name "overlay_acpt">
-<!ENTITY project_version "v03">
-<!ENTITY release "v08_00_00_25">
+<!ENTITY project_version "v04">
+<!ENTITY release "v08_00_00_33">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "foppiani">
 <!ENTITY dataset "prod_crossingmuon_uboone_overlay_run1_reco2_reco2">
