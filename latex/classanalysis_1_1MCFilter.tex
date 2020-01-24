@@ -1,0 +1,152 @@
+\hypertarget{classanalysis_1_1MCFilter}{}\section{analysis\+:\+:M\+C\+Filter Class Reference}
+\label{classanalysis_1_1MCFilter}\index{analysis\+::\+M\+C\+Filter@{analysis\+::\+M\+C\+Filter}}
+Inheritance diagram for analysis\+:\+:M\+C\+Filter\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classanalysis_1_1MCFilter}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classanalysis_1_1MCFilter_a4674d0a8c4bb203b107cbf33b132cf4e}{M\+C\+Filter} (const fhicl\+::\+Parameter\+Set \&pset)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{classanalysis_1_1MCFilter_a29c1e440a007d89982d765b100a02098}{$\sim$\+M\+C\+Filter} ()\hypertarget{classanalysis_1_1MCFilter_a29c1e440a007d89982d765b100a02098}{}\label{classanalysis_1_1MCFilter_a29c1e440a007d89982d765b100a02098}
+
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1MCFilter_af59bef8a2a10217dd9e5dd5ef68e7b40}{configure} (fhicl\+::\+Parameter\+Set const \&pset)
+\item 
+void \hyperlink{classanalysis_1_1MCFilter_a4333e02179125d550675c38666b6dd43}{analyze\+Event} (art\+::\+Event const \&e, bool f\+Data) override
+\begin{DoxyCompactList}\small\item\em Analysis function. \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1MCFilter_a35bda3e9965c91f64de0dd8805511b63}{analyze\+Slice} (art\+::\+Event const \&e, std\+::vector$<$ Proxy\+Pfp\+Elem\+\_\+t $>$ \&slice\+\_\+pfp\+\_\+v, bool f\+Data, bool selected) override\hypertarget{classanalysis_1_1MCFilter_a35bda3e9965c91f64de0dd8805511b63}{}\label{classanalysis_1_1MCFilter_a35bda3e9965c91f64de0dd8805511b63}
+
+\begin{DoxyCompactList}\small\item\em Analyze slice. \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1MCFilter_a234a91a218b34d4c5d9b2599e9cba6cf}{Save\+Truth} (art\+::\+Event const \&e)\hypertarget{classanalysis_1_1MCFilter_a234a91a218b34d4c5d9b2599e9cba6cf}{}\label{classanalysis_1_1MCFilter_a234a91a218b34d4c5d9b2599e9cba6cf}
+
+\begin{DoxyCompactList}\small\item\em Save truth info for event associated to neutrino. \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1MCFilter_ad1f3f15574d2dfc577eeb1a5d160a615}{set\+Branches} (T\+Tree $\ast$\+\_\+tree) override\hypertarget{classanalysis_1_1MCFilter_ad1f3f15574d2dfc577eeb1a5d160a615}{}\label{classanalysis_1_1MCFilter_ad1f3f15574d2dfc577eeb1a5d160a615}
+
+\begin{DoxyCompactList}\small\item\em set branches for T\+Tree \end{DoxyCompactList}\item 
+void \hyperlink{classanalysis_1_1MCFilter_a651e6df0f583124f12367cfffe4ccffc}{reset\+T\+Tree} (T\+Tree $\ast$\+\_\+tree) override\hypertarget{classanalysis_1_1MCFilter_a651e6df0f583124f12367cfffe4ccffc}{}\label{classanalysis_1_1MCFilter_a651e6df0f583124f12367cfffe4ccffc}
+
+\begin{DoxyCompactList}\small\item\em reset ttree branches \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+art\+::\+Input\+Tag {\bfseries f\+M\+C\+Tproducer}\hypertarget{classanalysis_1_1MCFilter_a34114085e663e12886a943d87727d074}{}\label{classanalysis_1_1MCFilter_a34114085e663e12886a943d87727d074}
+
+\item 
+art\+::\+Input\+Tag {\bfseries f\+M\+C\+Rproducer}\hypertarget{classanalysis_1_1MCFilter_a0bea112c5e3907d217a3467b39ca26ac}{}\label{classanalysis_1_1MCFilter_a0bea112c5e3907d217a3467b39ca26ac}
+
+\item 
+float {\bfseries \+\_\+mcf\+\_\+nu\+\_\+e}\hypertarget{classanalysis_1_1MCFilter_a3c7532543496ff0421a866a5799524c8}{}\label{classanalysis_1_1MCFilter_a3c7532543496ff0421a866a5799524c8}
+
+\item 
+float {\bfseries \+\_\+mcf\+\_\+lep\+\_\+e}\hypertarget{classanalysis_1_1MCFilter_a21f43051e17fd205d2e8237e944ec00e}{}\label{classanalysis_1_1MCFilter_a21f43051e17fd205d2e8237e944ec00e}
+
+\item 
+int {\bfseries \+\_\+mcf\+\_\+actvol}\hypertarget{classanalysis_1_1MCFilter_a194d9ed7260c901c32599eface0c78bf}{}\label{classanalysis_1_1MCFilter_a194d9ed7260c901c32599eface0c78bf}
+
+\item 
+int {\bfseries \+\_\+mcf\+\_\+nmm}\hypertarget{classanalysis_1_1MCFilter_a6314d2ed7133798bddc8fc68d3cb22ce}{}\label{classanalysis_1_1MCFilter_a6314d2ed7133798bddc8fc68d3cb22ce}
+
+\item 
+int {\bfseries \+\_\+mcf\+\_\+nmp}\hypertarget{classanalysis_1_1MCFilter_a65f2c84359cf43bc5e67fff9ce5bb9bb}{}\label{classanalysis_1_1MCFilter_a65f2c84359cf43bc5e67fff9ce5bb9bb}
+
+\item 
+int {\bfseries \+\_\+mcf\+\_\+nem}\hypertarget{classanalysis_1_1MCFilter_ac0517c9dc10e4cd90aa0ae05eb7ebf1d}{}\label{classanalysis_1_1MCFilter_ac0517c9dc10e4cd90aa0ae05eb7ebf1d}
+
+\item 
+int {\bfseries \+\_\+mcf\+\_\+nep}\hypertarget{classanalysis_1_1MCFilter_a928bf392f75a9949d432739502ebd81d}{}\label{classanalysis_1_1MCFilter_a928bf392f75a9949d432739502ebd81d}
+
+\item 
+int {\bfseries \+\_\+mcf\+\_\+np0}\hypertarget{classanalysis_1_1MCFilter_aed8150427b87d9dcd4be67478506b494}{}\label{classanalysis_1_1MCFilter_aed8150427b87d9dcd4be67478506b494}
+
+\item 
+int {\bfseries \+\_\+mcf\+\_\+npp}\hypertarget{classanalysis_1_1MCFilter_a89522765fc88905880763efa99edac7d}{}\label{classanalysis_1_1MCFilter_a89522765fc88905880763efa99edac7d}
+
+\item 
+int {\bfseries \+\_\+mcf\+\_\+npm}\hypertarget{classanalysis_1_1MCFilter_ad04d7b326f5ebd507f11a485318b5df0}{}\label{classanalysis_1_1MCFilter_ad04d7b326f5ebd507f11a485318b5df0}
+
+\item 
+float {\bfseries \+\_\+mcf\+\_\+mcshr\+\_\+elec\+\_\+etot}\hypertarget{classanalysis_1_1MCFilter_a929ec1002eb7280e819ec8b93f5044a8}{}\label{classanalysis_1_1MCFilter_a929ec1002eb7280e819ec8b93f5044a8}
+
+\item 
+int {\bfseries \+\_\+mcf\+\_\+pass\+\_\+ccpi0}\hypertarget{classanalysis_1_1MCFilter_a92eb159711967815e6085f277b2edce4}{}\label{classanalysis_1_1MCFilter_a92eb159711967815e6085f277b2edce4}
+
+\item 
+int {\bfseries \+\_\+mcf\+\_\+pass\+\_\+ncpi0}\hypertarget{classanalysis_1_1MCFilter_a6fb2db751fd59f00cdbaa49a9563a52b}{}\label{classanalysis_1_1MCFilter_a6fb2db751fd59f00cdbaa49a9563a52b}
+
+\item 
+int {\bfseries \+\_\+mcf\+\_\+pass\+\_\+ccnopi}\hypertarget{classanalysis_1_1MCFilter_aaff2efb0f23e9a4bc107875aba79fe2e}{}\label{classanalysis_1_1MCFilter_aaff2efb0f23e9a4bc107875aba79fe2e}
+
+\item 
+int {\bfseries \+\_\+mcf\+\_\+pass\+\_\+ncnopi}\hypertarget{classanalysis_1_1MCFilter_a38cab4dec760f87cd65b50475b6ee4ac}{}\label{classanalysis_1_1MCFilter_a38cab4dec760f87cd65b50475b6ee4ac}
+
+\item 
+int {\bfseries \+\_\+mcf\+\_\+pass\+\_\+cccpi}\hypertarget{classanalysis_1_1MCFilter_ab193923ab6fcdbba3cbde5e8e39648d7}{}\label{classanalysis_1_1MCFilter_ab193923ab6fcdbba3cbde5e8e39648d7}
+
+\item 
+int {\bfseries \+\_\+mcf\+\_\+pass\+\_\+nccpi}\hypertarget{classanalysis_1_1MCFilter_a417f1f48990180e47aa9232a6f008f5a}{}\label{classanalysis_1_1MCFilter_a417f1f48990180e47aa9232a6f008f5a}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\index{analysis\+::\+M\+C\+Filter@{analysis\+::\+M\+C\+Filter}!M\+C\+Filter@{M\+C\+Filter}}
+\index{M\+C\+Filter@{M\+C\+Filter}!analysis\+::\+M\+C\+Filter@{analysis\+::\+M\+C\+Filter}}
+\subsubsection[{\texorpdfstring{M\+C\+Filter(const fhicl\+::\+Parameter\+Set \&pset)}{MCFilter(const fhicl::ParameterSet &pset)}}]{\setlength{\rightskip}{0pt plus 5cm}analysis\+::\+M\+C\+Filter\+::\+M\+C\+Filter (
+\begin{DoxyParamCaption}
+\item[{const fhicl\+::\+Parameter\+Set \&}]{p}
+\end{DoxyParamCaption}
+)}\hypertarget{classanalysis_1_1MCFilter_a4674d0a8c4bb203b107cbf33b132cf4e}{}\label{classanalysis_1_1MCFilter_a4674d0a8c4bb203b107cbf33b132cf4e}
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pset} & Constructor.\\
+\hline
+\end{DoxyParams}
+Arguments\+:
+
+pset -\/ Fcl parameters. 
+
+\subsection{Member Function Documentation}
+\index{analysis\+::\+M\+C\+Filter@{analysis\+::\+M\+C\+Filter}!analyze\+Event@{analyze\+Event}}
+\index{analyze\+Event@{analyze\+Event}!analysis\+::\+M\+C\+Filter@{analysis\+::\+M\+C\+Filter}}
+\subsubsection[{\texorpdfstring{analyze\+Event(art\+::\+Event const \&e, bool f\+Data) override}{analyzeEvent(art::Event const &e, bool fData) override}}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\+::\+M\+C\+Filter\+::analyze\+Event (
+\begin{DoxyParamCaption}
+\item[{art\+::\+Event const \&}]{e, }
+\item[{bool}]{f\+Data}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}\hypertarget{classanalysis_1_1MCFilter_a4333e02179125d550675c38666b6dd43}{}\label{classanalysis_1_1MCFilter_a4333e02179125d550675c38666b6dd43}
+
+
+Analysis function. 
+
+Reconfigure method.
+
+Arguments\+:
+
+pset -\/ Fcl parameter set. 
+
+Implements \hyperlink{classanalysis_1_1AnalysisToolBase_ad5079f85c78e6c40f70ebf4ee31f5600}{analysis\+::\+Analysis\+Tool\+Base}.
+
+\index{analysis\+::\+M\+C\+Filter@{analysis\+::\+M\+C\+Filter}!configure@{configure}}
+\index{configure@{configure}!analysis\+::\+M\+C\+Filter@{analysis\+::\+M\+C\+Filter}}
+\subsubsection[{\texorpdfstring{configure(fhicl\+::\+Parameter\+Set const \&pset)}{configure(fhicl::ParameterSet const &pset)}}]{\setlength{\rightskip}{0pt plus 5cm}void analysis\+::\+M\+C\+Filter\+::configure (
+\begin{DoxyParamCaption}
+\item[{fhicl\+::\+Parameter\+Set const \&}]{p}
+\end{DoxyParamCaption}
+)}\hypertarget{classanalysis_1_1MCFilter_af59bef8a2a10217dd9e5dd5ef68e7b40}{}\label{classanalysis_1_1MCFilter_af59bef8a2a10217dd9e5dd5ef68e7b40}
+Reconfigure method.
+
+Arguments\+:
+
+pset -\/ Fcl parameter set. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/travis/build/ubneutrinos/searchingfornues/\+Selection/\+Analysis\+Tools/M\+C\+Filter\+\_\+tool.\+cc\end{DoxyCompactItemize}

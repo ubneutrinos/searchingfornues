@@ -75,5 +75,7 @@ var searchData=
   ['m_5fxclcoef',['m_xclCoef',['../classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate.html#ad903070f4430d2cdba484d4aa4036a13',1,'flashmatch::FlashMatchingTool::SliceCandidate']]],
   ['m_5fy',['m_y',['../classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate_1_1Deposition.html#aadf5e81fcb479aff701aa1bce36e42cc',1,'flashmatch::FlashMatchingTool::SliceCandidate::Deposition']]],
   ['m_5fz',['m_z',['../classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate_1_1Deposition.html#a60c7bb1d964b765e1d51755a709eee09',1,'flashmatch::FlashMatchingTool::SliceCandidate::Deposition']]],
+  ['mcfilter',['MCFilter',['../classanalysis_1_1MCFilter.html',1,'analysis']]],
+  ['mcfilter',['MCFilter',['../classanalysis_1_1MCFilter.html#a4674d0a8c4bb203b107cbf33b132cf4e',1,'analysis::MCFilter']]],
   ['mucsflashmatch',['MuCSFlashMatch',['../classMuCSFlashMatch.html',1,'']]]
 ];
