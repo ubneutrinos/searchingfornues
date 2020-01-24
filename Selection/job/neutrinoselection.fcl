@@ -25,7 +25,7 @@ CalorimetryAnalysisTool: {
     MCRproducer: "mcreco"
     MCPproducer: "largeant"
     GetCaloID: false
-    ADCtoE:  @local::microboone_reco_data_producers.pandoracalo.CaloAlg.CalAreaConstants
+    ADCtoE: @local::microboone_reco_data_producers.shrreco3d.ADCtoE
 }
 
 VertexAnalysisTool: {
