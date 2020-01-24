@@ -109,6 +109,12 @@ DefaultAnalysisTool: {
     fidvolZend: 50.
 }
 
+MCFilterAnalysisTool: {
+    tool_type: "MCFilter"
+    MCTproducer: "generator"
+    MCRproducer: "mcreco"
+}
+
 Pi0TruthAnalysisTool: {
     tool_type: "Pi0TruthAnalysis"
     MCTproducer: "generator"
@@ -222,6 +228,7 @@ NuSelectionFilter:{
         pi0tagger:     @local::Pi0TaggerTool
         zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
         secondshower:  @local::SecondShowerTaggerTool
+        mcfilter:      @local::MCFilterAnalysisTool
     }
 }
 
