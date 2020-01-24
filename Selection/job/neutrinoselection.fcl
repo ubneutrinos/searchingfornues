@@ -25,7 +25,7 @@ CalorimetryAnalysisTool: {
     MCRproducer: "mcreco"
     MCPproducer: "largeant"
     GetCaloID: false
-    ADCtoE:  @local::microboone_reco_data_producers.pandoracalo.CaloAlg.CalAreaConstants
+    ADCtoE: @local::microboone_reco_data_producers.shrreco3d.ADCtoE
 }
 
 VertexAnalysisTool: {
@@ -111,6 +111,12 @@ DefaultAnalysisTool: {
     fidvolYend: 6.
     fidvolZstart: 20.
     fidvolZend: 50.
+}
+
+MCFilterAnalysisTool: {
+    tool_type: "MCFilter"
+    MCTproducer: "generator"
+    MCRproducer: "mcreco"
 }
 
 Pi0TruthAnalysisTool: {
@@ -228,6 +234,7 @@ NuSelectionFilter:{
         zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
         secondshower:  @local::SecondShowerTaggerTool
         eventfilter:   @local::EventFilterTool
+        mcfilter:      @local::MCFilterAnalysisTool
     }
 }
 
