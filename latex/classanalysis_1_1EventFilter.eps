@@ -5,7 +5,7 @@
 %%For: 
 %Magnification: 1.00
 %%Orientation: Portrait
-%%BoundingBox: 0 0 500 905.349794
+%%BoundingBox: 0 0 500 232.558140
 %%Pages: 0
 %%BeginSetup
 %%EndSetup
@@ -19,13 +19,13 @@
 /marginwidth 10 def
 /distx 20 def
 /disty 40 def
-/boundaspect 0.552273 def  % aspect ratio of the BoundingBox (width/height)
+/boundaspect 2.150000 def  % aspect ratio of the BoundingBox (width/height)
 /boundx 500 def
 /boundy boundx boundaspect div def
 /xspacing 0 def
 /yspacing 0 def
-/rows 22 def
-/cols 2 def
+/rows 2 def
+/cols 1 def
 /scalefactor 0 def
 /boxfont /Times-Roman findfont fontheight scalefont def
 
@@ -173,28 +173,8 @@
 
 boxfont setfont
 1 boundaspect scale
-(analysis::AnalysisToolBase) cw
-(analysis::BDT) cw
-(analysis::CalorimetryAnalysis) cw
-(analysis::ContainmentAnalysis) cw
-(analysis::CosmicIP) cw
-(analysis::CRTApproachAnalysis) cw
-(analysis::DefaultAnalysis) cw
 (analysis::EventFilter) cw
-(analysis::EventWeightTree) cw
-(analysis::FlashMatching) cw
-(analysis::MCFilter) cw
-(analysis::NeutrinoEnergy) cw
-(analysis::ObviousCosmicFlashMatching) cw
-(analysis::Pi0Tagger) cw
-(analysis::Pi0TruthAnalysis) cw
-(analysis::PMTNoise) cw
-(analysis::SecondShowerTagger) cw
-(analysis::ShowerAnalysis) cw
-(analysis::ShowerStartPoint) cw
-(analysis::SlicePurCompl) cw
-(analysis::TrackAnalysis) cw
-(analysis::VertexAnalysis) cw
+(analysis::AnalysisToolBase) cw
 /boxwidth boxwidth marginwidth 2 mul add def
 /xspacing boxwidth distx add def
 /yspacing boxheight disty add def
@@ -206,74 +186,12 @@ boundx scalefactor div boundy scalefactor div scale
 
 % ----- classes -----
 
- (analysis::AnalysisToolBase) 0.000000 21.000000 box
- (analysis::BDT) 1.000000 20.000000 box
- (analysis::CalorimetryAnalysis) 1.000000 19.000000 box
- (analysis::ContainmentAnalysis) 1.000000 18.000000 box
- (analysis::CosmicIP) 1.000000 17.000000 box
- (analysis::CRTApproachAnalysis) 1.000000 16.000000 box
- (analysis::DefaultAnalysis) 1.000000 15.000000 box
- (analysis::EventFilter) 1.000000 14.000000 box
- (analysis::EventWeightTree) 1.000000 13.000000 box
- (analysis::FlashMatching) 1.000000 12.000000 box
- (analysis::MCFilter) 1.000000 11.000000 box
- (analysis::NeutrinoEnergy) 1.000000 10.000000 box
- (analysis::ObviousCosmicFlashMatching) 1.000000 9.000000 box
- (analysis::Pi0Tagger) 1.000000 8.000000 box
- (analysis::Pi0TruthAnalysis) 1.000000 7.000000 box
- (analysis::PMTNoise) 1.000000 6.000000 box
- (analysis::SecondShowerTagger) 1.000000 5.000000 box
- (analysis::ShowerAnalysis) 1.000000 4.000000 box
- (analysis::ShowerStartPoint) 1.000000 3.000000 box
- (analysis::SlicePurCompl) 1.000000 2.000000 box
- (analysis::TrackAnalysis) 1.000000 1.000000 box
- (analysis::VertexAnalysis) 1.000000 0.000000 box
+ (analysis::EventFilter) 0.000000 0.000000 box
+ (analysis::AnalysisToolBase) 0.000000 1.000000 box
 
 % ----- relations -----
 
 solid
-1 0.000000 20.250000 out
+0 0.000000 0.000000 out
 solid
-0 0.000000 20.500000 hedge
-solid
-0 0.000000 19.500000 hedge
-solid
-0 0.000000 18.500000 hedge
-solid
-0 0.000000 17.500000 hedge
-solid
-0 0.000000 16.500000 hedge
-solid
-0 0.000000 15.500000 hedge
-solid
-0 0.000000 14.500000 hedge
-solid
-0 0.000000 13.500000 hedge
-solid
-0 0.000000 12.500000 hedge
-solid
-0 0.000000 11.500000 hedge
-solid
-0 0.000000 10.500000 hedge
-solid
-0 0.000000 9.500000 hedge
-solid
-0 0.000000 8.500000 hedge
-solid
-0 0.000000 7.500000 hedge
-solid
-0 0.000000 6.500000 hedge
-solid
-0 0.000000 5.500000 hedge
-solid
-0 0.000000 4.500000 hedge
-solid
-0 0.000000 3.500000 hedge
-solid
-0 0.000000 2.500000 hedge
-solid
-0 0.000000 1.500000 hedge
-solid
-0 0.000000 0.500000 hedge
-solid
-0.000000 21.000000 0.500000 vedge
+1 0.000000 1.000000 in
