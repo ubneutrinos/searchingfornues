@@ -14,6 +14,7 @@
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "../CommonDefs/ProximityClustering.h"
 #include "../CommonDefs/TrackFitterFunctions.h"
+#include "../CommonDefs/SCECorrections.h"
 
 namespace analysis
 {
@@ -89,6 +90,8 @@ private:
   art::InputTag fCALproducer;
   float fdEdxcmSkip, fdEdxcmLen;
   bool fLocaldEdx;
+
+  std::vector<float> fADCtoE; // vector of ADC to # of e- conversion [to be taken from production reco2 fhicl files]
 
   std::vector<float> _shr_energy_u_v;
   std::vector<float> _shr_energy_v_v;
@@ -166,6 +169,8 @@ ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
   fdEdxcmSkip = p.get<float>("dEdxcmSkip", 0.0); // how many cm to skip @ vtx for dE/dx calculation
   fdEdxcmLen = p.get<float>("dEdxcmLen", 4.0);   // how long the dE/dx segment should be
   fLocaldEdx = p.get<bool>("LocaldEdx", true);   // use dE/dx from calo?
+
+  fADCtoE = p.get<std::vector<float>>("ADCtoE");
 
   // load proximity clustering algorithm
   //PrxyCluster = new searchingfornues::ProximityClustering();
@@ -353,6 +358,11 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
         {
           // using function from CommonDefs/TrackFitterFunctions.h
           searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
+	  calodEdx = searchingfornues::GetdEdxfromdQdx(calodEdx,
+						       _shr_tkfit_start_x_v.back(),
+						       _shr_tkfit_start_y_v.back(),
+						       _shr_tkfit_start_z_v.back(),
+						       2.1, fADCtoE[tkcalo->PlaneID().Plane] );
 
           if (tkcalo->PlaneID().Plane == 0)
           {
@@ -374,6 +384,11 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 
           // Gap 1.0 cm
           searchingfornues::GetTrackFitdEdx(tkcalo, 1.0, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
+	  calodEdx = searchingfornues::GetdEdxfromdQdx(calodEdx,
+						       _shr_tkfit_start_x_v.back(),
+						       _shr_tkfit_start_y_v.back(),
+						       _shr_tkfit_start_z_v.back(),
+						       2.1, fADCtoE[tkcalo->PlaneID().Plane] );
           if (tkcalo->PlaneID().Plane == 2)
           {
             _shr_tkfit_gap10_dedx_y_v.back() = calodEdx;
