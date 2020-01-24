@@ -2,7 +2,7 @@
 #define LLRPID_H
 
 #include "LLRPID_proton_muon_lookup.h"
-#include "LLRPID_recalibration.h"
+#include "LLRPID_correction_lookup.h"
 
 namespace searchingfornues
 {
@@ -25,10 +25,10 @@ namespace searchingfornues
       parameters_bin_edges[plane] = bin_edges;
     }
 
-    void set_angle_binning(size_t plane, std::vector<size_t> num_bins, std::vector<std::vector<float>> bin_edges)
+    void set_corr_par_binning(size_t plane, std::vector<size_t> num_bins, std::vector<std::vector<float>> bin_edges)
     {
-      angles_num_bins[plane] = num_bins;
-      angles_bin_edges[plane] = bin_edges;
+      corr_parameters_num_bins[plane] = num_bins;
+      corr_parameters_bin_edges[plane] = bin_edges;
     }
 
     void set_lookup_tables(size_t plane, std::vector<float> tables)
@@ -86,23 +86,23 @@ namespace searchingfornues
     }
 
 
-    // look-up in which angle bin we should be
-    size_t findLookupAngleIndex(float dedx_value, std::vector<float> angle_value, size_t plane)
+    // look-up in which corr_parameter bin we should be
+    size_t findLookupCorrParameterIndex(std::vector<float> corr_parameter_value, size_t plane)
     {
       //findParameterBin
-      std::vector<size_t> this_angles_bins;
-      for(size_t i=0; i<angle_value.size(); i++)
+      std::vector<size_t> this_corr_parameters_bins;
+      for(size_t i=0; i<corr_parameter_value.size(); i++)
       {
-        size_t aux_index = digitize(angle_value[i], angles_bin_edges[plane][i]);
-        this_angles_bins.push_back(aux_index);
+        size_t aux_index = digitize(corr_parameter_value[i], corr_parameters_bin_edges[plane][i]);
+        this_corr_parameters_bins.push_back(aux_index);
       }
 
       //findLookUpRow
       size_t lookup_index=0, accumulator_par_bins=1;
-      for(size_t i=this_angles_bins.size(); i-- > 0; )
+      for(size_t i=this_corr_parameters_bins.size(); i-- > 0; )
       {
-        lookup_index += (accumulator_par_bins * this_angles_bins[i]);
-        accumulator_par_bins *= angles_num_bins[plane][i];
+        lookup_index += (accumulator_par_bins * this_corr_parameters_bins[i]);
+        accumulator_par_bins *= corr_parameters_num_bins[plane][i];
       }
 
       return lookup_index;
@@ -114,9 +114,9 @@ namespace searchingfornues
       return lookup_tables[plane][index];
     }
 
-    float Correction_hit_one_plane(float dedx_value, std::vector<float> angle_value, size_t plane)
+    float Correction_hit_one_plane(std::vector<float> corr_parameter_value, size_t plane)
     {
-      size_t index = findLookupAngleIndex(dedx_value, angle_value, plane);
+      size_t index = findLookupCorrParameterIndex(corr_parameter_value, plane);
       return correction_tables[plane][index];
     }
 
@@ -135,6 +135,26 @@ namespace searchingfornues
       return ll_out;
     }
 
+    std::vector<float> correct_many_hits_one_plane(std::vector<float> dedx_values, std::vector<std::vector<float>> corr_par_values, std::vector<bool> is_to_correct, size_t plane)
+    {
+      std::vector<float> dedx_values_corrected;
+      for(size_t i=0; i<dedx_values.size(); i++)
+      {
+        float aux_dedx = dedx_values[i];
+        if (is_to_correct[i])
+        {
+          std::vector<float> aux_par;
+          for(std::vector<float> par_value: corr_par_values)
+          {
+            aux_par.push_back(par_value[i]);
+          }
+          aux_dedx *= Correction_hit_one_plane(aux_par, plane);
+        }
+        dedx_values_corrected.push_back(aux_dedx);
+      }
+      return dedx_values_corrected;
+    }
+
   private:
     size_t dedx_num_bins[3];
     std::vector<float> dedx_bin_edges[3];
@@ -142,8 +162,8 @@ namespace searchingfornues
     std::vector<size_t> parameters_num_bins[3];
     std::vector<std::vector<float>> parameters_bin_edges[3];
 
-    std::vector<size_t> angles_num_bins[3];
-    std::vector<std::vector<float>> angles_bin_edges[3];
+    std::vector<size_t> corr_parameters_num_bins[3];
+    std::vector<std::vector<float>> corr_parameters_bin_edges[3];
 
     std::vector<float> lookup_tables[3];
     std::vector<float> correction_tables[3];

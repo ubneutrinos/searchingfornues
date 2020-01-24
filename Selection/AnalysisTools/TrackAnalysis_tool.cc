@@ -188,6 +188,7 @@ TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p) : _mcsfitter(fhicl::T
   fPIDproducer = p.get<art::InputTag>("PIDproducer");
   fTRKproducer = p.get<art::InputTag>("TRKproducer");
 
+  // set dedx pdf parameters
   llr_pid_calculator.set_dedx_binning(0, dedx_num_bins_pl_0, dedx_edges_pl_0);
   std::vector<size_t> parameters_num_bins_0 = {parameter_0_num_bins_pl_0, parameter_1_num_bins_pl_0};
   std::vector<std::vector<float>> parameters_bin_edges_0 = {parameter_0_edges_pl_0, parameter_1_edges_pl_0};
@@ -205,6 +206,22 @@ TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p) : _mcsfitter(fhicl::T
   std::vector<std::vector<float>> parameters_bin_edges_2 = {parameter_0_edges_pl_2, parameter_1_edges_pl_2};
   llr_pid_calculator.set_par_binning(2, parameters_num_bins_2, parameters_bin_edges_2);
   llr_pid_calculator.set_lookup_tables(2, dedx_pdf_pl_2);
+
+  // set correction parameters
+  std::vector<size_t> corr_parameters_num_bins_0 = {parameter_correction_0_num_bins_pl_0, parameter_correction_1_num_bins_pl_0};
+  std::vector<std::vector<float>> corr_parameters_bin_edges_0 = {parameter_correction_0_edges_pl_0, parameter_correction_1_edges_pl_0};
+  llr_pid_calculator.set_corr_par_binning(0, corr_parameters_num_bins_0, corr_parameters_bin_edges_0);
+  llr_pid_calculator.set_correction_tables(0, correction_table_pl_0);
+
+  std::vector<size_t> corr_parameters_num_bins_1 = {parameter_correction_0_num_bins_pl_1, parameter_correction_1_num_bins_pl_1};
+  std::vector<std::vector<float>> corr_parameters_bin_edges_1 = {parameter_correction_0_edges_pl_1, parameter_correction_1_edges_pl_1};
+  llr_pid_calculator.set_corr_par_binning(1, corr_parameters_num_bins_1, corr_parameters_bin_edges_1);
+  llr_pid_calculator.set_correction_tables(1, correction_table_pl_1);
+
+  std::vector<size_t> corr_parameters_num_bins_2 = {parameter_correction_0_num_bins_pl_2, parameter_correction_1_num_bins_pl_2};
+  std::vector<std::vector<float>> corr_parameters_bin_edges_2 = {parameter_correction_0_edges_pl_2, parameter_correction_1_edges_pl_2};
+  llr_pid_calculator.set_corr_par_binning(2, corr_parameters_num_bins_2, corr_parameters_bin_edges_2);
+  llr_pid_calculator.set_correction_tables(2, correction_table_pl_2);
 }
 
 //----------------------------------------------------------------------------
@@ -427,20 +444,36 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
           calo_energy += dedx_values[i] * pitch[i];
         }
 
-        // std::vector<float> direction_x, direction_y, direction_z;
-        // auto const& xyz_v = calo->XYZ();
-        // for (auto xyz : xyz_v)
-        // {
-        //   float _dir[3];
-        //   searchingfornues::TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir);
-        //   // std::cout << "_dir[0], _dir[1], _dir[2] = " << _dir[0] << " , " << _dir[1] << " , " << _dir[2] << std::endl;
-        //   // std::cout << "_dir_norm = " << _dir[0]*_dir[0] + _dir[1]*_dir[1] + _dir[2]*_dir[2] << std::endl;
-        //   direction_x.push_back(_dir[0]);
-        //   direction_y.push_back(_dir[1]);
-        //   direction_z.push_back(_dir[2]);
-        // }
+        std::vector<float> direction_x, direction_y, direction_z;
 
-        float llr_pid = llr_pid_calculator.LLR_many_hits_one_plane(dedx_values, par_values, plane);
+        auto const& xyz_v = calo->XYZ();
+        for (auto xyz : xyz_v)
+        {
+          float _dir[3];
+          searchingfornues::TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir);
+          // std::cout << "_dir[0], _dir[1], _dir[2] = " << _dir[0] << " , " << _dir[1] << " , " << _dir[2] << std::endl;
+          // std::cout << "_dir_norm = " << _dir[0]*_dir[0] + _dir[1]*_dir[1] + _dir[2]*_dir[2] << std::endl;
+          direction_x.push_back(_dir[0]);
+          direction_y.push_back(_dir[1]);
+          direction_z.push_back(_dir[2]);
+        }
+
+        std::vector<std::vector<float>> corr_par_values;
+        corr_par_values = searchingfornues::polarAngles(direction_x, direction_y, direction_z, 2, plane);
+
+        // fill vector of boolean to determine if hit has to be corrected or not
+        std::vector<bool> is_hit_montecarlo;
+        for (size_t i = 0; i < dedx_values.size(); i++)
+        {
+          // needs to be changed
+          is_hit_montecarlo.push_back(true);
+        }
+
+        // correct hits
+        std::vector<float> dedx_values_corrected;
+        dedx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(dedx_values, corr_par_values, is_hit_montecarlo, plane);
+
+        float llr_pid = llr_pid_calculator.LLR_many_hits_one_plane(dedx_values_corrected, par_values, plane);
         if (plane == 0)
         {
           _trk_llr_pid_u_v.back() = llr_pid;

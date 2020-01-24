@@ -104,6 +104,59 @@ namespace searchingfornues
     }
   }
 
+  std::vector<float> polarAngles(float dir_x, float dir_y, float dir_z, size_t axis, size_t plane)
+  {
+    float dir_y_prime, dir_z_prime;
+    if (plane == 0)
+    {
+      dir_y_prime = dir_y * (1/2)           + dir_z * (sqrt(3)/2);
+      dir_z_prime = dir_y * (-sqrt(3)/2) + dir_z * (1/2);
+    }
+    if (plane == 1)
+    {
+      dir_y_prime = dir_y * (1/2)           + dir_z * (-sqrt(3)/2);
+      dir_z_prime = dir_y * (sqrt(3)/2)  + dir_z * (1/2);
+    }
+    if (plane == 2)
+    {
+      dir_y_prime = dir_y;
+      dir_z_prime = dir_z;
+    }
+
+    std::vector<float> abs_angle;
+
+    if (axis == 0)
+    {
+      abs_angle.push_back(acos( abs(dir_x)));
+      abs_angle.push_back(atan2( abs(dir_y_prime), abs(dir_z_prime)));
+    }
+    if (axis == 1)
+    {
+      abs_angle.push_back(acos( abs(dir_y_prime)));
+      abs_angle.push_back(atan2( abs(dir_x), abs(dir_z_prime)));
+    }
+    if (axis == 2)
+    {
+      abs_angle.push_back(acos( abs(dir_z_prime)));
+      abs_angle.push_back(atan2( abs(dir_y_prime), abs(dir_x)));
+    }
+    return abs_angle;
+  }
+
+  std::vector<std::vector<float>> polarAngles(std::vector<float> dir_x, std::vector<float> dir_y, std::vector<float> dir_z, size_t axis, size_t plane)
+  {
+    std::vector<float> aux_theta_v, aux_phi_v;
+    for (size_t i = 0; i < dir_x.size(); i++)
+    {
+      std::vector<float> aux_angles = polarAngles(dir_x[i], dir_y[i], dir_z[i], axis, plane);
+      aux_theta_v.push_back(aux_angles[0]);
+      aux_phi_v.push_back(aux_angles[1]);
+    }
+    std::vector<std::vector<float>> out;
+    out.push_back(aux_theta_v);
+    out.push_back(aux_phi_v);
+    return out;
+  }
 } // namespace searchingfornues
 
 #endif
