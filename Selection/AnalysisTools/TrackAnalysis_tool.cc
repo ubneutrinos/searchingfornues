@@ -99,6 +99,10 @@ private:
   art::InputTag fCALOproducer;
   art::InputTag fPIDproducer;
   art::InputTag fTRKproducer;
+  art::InputTag fBacktrackTag;
+  art::InputTag fHproducer;
+  bool fRecalibrateHits;
+  float fEnergyThresholdForMCHits;
 
   int _run, _sub, _evt;
 
@@ -187,6 +191,10 @@ TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p) : _mcsfitter(fhicl::T
   fCALOproducer = p.get<art::InputTag>("CALOproducer");
   fPIDproducer = p.get<art::InputTag>("PIDproducer");
   fTRKproducer = p.get<art::InputTag>("TRKproducer");
+  fBacktrackTag = p.get<art::InputTag>("BacktrackTag", "gaushitTruthMatch");
+  fHproducer = p.get<art::InputTag>("Hproducer", "gaushit");
+  fEnergyThresholdForMCHits = p.get<float>("EnergyThresholdForMCHits", 0.1);
+  fRecalibrateHits = p.get<bool>("RecalibrateHits", false);
 
   // set dedx pdf parameters
   llr_pid_calculator.set_dedx_binning(0, dedx_num_bins_pl_0, dedx_edges_pl_0);
@@ -439,39 +447,55 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
         par_values.push_back(pitch);
 
         float calo_energy = 0;
-        for (size_t i = 0; i < dedx_values.size(); i++)
-        {
-          calo_energy += dedx_values[i] * pitch[i];
-        }
 
-        std::vector<float> direction_x, direction_y, direction_z;
-
-        auto const& xyz_v = calo->XYZ();
-        for (auto xyz : xyz_v)
-        {
-          float _dir[3];
-          searchingfornues::TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir);
-          // std::cout << "_dir[0], _dir[1], _dir[2] = " << _dir[0] << " , " << _dir[1] << " , " << _dir[2] << std::endl;
-          // std::cout << "_dir_norm = " << _dir[0]*_dir[0] + _dir[1]*_dir[1] + _dir[2]*_dir[2] << std::endl;
-          direction_x.push_back(_dir[0]);
-          direction_y.push_back(_dir[1]);
-          direction_z.push_back(_dir[2]);
-        }
-
-        std::vector<std::vector<float>> corr_par_values;
-        corr_par_values = searchingfornues::polarAngles(direction_x, direction_y, direction_z, 2, plane);
-
-        // fill vector of boolean to determine if hit has to be corrected or not
-        std::vector<bool> is_hit_montecarlo;
-        for (size_t i = 0; i < dedx_values.size(); i++)
-        {
-          // needs to be changed
-          is_hit_montecarlo.push_back(true);
-        }
-
-        // correct hits
         std::vector<float> dedx_values_corrected;
-        dedx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(dedx_values, corr_par_values, is_hit_montecarlo, plane);
+        if (fData || !fRecalibrateHits)
+        {
+          dedx_values_corrected = dedx_values;
+        }
+        else
+        {
+          std::vector<float> direction_x, direction_y, direction_z;
+          auto const& xyz_v = calo->XYZ();
+          for (auto xyz : xyz_v)
+          {
+            float _dir[3];
+            searchingfornues::TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir);
+            // std::cout << "_dir[0], _dir[1], _dir[2] = " << _dir[0] << " , " << _dir[1] << " , " << _dir[2] << std::endl;
+            // std::cout << "_dir_norm = " << _dir[0]*_dir[0] + _dir[1]*_dir[1] + _dir[2]*_dir[2] << std::endl;
+            direction_x.push_back(_dir[0]);
+            direction_y.push_back(_dir[1]);
+            direction_z.push_back(_dir[2]);
+          }
+
+          std::vector<std::vector<float>> corr_par_values;
+          corr_par_values = searchingfornues::polarAngles(direction_x, direction_y, direction_z, 2, plane);
+
+          // fill vector of boolean to determine if hit has to be corrected or not
+          std::vector<bool> is_hit_montecarlo;
+
+          art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
+          std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
+          assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
+
+          const std::vector< size_t > &tp_indices = calo->TpIndices();
+          for (size_t i = 0; i < tp_indices.size(); i++)
+          {
+            size_t tp_index = tp_indices[i];
+            is_hit_montecarlo.push_back(searchingfornues::isHitBtMonteCarlo(tp_index, assocMCPart, fEnergyThresholdForMCHits));
+          }
+          // correct hits
+          dedx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(dedx_values, corr_par_values, is_hit_montecarlo, plane);
+          // for (size_t i = 0; i < dedx_values_corrected.size(); i++)
+          // {
+          //   std::cout << "point i: " << dedx_values[i] << dedx_values_corrected[i] << std::endl;
+          // }
+        }
+
+        for (size_t i = 0; i < dedx_values_corrected.size(); i++)
+        {
+          calo_energy += dedx_values_corrected[i] * pitch[i];
+        }
 
         float llr_pid = llr_pid_calculator.LLR_many_hits_one_plane(dedx_values_corrected, par_values, plane);
         if (plane == 0)

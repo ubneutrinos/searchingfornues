@@ -56,7 +56,7 @@ namespace searchingfornues
 	if (previousvalidpoint >= 0) {
 	  auto point1 = trk->LocationAtPoint(i);
 	  auto point0 = trk->LocationAtPoint(previousvalidpoint);
-	  
+
 	  // SCE correct both points
 	  float point1X = point1.X();
 	  float point1Y = point1.Y();
@@ -66,17 +66,17 @@ namespace searchingfornues
 	  float point0Y = point0.Y();
 	  float point0Z = point0.Z();
 	  ApplySCECorrectionXYZ(point0X,point0Y,point0Z);
-	  
+
 	  float distance3D =  sqrt( (point1X-point0X)*(point1X-point0X) + (point1Y-point0Y)*(point1Y-point0Y) + (point1Z-point0Z)*(point1Z-point0Z) );
-	  
+
 	  SCElength += distance3D;
-	  
+
 	}// if there is a previous valid point
 	previousvalidpoint = i;
       }// if point is valid
     }// for all track points
-    
-    return SCElength; 
+
+    return SCElength;
   }
 
   // apply the mapping of XYZ true -> XYZ position as it would be recosntructed.
@@ -151,10 +151,10 @@ namespace searchingfornues
   }
 
   float GetLocalEFieldMag(const float x, const float y, const float z) {
-    
+
     const detinfo::DetectorProperties* detprop = art::ServiceHandle<detinfo::DetectorPropertiesService>()->provider();
     auto const *sce = lar::providerFrom<spacecharge::SpaceChargeService>();
-    
+
     double E_field_nominal = detprop->Efield();        // Electric Field in the drift region in KV/cm
 
     //correct Efield for SCE
@@ -174,14 +174,13 @@ namespace searchingfornues
    * @input adctoe to convert to e- (different for every plane)
    * @return dedx
    */
-  float GetdEdxfromdQdx(const float dqdx, const float x, const float y, const float z,
-			const float dedxfixed, const float adctoe) {
+  float GetdEdxfromdQdx(const float dqdx, const float x, const float y, const float z, const float dedxfixed, const float adctoe) {
 
     auto efield = searchingfornues::GetLocalEFieldMag(x,y,z); // kV / cm
-    
+
     float B = 0.212 / (1.383 * efield);
     float r = log( dedxfixed * B + 0.93 ) / (dedxfixed * B);
-    return dqdx * adctoe * (23.6/1e6) / r; 
+    return dqdx * adctoe * (23.6/1e6) / r;
   }
 
 

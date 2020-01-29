@@ -15,6 +15,7 @@
 #include "../CommonDefs/ProximityClustering.h"
 #include "../CommonDefs/TrackFitterFunctions.h"
 #include "../CommonDefs/SCECorrections.h"
+#include "../CommonDefs/LLR_PID.h"
 
 namespace analysis
 {
@@ -88,10 +89,18 @@ private:
   // input variables for tool
   art::InputTag fTRKproducer;
   art::InputTag fCALproducer;
+
+  art::InputTag fBacktrackTag;
+  art::InputTag fHproducer;
+  float fEnergyThresholdForMCHits;
+
   float fdEdxcmSkip, fdEdxcmLen;
   bool fLocaldEdx;
 
   std::vector<float> fADCtoE; // vector of ADC to # of e- conversion [to be taken from production reco2 fhicl files]
+  bool fRecalibrateHits;
+
+  searchingfornues::LLRPID llr_pid_calculator;
 
   std::vector<float> _shr_energy_u_v;
   std::vector<float> _shr_energy_v_v;
@@ -166,17 +175,39 @@ ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
 {
   fTRKproducer = p.get<art::InputTag>("TRKproducer", "");
   fCALproducer = p.get<art::InputTag>("CALproducer", "");
+
+  fBacktrackTag = p.get<art::InputTag>("BacktrackTag", "gaushitTruthMatch");
+  fHproducer = p.get<art::InputTag>("Hproducer", "gaushit");
+  fEnergyThresholdForMCHits = p.get<float>("EnergyThresholdForMCHits", 0.1);
+
+
   fdEdxcmSkip = p.get<float>("dEdxcmSkip", 0.0); // how many cm to skip @ vtx for dE/dx calculation
   fdEdxcmLen = p.get<float>("dEdxcmLen", 4.0);   // how long the dE/dx segment should be
   fLocaldEdx = p.get<bool>("LocaldEdx", true);   // use dE/dx from calo?
 
   fADCtoE = p.get<std::vector<float>>("ADCtoE");
 
+  fRecalibrateHits = p.get<bool>("RecalibrateHits", false);
   // load proximity clustering algorithm
   //PrxyCluster = new searchingfornues::ProximityClustering();
   //PrxyCluster->initialize();
   //PrxyCluster->setRadius(2.0);
   //PrxyCluster->setCellSize(2.0);
+
+  std::vector<size_t> corr_parameters_num_bins_0 = {parameter_correction_0_num_bins_pl_0, parameter_correction_1_num_bins_pl_0};
+  std::vector<std::vector<float>> corr_parameters_bin_edges_0 = {parameter_correction_0_edges_pl_0, parameter_correction_1_edges_pl_0};
+  llr_pid_calculator.set_corr_par_binning(0, corr_parameters_num_bins_0, corr_parameters_bin_edges_0);
+  llr_pid_calculator.set_correction_tables(0, correction_table_pl_0);
+
+  std::vector<size_t> corr_parameters_num_bins_1 = {parameter_correction_0_num_bins_pl_1, parameter_correction_1_num_bins_pl_1};
+  std::vector<std::vector<float>> corr_parameters_bin_edges_1 = {parameter_correction_0_edges_pl_1, parameter_correction_1_edges_pl_1};
+  llr_pid_calculator.set_corr_par_binning(1, corr_parameters_num_bins_1, corr_parameters_bin_edges_1);
+  llr_pid_calculator.set_correction_tables(1, correction_table_pl_1);
+
+  std::vector<size_t> corr_parameters_num_bins_2 = {parameter_correction_0_num_bins_pl_2, parameter_correction_1_num_bins_pl_2};
+  std::vector<std::vector<float>> corr_parameters_bin_edges_2 = {parameter_correction_0_edges_pl_2, parameter_correction_1_edges_pl_2};
+  llr_pid_calculator.set_corr_par_binning(2, corr_parameters_num_bins_2, corr_parameters_bin_edges_2);
+  llr_pid_calculator.set_correction_tables(2, correction_table_pl_2);
 }
 
 //----------------------------------------------------------------------------
@@ -356,13 +387,57 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 
         for (const auto &tkcalo : tkcalos)
         {
+          std::vector<float> dqdx_values, dqdx_values_corrected;
+          if (fLocaldEdx)
+            dqdx_values = tkcalo->dQdx();
+          else
+            dqdx_values = tkcalo->dEdx();
+          if (fData || !fRecalibrateHits)
+          {
+            dqdx_values_corrected = dqdx_values;
+          }
+          else
+          {
+            std::vector<float> direction_x, direction_y, direction_z;
+            auto const& xyz_v = tkcalo->XYZ();
+            for (auto xyz : xyz_v)
+            {
+              float _dir[3];
+              searchingfornues::TrkDirectionAtXYZ(*tk, xyz.X(), xyz.Y(), xyz.Z(), _dir);
+              // std::cout << "_dir[0], _dir[1], _dir[2] = " << _dir[0] << " , " << _dir[1] << " , " << _dir[2] << std::endl;
+              // std::cout << "_dir_norm = " << _dir[0]*_dir[0] + _dir[1]*_dir[1] + _dir[2]*_dir[2] << std::endl;
+              direction_x.push_back(_dir[0]);
+              direction_y.push_back(_dir[1]);
+              direction_z.push_back(_dir[2]);
+            }
+
+            std::vector<std::vector<float>> corr_par_values;
+            corr_par_values = searchingfornues::polarAngles(direction_x, direction_y, direction_z, 2, tkcalo->PlaneID().Plane);
+
+            // fill vector of boolean to determine if hit has to be corrected or not
+            std::vector<bool> is_hit_montecarlo;
+
+            art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
+            std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
+            assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
+
+            const std::vector< size_t > &tp_indices = tkcalo->TpIndices();
+            for (size_t i = 0; i < tp_indices.size(); i++)
+            {
+              size_t tp_index = tp_indices[i];
+              is_hit_montecarlo.push_back(searchingfornues::isHitBtMonteCarlo(tp_index, assocMCPart, fEnergyThresholdForMCHits));
+            }
+            // correct hits
+            dqdx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(dqdx_values, corr_par_values, is_hit_montecarlo, tkcalo->PlaneID().Plane);
+          }
           // using function from CommonDefs/TrackFitterFunctions.h
-          searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
-	  calodEdx = searchingfornues::GetdEdxfromdQdx(calodEdx,
-						       _shr_tkfit_start_x_v.back(),
-						       _shr_tkfit_start_y_v.back(),
-						       _shr_tkfit_start_z_v.back(),
-						       2.1, fADCtoE[tkcalo->PlaneID().Plane] );
+          searchingfornues::GetTrackFitdEdx(dqdx_values_corrected, tkcalo->ResidualRange(), fdEdxcmSkip, fdEdxcmLen, calodEdx, caloNpts);
+          if (fLocaldEdx)
+            calodEdx = searchingfornues::GetdEdxfromdQdx(calodEdx,
+                   _shr_tkfit_start_x_v.back(),
+                   _shr_tkfit_start_y_v.back(),
+                   _shr_tkfit_start_z_v.back(),
+                   2.1, fADCtoE[tkcalo->PlaneID().Plane] );
 
           if (tkcalo->PlaneID().Plane == 0)
           {
@@ -383,12 +458,13 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
           }
 
           // Gap 1.0 cm
-          searchingfornues::GetTrackFitdEdx(tkcalo, 1.0, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
-	  calodEdx = searchingfornues::GetdEdxfromdQdx(calodEdx,
-						       _shr_tkfit_start_x_v.back(),
-						       _shr_tkfit_start_y_v.back(),
-						       _shr_tkfit_start_z_v.back(),
-						       2.1, fADCtoE[tkcalo->PlaneID().Plane] );
+          searchingfornues::GetTrackFitdEdx(dqdx_values_corrected, tkcalo->ResidualRange(), 1.0, fdEdxcmLen, calodEdx, caloNpts);
+          if (fLocaldEdx)
+            calodEdx = searchingfornues::GetdEdxfromdQdx(calodEdx,
+                   _shr_tkfit_start_x_v.back(),
+                   _shr_tkfit_start_y_v.back(),
+                   _shr_tkfit_start_z_v.back(),
+                   2.1, fADCtoE[tkcalo->PlaneID().Plane] );
           if (tkcalo->PlaneID().Plane == 2)
           {
             _shr_tkfit_gap10_dedx_y_v.back() = calodEdx;

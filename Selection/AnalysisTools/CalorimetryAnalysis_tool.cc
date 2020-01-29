@@ -1006,7 +1006,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
 
   _trk_theta = trk->Theta();
   _trk_phi = trk->Phi();
-  _trk_len = searchingfornues::GetSCECorrTrackLength(trk); 
+  _trk_len = searchingfornues::GetSCECorrTrackLength(trk);
 
   _trk_dir_x = trk->StartDirection().X();
   _trk_dir_y = trk->StartDirection().Y();
@@ -1036,23 +1036,26 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
 
   int key = trk.key();
 
-  if (fGetCaloID) {
-  int caloctr = 0;
-  for (const searchingfornues::ProxyCaloElem_t tkcalo : calo_proxy) {
-    // find track with ID matching the pfp index (this convention apparently works only for shower fits...)
-    if (tkcalo->ID() == int(pfp.index())) {
-      key = caloctr;
-      break;
-    }
-    caloctr += 1;
-  }// for all calo-proxy objects
+  if (fGetCaloID)
+  {
+    int caloctr = 0;
+    for (const searchingfornues::ProxyCaloElem_t tkcalo : calo_proxy)
+    {
+      // find track with ID matching the pfp index (this convention apparently works only for shower fits...)
+      if (tkcalo->ID() == int(pfp.index()))
+      {
+        key = caloctr;
+        break;
+      }
+      caloctr += 1;
+    }// for all calo-proxy objects
   }// if we want to get the calo object index manually
 
   auto calo_v = calo_proxy[key].get<anab::Calorimetry>();
 
   for (auto const& calo : calo_v)
-    {
-      auto const& plane = calo->PlaneID().Plane;
+  {
+    auto const& plane = calo->PlaneID().Plane;
     auto const& xyz_v = calo->XYZ();
 
     if (plane == 0)

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
 <!ENTITY name "bnb_ncpi0_shr">
-<!ENTITY project_version "v04">
+<!ENTITY project_version "v05">
 <!ENTITY release "v08_00_00_33">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "foppiani">
@@ -50,7 +50,7 @@
 
     <memory>2000</memory>
     <disk>10GB</disk>
-    <numjobs>94</numjobs>
+    <numjobs>104</numjobs>
     <maxfilesperjob>25</maxfilesperjob>
     <schema>root</schema>
     <jobsub>--expected-lifetime=12h -q --generate-email-summary --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub>

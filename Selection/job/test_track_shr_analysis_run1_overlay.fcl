@@ -2,6 +2,7 @@
 
 physics.filters.nuselection.AnalysisTools : {
   track:         @local::TrackAnalysisTool
+  shower:        @local::ShowerAnalysisTool
 }
 
 physics.filters.nuselection.SelectionTool : {

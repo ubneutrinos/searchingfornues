@@ -287,6 +287,28 @@ int getAssocBtPart(const std::vector<art::Ptr<recob::Hit>> &hits,
   return maxel;
 }
 
+// tell hit by hit if it is Monte Carlo or data
+bool isHitBtMonteCarlo(const size_t hit_index,
+                       const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart,
+                       float en_threshold)
+{
+  std::vector<art::Ptr<simb::MCParticle>> particle_vec = assocMCPart->at(hit_index);
+  std::vector<anab::BackTrackerHitMatchingData const *> match_vec = assocMCPart->data(hit_index);
+  //loop over particles
+  bool found_mc_hit = false;
+  for (size_t i_p = 0; i_p < particle_vec.size(); ++i_p)
+  {
+    // std::cout << "match_vec[i_p]->energy = " << match_vec[i_p]->energy << " , en_threshold = " << en_threshold  << std::endl;
+    if (match_vec[i_p]->energy > en_threshold)
+    {
+      found_mc_hit = true;
+      break;
+    }
+  } //end loop over particles per hit
+  // std::cout << "tp index " << hit_index << " , found_mc_hit " << found_mc_hit << std::endl;
+  return found_mc_hit;
+}
+
 } // namespace searchingfornues
 
 #endif

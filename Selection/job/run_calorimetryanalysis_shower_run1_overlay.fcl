@@ -3,4 +3,5 @@
 physics.filters.nuselection.AnalysisTools.calorimetry.TRKproducer: "shrreco3dKalmanShower"
 physics.filters.nuselection.AnalysisTools.calorimetry.CALOproducer: "shrreco3dKalmanShowercali"
 physics.filters.nuselection.AnalysisTools.calorimetry.ShrFit: true
+physics.filters.nuselection.AnalysisTools.calorimetry.GetCaloID: true
 physics.filters.nuselection.IsData: false
