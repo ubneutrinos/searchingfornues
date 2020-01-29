@@ -121,10 +121,10 @@ Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDe
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/Geometry.h...
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h...
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h...
+Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_correction_lookup.h...
+Parsing file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_correction_lookup.h...
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h...
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h...
-Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_recalibration.h...
-Parsing file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_recalibration.h...
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/PFPHitDistance.h...
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/PFPHitDistance.h...
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/PIDFuncs.h...
@@ -177,7 +177,7 @@ Preprocessing /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondS
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc...
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ShowerMerger_module.cc...
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ShowerMerger_module.cc...
-Preprocessing /ho/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingToolBase_tool.h:2: warning: the name `larpandora/LArPandoraEventBuilding/SliceIdTools/FlashNeutrinoId_tool.h' supplied as the second argument in the \file statement is not an input file
+Preproces/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingToolBase_tool.h:2: warning: the name `larpandora/LArPandoraEventBuilding/SliceIdTools/FlashNeutrinoId_tool.h' supplied as the second argument in the \file statement is not an input file
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/ProximityClustering.h:2: warning: the name `ProximityClusterer.h' supplied as the second argument in the \file statement is not an input file
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:46: warning: Compound analysis::DefaultAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:29: warning: Compound analysis::VertexAnalysis is not documented.
@@ -190,7 +190,7 @@ Preprocessing /ho/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/F
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:29: warning: Compound analysis::BDT is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:35: warning: Compound analysis::Pi0TruthAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/CosmicRejection_module.cc:46: warning: Compound CosmicRejection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:37: warning: Compound analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:38: warning: Compound analysis::ShowerAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SaveSliceHits_module.cc:36: warning: Compound SaveSliceHits is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/ShowerSelection_tool.cc:26: warning: Compound selection::ShowerSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:43: warning: Compound NeutrinoSelectionFilter is not documented.
@@ -222,7 +222,7 @@ Preprocessing /ho/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/F
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionExample_tool.cc:24: warning: Compound selection::SelectionExample is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:29: warning: Compound analysis::Pi0Tagger is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/MCFilter_tool.cc:29: warning: Compound analysis::MCFilter is not documented.
-me/travis/build/ubneutrinos/searchingfornues/util/fixMap.C...
+sing /home/travis/build/ubneutrinos/searchingfornues/util/fixMap.C...
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/util/fixMap.C...
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/util/readMap.C...
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/util/readMap.C...
@@ -285,8 +285,8 @@ Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selecti
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/Containment.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/Geometry.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h...
+Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_correction_lookup.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h...
-Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_recalibration.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/PFPHitDistance.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/PIDFuncs.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/ProximityClustering.h...
@@ -296,7 +296,7 @@ Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selecti
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/TrackShowerScoreFuncs.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/Typedefs.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h...
-Generating file /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMatch_module.cc:49: warning: Member ACPTTrigFlashMatch(fhicl::ParameterSet const &p) (function) of class ACPTTrigFlashMatch is not documented.
+Gene/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMatch_module.cc:49: warning: Member ACPTTrigFlashMatch(fhicl::ParameterSet const &p) (function) of class ACPTTrigFlashMatch is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMatch_module.cc:60: warning: Member analyze(art::Event const &e) override (function) of class ACPTTrigFlashMatch is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMatch_module.cc:63: warning: Member beginJob() override (function) of class ACPTTrigFlashMatch is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMatch_module.cc:64: warning: Member endJob() override (function) of class ACPTTrigFlashMatch is not documented.
@@ -708,137 +708,136 @@ Generating file /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/AC
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:89: warning: argument 'pset' of command @param is not found in the argument list of analysis::BDT::BDT(const fhicl::ParameterSet &p)
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:38: warning: The following parameters of analysis::BDT::BDT(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:104: warning: Member FillCalorimetry(art::Event const &e, const searchingfornues::ProxyPfpElem_t pfp, const searchingfornues::ProxyCaloColl_t calo_proxy, const searchingfornues::ProxyPIDColl_t pid_proxy, const searchingfornues::ProxyClusColl_t clus_proxy, const bool fData, const bool fShrFit, const std::vector< searchingfornues::BtPart > btparts_v, const std::unique_ptr< art::FindManyP< simb::MCParticle, anab::BackTrackerHitMatchingData >> &assocMCPart) (function) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:114: warning: Member TrkDirectionAtXYZ(const recob::Track, const double x, const double y, const double z, float out[3]) (function) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:117: warning: Member _trkmom (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:120: warning: Member proton (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:121: warning: Member muon (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:123: warning: Member fPFPproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:124: warning: Member fCALOproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:125: warning: Member fPIDproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:126: warning: Member fTRKproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:127: warning: Member fCLSproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:128: warning: Member fBacktrackTag (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:129: warning: Member fHproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:130: warning: Member fMCRproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:131: warning: Member fT0producer (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:132: warning: Member fMCPproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:134: warning: Member fBacktrack (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:136: warning: Member fShrFit (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:138: warning: Member fADCtoE (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:140: warning: Member fGetCaloID (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:143: warning: Member _calo_tree (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:145: warning: Member _run (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:145: warning: Member _sub (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:145: warning: Member _evt (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:147: warning: Member _backtracked_pdg (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:148: warning: Member _backtracked_e (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:149: warning: Member _backtracked_purity (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:150: warning: Member _backtracked_completeness (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:151: warning: Member _backtracked_overlay_purity (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:153: warning: Member _backtracked_px (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:154: warning: Member _backtracked_py (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:155: warning: Member _backtracked_pz (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:157: warning: Member _backtracked_start_x (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:158: warning: Member _backtracked_start_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:159: warning: Member _backtracked_start_z (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:160: warning: Member _backtracked_start_t (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:161: warning: Member _backtracked_start_U (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:162: warning: Member _backtracked_start_V (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:163: warning: Member _backtracked_start_Y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:164: warning: Member _backtracked_sce_start_x (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:165: warning: Member _backtracked_sce_start_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:166: warning: Member _backtracked_sce_start_z (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:167: warning: Member _backtracked_sce_start_U (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:168: warning: Member _backtracked_sce_start_V (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:169: warning: Member _backtracked_sce_start_Y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:171: warning: Member _backtracked_end_process (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:172: warning: Member _backtracked_end_in_tpc (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:174: warning: Member _generation (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:175: warning: Member _shr_daughters (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:176: warning: Member _trk_daughters (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:179: warning: Member _nplanehits_U (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:180: warning: Member _nplanehits_V (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:181: warning: Member _nplanehits_Y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:182: warning: Member _trk_score (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:184: warning: Member _trk_theta (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:185: warning: Member _trk_phi (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:187: warning: Member _trk_dir_x (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:188: warning: Member _trk_dir_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:189: warning: Member _trk_dir_z (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:191: warning: Member _trk_len (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:193: warning: Member _trk_start_x (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:194: warning: Member _trk_start_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:195: warning: Member _trk_start_z (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:197: warning: Member _trk_sce_start_x (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:198: warning: Member _trk_sce_start_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:199: warning: Member _trk_sce_start_z (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:201: warning: Member _trk_end_x (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:202: warning: Member _trk_end_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:203: warning: Member _trk_end_z (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:205: warning: Member _trk_sce_end_x (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:206: warning: Member _trk_sce_end_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:207: warning: Member _trk_sce_end_z (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:209: warning: Member _trk_bragg_p_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:210: warning: Member _trk_bragg_mu_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:211: warning: Member _trk_bragg_mip_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:212: warning: Member _trk_pid_chipr_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:213: warning: Member _trk_pid_chika_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:214: warning: Member _trk_pid_chipi_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:215: warning: Member _trk_pid_chimu_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:216: warning: Member _trk_pida_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:218: warning: Member _trk_bragg_p_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:219: warning: Member _trk_bragg_mu_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:220: warning: Member _trk_bragg_mip_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:221: warning: Member _trk_pid_chipr_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:222: warning: Member _trk_pid_chika_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:223: warning: Member _trk_pid_chipi_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:224: warning: Member _trk_pid_chimu_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:225: warning: Member _trk_pida_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:227: warning: Member _trk_bragg_p_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:228: warning: Member _trk_bragg_mu_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:229: warning: Member _trk_bragg_mip_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:230: warning: Member _trk_pid_chipr_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:231: warning: Member _trk_pid_chika_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:232: warning: Member _trk_pid_chipi_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:233: warning: Member _trk_pid_chimu_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:234: warning: Member _trk_pida_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:236: warning: Member _trk_bragg_p_three_planes (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:238: warning: Member _trk_mcs_muon_mom (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:239: warning: Member _trk_energy_proton (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:240: warning: Member _trk_energy_muon (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:242: warning: Member _longest (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:245: warning: Member _dqdx_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:246: warning: Member _dqdx_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:247: warning: Member _dqdx_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:249: warning: Member _dedx_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:250: warning: Member _dedx_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:251: warning: Member _dedx_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:253: warning: Member _rr_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:254: warning: Member _rr_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:255: warning: Member _rr_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:257: warning: Member _pitch_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:258: warning: Member _pitch_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:259: warning: Member _pitch_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:261: warning: Member _x_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:262: warning: Member _x_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:263: warning: Member _x_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:265: warning: Member _y_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:266: warning: Member _y_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:267: warning: Member _y_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:269: warning: Member _z_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:270: warning: Member _z_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:271: warning: Member _z_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:273: warning: Member _dir_x_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:274: warning: Member _dir_x_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:275: warning: Member _dir_x_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:277: warning: Member _dir_y_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:278: warning: Member _dir_y_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:279: warning: Member _dir_y_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:281: warning: Member _dir_z_u (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:282: warning: Member _dir_z_v (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:283: warning: Member _dir_z_y (variable) of class analysis::CalorimetryAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:287: warning: argument 'pset' of command @param is not found in the argument list of analysis::CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p)
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:96: warning: Member FillCalorimetry(art::Event const &e, const searchingfornues::ProxyPfpElem_t pfp, const searchingfornues::ProxyCaloColl_t calo_proxy, const searchingfornues::ProxyPIDColl_t pid_proxy, const searchingfornues::ProxyClusColl_t clus_proxy, const bool fData, const bool fShrFit, const std::vector< searchingfornues::BtPart > btparts_v, const std::unique_ptr< art::FindManyP< simb::MCParticle, anab::BackTrackerHitMatchingData >> &assocMCPart) (function) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:107: warning: Member _trkmom (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:110: warning: Member proton (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:111: warning: Member muon (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:113: warning: Member fPFPproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:114: warning: Member fCALOproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:115: warning: Member fPIDproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:116: warning: Member fTRKproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:117: warning: Member fCLSproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:118: warning: Member fBacktrackTag (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:119: warning: Member fHproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:120: warning: Member fMCRproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:121: warning: Member fT0producer (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:122: warning: Member fMCPproducer (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:124: warning: Member fBacktrack (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:126: warning: Member fShrFit (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:128: warning: Member fADCtoE (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:130: warning: Member fGetCaloID (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:133: warning: Member _calo_tree (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:135: warning: Member _run (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:135: warning: Member _sub (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:135: warning: Member _evt (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:137: warning: Member _backtracked_pdg (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:138: warning: Member _backtracked_e (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:139: warning: Member _backtracked_purity (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:140: warning: Member _backtracked_completeness (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:141: warning: Member _backtracked_overlay_purity (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:143: warning: Member _backtracked_px (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:144: warning: Member _backtracked_py (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:145: warning: Member _backtracked_pz (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:147: warning: Member _backtracked_start_x (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:148: warning: Member _backtracked_start_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:149: warning: Member _backtracked_start_z (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:150: warning: Member _backtracked_start_t (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:151: warning: Member _backtracked_start_U (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:152: warning: Member _backtracked_start_V (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:153: warning: Member _backtracked_start_Y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:154: warning: Member _backtracked_sce_start_x (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:155: warning: Member _backtracked_sce_start_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:156: warning: Member _backtracked_sce_start_z (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:157: warning: Member _backtracked_sce_start_U (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:158: warning: Member _backtracked_sce_start_V (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:159: warning: Member _backtracked_sce_start_Y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:161: warning: Member _backtracked_end_process (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:162: warning: Member _backtracked_end_in_tpc (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:164: warning: Member _generation (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:165: warning: Member _shr_daughters (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:166: warning: Member _trk_daughters (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:169: warning: Member _nplanehits_U (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:170: warning: Member _nplanehits_V (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:171: warning: Member _nplanehits_Y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:172: warning: Member _trk_score (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:174: warning: Member _trk_theta (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:175: warning: Member _trk_phi (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:177: warning: Member _trk_dir_x (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:178: warning: Member _trk_dir_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:179: warning: Member _trk_dir_z (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:181: warning: Member _trk_len (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:183: warning: Member _trk_start_x (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:184: warning: Member _trk_start_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:185: warning: Member _trk_start_z (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:187: warning: Member _trk_sce_start_x (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:188: warning: Member _trk_sce_start_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:189: warning: Member _trk_sce_start_z (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:191: warning: Member _trk_end_x (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:192: warning: Member _trk_end_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:193: warning: Member _trk_end_z (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:195: warning: Member _trk_sce_end_x (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:196: warning: Member _trk_sce_end_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:197: warning: Member _trk_sce_end_z (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:199: warning: Member _trk_bragg_p_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:200: warning: Member _trk_bragg_mu_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:201: warning: Member _trk_bragg_mip_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:202: warning: Member _trk_pid_chipr_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:203: warning: Member _trk_pid_chika_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:204: warning: Member _trk_pid_chipi_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:205: warning: Member _trk_pid_chimu_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:206: warning: Member _trk_pida_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:208: warning: Member _trk_bragg_p_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:209: warning: Member _trk_bragg_mu_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:210: warning: Member _trk_bragg_mip_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:211: warning: Member _trk_pid_chipr_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:212: warning: Member _trk_pid_chika_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:213: warning: Member _trk_pid_chipi_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:214: warning: Member _trk_pid_chimu_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:215: warning: Member _trk_pida_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:217: warning: Member _trk_bragg_p_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:218: warning: Member _trk_bragg_mu_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:219: warning: Member _trk_bragg_mip_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:220: warning: Member _trk_pid_chipr_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:221: warning: Member _trk_pid_chika_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:222: warning: Member _trk_pid_chipi_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:223: warning: Member _trk_pid_chimu_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:224: warning: Member _trk_pida_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:226: warning: Member _trk_bragg_p_three_planes (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:228: warning: Member _trk_mcs_muon_mom (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:229: warning: Member _trk_energy_proton (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:230: warning: Member _trk_energy_muon (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:232: warning: Member _longest (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:235: warning: Member _dqdx_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:236: warning: Member _dqdx_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:237: warning: Member _dqdx_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:239: warning: Member _dedx_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:240: warning: Member _dedx_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:241: warning: Member _dedx_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:243: warning: Member _rr_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:244: warning: Member _rr_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:245: warning: Member _rr_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:247: warning: Member _pitch_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:248: warning: Member _pitch_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:249: warning: Member _pitch_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:251: warning: Member _x_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:252: warning: Member _x_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:253: warning: Member _x_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:255: warning: Member _y_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:256: warning: Member _y_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:257: warning: Member _y_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:259: warning: Member _z_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:260: warning: Member _z_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:261: warning: Member _z_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:263: warning: Member _dir_x_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:264: warning: Member _dir_x_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:265: warning: Member _dir_x_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:267: warning: Member _dir_y_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:268: warning: Member _dir_y_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:269: warning: Member _dir_y_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:271: warning: Member _dir_z_u (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:272: warning: Member _dir_z_v (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:273: warning: Member _dir_z_y (variable) of class analysis::CalorimetryAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:277: warning: argument 'pset' of command @param is not found in the argument list of analysis::CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p)
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:52: warning: The following parameters of analysis::CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ContainmentAnalysis_tool.cc:71: warning: Member DistFiducial(float x, float y, float z) (function) of class analysis::ContainmentAnalysis is not documented.
@@ -1296,61 +1295,66 @@ Generating file /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/AC
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/SecondShowerTagger_tool.cc:90: warning: Member _secondshower_U_dir (variable) of class analysis::SecondShowerTagger is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/SecondShowerTagger_tool.cc:90: warning: Member _secondshower_V_dir (variable) of class analysis::SecondShowerTagger is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/SecondShowerTagger_tool.cc:90: warning: Member _secondshower_Y_dir (variable) of class analysis::SecondShowerTagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:86: warning: Member _run (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:86: warning: Member _sub (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:86: warning: Member _evt (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:89: warning: Member fTRKproducer (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:90: warning: Member fCALproducer (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:91: warning: Member fdEdxcmSkip (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:91: warning: Member fdEdxcmLen (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:92: warning: Member fLocaldEdx (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:94: warning: Member fADCtoE (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:96: warning: Member _shr_energy_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:97: warning: Member _shr_energy_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:98: warning: Member _shr_energy_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:100: warning: Member _shr_dedx_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:101: warning: Member _shr_dedx_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:102: warning: Member _shr_dedx_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:104: warning: Member _shr_pfp_id_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:106: warning: Member _shr_start_x_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:107: warning: Member _shr_start_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:108: warning: Member _shr_start_z_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:110: warning: Member _shr_start_U_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:111: warning: Member _shr_start_V_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:112: warning: Member _shr_dist_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:114: warning: Member _shr_px_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:115: warning: Member _shr_py_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:116: warning: Member _shr_pz_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:118: warning: Member _shr_theta_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:119: warning: Member _shr_phi_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:121: warning: Member _shr_pitch_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:122: warning: Member _shr_pitch_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:123: warning: Member _shr_pitch_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:125: warning: Member _shr_openangle_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:127: warning: Member _shr_tkfit_nhits_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:128: warning: Member _shr_tkfit_start_x_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:129: warning: Member _shr_tkfit_start_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:130: warning: Member _shr_tkfit_start_z_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:132: warning: Member _shr_tkfit_start_U_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:133: warning: Member _shr_tkfit_start_V_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:135: warning: Member _shr_tkfit_theta_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:136: warning: Member _shr_tkfit_phi_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:138: warning: Member _shr_tkfit_pitch_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:139: warning: Member _shr_tkfit_pitch_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:140: warning: Member _shr_tkfit_pitch_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:142: warning: Member _shr_tkfit_dedx_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:143: warning: Member _shr_tkfit_dedx_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:144: warning: Member _shr_tkfit_dedx_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:146: warning: Member _shr_tkfit_gap10_dedx_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:147: warning: Member _shr_tkfit_gap10_dedx_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:148: warning: Member _shr_tkfit_gap10_dedx_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:150: warning: Member _shr_tkfit_dedx_nhits_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:151: warning: Member _shr_tkfit_dedx_nhits_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:152: warning: Member _shr_tkfit_dedx_nhits_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:154: warning: Member _shr_moliere_avg_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:155: warning: Member _shr_moliere_rms_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:159: warning: argument 'pset' of command @param is not found in the argument list of analysis::ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:45: warning: The following parameters of analysis::ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p) are not documented:
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:87: warning: Member _run (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:87: warning: Member _sub (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:87: warning: Member _evt (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:90: warning: Member fTRKproducer (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:91: warning: Member fCALproducer (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:93: warning: Member fBacktrackTag (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:94: warning: Member fHproducer (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:95: warning: Member fEnergyThresholdForMCHits (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:97: warning: Member fdEdxcmSkip (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:97: warning: Member fdEdxcmLen (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:98: warning: Member fLocaldEdx (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:100: warning: Member fADCtoE (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:101: warning: Member fRecalibrateHits (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:103: warning: Member llr_pid_calculator (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:105: warning: Member _shr_energy_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:106: warning: Member _shr_energy_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:107: warning: Member _shr_energy_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:109: warning: Member _shr_dedx_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:110: warning: Member _shr_dedx_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:111: warning: Member _shr_dedx_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:113: warning: Member _shr_pfp_id_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:115: warning: Member _shr_start_x_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:116: warning: Member _shr_start_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:117: warning: Member _shr_start_z_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:119: warning: Member _shr_start_U_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:120: warning: Member _shr_start_V_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:121: warning: Member _shr_dist_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:123: warning: Member _shr_px_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:124: warning: Member _shr_py_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:125: warning: Member _shr_pz_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:127: warning: Member _shr_theta_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:128: warning: Member _shr_phi_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:130: warning: Member _shr_pitch_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:131: warning: Member _shr_pitch_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:132: warning: Member _shr_pitch_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:134: warning: Member _shr_openangle_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:136: warning: Member _shr_tkfit_nhits_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:137: warning: Member _shr_tkfit_start_x_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:138: warning: Member _shr_tkfit_start_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:139: warning: Member _shr_tkfit_start_z_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:141: warning: Member _shr_tkfit_start_U_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:142: warning: Member _shr_tkfit_start_V_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:144: warning: Member _shr_tkfit_theta_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:145: warning: Member _shr_tkfit_phi_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:147: warning: Member _shr_tkfit_pitch_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:148: warning: Member _shr_tkfit_pitch_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:149: warning: Member _shr_tkfit_pitch_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:151: warning: Member _shr_tkfit_dedx_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:152: warning: Member _shr_tkfit_dedx_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:153: warning: Member _shr_tkfit_dedx_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:155: warning: Member _shr_tkfit_gap10_dedx_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:156: warning: Member _shr_tkfit_gap10_dedx_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:157: warning: Member _shr_tkfit_gap10_dedx_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:159: warning: Member _shr_tkfit_dedx_nhits_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:160: warning: Member _shr_tkfit_dedx_nhits_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:161: warning: Member _shr_tkfit_dedx_nhits_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:163: warning: Member _shr_moliere_avg_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:164: warning: Member _shr_moliere_rms_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:168: warning: argument 'pset' of command @param is not found in the argument list of analysis::ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:46: warning: The following parameters of analysis::ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerStartPoint_tool.cc:80: warning: Member _run (variable) of class analysis::ShowerStartPoint is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerStartPoint_tool.cc:80: warning: Member _sub (variable) of class analysis::ShowerStartPoint is not documented.
@@ -1425,66 +1429,70 @@ Generating file /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/AC
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:99: warning: Member fCALOproducer (variable) of class analysis::TrackAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:100: warning: Member fPIDproducer (variable) of class analysis::TrackAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:101: warning: Member fTRKproducer (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:103: warning: Member _run (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:103: warning: Member _sub (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:103: warning: Member _evt (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:105: warning: Member _trk_pfp_id_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:107: warning: Member _trk_start_x_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:108: warning: Member _trk_start_y_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:109: warning: Member _trk_start_z_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:111: warning: Member _trk_sce_start_x_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:112: warning: Member _trk_sce_start_y_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:113: warning: Member _trk_sce_start_z_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:115: warning: Member _trk_distance_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:117: warning: Member _trk_theta_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:118: warning: Member _trk_phi_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:120: warning: Member _trk_dir_x_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:121: warning: Member _trk_dir_y_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:122: warning: Member _trk_dir_z_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:124: warning: Member _trk_end_x_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:125: warning: Member _trk_end_y_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:126: warning: Member _trk_end_z_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:128: warning: Member _trk_sce_end_x_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:129: warning: Member _trk_sce_end_y_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:130: warning: Member _trk_sce_end_z_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:132: warning: Member _trk_len_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:134: warning: Member _trk_bragg_p_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:135: warning: Member _trk_bragg_mu_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:136: warning: Member _trk_bragg_mip_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:137: warning: Member _trk_pid_chipr_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:138: warning: Member _trk_pid_chika_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:139: warning: Member _trk_pid_chipi_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:140: warning: Member _trk_pid_chimu_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:141: warning: Member _trk_pida_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:143: warning: Member _trk_bragg_p_u_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:144: warning: Member _trk_bragg_mu_u_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:145: warning: Member _trk_bragg_mip_u_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:146: warning: Member _trk_pid_chipr_u_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:147: warning: Member _trk_pid_chika_u_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:148: warning: Member _trk_pid_chipi_u_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:149: warning: Member _trk_pid_chimu_u_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:150: warning: Member _trk_pida_u_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:152: warning: Member _trk_bragg_p_v_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:153: warning: Member _trk_bragg_mu_v_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:154: warning: Member _trk_bragg_mip_v_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:155: warning: Member _trk_pid_chipr_v_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:156: warning: Member _trk_pid_chika_v_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:157: warning: Member _trk_pid_chipi_v_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:158: warning: Member _trk_pid_chimu_v_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:159: warning: Member _trk_pida_v_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:161: warning: Member _trk_llr_pid_u_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:162: warning: Member _trk_llr_pid_v_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:163: warning: Member _trk_llr_pid_y_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:164: warning: Member _trk_llr_pid_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:166: warning: Member _trk_llr_pid_score_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:168: warning: Member _trk_mcs_muon_mom_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:169: warning: Member _trk_range_muon_mom_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:170: warning: Member _trk_energy_proton_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:171: warning: Member _trk_energy_muon_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:172: warning: Member _trk_calo_energy_u_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:173: warning: Member _trk_calo_energy_v_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:174: warning: Member _trk_calo_energy_y_v (variable) of class analysis::TrackAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:178: warning: argument 'pset' of command @param is not found in the argument list of analysis::TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p)
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:102: warning: Member fBacktrackTag (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:103: warning: Member fHproducer (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:104: warning: Member fRecalibrateHits (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:105: warning: Member fEnergyThresholdForMCHits (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:107: warning: Member _run (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:107: warning: Member _sub (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:107: warning: Member _evt (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:109: warning: Member _trk_pfp_id_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:111: warning: Member _trk_start_x_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:112: warning: Member _trk_start_y_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:113: warning: Member _trk_start_z_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:115: warning: Member _trk_sce_start_x_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:116: warning: Member _trk_sce_start_y_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:117: warning: Member _trk_sce_start_z_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:119: warning: Member _trk_distance_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:121: warning: Member _trk_theta_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:122: warning: Member _trk_phi_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:124: warning: Member _trk_dir_x_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:125: warning: Member _trk_dir_y_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:126: warning: Member _trk_dir_z_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:128: warning: Member _trk_end_x_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:129: warning: Member _trk_end_y_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:130: warning: Member _trk_end_z_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:132: warning: Member _trk_sce_end_x_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:133: warning: Member _trk_sce_end_y_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:134: warning: Member _trk_sce_end_z_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:136: warning: Member _trk_len_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:138: warning: Member _trk_bragg_p_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:139: warning: Member _trk_bragg_mu_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:140: warning: Member _trk_bragg_mip_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:141: warning: Member _trk_pid_chipr_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:142: warning: Member _trk_pid_chika_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:143: warning: Member _trk_pid_chipi_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:144: warning: Member _trk_pid_chimu_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:145: warning: Member _trk_pida_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:147: warning: Member _trk_bragg_p_u_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:148: warning: Member _trk_bragg_mu_u_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:149: warning: Member _trk_bragg_mip_u_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:150: warning: Member _trk_pid_chipr_u_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:151: warning: Member _trk_pid_chika_u_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:152: warning: Member _trk_pid_chipi_u_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:153: warning: Member _trk_pid_chimu_u_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:154: warning: Member _trk_pida_u_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:156: warning: Member _trk_bragg_p_v_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:157: warning: Member _trk_bragg_mu_v_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:158: warning: Member _trk_bragg_mip_v_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:159: warning: Member _trk_pid_chipr_v_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:160: warning: Member _trk_pid_chika_v_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:161: warning: Member _trk_pid_chipi_v_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:162: warning: Member _trk_pid_chimu_v_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:163: warning: Member _trk_pida_v_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:165: warning: Member _trk_llr_pid_u_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:166: warning: Member _trk_llr_pid_v_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:167: warning: Member _trk_llr_pid_y_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:168: warning: Member _trk_llr_pid_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:170: warning: Member _trk_llr_pid_score_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:172: warning: Member _trk_mcs_muon_mom_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:173: warning: Member _trk_range_muon_mom_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:174: warning: Member _trk_energy_proton_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:175: warning: Member _trk_energy_muon_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:176: warning: Member _trk_calo_energy_u_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:177: warning: Member _trk_calo_energy_v_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:178: warning: Member _trk_calo_energy_y_v (variable) of class analysis::TrackAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:182: warning: argument 'pset' of command @param is not found in the argument list of analysis::TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p)
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:50: warning: The following parameters of analysis::TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/VertexAnalysis_tool.cc:45: warning: Member configure(fhicl::ParameterSet const &pset) (function) of class analysis::VertexAnalysis is not documented.
@@ -1574,23 +1582,24 @@ Generating file /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/AC
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/BacktrackingFuncs.h:138: warning: Member start_t (variable) of class searchingfornues::BtPart is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:16: warning: Member set_dedx_binning(size_t plane, size_t num_bins, std::vector< float > bin_edges) (function) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:22: warning: Member set_par_binning(size_t plane, std::vector< size_t > num_bins, std::vector< std::vector< float >> bin_edges) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:28: warning: Member set_angle_binning(size_t plane, std::vector< size_t > num_bins, std::vector< std::vector< float >> bin_edges) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:28: warning: Member set_corr_par_binning(size_t plane, std::vector< size_t > num_bins, std::vector< std::vector< float >> bin_edges) (function) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:34: warning: Member set_lookup_tables(size_t plane, std::vector< float > tables) (function) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:39: warning: Member set_correction_tables(size_t plane, std::vector< float > tables) (function) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:44: warning: Member digitize(float value, std::vector< float > bin_edges) (function) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:58: warning: Member findLookupIndex(float dedx_value, std::vector< float > par_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:90: warning: Member findLookupAngleIndex(float dedx_value, std::vector< float > angle_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:90: warning: Member findLookupCorrParameterIndex(std::vector< float > corr_parameter_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:111: warning: Member LLR_one_hit_one_plane(float dedx_value, std::vector< float > par_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:117: warning: Member Correction_hit_one_plane(float dedx_value, std::vector< float > angle_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:117: warning: Member Correction_hit_one_plane(std::vector< float > corr_parameter_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:123: warning: Member LLR_many_hits_one_plane(std::vector< float > dedx_values, std::vector< std::vector< float >> par_values, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:139: warning: Member dedx_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:140: warning: Member dedx_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:142: warning: Member parameters_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:143: warning: Member parameters_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:145: warning: Member angles_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:146: warning: Member angles_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:148: warning: Member lookup_tables[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:149: warning: Member correction_tables[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:138: warning: Member correct_many_hits_one_plane(std::vector< float > dedx_values, std::vector< std::vector< float >> corr_par_values, std::vector< bool > is_to_correct, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:159: warning: Member dedx_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:160: warning: Member dedx_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:162: warning: Member parameters_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:163: warning: Member parameters_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:165: warning: Member corr_parameters_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:166: warning: Member corr_parameters_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:168: warning: Member lookup_tables[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:169: warning: Member correction_tables[3] (variable) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:85: warning: Member _trkmom (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:86: warning: Member mcsfitter (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:90: warning: Member proton (variable) of class selection::CC0piNpSelection is not documented.
@@ -1816,7 +1825,7 @@ Generating file /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/AC
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/ShowerSelection_tool.cc:102: warning: Member fTRKproducer (variable) of class selection::ShowerSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/ShowerSelection_tool.cc:103: warning: Member fCALproducer (variable) of class selection::ShowerSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:82: warning: Member fData (variable) of class selection::SelectionToolBase is not documented.
-documentation...
+rating file documentation...
 Generating page documentation...
 Generating group documentation...
 Generating class documentation...
@@ -1888,5 +1897,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 922/65536 hits=5117 misses=951
+lookup cache used 928/65536 hits=5140 misses=958
 finished...
