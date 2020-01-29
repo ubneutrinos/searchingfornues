@@ -89,14 +89,6 @@ public:
      */
   void resetTTree(TTree *_tree) override;
 
-  /**
-   * @brief get dEdx using constant MeV/cm value and ModBox recombination model, but accounting for local E-field variations
-   */
-  std::vector<float> GetdEdxfromdQdx(const std::vector<float>& dqdx_v,
-				     const std::vector<float>& x_v,
-				     const std::vector<float>& y_v,
-				     const std::vector<float>& z_v,
-				     const int plane);
 
 private:
 
@@ -107,12 +99,10 @@ private:
            const searchingfornues::ProxyPIDColl_t pid_proxy,
            const searchingfornues::ProxyClusColl_t clus_proxy,
            const bool fData,
-		       const bool fShrFit,
+           const bool fShrFit,
            const std::vector<searchingfornues::BtPart> btparts_v,
            const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart);
 
-  void TrkDirectionAtXYZ(const recob::Track, const double x, const double y, const double z,
-                          float out[3]);
 
   trkf::TrackMomentumCalculator _trkmom;
 
@@ -429,9 +419,9 @@ void CalorimetryAnalysis::analyzeEvent(art::Event const &e, bool fData)
           pid_proxy,
           clus_proxy,
           !fBacktrack,
-		      fShrFit,
+          fShrFit,
           btparts_v,
-	  assocMCPart);
+    assocMCPart);
 
     }//  if T0 assocaition is found
   }// for all PFParticles
@@ -533,7 +523,7 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
         pid_proxy,
         clus_proxy,
         fData,
-		    fShrFit,
+        fShrFit,
         btparts_v,
         assocMCPart);
   } // for all PFParticles
@@ -830,7 +820,7 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
             const searchingfornues::ProxyPIDColl_t pid_proxy,
             const searchingfornues::ProxyClusColl_t clus_proxy,
             const bool fData,
-					  const bool fShrFit,
+            const bool fShrFit,
             const std::vector<searchingfornues::BtPart> btparts_v,
             const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart)
 {
@@ -1056,12 +1046,15 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
   for (auto const& calo : calo_v)
   {
     auto const& plane = calo->PlaneID().Plane;
+    if (plane>2)
+    {
+      continue;
+    }
     auto const& xyz_v = calo->XYZ();
 
     if (plane == 0)
     {
       _dqdx_u = calo->dQdx();
-      _dedx_u = calo->dEdx();
       _rr_u = calo->ResidualRange();
       _pitch_u = calo->TrkPitchVec();
       for (auto xyz : xyz_v)
@@ -1071,17 +1064,17 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _z_u.push_back(xyz.Z());
 
         float _dir_u[3];
-        TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir_u);
+        searchingfornues::TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir_u);
         _dir_x_u.push_back(_dir_u[0]);
         _dir_y_u.push_back(_dir_u[1]);
         _dir_z_u.push_back(_dir_u[2]);
       }
-      if (fShrFit) { _dedx_u = GetdEdxfromdQdx(_dqdx_u,_x_u,_y_u,_z_u, plane); }
+      if (fShrFit) { _dedx_u = searchingfornues::GetdEdxfromdQdx(_dqdx_u, _x_u, _y_u, _z_u, 2.1, fADCtoE[plane]); }
+      else {_dedx_u = calo->dEdx();}
     }
     else if (plane == 1)
     {
       _dqdx_v = calo->dQdx();
-      _dedx_v = calo->dEdx();
       _rr_v = calo->ResidualRange();
       _pitch_v = calo->TrkPitchVec();
       for (auto xyz : xyz_v)
@@ -1091,17 +1084,17 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _z_v.push_back(xyz.Z());
 
         float _dir_v[3];
-        TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir_v);
+        searchingfornues::TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir_v);
         _dir_x_v.push_back(_dir_v[0]);
         _dir_y_v.push_back(_dir_v[1]);
         _dir_z_v.push_back(_dir_v[2]);
       }
-      if (fShrFit) { _dedx_v = GetdEdxfromdQdx(_dqdx_v,_x_v,_y_v,_z_v, plane); }
+      if (fShrFit) { _dedx_v = searchingfornues::GetdEdxfromdQdx(_dqdx_v, _x_v, _y_v, _z_v, 2.1, fADCtoE[plane]); }
+      else {_dedx_v = calo->dEdx();}
     }
     else if (plane == 2) //collection
     {
       _dqdx_y = calo->dQdx();
-      _dedx_y = calo->dEdx();
       _rr_y = calo->ResidualRange();
       _pitch_y = calo->TrkPitchVec();
       for (auto xyz : xyz_v)
@@ -1111,68 +1104,19 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _z_y.push_back(xyz.Z());
 
         float _dir_y[3];
-        TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir_y);
+        searchingfornues::TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir_y);
         _dir_x_y.push_back(_dir_y[0]);
         _dir_y_y.push_back(_dir_y[1]);
         _dir_z_y.push_back(_dir_y[2]);
       }
-      if (fShrFit) { _dedx_y = GetdEdxfromdQdx(_dqdx_y,_x_y,_y_y,_z_y, plane); }
+      if (fShrFit) { _dedx_y = searchingfornues::GetdEdxfromdQdx(_dqdx_y, _x_y, _y_y, _z_y, 2.1, fADCtoE[plane]); }
+      else {_dedx_y = calo->dEdx();}
     }
   }
 
   _calo_tree->Fill();
 }
 
-std::vector<float> CalorimetryAnalysis::GetdEdxfromdQdx(const std::vector<float>& dqdx_v,
-							const std::vector<float>& x_v,
-							const std::vector<float>& y_v,
-							const std::vector<float>& z_v,
-							const int plane) {
-
-  std::vector<float> dedx_v;
-
-  if ( (x_v.size() < dqdx_v.size()) || (y_v.size() < dqdx_v.size()) || (z_v.size() < dqdx_v.size()) ) {
-    std::cout << "ERROR. Vector size does not match in CalorimetryAnalysis_tool [searchingfornues]" << std::endl;
-    return dedx_v;
-  }
-
-  for (size_t i=0; i < dqdx_v.size(); i++) {
-
-    dedx_v.push_back( searchingfornues::GetdEdxfromdQdx(dqdx_v[i], x_v[i], y_v[i], z_v[i], 2.1, fADCtoE[plane]) );
-
-  }// for all points in track
-
-  return dedx_v;
-}
-
-void CalorimetryAnalysis::TrkDirectionAtXYZ(const recob::Track trk, const double x, const double y, const double z, float out[3])
-{
-  float min_dist = 100;
-  size_t i_min = -1;
-  //std::cout << "DAVIDC min dist is " << min_dist << std::endl;
-  for(size_t i=0; i < trk.NumberTrajectoryPoints(); i++)
-  {
-    if (trk.HasValidPoint(i))
-    { // check this point is valid
-      auto point_i = trk.LocationAtPoint(i);
-      float distance = searchingfornues::distance3d((double)point_i.X(), (double)point_i.Y(), (double)point_i.Z(),
-                x, y, z);
-      //std::cout << "\t DAVIDC found valid point [" << point_i.X() << ", " << point_i.Y() << "," << point_i.Z() <<  " ] w/ distance " << distance << std::endl;
-      if (distance < min_dist)
-      {
-        min_dist = distance;
-        i_min = i;
-      }
-    }// if point is valid
-  }// for all track points
-  // std::cout << "minimum distance = " << min_dist << std::endl;
-  //std::cout << "DAVIDC min dist after loop is is " << min_dist << " and i_min is " << i_min << std::endl;
-
-  auto direction = trk.DirectionAtPoint(i_min);
-  out[0] = (float)direction.X();
-  out[1] = (float)direction.Y();
-  out[2] = (float)direction.Z();
-}
 
 DEFINE_ART_CLASS_TOOL(CalorimetryAnalysis)
 } // namespace analysis

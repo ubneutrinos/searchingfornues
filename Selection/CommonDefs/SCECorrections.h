@@ -150,7 +150,8 @@ namespace searchingfornues
     out[0] += _xoffset;
   }
 
-  float GetLocalEFieldMag(const float x, const float y, const float z) {
+  float GetLocalEFieldMag(const float x, const float y, const float z)
+  {
 
     const detinfo::DetectorProperties* detprop = art::ServiceHandle<detinfo::DetectorPropertiesService>()->provider();
     auto const *sce = lar::providerFrom<spacecharge::SpaceChargeService>();
@@ -174,15 +175,35 @@ namespace searchingfornues
    * @input adctoe to convert to e- (different for every plane)
    * @return dedx
    */
-  float GetdEdxfromdQdx(const float dqdx, const float x, const float y, const float z, const float dedxfixed, const float adctoe) {
-
+  float GetdEdxfromdQdx(const float dqdx, const float x, const float y, const float z, const float dedxfixed, const float adctoe)
+  {
     auto efield = searchingfornues::GetLocalEFieldMag(x,y,z); // kV / cm
-
     float B = 0.212 / (1.383 * efield);
     float r = log( dedxfixed * B + 0.93 ) / (dedxfixed * B);
     return dqdx * adctoe * (23.6/1e6) / r;
   }
 
+  std::vector<float> GetdEdxfromdQdx(const std::vector<float> dqdx_v,
+                const std::vector<float> x_v,
+                const std::vector<float> y_v,
+                const std::vector<float> z_v,
+                const float dedxfixed,
+                const float adctoe) {
+
+    std::vector<float> dedx_v;
+
+    if ( (x_v.size() < dqdx_v.size()) || (y_v.size() < dqdx_v.size()) || (z_v.size() < dqdx_v.size()) ) {
+      std::cout << "ERROR. Vector size does not match in CalorimetryAnalysis_tool [searchingfornues]" << std::endl;
+      return dedx_v;
+    }
+
+    for (size_t i=0; i < dqdx_v.size(); i++)
+    {
+      dedx_v.push_back( searchingfornues::GetdEdxfromdQdx(dqdx_v[i], x_v[i], y_v[i], z_v[i], dedxfixed, adctoe) );
+    }// for all points in track
+
+    return dedx_v;
+  }
 
 
 } // namespace searchingfornues

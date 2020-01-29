@@ -387,6 +387,9 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 
         for (const auto &tkcalo : tkcalos)
         {
+          auto const& plane = tkcalo->PlaneID().Plane;
+          if (plane > 2)
+            continue;
           std::vector<float> dqdx_values, dqdx_values_corrected;
           if (fLocaldEdx)
             dqdx_values = tkcalo->dQdx();
@@ -412,7 +415,7 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
             }
 
             std::vector<std::vector<float>> corr_par_values;
-            corr_par_values = searchingfornues::polarAngles(direction_x, direction_y, direction_z, 2, tkcalo->PlaneID().Plane);
+            corr_par_values = searchingfornues::polarAngles(direction_x, direction_y, direction_z, 2, plane);
 
             // fill vector of boolean to determine if hit has to be corrected or not
             std::vector<bool> is_hit_montecarlo;
@@ -428,52 +431,55 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
               is_hit_montecarlo.push_back(searchingfornues::isHitBtMonteCarlo(tp_index, assocMCPart, fEnergyThresholdForMCHits));
             }
             // correct hits
-            dqdx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(dqdx_values, corr_par_values, is_hit_montecarlo, tkcalo->PlaneID().Plane);
+            dqdx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(dqdx_values, corr_par_values, is_hit_montecarlo, plane);
           }
           // using function from CommonDefs/TrackFitterFunctions.h
           searchingfornues::GetTrackFitdEdx(dqdx_values_corrected, tkcalo->ResidualRange(), fdEdxcmSkip, fdEdxcmLen, calodEdx, caloNpts);
           if (fLocaldEdx)
+          {
             calodEdx = searchingfornues::GetdEdxfromdQdx(calodEdx,
                    _shr_tkfit_start_x_v.back(),
                    _shr_tkfit_start_y_v.back(),
                    _shr_tkfit_start_z_v.back(),
-                   2.1, fADCtoE[tkcalo->PlaneID().Plane] );
+                   2.1, fADCtoE[plane] );
+          }
 
-          if (tkcalo->PlaneID().Plane == 0)
+          if (plane == 0)
           {
             _shr_tkfit_dedx_u_v.back() = calodEdx;
             _shr_tkfit_dedx_nhits_u_v.back() = caloNpts;
           }
 
-          if (tkcalo->PlaneID().Plane == 1)
+          if (plane == 1)
           {
             _shr_tkfit_dedx_v_v.back() = calodEdx;
             _shr_tkfit_dedx_nhits_v_v.back() = caloNpts;
           }
 
-          if (tkcalo->PlaneID().Plane == 2)
+          if (plane == 2)
           {
             _shr_tkfit_dedx_y_v.back() = calodEdx;
             _shr_tkfit_dedx_nhits_y_v.back() = caloNpts;
           }
-
           // Gap 1.0 cm
           searchingfornues::GetTrackFitdEdx(dqdx_values_corrected, tkcalo->ResidualRange(), 1.0, fdEdxcmLen, calodEdx, caloNpts);
           if (fLocaldEdx)
+          {
             calodEdx = searchingfornues::GetdEdxfromdQdx(calodEdx,
-                   _shr_tkfit_start_x_v.back(),
-                   _shr_tkfit_start_y_v.back(),
-                   _shr_tkfit_start_z_v.back(),
-                   2.1, fADCtoE[tkcalo->PlaneID().Plane] );
-          if (tkcalo->PlaneID().Plane == 2)
+                 _shr_tkfit_start_x_v.back(),
+                 _shr_tkfit_start_y_v.back(),
+                 _shr_tkfit_start_z_v.back(),
+                 2.1, fADCtoE[plane] );
+          }
+          if (plane == 2)
           {
             _shr_tkfit_gap10_dedx_y_v.back() = calodEdx;
           }
-          else if (tkcalo->PlaneID().Plane == 1)
+          else if (plane == 1)
           {
             _shr_tkfit_gap10_dedx_v_v.back() = calodEdx;
           }
-          else if (tkcalo->PlaneID().Plane == 0)
+          else if (plane == 0)
           {
             _shr_tkfit_gap10_dedx_u_v.back() = calodEdx;
           }
