@@ -16,6 +16,7 @@
 #include "../CommonDefs/TrackFitterFunctions.h"
 #include "../CommonDefs/SCECorrections.h"
 #include "../CommonDefs/LLR_PID.h"
+#include "../CommonDefs/LLRPID_correction_lookup.h"
 
 namespace analysis
 {
@@ -101,6 +102,7 @@ private:
   bool fRecalibrateHits;
 
   searchingfornues::LLRPID llr_pid_calculator;
+  searchingfornues::CorrectionLookUpParameters lookup_parameters;
 
   std::vector<float> _shr_energy_u_v;
   std::vector<float> _shr_energy_v_v;
@@ -194,20 +196,17 @@ ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
   //PrxyCluster->setRadius(2.0);
   //PrxyCluster->setCellSize(2.0);
 
-  std::vector<size_t> corr_parameters_num_bins_0 = {parameter_correction_0_num_bins_pl_0, parameter_correction_1_num_bins_pl_0};
-  std::vector<std::vector<float>> corr_parameters_bin_edges_0 = {parameter_correction_0_edges_pl_0, parameter_correction_1_edges_pl_0};
-  llr_pid_calculator.set_corr_par_binning(0, corr_parameters_num_bins_0, corr_parameters_bin_edges_0);
-  llr_pid_calculator.set_correction_tables(0, correction_table_pl_0);
+  if (fRecalibrateHits)
+  {
+    llr_pid_calculator.set_corr_par_binning(0, lookup_parameters.parameter_correction_edges_pl_0);
+    llr_pid_calculator.set_correction_tables(0, lookup_parameters.correction_table_pl_0);
 
-  std::vector<size_t> corr_parameters_num_bins_1 = {parameter_correction_0_num_bins_pl_1, parameter_correction_1_num_bins_pl_1};
-  std::vector<std::vector<float>> corr_parameters_bin_edges_1 = {parameter_correction_0_edges_pl_1, parameter_correction_1_edges_pl_1};
-  llr_pid_calculator.set_corr_par_binning(1, corr_parameters_num_bins_1, corr_parameters_bin_edges_1);
-  llr_pid_calculator.set_correction_tables(1, correction_table_pl_1);
+    llr_pid_calculator.set_corr_par_binning(1, lookup_parameters.parameter_correction_edges_pl_1);
+    llr_pid_calculator.set_correction_tables(1, lookup_parameters.correction_table_pl_1);
 
-  std::vector<size_t> corr_parameters_num_bins_2 = {parameter_correction_0_num_bins_pl_2, parameter_correction_1_num_bins_pl_2};
-  std::vector<std::vector<float>> corr_parameters_bin_edges_2 = {parameter_correction_0_edges_pl_2, parameter_correction_1_edges_pl_2};
-  llr_pid_calculator.set_corr_par_binning(2, corr_parameters_num_bins_2, corr_parameters_bin_edges_2);
-  llr_pid_calculator.set_correction_tables(2, correction_table_pl_2);
+    llr_pid_calculator.set_corr_par_binning(2, lookup_parameters.parameter_correction_edges_pl_2);
+    llr_pid_calculator.set_correction_tables(2, lookup_parameters.correction_table_pl_2);
+  }
 }
 
 //----------------------------------------------------------------------------
@@ -432,6 +431,10 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
             }
             // correct hits
             dqdx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(dqdx_values, corr_par_values, is_hit_montecarlo, plane);
+            for (size_t i = 0; i < dqdx_values_corrected.size(); i++)
+            {
+              std::cout << "shower point " << i << " : isHitBtMonteCarlo = " << is_hit_montecarlo[i] << " dedx before = " << dqdx_values[i] << " dedx after = " << dqdx_values_corrected[i] << std::endl;
+            }
           }
           // using function from CommonDefs/TrackFitterFunctions.h
           searchingfornues::GetTrackFitdEdx(dqdx_values_corrected, tkcalo->ResidualRange(), fdEdxcmSkip, fdEdxcmLen, calodEdx, caloNpts);

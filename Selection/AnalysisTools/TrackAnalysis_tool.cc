@@ -13,9 +13,12 @@
 #include "../CommonDefs/BacktrackingFuncs.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "../CommonDefs/PIDFuncs.h"
-#include "../CommonDefs/LLR_PID.h"
 #include "../CommonDefs/SCECorrections.h"
 #include "../CommonDefs/Geometry.h"
+
+#include "../CommonDefs/LLR_PID.h"
+#include "../CommonDefs/LLRPID_proton_muon_lookup.h"
+#include "../CommonDefs/LLRPID_correction_lookup.h"
 
 #include "larreco/RecoAlg/TrajectoryMCSFitter.h"
 #include "ubana/ParticleID/Algorithms/uB_PlaneIDBitsetHelperFunctions.h"
@@ -95,6 +98,8 @@ private:
   TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
 
   searchingfornues::LLRPID llr_pid_calculator;
+  searchingfornues::ProtonMuonLookUpParameters protonmuon_parameters;
+  searchingfornues::CorrectionLookUpParameters correction_parameters;
 
   art::InputTag fCALOproducer;
   art::InputTag fPIDproducer;
@@ -187,7 +192,6 @@ private:
 ///
 TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p) : _mcsfitter(fhicl::Table<trkf::TrajectoryMCSFitter::Config>(p.get<fhicl::ParameterSet>("mcsfitmu")))
 {
-
   fCALOproducer = p.get<art::InputTag>("CALOproducer");
   fPIDproducer = p.get<art::InputTag>("PIDproducer");
   fTRKproducer = p.get<art::InputTag>("TRKproducer");
@@ -197,39 +201,30 @@ TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p) : _mcsfitter(fhicl::T
   fRecalibrateHits = p.get<bool>("RecalibrateHits", false);
 
   // set dedx pdf parameters
-  llr_pid_calculator.set_dedx_binning(0, dedx_num_bins_pl_0, dedx_edges_pl_0);
-  std::vector<size_t> parameters_num_bins_0 = {parameter_0_num_bins_pl_0, parameter_1_num_bins_pl_0};
-  std::vector<std::vector<float>> parameters_bin_edges_0 = {parameter_0_edges_pl_0, parameter_1_edges_pl_0};
-  llr_pid_calculator.set_par_binning(0, parameters_num_bins_0, parameters_bin_edges_0);
-  llr_pid_calculator.set_lookup_tables(0, dedx_pdf_pl_0);
+  llr_pid_calculator.set_dedx_binning(0, protonmuon_parameters.dedx_edges_pl_0);
+  llr_pid_calculator.set_par_binning(0, protonmuon_parameters.parameters_edges_pl_0);
+  llr_pid_calculator.set_lookup_tables(0, protonmuon_parameters.dedx_pdf_pl_0);
 
-  llr_pid_calculator.set_dedx_binning(1, dedx_num_bins_pl_1, dedx_edges_pl_1);
-  std::vector<size_t> parameters_num_bins_1 = {parameter_0_num_bins_pl_1, parameter_1_num_bins_pl_1};
-  std::vector<std::vector<float>> parameters_bin_edges_1 = {parameter_0_edges_pl_1, parameter_1_edges_pl_1};
-  llr_pid_calculator.set_par_binning(1, parameters_num_bins_1, parameters_bin_edges_1);
-  llr_pid_calculator.set_lookup_tables(1, dedx_pdf_pl_1);
+  llr_pid_calculator.set_dedx_binning(1, protonmuon_parameters.dedx_edges_pl_1);
+  llr_pid_calculator.set_par_binning(1, protonmuon_parameters.parameters_edges_pl_1);
+  llr_pid_calculator.set_lookup_tables(1, protonmuon_parameters.dedx_pdf_pl_1);
 
-  llr_pid_calculator.set_dedx_binning(2, dedx_num_bins_pl_2, dedx_edges_pl_2);
-  std::vector<size_t> parameters_num_bins_2 = {parameter_0_num_bins_pl_2, parameter_1_num_bins_pl_2};
-  std::vector<std::vector<float>> parameters_bin_edges_2 = {parameter_0_edges_pl_2, parameter_1_edges_pl_2};
-  llr_pid_calculator.set_par_binning(2, parameters_num_bins_2, parameters_bin_edges_2);
-  llr_pid_calculator.set_lookup_tables(2, dedx_pdf_pl_2);
+  llr_pid_calculator.set_dedx_binning(2, protonmuon_parameters.dedx_edges_pl_2);
+  llr_pid_calculator.set_par_binning(2, protonmuon_parameters.parameters_edges_pl_2);
+  llr_pid_calculator.set_lookup_tables(2, protonmuon_parameters.dedx_pdf_pl_2);
 
   // set correction parameters
-  std::vector<size_t> corr_parameters_num_bins_0 = {parameter_correction_0_num_bins_pl_0, parameter_correction_1_num_bins_pl_0};
-  std::vector<std::vector<float>> corr_parameters_bin_edges_0 = {parameter_correction_0_edges_pl_0, parameter_correction_1_edges_pl_0};
-  llr_pid_calculator.set_corr_par_binning(0, corr_parameters_num_bins_0, corr_parameters_bin_edges_0);
-  llr_pid_calculator.set_correction_tables(0, correction_table_pl_0);
+  if (fRecalibrateHits)
+  {
+    llr_pid_calculator.set_corr_par_binning(0, correction_parameters.parameter_correction_edges_pl_0);
+    llr_pid_calculator.set_correction_tables(0, correction_parameters.correction_table_pl_0);
 
-  std::vector<size_t> corr_parameters_num_bins_1 = {parameter_correction_0_num_bins_pl_1, parameter_correction_1_num_bins_pl_1};
-  std::vector<std::vector<float>> corr_parameters_bin_edges_1 = {parameter_correction_0_edges_pl_1, parameter_correction_1_edges_pl_1};
-  llr_pid_calculator.set_corr_par_binning(1, corr_parameters_num_bins_1, corr_parameters_bin_edges_1);
-  llr_pid_calculator.set_correction_tables(1, correction_table_pl_1);
+    llr_pid_calculator.set_corr_par_binning(1, correction_parameters.parameter_correction_edges_pl_1);
+    llr_pid_calculator.set_correction_tables(1, correction_parameters.correction_table_pl_1);
 
-  std::vector<size_t> corr_parameters_num_bins_2 = {parameter_correction_0_num_bins_pl_2, parameter_correction_1_num_bins_pl_2};
-  std::vector<std::vector<float>> corr_parameters_bin_edges_2 = {parameter_correction_0_edges_pl_2, parameter_correction_1_edges_pl_2};
-  llr_pid_calculator.set_corr_par_binning(2, corr_parameters_num_bins_2, corr_parameters_bin_edges_2);
-  llr_pid_calculator.set_correction_tables(2, correction_table_pl_2);
+    llr_pid_calculator.set_corr_par_binning(2, correction_parameters.parameter_correction_edges_pl_2);
+    llr_pid_calculator.set_correction_tables(2, correction_parameters.correction_table_pl_2);
+  }
 }
 
 //----------------------------------------------------------------------------
@@ -486,10 +481,10 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
           }
           // correct hits
           dedx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(dedx_values, corr_par_values, is_hit_montecarlo, plane);
-          // for (size_t i = 0; i < dedx_values_corrected.size(); i++)
-          // {
-          //   std::cout << "point i: " << dedx_values[i] << dedx_values_corrected[i] << std::endl;
-          // }
+          for (size_t i = 0; i < dedx_values_corrected.size(); i++)
+          {
+            std::cout << "track point: " << i << " isHitBtMonteCarlo = " << is_hit_montecarlo[i] << " dedx before = " << dedx_values[i] << " dedx after = " << dedx_values_corrected[i] << std::endl;
+          }
         }
 
         for (size_t i = 0; i < dedx_values_corrected.size(); i++)

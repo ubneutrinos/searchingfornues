@@ -1,8 +1,8 @@
 #ifndef LLRPID_H
 #define LLRPID_H
 
-#include "LLRPID_proton_muon_lookup.h"
-#include "LLRPID_correction_lookup.h"
+// #include "LLRPID_proton_muon_lookup.h"
+// #include "LLRPID_correction_lookup.h"
 
 namespace searchingfornues
 {
@@ -13,22 +13,29 @@ namespace searchingfornues
 
     LLRPID(){}
 
-    void set_dedx_binning(size_t plane, size_t num_bins, std::vector<float> bin_edges)
+    void set_dedx_binning(size_t plane, std::vector<float> bin_edges)
     {
-      dedx_num_bins[plane] = num_bins;
       dedx_bin_edges[plane] = bin_edges;
+      dedx_num_bins[plane] = (bin_edges.size()-1);
     }
 
-    void set_par_binning(size_t plane, std::vector<size_t> num_bins, std::vector<std::vector<float>> bin_edges)
+    void set_par_binning(size_t plane, std::vector<std::vector<float>> bin_edges)
     {
-      parameters_num_bins[plane] = num_bins;
       parameters_bin_edges[plane] = bin_edges;
+      for (size_t i=0; i<bin_edges.size(); i++)
+      {
+        parameters_num_bins[plane].push_back(parameters_bin_edges[plane][i].size()-1);
+      }
     }
 
-    void set_corr_par_binning(size_t plane, std::vector<size_t> num_bins, std::vector<std::vector<float>> bin_edges)
+    void set_corr_par_binning(size_t plane, std::vector<std::vector<float>> bin_edges)
     {
-      corr_parameters_num_bins[plane] = num_bins;
       corr_parameters_bin_edges[plane] = bin_edges;
+      parameters_bin_edges[plane] = bin_edges;
+      for (size_t i=0; i<bin_edges.size(); i++)
+      {
+        corr_parameters_num_bins[plane].push_back(corr_parameters_bin_edges[plane][i].size()-1);
+      }
     }
 
     void set_lookup_tables(size_t plane, std::vector<float> tables)
@@ -114,7 +121,7 @@ namespace searchingfornues
       return lookup_tables[plane][index];
     }
 
-    float Correction_hit_one_plane(std::vector<float> corr_parameter_value, size_t plane)
+    float correction_hit_one_plane(std::vector<float> corr_parameter_value, size_t plane)
     {
       size_t index = findLookupCorrParameterIndex(corr_parameter_value, plane);
       return correction_tables[plane][index];
@@ -148,7 +155,7 @@ namespace searchingfornues
           {
             aux_par.push_back(par_value[i]);
           }
-          aux_dedx *= Correction_hit_one_plane(aux_par, plane);
+          aux_dedx *= correction_hit_one_plane(aux_par, plane);
         }
         dedx_values_corrected.push_back(aux_dedx);
       }
@@ -167,6 +174,8 @@ namespace searchingfornues
 
     std::vector<float> lookup_tables[3];
     std::vector<float> correction_tables[3];
+
+
   };
 }
 
