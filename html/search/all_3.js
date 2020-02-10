@@ -11,6 +11,7 @@ var searchData=
   ['containmentanalysis',['ContainmentAnalysis',['../classanalysis_1_1ContainmentAnalysis.html',1,'analysis']]],
   ['containmentanalysis',['ContainmentAnalysis',['../classanalysis_1_1ContainmentAnalysis.html#a1544702632da81fbf99462a4099ad15e',1,'analysis::ContainmentAnalysis']]],
   ['convertflashformat',['ConvertFlashFormat',['../classflashmatch_1_1FlashMatchingTool_1_1FlashCandidate.html#ab8156ee16d27febb44352c4ffd6adf56',1,'flashmatch::FlashMatchingTool::FlashCandidate']]],
+  ['correctionlookupparameters',['CorrectionLookUpParameters',['../structsearchingfornues_1_1CorrectionLookUpParameters.html',1,'searchingfornues']]],
   ['cosmicip',['CosmicIP',['../classanalysis_1_1CosmicIP.html#aa34450dae6a5ea2d51520aefcc9c0e6f',1,'analysis::CosmicIP']]],
   ['cosmicip',['CosmicIP',['../classanalysis_1_1CosmicIP.html',1,'analysis']]],
   ['cosmicrejection',['CosmicRejection',['../classCosmicRejection.html',1,'']]],

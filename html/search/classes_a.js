@@ -5,6 +5,7 @@ var searchData=
   ['pi0truthanalysis',['Pi0TruthAnalysis',['../classanalysis_1_1Pi0TruthAnalysis.html',1,'analysis']]],
   ['pmtnoise',['PMTNoise',['../classanalysis_1_1PMTNoise.html',1,'analysis']]],
   ['protonhitpurity',['ProtonHitPurity',['../classProtonHitPurity.html',1,'']]],
+  ['protonmuonlookupparameters',['ProtonMuonLookUpParameters',['../structsearchingfornues_1_1ProtonMuonLookUpParameters.html',1,'searchingfornues']]],
   ['protontruthstudies',['ProtonTruthStudies',['../classProtonTruthStudies.html',1,'']]],
   ['proximityclustering',['ProximityClustering',['../classProximityClustering.html',1,'']]]
 ];

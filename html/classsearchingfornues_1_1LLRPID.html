@@ -97,15 +97,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa8fb15d37ae277de14b449ee3d734b4b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa8fb15d37ae277de14b449ee3d734b4b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_dedx_binning</b> (size_t plane, size_t num_bins, std::vector&lt; float &gt; bin_edges)</td></tr>
-<tr class="separator:aa8fb15d37ae277de14b449ee3d734b4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9823701e9059de54a55cf8d180a3c42d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9823701e9059de54a55cf8d180a3c42d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_par_binning</b> (size_t plane, std::vector&lt; size_t &gt; num_bins, std::vector&lt; std::vector&lt; float &gt;&gt; bin_edges)</td></tr>
-<tr class="separator:a9823701e9059de54a55cf8d180a3c42d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4856a3584ef3a640e976398b00c4eb86"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4856a3584ef3a640e976398b00c4eb86"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_corr_par_binning</b> (size_t plane, std::vector&lt; size_t &gt; num_bins, std::vector&lt; std::vector&lt; float &gt;&gt; bin_edges)</td></tr>
-<tr class="separator:a4856a3584ef3a640e976398b00c4eb86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec6761769b6881e7ebde2c73f24230cb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aec6761769b6881e7ebde2c73f24230cb"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_dedx_binning</b> (size_t plane, std::vector&lt; float &gt; bin_edges)</td></tr>
+<tr class="separator:aec6761769b6881e7ebde2c73f24230cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3b0a021bffa8f0f466ce8ae0f46af50"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa3b0a021bffa8f0f466ce8ae0f46af50"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_par_binning</b> (size_t plane, std::vector&lt; std::vector&lt; float &gt;&gt; bin_edges)</td></tr>
+<tr class="separator:aa3b0a021bffa8f0f466ce8ae0f46af50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b11d5307ee3346d564a085c8736f9b6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8b11d5307ee3346d564a085c8736f9b6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>set_corr_par_binning</b> (size_t plane, std::vector&lt; std::vector&lt; float &gt;&gt; bin_edges)</td></tr>
+<tr class="separator:a8b11d5307ee3346d564a085c8736f9b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8596d9156bc1771641c3245e9cd71a94"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8596d9156bc1771641c3245e9cd71a94"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>set_lookup_tables</b> (size_t plane, std::vector&lt; float &gt; tables)</td></tr>
 <tr class="separator:a8596d9156bc1771641c3245e9cd71a94"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -124,9 +124,9 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>findLookupCorrParam
 <tr class="memitem:a615612fe3657b51e18bf1e514399363a"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a615612fe3657b51e18bf1e514399363a"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>LLR_one_hit_one_plane</b> (float dedx_value, std::vector&lt; float &gt; par_value, size_t plane)</td></tr>
 <tr class="separator:a615612fe3657b51e18bf1e514399363a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88acddc5e3f931282505f1e1c421d434"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a88acddc5e3f931282505f1e1c421d434"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>Correction_hit_one_plane</b> (std::vector&lt; float &gt; corr_parameter_value, size_t plane)</td></tr>
-<tr class="separator:a88acddc5e3f931282505f1e1c421d434"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06901bea0c1a2e5b9e3d4ce8b5a96e82"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a06901bea0c1a2e5b9e3d4ce8b5a96e82"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>correction_hit_one_plane</b> (std::vector&lt; float &gt; corr_parameter_value, size_t plane)</td></tr>
+<tr class="separator:a06901bea0c1a2e5b9e3d4ce8b5a96e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8090da570daccff827fa96685b54f1e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac8090da570daccff827fa96685b54f1e"></a>
 float&#160;</td><td class="memItemRight" valign="bottom"><b>LLR_many_hits_one_plane</b> (std::vector&lt; float &gt; dedx_values, std::vector&lt; std::vector&lt; float &gt;&gt; par_values, size_t plane)</td></tr>
 <tr class="separator:ac8090da570daccff827fa96685b54f1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
