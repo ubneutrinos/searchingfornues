@@ -185,7 +185,7 @@ ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
 
   fdEdxcmSkip = p.get<float>("dEdxcmSkip", 0.0); // how many cm to skip @ vtx for dE/dx calculation
   fdEdxcmLen = p.get<float>("dEdxcmLen", 4.0);   // how long the dE/dx segment should be
-  fLocaldEdx = p.get<bool>("LocaldEdx", true);   // use dE/dx from calo?
+  fLocaldEdx = p.get<bool>("LocaldEdx", false);   // use dE/dx from calo?
 
   fADCtoE = p.get<std::vector<float>>("ADCtoE");
 
@@ -245,6 +245,15 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
   if (fTRKproducer != "")
   {
     tkcalo_proxy = new searchingfornues::ProxyCaloColl_t(proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer, proxy::withAssociated<anab::Calorimetry>(fCALproducer)));
+  }
+
+  // grab hit backtracked information to be able to apply hit-by-hit re-calibrations
+  // only to MC charge
+  std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
+
+  if (!fData) {
+    art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
+    assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
   }
 
   TVector3 nuvtx;
@@ -389,56 +398,22 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
           auto const& plane = tkcalo->PlaneID().Plane;
           if (plane > 2)
             continue;
-          std::vector<float> dqdx_values, dqdx_values_corrected;
-          if (fLocaldEdx)
-            dqdx_values = tkcalo->dQdx();
-          else
-            dqdx_values = tkcalo->dEdx();
-          if (fData || !fRecalibrateHits)
-          {
-            dqdx_values_corrected = dqdx_values;
-          }
-          else
-          {
-            std::vector<float> direction_x, direction_y, direction_z;
-            auto const& xyz_v = tkcalo->XYZ();
-            for (auto xyz : xyz_v)
-            {
-              float _dir[3];
-              searchingfornues::TrkDirectionAtXYZ(*tk, xyz.X(), xyz.Y(), xyz.Z(), _dir);
-              // std::cout << "_dir[0], _dir[1], _dir[2] = " << _dir[0] << " , " << _dir[1] << " , " << _dir[2] << std::endl;
-              // std::cout << "_dir_norm = " << _dir[0]*_dir[0] + _dir[1]*_dir[1] + _dir[2]*_dir[2] << std::endl;
-              direction_x.push_back(_dir[0]);
-              direction_y.push_back(_dir[1]);
-              direction_z.push_back(_dir[2]);
-            }
 
-            std::vector<std::vector<float>> corr_par_values;
-            corr_par_values = searchingfornues::polarAngles(direction_x, direction_y, direction_z, 2, plane);
+          std::vector<float> dqdx_values_corrected;
 
-            // fill vector of boolean to determine if hit has to be corrected or not
-            std::vector<bool> is_hit_montecarlo;
+          if (fData || !fRecalibrateHits) {
+	    if (!fLocaldEdx)
+	      dqdx_values_corrected = tkcalo->dQdx();
+	    else
+	      dqdx_values_corrected = tkcalo->dEdx();
+	  }// if re-calibration is not necessary
 
-            art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
-            std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
-            assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
+	  else 
+	    dqdx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(tkcalo, tk, assocMCPart, fRecalibrateHits, fEnergyThresholdForMCHits, fLocaldEdx);
 
-            const std::vector< size_t > &tp_indices = tkcalo->TpIndices();
-            for (size_t i = 0; i < tp_indices.size(); i++)
-            {
-              size_t tp_index = tp_indices[i];
-              is_hit_montecarlo.push_back(searchingfornues::isHitBtMonteCarlo(tp_index, assocMCPart, fEnergyThresholdForMCHits));
-            }
-            // correct hits
-            dqdx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(dqdx_values, corr_par_values, is_hit_montecarlo, plane);
-            for (size_t i = 0; i < dqdx_values_corrected.size(); i++)
-            {
-              std::cout << "shower point " << i << " : isHitBtMonteCarlo = " << is_hit_montecarlo[i] << " dedx before = " << dqdx_values[i] << " dedx after = " << dqdx_values_corrected[i] << std::endl;
-            }
-          }
           // using function from CommonDefs/TrackFitterFunctions.h
           searchingfornues::GetTrackFitdEdx(dqdx_values_corrected, tkcalo->ResidualRange(), fdEdxcmSkip, fdEdxcmLen, calodEdx, caloNpts);
-          if (fLocaldEdx)
+          if (!fLocaldEdx)
           {
             calodEdx = searchingfornues::GetdEdxfromdQdx(calodEdx,
                    _shr_tkfit_start_x_v.back(),
@@ -466,7 +441,7 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
           }
           // Gap 1.0 cm
           searchingfornues::GetTrackFitdEdx(dqdx_values_corrected, tkcalo->ResidualRange(), 1.0, fdEdxcmLen, calodEdx, caloNpts);
-          if (fLocaldEdx)
+          if (!fLocaldEdx)
           {
             calodEdx = searchingfornues::GetdEdxfromdQdx(calodEdx,
                  _shr_tkfit_start_x_v.back(),

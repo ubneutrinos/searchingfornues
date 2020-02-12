@@ -18,7 +18,8 @@
 #include "../CommonDefs/SCECorrections.h"
 #include "../CommonDefs/ShowerBranchTagger.h"
 //#include "../CommonDefs/PIDFuncs.h"
-//#include "../CommonDefs/LLR_PID.h"
+#include "../CommonDefs/LLR_PID.h"
+#include "../CommonDefs/LLRPID_correction_lookup.h"
 
 #include "larcore/Geometry/Geometry.h"
 #include "lardataobj/RecoBase/SpacePoint.h"
@@ -85,8 +86,6 @@ private:
     const trkf::TrackMomentumCalculator _trkmom;
     const trkf::TrajectoryMCSFitter mcsfitter;
 
-  //searchingfornues::LLRPID LLR_PID;
-
     TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
     TParticlePDG *electron = TDatabasePDG::Instance()->GetParticle(11);
     TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
@@ -106,6 +105,12 @@ private:
     bool fLocaldEdx;               // use local dE/dx from calorimetry (true) or globally convert Q -> MeV (false)
 
   std::vector<float> fADCtoE; // vector of ADC to # of e- conversion [to be taken from production reco2 fhicl files]
+  bool fRecalibrateHits;
+  float fEnergyThresholdForMCHits;
+
+  // re-calibration tools
+  searchingfornues::LLRPID llr_pid_calculator;
+  searchingfornues::CorrectionLookUpParameters lookup_parameters;
   
   art::InputTag fCLSproducer;
   art::InputTag fPIDproducer;
@@ -318,25 +323,20 @@ CC0piNpSelection::CC0piNpSelection(const fhicl::ParameterSet &pset)
     _wire2cm = geom->WirePitch(0,0,0);
     _time2cm = detp->SamplingRate() / 1000.0 * detp->DriftVelocity( detp->Efield(), detp->Temperature() );
 
-    /*
-  LLR_PID.set_dedx_binning(0, dedx_num_bins_pl_0, dedx_edges_pl_0);
-  std::vector<size_t> parameters_num_bins_0 = {parameter_0_num_bins_pl_0, parameter_1_num_bins_pl_0};
-  std::vector<std::vector<float>> parameters_bin_edges_0 = {parameter_0_edges_pl_0, parameter_1_edges_pl_0};
-  LLR_PID.set_par_binning(0, parameters_num_bins_0, parameters_bin_edges_0);
-  LLR_PID.set_lookup_tables(0, dedx_pdf_pl_0);
+    fRecalibrateHits = pset.get<bool>("RecalibrateHits", false);
+    fEnergyThresholdForMCHits = pset.get<float>("EnergyThresholdForMCHits", 0.1);
 
-  LLR_PID.set_dedx_binning(1, dedx_num_bins_pl_1, dedx_edges_pl_1);
-  std::vector<size_t> parameters_num_bins_1 = {parameter_0_num_bins_pl_1, parameter_1_num_bins_pl_1};
-  std::vector<std::vector<float>> parameters_bin_edges_1 = {parameter_0_edges_pl_1, parameter_1_edges_pl_1};
-  LLR_PID.set_par_binning(1, parameters_num_bins_1, parameters_bin_edges_1);
-  LLR_PID.set_lookup_tables(1, dedx_pdf_pl_1);
-
-  LLR_PID.set_dedx_binning(2, dedx_num_bins_pl_2, dedx_edges_pl_2);
-  std::vector<size_t> parameters_num_bins_2 = {parameter_0_num_bins_pl_2, parameter_1_num_bins_pl_2};
-  std::vector<std::vector<float>> parameters_bin_edges_2 = {parameter_0_edges_pl_2, parameter_1_edges_pl_2};
-  LLR_PID.set_par_binning(2, parameters_num_bins_2, parameters_bin_edges_2);
-  LLR_PID.set_lookup_tables(2, dedx_pdf_pl_2);
-    */
+    if (fRecalibrateHits)
+      {
+	llr_pid_calculator.set_corr_par_binning(0, lookup_parameters.parameter_correction_edges_pl_0);
+	llr_pid_calculator.set_correction_tables(0, lookup_parameters.correction_table_pl_0);
+	
+	llr_pid_calculator.set_corr_par_binning(1, lookup_parameters.parameter_correction_edges_pl_1);
+	llr_pid_calculator.set_correction_tables(1, lookup_parameters.correction_table_pl_1);
+	
+	llr_pid_calculator.set_corr_par_binning(2, lookup_parameters.parameter_correction_edges_pl_2);
+	llr_pid_calculator.set_correction_tables(2, lookup_parameters.correction_table_pl_2);
+      }
 }
 
 //----------------------------------------------------------------------------
@@ -389,6 +389,7 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
 bool CC0piNpSelection::selectEvent(art::Event const &e,
                                    const std::vector<ProxyPfpElem_t> &pfp_pxy_v)
 {
+
     ProxyClusColl_t const &clus_proxy = proxy::getCollection<std::vector<recob::Cluster>>(e, fCLSproducer,
                                                                                           proxy::withAssociated<recob::Hit>(fCLSproducer));
     searchingfornues::ProxyPIDColl_t const &pid_proxy = proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer,
@@ -794,18 +795,37 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                             if (tkcalo->ResidualRange().size() == 0)
                                 continue;
 
+
+			    std::vector<float> dqdx_values_corrected;
+			    
+			    if (fData || !fRecalibrateHits) {
+			      if (!fLocaldEdx)
+				dqdx_values_corrected = tkcalo->dQdx();
+			      else
+				dqdx_values_corrected = tkcalo->dEdx();
+			    }// if re-calibration is not necessary
+			    
+			    else 
+			      dqdx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(tkcalo, tk, assocMCPart, fRecalibrateHits, fEnergyThresholdForMCHits, fLocaldEdx);
+			    
                             // using function from CommonDefs/TrackFitterFunctions.h
-                            searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
+                            //searchingfornues::GetTrackFitdEdx(tkcalo->dQdx(),tkcalo->ResidualRange(), fdEdxcmSkip, fdEdxcmLen, calodEdx, caloNpts);
+			    //std::cout << "DAVIDC (a) : " << calodEdx << std::endl;
+                            searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), fdEdxcmSkip, fdEdxcmLen, calodEdx, caloNpts);
+			    //std::cout << "DAVIDC (b) : " << calodEdx << std::endl;
+                            //searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx, calodEdx, caloNpts);
+			    //std::cout << "DAVIDC (c) : " << calodEdx << std::endl;
 			    // use xyz coordinates instead of RR to calculate distance
-                            searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx,
-							      shr_tkfit_start_sce[0],shr_tkfit_start_sce[1],shr_tkfit_start_sce[2],
-							      calodEdxXYZ, caloNptsXYZ);
+                            searchingfornues::GetTrackFitdEdx(tkcalo->dQdx(),tkcalo->ResidualRange(), fdEdxcmSkip, fdEdxcmLen, calodEdxXYZ, caloNptsXYZ);
+                            //searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, fdEdxcmLen, fLocaldEdx,
+			    //				      shr_tkfit_start_sce[0],shr_tkfit_start_sce[1],shr_tkfit_start_sce[2],
+			    //				      calodEdxXYZ, caloNptsXYZ);
                             // use only first 2 cm
-                            searchingfornues::GetTrackFitdEdx(tkcalo, fdEdxcmSkip, 2.0, fLocaldEdx, calodEdx2cm, caloNpts2cm);
+                            searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), fdEdxcmSkip, 2.0, calodEdx2cm, caloNpts2cm);
                             // Gap 0.5 cm
-                            searchingfornues::GetTrackFitdEdx(tkcalo, 0.5, fdEdxcmLen, fLocaldEdx, calodEdxgap05, caloNptsgap05);
+                            searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), 0.5, fdEdxcmLen, calodEdxgap05, caloNptsgap05);
                             // Gap 1.0 cm
-                            searchingfornues::GetTrackFitdEdx(tkcalo, 1.0, fdEdxcmLen, fLocaldEdx, calodEdxgap10, caloNptsgap10);
+                            searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), 1.0, fdEdxcmLen, calodEdxgap10, caloNptsgap10);
 
 			    calodEdx = searchingfornues::GetdEdxfromdQdx(calodEdx,_shr_start_x, _shr_start_y, _shr_start_z, 2.1, fADCtoE[plane] );
 			    calodEdxXYZ = searchingfornues::GetdEdxfromdQdx(calodEdxXYZ,_shr_start_x, _shr_start_y, _shr_start_z, 2.1, fADCtoE[plane] );
@@ -815,6 +835,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 			    
                             if (plane == 2)
                             {
+			      std::cout << "DAVIDC" << std::endl;
                                 _shr_tkfit_dedx_Y = calodEdx;
                                 _shr_tkfit_nhits_Y = caloNpts;
                                 _shr_tkfit_dedx_Y_alt = calodEdxXYZ;

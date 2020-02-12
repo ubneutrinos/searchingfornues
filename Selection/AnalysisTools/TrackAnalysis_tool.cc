@@ -456,8 +456,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
           {
             float _dir[3];
             searchingfornues::TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir);
-            // std::cout << "_dir[0], _dir[1], _dir[2] = " << _dir[0] << " , " << _dir[1] << " , " << _dir[2] << std::endl;
-            // std::cout << "_dir_norm = " << _dir[0]*_dir[0] + _dir[1]*_dir[1] + _dir[2]*_dir[2] << std::endl;
+
             direction_x.push_back(_dir[0]);
             direction_y.push_back(_dir[1]);
             direction_z.push_back(_dir[2]);
@@ -483,7 +482,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
           dedx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(dedx_values, corr_par_values, is_hit_montecarlo, plane);
           for (size_t i = 0; i < dedx_values_corrected.size(); i++)
           {
-            std::cout << "track point: " << i << " isHitBtMonteCarlo = " << is_hit_montecarlo[i] << " dedx before = " << dedx_values[i] << " dedx after = " << dedx_values_corrected[i] << std::endl;
+            //std::cout << "track point: " << i << " isHitBtMonteCarlo = " << is_hit_montecarlo[i] << " dedx before = " << dedx_values[i] << " dedx after = " << dedx_values_corrected[i] << std::endl;
           }
         }
 
