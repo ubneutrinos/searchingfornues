@@ -206,7 +206,7 @@ Preproces/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatc
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/MuCSFlashMatch_module.cc:46: warning: Compound MuCSFlashMatch is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_correction_lookup.h:9: warning: Compound searchingfornues::CorrectionLookUpParameters is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CRTApproachSelection_tool.cc:41: warning: Compound selection::CRTApproachSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:11: warning: Compound searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:14: warning: Compound searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingTool_tool.cc:16: warning: Compound flashmatch::FlashMatchingTool is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/TrackAnalysis_tool.cc:45: warning: Compound analysis::TrackAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/AnalysisToolBase.h:23: warning: Compound analysis::AnalysisToolBase is not documented.
@@ -1591,26 +1591,27 @@ Gene/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashM
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_correction_lookup.h:21: warning: Member correction_table_pl_1 (variable) of class searchingfornues::CorrectionLookUpParameters is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_correction_lookup.h:28: warning: Member parameter_correction_edges_pl_2 (variable) of class searchingfornues::CorrectionLookUpParameters is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_correction_lookup.h:30: warning: Member correction_table_pl_2 (variable) of class searchingfornues::CorrectionLookUpParameters is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:16: warning: Member set_dedx_binning(size_t plane, std::vector< float > bin_edges) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:22: warning: Member set_par_binning(size_t plane, std::vector< std::vector< float >> bin_edges) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:31: warning: Member set_corr_par_binning(size_t plane, std::vector< std::vector< float >> bin_edges) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:41: warning: Member set_lookup_tables(size_t plane, std::vector< float > tables) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:46: warning: Member set_correction_tables(size_t plane, std::vector< float > tables) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:51: warning: Member digitize(float value, std::vector< float > bin_edges) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:65: warning: Member findLookupIndex(float dedx_value, std::vector< float > par_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:97: warning: Member findLookupCorrParameterIndex(std::vector< float > corr_parameter_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:118: warning: Member LLR_one_hit_one_plane(float dedx_value, std::vector< float > par_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:124: warning: Member correction_hit_one_plane(std::vector< float > corr_parameter_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:130: warning: Member LLR_many_hits_one_plane(std::vector< float > dedx_values, std::vector< std::vector< float >> par_values, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:145: warning: Member correct_many_hits_one_plane(std::vector< float > dedx_values, std::vector< std::vector< float >> corr_par_values, std::vector< bool > is_to_correct, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:166: warning: Member dedx_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:167: warning: Member dedx_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:169: warning: Member parameters_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:170: warning: Member parameters_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:172: warning: Member corr_parameters_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:173: warning: Member corr_parameters_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:175: warning: Member lookup_tables[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:176: warning: Member correction_tables[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:19: warning: Member set_dedx_binning(size_t plane, std::vector< float > bin_edges) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:25: warning: Member set_par_binning(size_t plane, std::vector< std::vector< float >> bin_edges) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:34: warning: Member set_corr_par_binning(size_t plane, std::vector< std::vector< float >> bin_edges) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:44: warning: Member set_lookup_tables(size_t plane, std::vector< float > tables) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:49: warning: Member set_correction_tables(size_t plane, std::vector< float > tables) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:54: warning: Member digitize(float value, std::vector< float > bin_edges) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:68: warning: Member findLookupIndex(float dedx_value, std::vector< float > par_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:99: warning: Member findLookupCorrParameterIndex(std::vector< float > corr_parameter_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:120: warning: Member LLR_one_hit_one_plane(float dedx_value, std::vector< float > par_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:126: warning: Member correction_hit_one_plane(std::vector< float > corr_parameter_value, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:132: warning: Member LLR_many_hits_one_plane(std::vector< float > dedx_values, std::vector< std::vector< float >> par_values, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:147: warning: Member correct_many_hits_one_plane(std::vector< float > dedx_values, std::vector< std::vector< float >> corr_par_values, std::vector< bool > is_to_correct, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:167: warning: Member correct_many_hits_one_plane(const art::Ptr< anab::Calorimetry > tkcalo, const searchingfornues::ProxyCaloElem_t tk, const std::unique_ptr< art::FindManyP< simb::MCParticle, anab::BackTrackerHitMatchingData >> &assocMCPart, const bool fRecalibrateHits, const float fEnergyThresholdForMCHits, const bool fLocaldEdx) (function) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:218: warning: Member dedx_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:219: warning: Member dedx_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:221: warning: Member parameters_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:222: warning: Member parameters_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:224: warning: Member corr_parameters_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:225: warning: Member corr_parameters_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:227: warning: Member lookup_tables[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:228: warning: Member correction_tables[3] (variable) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h:11: warning: Member dedx_edges_pl_0 (variable) of class searchingfornues::ProtonMuonLookUpParameters is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h:18: warning: Member parameters_edges_pl_0 (variable) of class searchingfornues::ProtonMuonLookUpParameters is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h:24: warning: Member dedx_pdf_pl_0 (variable) of class searchingfornues::ProtonMuonLookUpParameters is not documented.
@@ -1620,56 +1621,60 @@ Gene/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashM
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h:196: warning: Member dedx_edges_pl_2 (variable) of class searchingfornues::ProtonMuonLookUpParameters is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h:203: warning: Member parameters_edges_pl_2 (variable) of class searchingfornues::ProtonMuonLookUpParameters is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h:210: warning: Member dedx_pdf_pl_2 (variable) of class searchingfornues::ProtonMuonLookUpParameters is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:85: warning: Member _trkmom (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:86: warning: Member mcsfitter (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:90: warning: Member proton (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:91: warning: Member electron (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:92: warning: Member muon (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:93: warning: Member pion (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:94: warning: Member kaon (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:104: warning: Member fdEdxcmSkip (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:104: warning: Member fdEdxcmLen (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:105: warning: Member fSaveMoreDedx (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:106: warning: Member fLocaldEdx (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:108: warning: Member fADCtoE (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:110: warning: Member fCLSproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:111: warning: Member fPIDproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:112: warning: Member fTRKproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:113: warning: Member fTRKproducerTrkFit (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:114: warning: Member fBacktrackTag (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:115: warning: Member fHproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:116: warning: Member fMCRproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:117: warning: Member fMCPproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:118: warning: Member fCALproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:119: warning: Member fCALproducerTrkFit (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:121: warning: Member fClusterproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:122: warning: Member fHitproducer (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:124: warning: Member _wire2cm (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:124: warning: Member _time2cm (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:220: warning: Member _shrsubclusters0 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:220: warning: Member _shrsubclusters1 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:221: warning: Member _shrclusfrac0 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:221: warning: Member _shrclusfrac1 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:222: warning: Member _shrclusdir0 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:222: warning: Member _shrclusdir1 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:223: warning: Member _trkshrhitdist0 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:223: warning: Member _trkshrhitdist1 (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:228: warning: Member _ismerged (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:230: warning: Member _merge_bestdot (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:231: warning: Member _merge_bestdist (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:234: warning: Member _elecclusters_U_charge (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:234: warning: Member _elecclusters_V_charge (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:234: warning: Member _elecclusters_Y_charge (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:235: warning: Member _elecclusters_U_N (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:235: warning: Member _elecclusters_V_N (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:235: warning: Member _elecclusters_Y_N (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:237: warning: Member _merge_vtx_x (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:238: warning: Member _merge_vtx_y (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:239: warning: Member _merge_vtx_z (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:241: warning: Member _merge_tk_ipfp (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:243: warning: Member _shr_tkfit_npoints (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:244: warning: Member _shr_tkfit_npointsvalid (variable) of class selection::CC0piNpSelection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:246: warning: Member _shr_trkfitmedangle (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:86: warning: Member _trkmom (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:87: warning: Member mcsfitter (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:89: warning: Member proton (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:90: warning: Member electron (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:91: warning: Member muon (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:92: warning: Member pion (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:93: warning: Member kaon (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:103: warning: Member fdEdxcmSkip (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:103: warning: Member fdEdxcmLen (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:104: warning: Member fSaveMoreDedx (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:105: warning: Member fLocaldEdx (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:107: warning: Member fADCtoE (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:108: warning: Member fRecalibrateHits (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:109: warning: Member fEnergyThresholdForMCHits (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:112: warning: Member llr_pid_calculator (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:113: warning: Member lookup_parameters (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:115: warning: Member fCLSproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:116: warning: Member fPIDproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:117: warning: Member fTRKproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:118: warning: Member fTRKproducerTrkFit (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:119: warning: Member fBacktrackTag (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:120: warning: Member fHproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:121: warning: Member fMCRproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:122: warning: Member fMCPproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:123: warning: Member fCALproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:124: warning: Member fCALproducerTrkFit (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:126: warning: Member fClusterproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:127: warning: Member fHitproducer (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:129: warning: Member _wire2cm (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:129: warning: Member _time2cm (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:225: warning: Member _shrsubclusters0 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:225: warning: Member _shrsubclusters1 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:226: warning: Member _shrclusfrac0 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:226: warning: Member _shrclusfrac1 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:227: warning: Member _shrclusdir0 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:227: warning: Member _shrclusdir1 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:228: warning: Member _trkshrhitdist0 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:228: warning: Member _trkshrhitdist1 (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:233: warning: Member _ismerged (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:235: warning: Member _merge_bestdot (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:236: warning: Member _merge_bestdist (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:239: warning: Member _elecclusters_U_charge (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:239: warning: Member _elecclusters_V_charge (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:239: warning: Member _elecclusters_Y_charge (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:240: warning: Member _elecclusters_U_N (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:240: warning: Member _elecclusters_V_N (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:240: warning: Member _elecclusters_Y_N (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:242: warning: Member _merge_vtx_x (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:243: warning: Member _merge_vtx_y (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:244: warning: Member _merge_vtx_z (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:246: warning: Member _merge_tk_ipfp (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:248: warning: Member _shr_tkfit_npoints (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:249: warning: Member _shr_tkfit_npointsvalid (variable) of class selection::CC0piNpSelection is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CC0piNpSelection_tool.cc:251: warning: Member _shr_trkfitmedangle (variable) of class selection::CC0piNpSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:82: warning: Member fData (variable) of class selection::SelectionToolBase is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CRTApproachSelection_tool.cc:79: warning: Member Point2PointDistance(const TVector3 &nuvtx, TVector3 &taggedTrackSpt) (function) of class selection::CRTApproachSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/CRTApproachSelection_tool.cc:80: warning: Member Reset() (function) of class selection::CRTApproachSelection is not documented.
@@ -1919,5 +1924,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 924/65536 hits=5187 misses=959
+lookup cache used 935/65536 hits=5240 misses=973
 finished...
