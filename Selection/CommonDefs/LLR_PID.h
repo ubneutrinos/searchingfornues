@@ -4,6 +4,9 @@
 // #include "LLRPID_proton_muon_lookup.h"
 // #include "LLRPID_correction_lookup.h"
 
+#include "BacktrackingFuncs.h"
+#include "Geometry.h"
+
 namespace searchingfornues
 {
 
@@ -88,7 +91,6 @@ namespace searchingfornues
       size_t lookup_index = lookup_row_index;
       lookup_index += digitize(dedx_value, dedx_bin_edges[plane]);
 
-      // std::cout << "lookup index " << lookup_index << std::endl;
       return lookup_index;
     }
 
@@ -161,6 +163,56 @@ namespace searchingfornues
       }
       return dedx_values_corrected;
     }
+
+    std::vector<float> correct_many_hits_one_plane(const art::Ptr<anab::Calorimetry> tkcalo,
+						   const searchingfornues::ProxyCaloElem_t tk,
+						   const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart,
+						   const bool fRecalibrateHits,
+						   const float fEnergyThresholdForMCHits,
+						   const bool fLocaldEdx)
+    {
+
+      int plane = tkcalo->PlaneID().Plane;
+
+      std::vector<float> dqdx_values, dqdx_values_corrected;
+      if (!fLocaldEdx)
+	dqdx_values = tkcalo->dQdx();
+      else
+	dqdx_values = tkcalo->dEdx();
+      if (!fRecalibrateHits)
+	dqdx_values_corrected = dqdx_values;
+      else
+	{
+	  std::vector<float> direction_x, direction_y, direction_z;
+	  auto const& xyz_v = tkcalo->XYZ();
+	  for (auto xyz : xyz_v)
+            {
+              float _dir[3];
+              searchingfornues::TrkDirectionAtXYZ(*tk, xyz.X(), xyz.Y(), xyz.Z(), _dir);
+              direction_x.push_back(_dir[0]);
+              direction_y.push_back(_dir[1]);
+              direction_z.push_back(_dir[2]);
+            }
+
+            std::vector<std::vector<float>> corr_par_values;
+            corr_par_values = searchingfornues::polarAngles(direction_x, direction_y, direction_z, 2, plane);
+
+            // fill vector of boolean to determine if hit has to be corrected or not
+            std::vector<bool> is_hit_montecarlo;
+
+            const std::vector< size_t > &tp_indices = tkcalo->TpIndices();
+	    
+            for (size_t i = 0; i < tp_indices.size(); i++){
+	      size_t tp_index = tp_indices[i];
+	      is_hit_montecarlo.push_back(searchingfornues::isHitBtMonteCarlo(tp_index, assocMCPart, fEnergyThresholdForMCHits));
+	    }
+            // correct hits
+            dqdx_values_corrected = correct_many_hits_one_plane(dqdx_values, corr_par_values, is_hit_montecarlo, plane);
+	    
+	}
+
+      return dqdx_values_corrected;
+    }// end of function
 
   private:
     size_t dedx_num_bins[3];

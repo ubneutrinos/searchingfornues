@@ -281,6 +281,7 @@ CC0PiNpSelectionTool: {
     LocaldEdx: false # use dQdx and convert to dEdx with fixed conversion
     # ADC to E conversion taken from reco2 production fhicl file
     ADCtoE: @local::microboone_reco_data_producers.shrreco3d.ADCtoE
+    RecalibrateHits: true
 }
 
 # run 3 neutrino selection [ w/ crt veto ]
