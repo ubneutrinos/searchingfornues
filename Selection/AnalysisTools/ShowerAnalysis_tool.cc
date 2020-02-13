@@ -17,6 +17,7 @@
 #include "../CommonDefs/SCECorrections.h"
 #include "../CommonDefs/LLR_PID.h"
 #include "../CommonDefs/LLRPID_correction_lookup.h"
+#include "../CommonDefs/LLRPID_electron_photon_lookup.h"
 
 namespace analysis
 {
@@ -102,7 +103,8 @@ private:
   bool fRecalibrateHits;
 
   searchingfornues::LLRPID llr_pid_calculator;
-  searchingfornues::CorrectionLookUpParameters lookup_parameters;
+  searchingfornues::ElectronPhotonLookUpParameters electronphoton_parameters;
+  searchingfornues::CorrectionLookUpParameters correction_parameters;
 
   std::vector<float> _shr_energy_u_v;
   std::vector<float> _shr_energy_v_v;
@@ -164,6 +166,12 @@ private:
 
   std::vector<float> _shr_moliere_avg_v;
   std::vector<float> _shr_moliere_rms_v;
+
+  std::vector<float> _shr_llr_pid_u_v;
+  std::vector<float> _shr_llr_pid_v_v;
+  std::vector<float> _shr_llr_pid_y_v;
+  std::vector<float> _shr_llr_pid_v;
+  std::vector<float> _shr_llr_pid_score_v;
 };
 
 //----------------------------------------------------------------------------
@@ -196,16 +204,28 @@ ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
   //PrxyCluster->setRadius(2.0);
   //PrxyCluster->setCellSize(2.0);
 
+  llr_pid_calculator.set_dedx_binning(0, electronphoton_parameters.dedx_edges_pl_0);
+  llr_pid_calculator.set_par_binning(0, electronphoton_parameters.parameters_edges_pl_0);
+  llr_pid_calculator.set_lookup_tables(0, electronphoton_parameters.dedx_pdf_pl_0);
+
+  llr_pid_calculator.set_dedx_binning(1, electronphoton_parameters.dedx_edges_pl_1);
+  llr_pid_calculator.set_par_binning(1, electronphoton_parameters.parameters_edges_pl_1);
+  llr_pid_calculator.set_lookup_tables(1, electronphoton_parameters.dedx_pdf_pl_1);
+
+  llr_pid_calculator.set_dedx_binning(2, electronphoton_parameters.dedx_edges_pl_2);
+  llr_pid_calculator.set_par_binning(2, electronphoton_parameters.parameters_edges_pl_2);
+  llr_pid_calculator.set_lookup_tables(2, electronphoton_parameters.dedx_pdf_pl_2);
+
   if (fRecalibrateHits)
   {
-    llr_pid_calculator.set_corr_par_binning(0, lookup_parameters.parameter_correction_edges_pl_0);
-    llr_pid_calculator.set_correction_tables(0, lookup_parameters.correction_table_pl_0);
+    llr_pid_calculator.set_corr_par_binning(0, correction_parameters.parameter_correction_edges_pl_0);
+    llr_pid_calculator.set_correction_tables(0, correction_parameters.correction_table_pl_0);
 
-    llr_pid_calculator.set_corr_par_binning(1, lookup_parameters.parameter_correction_edges_pl_1);
-    llr_pid_calculator.set_correction_tables(1, lookup_parameters.correction_table_pl_1);
+    llr_pid_calculator.set_corr_par_binning(1, correction_parameters.parameter_correction_edges_pl_1);
+    llr_pid_calculator.set_correction_tables(1, correction_parameters.correction_table_pl_1);
 
-    llr_pid_calculator.set_corr_par_binning(2, lookup_parameters.parameter_correction_edges_pl_2);
-    llr_pid_calculator.set_correction_tables(2, lookup_parameters.correction_table_pl_2);
+    llr_pid_calculator.set_corr_par_binning(2, correction_parameters.parameter_correction_edges_pl_2);
+    llr_pid_calculator.set_correction_tables(2, correction_parameters.correction_table_pl_2);
   }
 }
 
@@ -351,6 +371,12 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
       _shr_tkfit_dedx_nhits_v_v.push_back(std::numeric_limits<int>::lowest());
       _shr_tkfit_dedx_nhits_y_v.push_back(std::numeric_limits<int>::lowest());
 
+      _shr_llr_pid_u_v.push_back(0);
+      _shr_llr_pid_v_v.push_back(0);
+      _shr_llr_pid_y_v.push_back(0);
+      _shr_llr_pid_v.push_back(0);
+      _shr_llr_pid_score_v.push_back(0);
+
       _shr_px_v.push_back(shr->Direction().X());
       _shr_py_v.push_back(shr->Direction().Y());
       _shr_pz_v.push_back(shr->Direction().Z());
@@ -368,7 +394,6 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 
       for (const searchingfornues::ProxyCaloElem_t &tk : *tkcalo_proxy)
       {
-
         // find track with ID matching the pfp index (this convention apparently works only for shower fits...)
         if (tk->ID() != int(slice_pfp_v[i_pfp].index()))
           continue;
@@ -401,26 +426,48 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 
           std::vector<float> dqdx_values_corrected;
 
-          if (fData || !fRecalibrateHits) {
-	    if (!fLocaldEdx)
-	      dqdx_values_corrected = tkcalo->dQdx();
-	    else
-	      dqdx_values_corrected = tkcalo->dEdx();
-	  }// if re-calibration is not necessary
+          if (fData || !fRecalibrateHits)
+          {
+            if (!fLocaldEdx)
+              dqdx_values_corrected = tkcalo->dQdx();
+            else
+              dqdx_values_corrected = tkcalo->dEdx();
+          }// if re-calibration is not necessary
+          else
+            dqdx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(tkcalo, tk, assocMCPart, fRecalibrateHits, fEnergyThresholdForMCHits, fLocaldEdx);
 
-	  else 
-	    dqdx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(tkcalo, tk, assocMCPart, fRecalibrateHits, fEnergyThresholdForMCHits, fLocaldEdx);
+          auto const& xyz_v = tkcalo->XYZ();
 
-          // using function from CommonDefs/TrackFitterFunctions.h
-          searchingfornues::GetTrackFitdEdx(dqdx_values_corrected, tkcalo->ResidualRange(), fdEdxcmSkip, fdEdxcmLen, calodEdx, caloNpts);
+          std::vector<float> x_v, y_v, z_v;
+          std::vector<float> dist_from_start_v;
+          for (auto xyz : xyz_v)
+          {
+            x_v.push_back(xyz.X());
+            y_v.push_back(xyz.Y());
+            z_v.push_back(xyz.Z());
+
+            float dist_from_start = searchingfornues::distance3d(xyz.X(), xyz.Y(), xyz.Z(),
+                            _shr_tkfit_start_x_v.back(), _shr_tkfit_start_y_v.back(), _shr_tkfit_start_z_v.back());
+            dist_from_start_v.push_back(dist_from_start);
+          }
+
+          std::vector<float> dedx_v;
           if (!fLocaldEdx)
           {
-            calodEdx = searchingfornues::GetdEdxfromdQdx(calodEdx,
-                   _shr_tkfit_start_x_v.back(),
-                   _shr_tkfit_start_y_v.back(),
-                   _shr_tkfit_start_z_v.back(),
-                   2.1, fADCtoE[plane] );
+            dedx_v = searchingfornues::GetdEdxfromdQdx(dqdx_values_corrected,
+                            x_v,
+                            y_v,
+                            z_v,
+                            2.1,
+                            fADCtoE[plane]);
           }
+          else
+          {
+            dedx_v = dqdx_values_corrected;
+          }
+
+          // using function from CommonDefs/TrackFitterFunctions.h
+          searchingfornues::GetTrackFitdEdx(dedx_v, tkcalo->ResidualRange(), fdEdxcmSkip, fdEdxcmLen, calodEdx, caloNpts);
 
           if (plane == 0)
           {
@@ -440,15 +487,8 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
             _shr_tkfit_dedx_nhits_y_v.back() = caloNpts;
           }
           // Gap 1.0 cm
-          searchingfornues::GetTrackFitdEdx(dqdx_values_corrected, tkcalo->ResidualRange(), 1.0, fdEdxcmLen, calodEdx, caloNpts);
-          if (!fLocaldEdx)
-          {
-            calodEdx = searchingfornues::GetdEdxfromdQdx(calodEdx,
-                 _shr_tkfit_start_x_v.back(),
-                 _shr_tkfit_start_y_v.back(),
-                 _shr_tkfit_start_z_v.back(),
-                 2.1, fADCtoE[plane] );
-          }
+          searchingfornues::GetTrackFitdEdx(dedx_v, tkcalo->ResidualRange(), 1.0, fdEdxcmLen, calodEdx, caloNpts);
+
           if (plane == 2)
           {
             _shr_tkfit_gap10_dedx_y_v.back() = calodEdx;
@@ -461,7 +501,29 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
           {
             _shr_tkfit_gap10_dedx_u_v.back() = calodEdx;
           }
+
+          // build par_values
+          std::vector<std::vector<float>> par_values;
+          par_values.push_back(dist_from_start_v);
+          auto const &pitch = tkcalo->TrkPitchVec();
+          par_values.push_back(pitch);
+
+          float llr_pid = llr_pid_calculator.LLR_many_hits_one_plane(dedx_v, par_values, plane);
+          if (plane == 0)
+          {
+            _shr_llr_pid_u_v.back() = llr_pid;
+          }
+          else if (plane == 1)
+          {
+            _shr_llr_pid_v_v.back() = llr_pid;
+          }
+          else if (plane == 2)
+          {
+            _shr_llr_pid_y_v.back() = llr_pid;
+          }
+          _shr_llr_pid_v.back() += llr_pid;
         } // for all calorimetry objects
+        _shr_llr_pid_score_v.back() = atan(_shr_llr_pid_v.back() / 100.) * 2 / 3.14159266;
       }
     }
   }
@@ -525,6 +587,12 @@ void ShowerAnalysis::setBranches(TTree *_tree)
   _tree->Branch("shr_tkfit_dedx_nhits_u_v", "std::vector< int >", &_shr_tkfit_dedx_nhits_u_v);
   _tree->Branch("shr_tkfit_dedx_nhits_v_v", "std::vector< int >", &_shr_tkfit_dedx_nhits_v_v);
   _tree->Branch("shr_tkfit_dedx_nhits_y_v", "std::vector< int >", &_shr_tkfit_dedx_nhits_y_v);
+
+  _tree->Branch("shr_llr_pid_u_v", "std::vector<float>", &_shr_llr_pid_u_v);
+  _tree->Branch("shr_llr_pid_v_v", "std::vector<float>", &_shr_llr_pid_v_v);
+  _tree->Branch("shr_llr_pid_y_v", "std::vector<float>", &_shr_llr_pid_y_v);
+  _tree->Branch("shr_llr_pid_v", "std::vector<float>", &_shr_llr_pid_v);
+  _tree->Branch("shr_llr_pid_score_v", "std::vector<float>", &_shr_llr_pid_score_v);
 
   _tree->Branch("shr_moliere_avg_v", "std::vector< float >", &_shr_moliere_avg_v);
   _tree->Branch("shr_moliere_rms_v", "std::vector< float >", &_shr_moliere_rms_v);
@@ -590,6 +658,12 @@ void ShowerAnalysis::fillDefault()
   _shr_tkfit_dedx_nhits_v_v.push_back(std::numeric_limits<int>::lowest());
   _shr_tkfit_dedx_nhits_y_v.push_back(std::numeric_limits<int>::lowest());
 
+  _shr_llr_pid_u_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_llr_pid_v_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_llr_pid_y_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_llr_pid_v.push_back(std::numeric_limits<float>::lowest());
+  _shr_llr_pid_score_v.push_back(std::numeric_limits<float>::lowest());
+
   _shr_moliere_rms_v.push_back(std::numeric_limits<float>::lowest());
   _shr_moliere_avg_v.push_back(std::numeric_limits<float>::lowest());
 }
@@ -653,6 +727,12 @@ void ShowerAnalysis::resetTTree(TTree *_tree)
   _shr_tkfit_dedx_nhits_u_v.clear();
   _shr_tkfit_dedx_nhits_v_v.clear();
   _shr_tkfit_dedx_nhits_y_v.clear();
+
+  _shr_llr_pid_u_v.clear();
+  _shr_llr_pid_v_v.clear();
+  _shr_llr_pid_y_v.clear();
+  _shr_llr_pid_v.clear();
+  _shr_llr_pid_score_v.clear();
 
   _shr_moliere_rms_v.clear();
   _shr_moliere_avg_v.clear();
