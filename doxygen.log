@@ -123,6 +123,8 @@ Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDe
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h...
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_correction_lookup.h...
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_correction_lookup.h...
+Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_electron_photon_lookup.h...
+Parsing file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_electron_photon_lookup.h...
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h...
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h...
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/PFPHitDistance.h...
@@ -174,10 +176,7 @@ Parsing file /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonTr
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SaveSliceHits_module.cc...
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SaveSliceHits_module.cc...
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc...
-Parsing file /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SecondShowerPurity_module.cc...
-Preprocessing /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ShowerMerger_module.cc...
-Parsing file /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ShowerMerger_module.cc...
-Preproces/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingToolBase_tool.h:2: warning: the name `larpandora/LArPandoraEventBuilding/SliceIdTools/FlashNeutrinoId_tool.h' supplied as the second argument in the \file statement is not an input file
+Parsing file /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/Sec/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatchingToolBase_tool.h:2: warning: the name `larpandora/LArPandoraEventBuilding/SliceIdTools/FlashNeutrinoId_tool.h' supplied as the second argument in the \file statement is not an input file
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/ProximityClustering.h:2: warning: the name `ProximityClusterer.h' supplied as the second argument in the \file statement is not an input file
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/DefaultAnalysis_tool.cc:46: warning: Compound analysis::DefaultAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h:9: warning: Compound searchingfornues::ProtonMuonLookUpParameters is not documented.
@@ -191,7 +190,7 @@ Preproces/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatc
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/BDT_tool.cc:29: warning: Compound analysis::BDT is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:35: warning: Compound analysis::Pi0TruthAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/CosmicRejection_module.cc:46: warning: Compound CosmicRejection is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:39: warning: Compound analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:40: warning: Compound analysis::ShowerAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/SaveSliceHits_module.cc:36: warning: Compound SaveSliceHits is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/ShowerSelection_tool.cc:26: warning: Compound selection::ShowerSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:43: warning: Compound NeutrinoSelectionFilter is not documented.
@@ -201,6 +200,7 @@ Preproces/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatc
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ProtonTruthStudies_module.cc:38: warning: Compound ProtonTruthStudies is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/GammaTruthStudies_module.cc:38: warning: Compound ProtonTruthStudies is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:37: warning: Compound selection::SelectionToolBase is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_electron_photon_lookup.h:9: warning: Compound searchingfornues::ElectronPhotonLookUpParameters is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/CalorimetryAnalysis_tool.cc:44: warning: Compound analysis::CalorimetryAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Filters/CommonOpticalFilter_module.cc:33: warning: Compound CommonOpticalFilter is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/MuCSFlashMatch_module.cc:46: warning: Compound MuCSFlashMatch is not documented.
@@ -224,7 +224,10 @@ Preproces/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/FlashMatc
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionExample_tool.cc:24: warning: Compound selection::SelectionExample is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:29: warning: Compound analysis::Pi0Tagger is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/MCFilter_tool.cc:29: warning: Compound analysis::MCFilter is not documented.
-sing /home/travis/build/ubneutrinos/searchingfornues/util/fixMap.C...
+ondShowerPurity_module.cc...
+Preprocessing /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ShowerMerger_module.cc...
+Parsing file /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ShowerMerger_module.cc...
+Preprocessing /home/travis/build/ubneutrinos/searchingfornues/util/fixMap.C...
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/util/fixMap.C...
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/util/readMap.C...
 Parsing file /home/travis/build/ubneutrinos/searchingfornues/util/readMap.C...
@@ -288,17 +291,14 @@ Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selecti
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/Geometry.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_correction_lookup.h...
+Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_electron_photon_lookup.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/PFPHitDistance.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/PIDFuncs.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/ProximityClustering.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/SCECorrections.h...
 Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/ShowerBranchTagger.h...
-Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/TrackFitterFunctions.h...
-Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/TrackShowerScoreFuncs.h...
-Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/Typedefs.h...
-Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h...
-Gene/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMatch_module.cc:49: warning: Member ACPTTrigFlashMatch(fhicl::ParameterSet const &p) (function) of class ACPTTrigFlashMatch is not documented.
+Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/TrackFitterFunct/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMatch_module.cc:49: warning: Member ACPTTrigFlashMatch(fhicl::ParameterSet const &p) (function) of class ACPTTrigFlashMatch is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMatch_module.cc:60: warning: Member analyze(art::Event const &e) override (function) of class ACPTTrigFlashMatch is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMatch_module.cc:63: warning: Member beginJob() override (function) of class ACPTTrigFlashMatch is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMatch_module.cc:64: warning: Member endJob() override (function) of class ACPTTrigFlashMatch is not documented.
@@ -1297,67 +1297,73 @@ Gene/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashM
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/SecondShowerTagger_tool.cc:90: warning: Member _secondshower_U_dir (variable) of class analysis::SecondShowerTagger is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/SecondShowerTagger_tool.cc:90: warning: Member _secondshower_V_dir (variable) of class analysis::SecondShowerTagger is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/SecondShowerTagger_tool.cc:90: warning: Member _secondshower_Y_dir (variable) of class analysis::SecondShowerTagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:88: warning: Member _run (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:88: warning: Member _sub (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:88: warning: Member _evt (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:91: warning: Member fTRKproducer (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:92: warning: Member fCALproducer (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:94: warning: Member fBacktrackTag (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:95: warning: Member fHproducer (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:96: warning: Member fEnergyThresholdForMCHits (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:98: warning: Member fdEdxcmSkip (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:98: warning: Member fdEdxcmLen (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:99: warning: Member fLocaldEdx (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:101: warning: Member fADCtoE (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:102: warning: Member fRecalibrateHits (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:104: warning: Member llr_pid_calculator (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:105: warning: Member lookup_parameters (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:107: warning: Member _shr_energy_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:108: warning: Member _shr_energy_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:109: warning: Member _shr_energy_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:111: warning: Member _shr_dedx_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:112: warning: Member _shr_dedx_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:113: warning: Member _shr_dedx_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:115: warning: Member _shr_pfp_id_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:117: warning: Member _shr_start_x_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:118: warning: Member _shr_start_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:119: warning: Member _shr_start_z_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:121: warning: Member _shr_start_U_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:122: warning: Member _shr_start_V_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:123: warning: Member _shr_dist_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:125: warning: Member _shr_px_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:126: warning: Member _shr_py_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:127: warning: Member _shr_pz_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:129: warning: Member _shr_theta_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:130: warning: Member _shr_phi_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:132: warning: Member _shr_pitch_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:133: warning: Member _shr_pitch_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:134: warning: Member _shr_pitch_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:136: warning: Member _shr_openangle_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:138: warning: Member _shr_tkfit_nhits_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:139: warning: Member _shr_tkfit_start_x_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:140: warning: Member _shr_tkfit_start_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:141: warning: Member _shr_tkfit_start_z_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:143: warning: Member _shr_tkfit_start_U_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:144: warning: Member _shr_tkfit_start_V_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:146: warning: Member _shr_tkfit_theta_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:147: warning: Member _shr_tkfit_phi_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:149: warning: Member _shr_tkfit_pitch_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:150: warning: Member _shr_tkfit_pitch_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:151: warning: Member _shr_tkfit_pitch_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:153: warning: Member _shr_tkfit_dedx_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:154: warning: Member _shr_tkfit_dedx_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:155: warning: Member _shr_tkfit_dedx_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:157: warning: Member _shr_tkfit_gap10_dedx_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:158: warning: Member _shr_tkfit_gap10_dedx_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:159: warning: Member _shr_tkfit_gap10_dedx_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:161: warning: Member _shr_tkfit_dedx_nhits_u_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:162: warning: Member _shr_tkfit_dedx_nhits_v_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:163: warning: Member _shr_tkfit_dedx_nhits_y_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:165: warning: Member _shr_moliere_avg_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:166: warning: Member _shr_moliere_rms_v (variable) of class analysis::ShowerAnalysis is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:170: warning: argument 'pset' of command @param is not found in the argument list of analysis::ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:47: warning: The following parameters of analysis::ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p) are not documented:
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:89: warning: Member _run (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:89: warning: Member _sub (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:89: warning: Member _evt (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:92: warning: Member fTRKproducer (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:93: warning: Member fCALproducer (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:95: warning: Member fBacktrackTag (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:96: warning: Member fHproducer (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:97: warning: Member fEnergyThresholdForMCHits (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:99: warning: Member fdEdxcmSkip (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:99: warning: Member fdEdxcmLen (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:100: warning: Member fLocaldEdx (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:102: warning: Member fADCtoE (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:103: warning: Member fRecalibrateHits (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:105: warning: Member llr_pid_calculator (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:106: warning: Member electronphoton_parameters (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:107: warning: Member correction_parameters (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:109: warning: Member _shr_energy_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:110: warning: Member _shr_energy_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:111: warning: Member _shr_energy_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:113: warning: Member _shr_dedx_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:114: warning: Member _shr_dedx_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:115: warning: Member _shr_dedx_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:117: warning: Member _shr_pfp_id_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:119: warning: Member _shr_start_x_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:120: warning: Member _shr_start_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:121: warning: Member _shr_start_z_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:123: warning: Member _shr_start_U_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:124: warning: Member _shr_start_V_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:125: warning: Member _shr_dist_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:127: warning: Member _shr_px_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:128: warning: Member _shr_py_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:129: warning: Member _shr_pz_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:131: warning: Member _shr_theta_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:132: warning: Member _shr_phi_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:134: warning: Member _shr_pitch_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:135: warning: Member _shr_pitch_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:136: warning: Member _shr_pitch_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:138: warning: Member _shr_openangle_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:140: warning: Member _shr_tkfit_nhits_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:141: warning: Member _shr_tkfit_start_x_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:142: warning: Member _shr_tkfit_start_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:143: warning: Member _shr_tkfit_start_z_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:145: warning: Member _shr_tkfit_start_U_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:146: warning: Member _shr_tkfit_start_V_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:148: warning: Member _shr_tkfit_theta_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:149: warning: Member _shr_tkfit_phi_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:151: warning: Member _shr_tkfit_pitch_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:152: warning: Member _shr_tkfit_pitch_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:153: warning: Member _shr_tkfit_pitch_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:155: warning: Member _shr_tkfit_dedx_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:156: warning: Member _shr_tkfit_dedx_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:157: warning: Member _shr_tkfit_dedx_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:159: warning: Member _shr_tkfit_gap10_dedx_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:160: warning: Member _shr_tkfit_gap10_dedx_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:161: warning: Member _shr_tkfit_gap10_dedx_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:163: warning: Member _shr_tkfit_dedx_nhits_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:164: warning: Member _shr_tkfit_dedx_nhits_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:165: warning: Member _shr_tkfit_dedx_nhits_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:167: warning: Member _shr_moliere_avg_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:168: warning: Member _shr_moliere_rms_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:170: warning: Member _shr_llr_pid_u_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:171: warning: Member _shr_llr_pid_v_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:172: warning: Member _shr_llr_pid_y_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:173: warning: Member _shr_llr_pid_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:174: warning: Member _shr_llr_pid_score_v (variable) of class analysis::ShowerAnalysis is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:178: warning: argument 'pset' of command @param is not found in the argument list of analysis::ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p)
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerAnalysis_tool.cc:48: warning: The following parameters of analysis::ShowerAnalysis::ShowerAnalysis(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerStartPoint_tool.cc:80: warning: Member _run (variable) of class analysis::ShowerStartPoint is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ShowerStartPoint_tool.cc:80: warning: Member _sub (variable) of class analysis::ShowerStartPoint is not documented.
@@ -1591,6 +1597,15 @@ Gene/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashM
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_correction_lookup.h:21: warning: Member correction_table_pl_1 (variable) of class searchingfornues::CorrectionLookUpParameters is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_correction_lookup.h:28: warning: Member parameter_correction_edges_pl_2 (variable) of class searchingfornues::CorrectionLookUpParameters is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_correction_lookup.h:30: warning: Member correction_table_pl_2 (variable) of class searchingfornues::CorrectionLookUpParameters is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_electron_photon_lookup.h:10: warning: Member dedx_edges_pl_0 (variable) of class searchingfornues::ElectronPhotonLookUpParameters is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_electron_photon_lookup.h:16: warning: Member parameters_edges_pl_0 (variable) of class searchingfornues::ElectronPhotonLookUpParameters is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_electron_photon_lookup.h:21: warning: Member dedx_pdf_pl_0 (variable) of class searchingfornues::ElectronPhotonLookUpParameters is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_electron_photon_lookup.h:67: warning: Member dedx_edges_pl_1 (variable) of class searchingfornues::ElectronPhotonLookUpParameters is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_electron_photon_lookup.h:73: warning: Member parameters_edges_pl_1 (variable) of class searchingfornues::ElectronPhotonLookUpParameters is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_electron_photon_lookup.h:78: warning: Member dedx_pdf_pl_1 (variable) of class searchingfornues::ElectronPhotonLookUpParameters is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_electron_photon_lookup.h:124: warning: Member dedx_edges_pl_2 (variable) of class searchingfornues::ElectronPhotonLookUpParameters is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_electron_photon_lookup.h:130: warning: Member parameters_edges_pl_2 (variable) of class searchingfornues::ElectronPhotonLookUpParameters is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_electron_photon_lookup.h:135: warning: Member dedx_pdf_pl_2 (variable) of class searchingfornues::ElectronPhotonLookUpParameters is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:19: warning: Member set_dedx_binning(size_t plane, std::vector< float > bin_edges) (function) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:25: warning: Member set_par_binning(size_t plane, std::vector< std::vector< float >> bin_edges) (function) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:34: warning: Member set_corr_par_binning(size_t plane, std::vector< std::vector< float >> bin_edges) (function) of class searchingfornues::LLRPID is not documented.
@@ -1604,14 +1619,14 @@ Gene/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashM
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:132: warning: Member LLR_many_hits_one_plane(std::vector< float > dedx_values, std::vector< std::vector< float >> par_values, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:147: warning: Member correct_many_hits_one_plane(std::vector< float > dedx_values, std::vector< std::vector< float >> corr_par_values, std::vector< bool > is_to_correct, size_t plane) (function) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:167: warning: Member correct_many_hits_one_plane(const art::Ptr< anab::Calorimetry > tkcalo, const searchingfornues::ProxyCaloElem_t tk, const std::unique_ptr< art::FindManyP< simb::MCParticle, anab::BackTrackerHitMatchingData >> &assocMCPart, const bool fRecalibrateHits, const float fEnergyThresholdForMCHits, const bool fLocaldEdx) (function) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:218: warning: Member dedx_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:219: warning: Member dedx_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:221: warning: Member parameters_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:222: warning: Member parameters_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:224: warning: Member corr_parameters_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:225: warning: Member corr_parameters_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:227: warning: Member lookup_tables[3] (variable) of class searchingfornues::LLRPID is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:228: warning: Member correction_tables[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:216: warning: Member dedx_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:217: warning: Member dedx_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:219: warning: Member parameters_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:220: warning: Member parameters_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:222: warning: Member corr_parameters_num_bins[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:223: warning: Member corr_parameters_bin_edges[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:225: warning: Member lookup_tables[3] (variable) of class searchingfornues::LLRPID is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLR_PID.h:226: warning: Member correction_tables[3] (variable) of class searchingfornues::LLRPID is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h:11: warning: Member dedx_edges_pl_0 (variable) of class searchingfornues::ProtonMuonLookUpParameters is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h:18: warning: Member parameters_edges_pl_0 (variable) of class searchingfornues::ProtonMuonLookUpParameters is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/LLRPID_proton_muon_lookup.h:24: warning: Member dedx_pdf_pl_0 (variable) of class searchingfornues::ProtonMuonLookUpParameters is not documented.
@@ -1850,7 +1865,11 @@ Gene/home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashM
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/ShowerSelection_tool.cc:102: warning: Member fTRKproducer (variable) of class selection::ShowerSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/ShowerSelection_tool.cc:103: warning: Member fCALproducer (variable) of class selection::ShowerSelection is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h:82: warning: Member fData (variable) of class selection::SelectionToolBase is not documented.
-rating file documentation...
+ions.h...
+Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/TrackShowerScoreFuncs.h...
+Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/CommonDefs/Typedefs.h...
+Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionToolBase.h...
+Generating file documentation...
 Generating page documentation...
 Generating group documentation...
 Generating class documentation...
@@ -1898,6 +1917,7 @@ Generating docs for nested compound flashmatch::FlashMatchingTool::SliceCandidat
 Generating docs for compound flashmatch::FlashMatchingToolBase...
 Generating docs for compound searchingfornues::BtPart...
 Generating docs for compound searchingfornues::CorrectionLookUpParameters...
+Generating docs for compound searchingfornues::ElectronPhotonLookUpParameters...
 Generating docs for compound searchingfornues::LLRPID...
 Generating docs for compound searchingfornues::ProtonMuonLookUpParameters...
 Generating docs for compound selection::CC0piNpSelection...
@@ -1924,5 +1944,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 935/65536 hits=5240 misses=973
+lookup cache used 954/65536 hits=5281 misses=993
 finished...
