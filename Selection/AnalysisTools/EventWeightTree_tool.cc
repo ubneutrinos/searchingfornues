@@ -66,6 +66,8 @@ namespace analysis
             std::map<std::string, std::vector<double>> _mapWeight;
             std::vector<double> _vecWeightFlux;
             std::vector<double> _vecWeightsGenie;
+            std::vector<double> _vecWeightsGenie_vec;
+           std::vector<int> _vecWeightsGenie_nam;
             std::vector<double> _vecWeightsReint;
             float _weightSpline;
             float _weightTune;
@@ -113,7 +115,10 @@ namespace analysis
         vecTag.push_back(eventweight_tag);
         vecTag.push_back(eventweight_spline_tag);
 
+	int ctr = 0;
+
         for(auto& thisTag : vecTag){
+
             art::Handle<std::vector<evwgh::MCEventWeight>> eventweights_handle;
             evt.getByLabel(thisTag, eventweights_handle);
 
@@ -133,10 +138,17 @@ namespace analysis
                 _mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
                 
                 if(_createFluxBranch || _createGenieBranch || _createReintBranch){
-                    bool isFirstVector = true;
+
+                    bool isFirstVectorFlux  = true;
+                    bool isFirstVectorGenie = true;
+
+		    
 
                     for(std::map<std::string, std::vector<double>>::iterator it=evtwgt_map.begin(); it!=evtwgt_map.end(); ++it){
                         std::string keyname = it->first;
+
+			ctr += 1;
+
                         if(keyname.find("horncurrent") != std::string::npos ||
                             keyname.find("expskin") != std::string::npos ||
                             keyname.find("piplus") != std::string::npos ||
@@ -150,16 +162,33 @@ namespace analysis
                             keyname.find("nucleontotxsec") != std::string::npos ||
                             keyname.find("nucleonqexsec") != std::string::npos ||
                             keyname.find("nucleoninexsec") != std::string::npos){
-                            if(isFirstVector){
+                            if(isFirstVectorFlux){
                                 _vecWeightFlux = it->second;
-                                isFirstVector = false;
+                                isFirstVectorFlux = false;
                             }
                             else{
                                 for(unsigned int i = 0; i < it->second.size(); ++i){
                                     _vecWeightFlux[i] *= it->second[i];
                                 }
                             }
-                        }
+			}// if flux systematic
+			else {
+			  //std::cout << "[EventWeightTree] key " << it->first << " has weights " << std::endl;
+			  for(unsigned int i = 0; i < it->second.size(); ++i) {
+			    _vecWeightsGenie_vec.push_back(it->second[i]);
+ 			    _vecWeightsGenie_nam.push_back(ctr); 
+			    //std::cout << "[EventWeightTree] \t " << it->second[i] << std::endl;
+			  }
+			  if(isFirstVectorGenie){
+			    _vecWeightsGenie = it->second;
+			    isFirstVectorGenie = false;
+			  }
+			  else{
+			    for(unsigned int i = 0; i < it->second.size(); ++i){
+			      _vecWeightsGenie[i] *= it->second[i];
+			    }
+			  }
+			}// if not a flux variation
                     }
                 }
             }
@@ -180,6 +209,8 @@ namespace analysis
         if(_createMapBranch) _tree->Branch("weights", "std::map<std::string, std::vector<double>>", &_mapWeight);
         if(_createFluxBranch) _tree->Branch("weightsFlux", "std::vector<double>", &_vecWeightFlux);
         if(_createGenieBranch) _tree->Branch("weightsGenie", "std::vector<double>", &_vecWeightsGenie);
+        if(_createGenieBranch) _tree->Branch("weightsGenie_vec", "std::vector<double>", &_vecWeightsGenie_vec);
+        //if(_createGenieBranch) _tree->Branch("weightsGenie_nam", "std::vector<int>", &_vecWeightsGenie_nam);
         if(_createReintBranch) _tree->Branch("weightsReint", "std::vector<double>", &_vecWeightsReint);
         if(_createSplineBranch) _tree->Branch("weightSpline",&_weightSpline,"weightSpline/F");
         if(_createTuneBranch) _tree->Branch("weightTune",&_weightTune,"weightTune/F");
@@ -190,6 +221,8 @@ namespace analysis
         _mapWeight.clear();
         _vecWeightFlux.clear();
         _vecWeightsGenie.clear();
+        _vecWeightsGenie_vec.clear();
+        _vecWeightsGenie_nam.clear();
         _vecWeightsReint.clear();
         _weightSpline = -1;
         _weightTune = -1;

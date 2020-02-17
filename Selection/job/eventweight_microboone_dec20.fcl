@@ -1,7 +1,7 @@
 BEGIN_PROLOG
 
 #include "eventweight_microboone_flux.fcl"
-#include "eventweight_microboone_genie_dec20.fcl"
+#include "eventweight_microboone_genie_genieall.fcl"
 #include "eventweight_microboone_genie_single_knobs.fcl"
 #include "eventweight_microboone_spline.fcl"
 
@@ -32,6 +32,7 @@ microboone_eventweight_dec20: {
 microboone_eventweight_dec20.weight_functions: [
   @sequence::microboone_eventweight_dec20.weight_functions_flux,
   @sequence::microboone_eventweight_dec20.weight_functions_genie,
+  #@sequence::microboone_eventweight_genie_knobs.weight_functions_genie,
   @sequence::microboone_eventweight_dec20.weight_functions_spline
 ]
 
