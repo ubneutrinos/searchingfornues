@@ -20,6 +20,7 @@
 //#include "../CommonDefs/PIDFuncs.h"
 #include "../CommonDefs/LLR_PID.h"
 #include "../CommonDefs/LLRPID_correction_lookup.h"
+#include "../CommonDefs/LLRPID_electron_photon_lookup.h"
 
 #include "larcore/Geometry/Geometry.h"
 #include "lardataobj/RecoBase/SpacePoint.h"
@@ -109,8 +110,9 @@ private:
   float fEnergyThresholdForMCHits;
 
   // re-calibration tools
-  searchingfornues::LLRPID llr_pid_calculator;
-  searchingfornues::CorrectionLookUpParameters lookup_parameters;
+  searchingfornues::LLRPID llr_pid_calculator_shr;
+  searchingfornues::ElectronPhotonLookUpParameters electronphoton_parameters;
+  searchingfornues::CorrectionLookUpParameters correction_parameters;
   
   art::InputTag fCLSproducer;
   art::InputTag fPIDproducer;
@@ -274,6 +276,11 @@ private:
     unsigned int _shr_tkfit_nhits_V_alt; /**< Number of hits in the 1x4 cm box on the V plane with the track fitting  [calculated using XYZ instead of RR] */
     unsigned int _shr_tkfit_nhits_U_alt; /**< Number of hits in the 1x4 cm box on the U plane with the track fitting [calculated using XYZ instead of RR] */
 
+    float _shr_llrpid_dedx_Y; /**< dE/dx of the leading shower on the Y plane with the LLR PID */
+    float _shr_llrpid_dedx_V; /**< dE/dx of the leading shower on the Y plane with the LLR PID */
+    float _shr_llrpid_dedx_U; /**< dE/dx of the leading shower on the Y plane with the LLR PID */
+    float _shr_llrpid_dedx;   /**< dE/dx of the leading shower (all three planes) with LLR PID */
+
     float _shr_tkfit_2cm_dedx_Y;         /**< dE/dx of the leading shower on the Y plane with the track fitting, use first 2 cm */
     float _shr_tkfit_2cm_dedx_V;         /**< dE/dx of the leading shower on the V plane with the track fitting, use first 2 cm */
     float _shr_tkfit_2cm_dedx_U;         /**< dE/dx of the leading shower on the U plane with the track fitting, use first 2 cm */
@@ -326,16 +333,31 @@ CC0piNpSelection::CC0piNpSelection(const fhicl::ParameterSet &pset)
     fRecalibrateHits = pset.get<bool>("RecalibrateHits", false);
     fEnergyThresholdForMCHits = pset.get<float>("EnergyThresholdForMCHits", 0.1);
 
+    // configure shower PID tools
+    llr_pid_calculator_shr.set_dedx_binning(0, electronphoton_parameters.dedx_edges_pl_0);
+    llr_pid_calculator_shr.set_par_binning(0, electronphoton_parameters.parameters_edges_pl_0);
+    llr_pid_calculator_shr.set_lookup_tables(0, electronphoton_parameters.dedx_pdf_pl_0);
+    
+    llr_pid_calculator_shr.set_dedx_binning(1, electronphoton_parameters.dedx_edges_pl_1);
+    llr_pid_calculator_shr.set_par_binning(1, electronphoton_parameters.parameters_edges_pl_1);
+    llr_pid_calculator_shr.set_lookup_tables(1, electronphoton_parameters.dedx_pdf_pl_1);
+    
+    llr_pid_calculator_shr.set_dedx_binning(2, electronphoton_parameters.dedx_edges_pl_2);
+    llr_pid_calculator_shr.set_par_binning(2, electronphoton_parameters.parameters_edges_pl_2);
+    llr_pid_calculator_shr.set_lookup_tables(2, electronphoton_parameters.dedx_pdf_pl_2);
+
+
+
     if (fRecalibrateHits)
       {
-	llr_pid_calculator.set_corr_par_binning(0, lookup_parameters.parameter_correction_edges_pl_0);
-	llr_pid_calculator.set_correction_tables(0, lookup_parameters.correction_table_pl_0);
+
+	llr_pid_calculator_shr.set_corr_par_binning(0, correction_parameters.parameter_correction_edges_pl_0);
+	llr_pid_calculator_shr.set_correction_tables(0, correction_parameters.correction_table_pl_0);
+	llr_pid_calculator_shr.set_corr_par_binning(1, correction_parameters.parameter_correction_edges_pl_1);
+	llr_pid_calculator_shr.set_correction_tables(1, correction_parameters.correction_table_pl_1);
+	llr_pid_calculator_shr.set_corr_par_binning(2, correction_parameters.parameter_correction_edges_pl_2);
+	llr_pid_calculator_shr.set_correction_tables(2, correction_parameters.correction_table_pl_2);
 	
-	llr_pid_calculator.set_corr_par_binning(1, lookup_parameters.parameter_correction_edges_pl_1);
-	llr_pid_calculator.set_correction_tables(1, lookup_parameters.correction_table_pl_1);
-	
-	llr_pid_calculator.set_corr_par_binning(2, lookup_parameters.parameter_correction_edges_pl_2);
-	llr_pid_calculator.set_correction_tables(2, lookup_parameters.correction_table_pl_2);
       }
 }
 
@@ -736,6 +758,11 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         _shr_tkfit_2cm_dedx_V = std::numeric_limits<float>::lowest();
                         _shr_tkfit_2cm_dedx_U = std::numeric_limits<float>::lowest();
 
+                        _shr_llrpid_dedx_Y = std::numeric_limits<float>::lowest();
+                        _shr_llrpid_dedx_V = std::numeric_limits<float>::lowest();
+                        _shr_llrpid_dedx_U = std::numeric_limits<float>::lowest();
+                        _shr_llrpid_dedx   = std::numeric_limits<float>::lowest();
+
                         _shr_tkfit_gap05_dedx_Y = std::numeric_limits<float>::lowest();
                         _shr_tkfit_gap05_dedx_V = std::numeric_limits<float>::lowest();
                         _shr_tkfit_gap05_dedx_U = std::numeric_limits<float>::lowest();
@@ -787,6 +814,11 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         float calodEdxgap10; // dEdx computed for track-fitter with 10 mm gap @ vtx
                         int caloNptsgap10;   // number of track-fitter with 10 mm gap @ vtx
 
+			_shr_llrpid_dedx = 0.; // reset dE/dx for shower to 0
+			_shr_llrpid_dedx_Y = 0;
+			_shr_llrpid_dedx_V = 0;
+			_shr_llrpid_dedx_U = 0;
+
                         for (const auto &tkcalo : tkcalos)
                         {
 
@@ -796,6 +828,20 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                                 continue;
 
 
+			    auto const& xyz_v = tkcalo->XYZ();
+			    
+			    // collect XYZ coordinates of track-fitted shower
+			    std::vector<float> x_v, y_v, z_v;
+			    std::vector<float> dist_from_start_v;
+			    for (auto xyz : xyz_v){
+			      x_v.push_back(xyz.X());
+			      y_v.push_back(xyz.Y());
+			      z_v.push_back(xyz.Z());
+			      float dist_from_start = searchingfornues::distance3d(xyz.X(), xyz.Y(), xyz.Z(),
+										   _shr_tkfit_start_x, _shr_tkfit_start_y, _shr_tkfit_start_z);
+			      dist_from_start_v.push_back(dist_from_start);
+			    }// collect XYZ coordinates of track-fitted shower
+			    
 			    std::vector<float> dqdx_values_corrected;
 			    
 			    if (fData || !fRecalibrateHits) {
@@ -806,7 +852,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 			    }// if re-calibration is not necessary
 			    
 			    else 
-			      dqdx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(tkcalo, tk, assocMCPart, fRecalibrateHits, fEnergyThresholdForMCHits, fLocaldEdx);
+			      dqdx_values_corrected = llr_pid_calculator_shr.correct_many_hits_one_plane(tkcalo, tk, assocMCPart, fRecalibrateHits, fEnergyThresholdForMCHits, fLocaldEdx);
 			    
                             // using function from CommonDefs/TrackFitterFunctions.h
                             //searchingfornues::GetTrackFitdEdx(tkcalo->dQdx(),tkcalo->ResidualRange(), fdEdxcmSkip, fdEdxcmLen, calodEdx, caloNpts);
@@ -832,55 +878,66 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 			    calodEdx2cm = searchingfornues::GetdEdxfromdQdx(calodEdx2cm, _shr_start_x, _shr_start_y, _shr_start_z, 2.1, fADCtoE[plane] );
 			    calodEdxgap05 = searchingfornues::GetdEdxfromdQdx(calodEdxgap05, _shr_start_x, _shr_start_y, _shr_start_z, 2.1, fADCtoE[plane] );
 			    calodEdxgap10 = searchingfornues::GetdEdxfromdQdx(calodEdxgap10, _shr_start_x, _shr_start_y, _shr_start_z, 2.1, fADCtoE[plane] );
-			    
-                            if (plane == 2)
-                            {
-			      std::cout << "DAVIDC" << std::endl;
-                                _shr_tkfit_dedx_Y = calodEdx;
-                                _shr_tkfit_nhits_Y = caloNpts;
-                                _shr_tkfit_dedx_Y_alt = calodEdxXYZ;
-                                _shr_tkfit_nhits_Y_alt = caloNptsXYZ;
-				if (fSaveMoreDedx == true) {
-				  _shr_tkfit_2cm_dedx_Y = calodEdx2cm;
-				  _shr_tkfit_2cm_nhits_Y = caloNpts2cm;
-				  _shr_tkfit_gap05_dedx_Y = calodEdxgap05;
-				  _shr_tkfit_gap05_nhits_Y = caloNptsgap05;
-				  _shr_tkfit_gap10_dedx_Y = calodEdxgap10;
-				  _shr_tkfit_gap10_nhits_Y = caloNptsgap10;
-				}
+
+			    // use LLR PID
+			    // build par_values
+			    std::vector<std::vector<float>> par_values;
+			    par_values.push_back(dist_from_start_v);
+			    auto const &pitch = tkcalo->TrkPitchVec();
+			    par_values.push_back(pitch);
+			    std::vector<float> dedx_values_corrected = searchingfornues::GetdEdxfromdQdx(dqdx_values_corrected,x_v,y_v,z_v,2.1,fADCtoE[plane]);
+			    float llr_pid_shr = llr_pid_calculator_shr.LLR_many_hits_one_plane(dedx_values_corrected, par_values, plane);
+			    // end use LLR PID
+
+			    _shr_llrpid_dedx += llr_pid_shr;
+
+                            if (plane == 2) {
+			      _shr_tkfit_dedx_Y = calodEdx;
+			      _shr_llrpid_dedx_Y = llr_pid_shr;
+			      _shr_tkfit_nhits_Y = caloNpts;
+			      _shr_tkfit_dedx_Y_alt = calodEdxXYZ;
+			      _shr_tkfit_nhits_Y_alt = caloNptsXYZ;
+			      if (fSaveMoreDedx == true) {
+				_shr_tkfit_2cm_dedx_Y = calodEdx2cm;
+				_shr_tkfit_2cm_nhits_Y = caloNpts2cm;
+				_shr_tkfit_gap05_dedx_Y = calodEdxgap05;
+				_shr_tkfit_gap05_nhits_Y = caloNptsgap05;
+				_shr_tkfit_gap10_dedx_Y = calodEdxgap10;
+				_shr_tkfit_gap10_nhits_Y = caloNptsgap10;
+			      }
                             }
-                            else if (plane == 1)
-                            {
-                                _shr_tkfit_dedx_V = calodEdx;
-                                _shr_tkfit_nhits_V = caloNpts;
-                                _shr_tkfit_dedx_V_alt = calodEdxXYZ;
-                                _shr_tkfit_nhits_V_alt = caloNptsXYZ;
-				if (fSaveMoreDedx == true) {
-				  _shr_tkfit_2cm_dedx_V = calodEdx2cm;
-				  _shr_tkfit_2cm_nhits_V = caloNpts2cm;
-				  _shr_tkfit_gap05_dedx_V = calodEdxgap05;
-				  _shr_tkfit_gap05_nhits_V = caloNptsgap05;
-				  _shr_tkfit_gap10_dedx_V = calodEdxgap10;
-				  _shr_tkfit_gap10_nhits_V = caloNptsgap10;
-				}
+                            else if (plane == 1){
+			      _shr_tkfit_dedx_V = calodEdx;
+			      _shr_llrpid_dedx_V = llr_pid_shr;
+			      _shr_tkfit_nhits_V = caloNpts;
+			      _shr_tkfit_dedx_V_alt = calodEdxXYZ;
+			      _shr_tkfit_nhits_V_alt = caloNptsXYZ;
+			      if (fSaveMoreDedx == true) {
+				_shr_tkfit_2cm_dedx_V = calodEdx2cm;
+				_shr_tkfit_2cm_nhits_V = caloNpts2cm;
+				_shr_tkfit_gap05_dedx_V = calodEdxgap05;
+				_shr_tkfit_gap05_nhits_V = caloNptsgap05;
+				_shr_tkfit_gap10_dedx_V = calodEdxgap10;
+				_shr_tkfit_gap10_nhits_V = caloNptsgap10;
+			      }
                             }
-                            else if (plane == 0)
-                            {
-                                _shr_tkfit_dedx_U = calodEdx;
-                                _shr_tkfit_nhits_U = caloNpts;
-                                _shr_tkfit_dedx_U_alt = calodEdxXYZ;
-                                _shr_tkfit_nhits_U_alt = caloNptsXYZ;
-				if (fSaveMoreDedx == true) {
-				  _shr_tkfit_2cm_dedx_U = calodEdx2cm;
-				  _shr_tkfit_2cm_nhits_U = caloNpts2cm;
+                            else if (plane == 0){
+			      _shr_tkfit_dedx_U = calodEdx;
+			      _shr_llrpid_dedx_U = llr_pid_shr;
+			      _shr_tkfit_nhits_U = caloNpts;
+			      _shr_tkfit_dedx_U_alt = calodEdxXYZ;
+			      _shr_tkfit_nhits_U_alt = caloNptsXYZ;
+			      if (fSaveMoreDedx == true) {
+				_shr_tkfit_2cm_dedx_U = calodEdx2cm;
+				_shr_tkfit_2cm_nhits_U = caloNpts2cm;
                                 _shr_tkfit_gap05_dedx_U = calodEdxgap05;
                                 _shr_tkfit_gap05_nhits_U = caloNptsgap05;
                                 _shr_tkfit_gap10_dedx_U = calodEdxgap10;
                                 _shr_tkfit_gap10_nhits_U = caloNptsgap10;
-				}
+			      }
                             }
-			    
                         } // for all calo objects
+			_shr_llrpid_dedx = atan(_shr_llrpid_dedx / 100.) * 2 / 3.14159266;
                     }
                 }
             }
@@ -1360,6 +1417,11 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_tkfit_2cm_nhits_U = 0;
     _shr_tkfit_2cm_nhits_V = 0;
 
+    _shr_llrpid_dedx_Y = std::numeric_limits<float>::lowest();
+    _shr_llrpid_dedx_V = std::numeric_limits<float>::lowest();
+    _shr_llrpid_dedx_U = std::numeric_limits<float>::lowest();
+    _shr_llrpid_dedx   = std::numeric_limits<float>::lowest();
+
     _shr_tkfit_gap05_dedx_Y = std::numeric_limits<float>::lowest();
     _shr_tkfit_gap05_dedx_U = std::numeric_limits<float>::lowest();
     _shr_tkfit_gap05_dedx_V = std::numeric_limits<float>::lowest();
@@ -1431,6 +1493,10 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_tkfit_nhits_Y", &_shr_tkfit_nhits_Y, "shr_tkfit_nhits_Y/i");
     _tree->Branch("shr_tkfit_nhits_V", &_shr_tkfit_nhits_V, "shr_tkfit_nhits_V/i");
     _tree->Branch("shr_tkfit_nhits_U", &_shr_tkfit_nhits_U, "shr_tkfit_nhits_U/i");
+    _tree->Branch("shr_llrpid_dedx_Y", &_shr_llrpid_dedx_Y, "shr_llrpid_dedx_Y/F");
+    _tree->Branch("shr_llrpid_dedx_V", &_shr_llrpid_dedx_V, "shr_llrpid_dedx_V/F");
+    _tree->Branch("shr_llrpid_dedx_U", &_shr_llrpid_dedx_U, "shr_llrpid_dedx_U/F");
+    _tree->Branch("shr_llrpid_dedx"  , &_shr_llrpid_dedx  , "shr_llrpid_dedx/F"  );
     _tree->Branch("shr_tkfit_dedx_Y_alt", &_shr_tkfit_dedx_Y_alt, "shr_tkfit_dedx_Y_alt/F");
     _tree->Branch("shr_tkfit_dedx_V_alt", &_shr_tkfit_dedx_V_alt, "shr_tkfit_dedx_V_alt/F");
     _tree->Branch("shr_tkfit_dedx_U_alt", &_shr_tkfit_dedx_U_alt, "shr_tkfit_dedx_U_alt/F");
