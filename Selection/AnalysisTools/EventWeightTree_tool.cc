@@ -174,20 +174,22 @@ namespace analysis
 			}// if flux systematic
 			else {
 			  //std::cout << "[EventWeightTree] key " << it->first << " has weights " << std::endl;
-			  for(unsigned int i = 0; i < it->second.size(); ++i) {
-			    _vecWeightsGenie_vec.push_back(it->second[i]);
- 			    _vecWeightsGenie_nam.push_back(ctr); 
-			    //std::cout << "[EventWeightTree] \t " << it->second[i] << std::endl;
-			  }
-			  if(isFirstVectorGenie){
-			    _vecWeightsGenie = it->second;
-			    isFirstVectorGenie = false;
-			  }
-			  else{
-			    for(unsigned int i = 0; i < it->second.size(); ++i){
-			      _vecWeightsGenie[i] *= it->second[i];
+			  if (it->second.size() == 100) {
+			    for(unsigned int i = 0; i < it->second.size(); ++i) {
+			      _vecWeightsGenie_vec.push_back(it->second[i]);
+			      _vecWeightsGenie_nam.push_back(ctr); 
+			      //std::cout << "[EventWeightTree] \t " << it->second[i] << std::endl;
 			    }
-			  }
+			    if(isFirstVectorGenie){
+			      _vecWeightsGenie = it->second;
+			      isFirstVectorGenie = false;
+			    }
+			    else{
+			      for(unsigned int i = 0; i < it->second.size(); ++i){
+				_vecWeightsGenie[i] *= it->second[i];
+			      }
+			    }
+			  }// if genie_all
 			}// if not a flux variation
                     }
                 }

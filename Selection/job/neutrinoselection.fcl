@@ -94,6 +94,7 @@ Pi0TaggerTool: {
     trkshrscore: 0.8
     TRKproducer: "shrreco3dKalmanShower"     # "pandoraKalmanShower"     #remove or leave empty of there are no track fits of the shower
     CALproducer: "shrreco3dKalmanShowercali" # "pandoraKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
+    Hitproducer: "gaushit"
     ADCtoE: @local::microboone_reco_data_producers.shrreco3d.ADCtoE
 }
 

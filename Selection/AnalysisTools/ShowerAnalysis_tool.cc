@@ -440,14 +440,18 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 
           std::vector<float> x_v, y_v, z_v;
           std::vector<float> dist_from_start_v;
+
+	  float shr_tkfit_start_sce[3];
+	  searchingfornues::ApplySCECorrectionXYZ(_shr_tkfit_start_x_v.back(),_shr_tkfit_start_y_v.back(),_shr_tkfit_start_z_v.back(),shr_tkfit_start_sce);
+
           for (auto xyz : xyz_v)
           {
             x_v.push_back(xyz.X());
             y_v.push_back(xyz.Y());
             z_v.push_back(xyz.Z());
-
+	    
             float dist_from_start = searchingfornues::distance3d(xyz.X(), xyz.Y(), xyz.Z(),
-                            _shr_tkfit_start_x_v.back(), _shr_tkfit_start_y_v.back(), _shr_tkfit_start_z_v.back());
+								 shr_tkfit_start_sce[0], shr_tkfit_start_sce[1], shr_tkfit_start_sce[2]);
             dist_from_start_v.push_back(dist_from_start);
           }
 
