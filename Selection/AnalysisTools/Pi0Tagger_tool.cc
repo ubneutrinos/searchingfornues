@@ -100,6 +100,8 @@ namespace analysis
     int _pi0_ngamma;
     float _pi0_radlen1, _pi0_radlen2;
     float _pi0_dot1, _pi0_dot2;
+    float _pi0_dir1_x, _pi0_dir1_y, _pi0_dir1_z;
+    float _pi0_dir2_x, _pi0_dir2_y, _pi0_dir2_z;
     float _pi0_energy1_Y, _pi0_energy2_Y;
     float _pi0_dedx1_Y, _pi0_dedx2_Y;
     float _pi0_dedx1_fit_Y, _pi0_dedx2_fit_Y;
@@ -413,17 +415,17 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
 	    
 	    if (tkcalo->PlaneID().Plane == 0) {
 	      searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), 0., 4., _pi0_dedx1_fit_U, nhits);
-	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx1_fit_U, nhits);
+	      //searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx1_fit_U, nhits);
 	      _pi0_dedx1_fit_U = searchingfornues::GetdEdxfromdQdx(_pi0_dedx1_fit_U, shr1->ShowerStart()[0], shr1->ShowerStart()[2], shr1->ShowerStart()[2], 2.1, fADCtoE[0] );
 	    }
 	    if (tkcalo->PlaneID().Plane == 1) {
 	      searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), 0., 4., _pi0_dedx1_fit_V, nhits);
-	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx1_fit_V, nhits);
+	      //searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx1_fit_V, nhits);
 	      _pi0_dedx1_fit_V = searchingfornues::GetdEdxfromdQdx(_pi0_dedx1_fit_V, shr1->ShowerStart()[0], shr1->ShowerStart()[2], shr1->ShowerStart()[2], 2.1, fADCtoE[1] );
 	    }
 	    if (tkcalo->PlaneID().Plane == 2) {
 	      searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), 0., 4., _pi0_dedx1_fit_Y, nhits);
-	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx1_fit_Y, nhits);
+	      //searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx1_fit_Y, nhits);
 	      _pi0_dedx1_fit_Y = searchingfornues::GetdEdxfromdQdx(_pi0_dedx1_fit_Y, shr1->ShowerStart()[0], shr1->ShowerStart()[2], shr1->ShowerStart()[2], 2.1, fADCtoE[2] );
 	    }
 	    
@@ -440,6 +442,9 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
     _pi0_dedx1_V    = shr1->dEdx()[1];
     _pi0_energy1_U  = shr1->Energy()[0];
     _pi0_dedx1_U    = shr1->dEdx()[0];
+    _pi0_dir1_x     = shr1->Direction()[0];
+    _pi0_dir1_y     = shr1->Direction()[1];
+    _pi0_dir1_z     = shr1->Direction()[2];
     
     auto vtxcompat2 = VtxCompatibility(nuvtx, shr2->ShowerStart(), shr2->Direction());
     
@@ -491,29 +496,27 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
 	    
 	    int nhits = 0;
 
-	    if (dqdx_values_corrected.size() > 0)
-	      std::cout << "[DEDX] dqdx is " << dqdx_values_corrected[0] << std::endl;
 	    
 	    if (tkcalo->PlaneID().Plane == 0) {
 	      searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), 0., 4., _pi0_dedx2_fit_U, nhits);
-	      std::cout << "[DEDX] 0 : " << _pi0_dedx2_fit_U << std::endl;
-	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx2_fit_U, nhits);
-	      std::cout << "[DEDX] 0 : " << _pi0_dedx2_fit_U << std::endl;
+	      //std::cout << "[DEDX] 0 : " << _pi0_dedx2_fit_U << std::endl;
+	      //searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx2_fit_U, nhits);
+	      //std::cout << "[DEDX] 0 : " << _pi0_dedx2_fit_U << std::endl;
 	      _pi0_dedx2_fit_U = searchingfornues::GetdEdxfromdQdx(_pi0_dedx2_fit_U, shr2->ShowerStart()[0], shr2->ShowerStart()[2], shr2->ShowerStart()[2], 2.1, fADCtoE[0] );
 	    }
 	    if (tkcalo->PlaneID().Plane == 1) {
 	      searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), 0., 4., _pi0_dedx2_fit_V, nhits);
-	      std::cout << "[DEDX] 1 : " << _pi0_dedx2_fit_V << std::endl;
-	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx2_fit_V, nhits);
-	      std::cout << "[DEDX] 1 : " << _pi0_dedx2_fit_V << std::endl;
+	      //std::cout << "[DEDX] 1 : " << _pi0_dedx2_fit_V << std::endl;
+	      //searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx2_fit_V, nhits);
+	      //std::cout << "[DEDX] 1 : " << _pi0_dedx2_fit_V << std::endl;
 	      
 	      _pi0_dedx2_fit_V = searchingfornues::GetdEdxfromdQdx(_pi0_dedx2_fit_V, shr2->ShowerStart()[0], shr2->ShowerStart()[2], shr2->ShowerStart()[2], 2.1, fADCtoE[1] );
 	    }
 	    if (tkcalo->PlaneID().Plane == 2) {
 	      searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), 0., 4., _pi0_dedx2_fit_Y, nhits);
-	      std::cout << "[DEDX] 2 : " << _pi0_dedx2_fit_Y << std::endl;
-	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx2_fit_Y, nhits);
-	      std::cout << "[DEDX] 2 : " << _pi0_dedx2_fit_Y << std::endl;
+	      //std::cout << "[DEDX] 2 : " << _pi0_dedx2_fit_Y << std::endl;
+	      //searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx2_fit_Y, nhits);
+	      //std::cout << "[DEDX] 2 : " << _pi0_dedx2_fit_Y << std::endl;
 	      _pi0_dedx2_fit_Y = searchingfornues::GetdEdxfromdQdx(_pi0_dedx2_fit_Y, shr2->ShowerStart()[0], shr2->ShowerStart()[2], shr2->ShowerStart()[2], 2.1, fADCtoE[2] );
 	    }
 	    
@@ -531,6 +534,9 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
     _pi0_dedx2_V   = shr2->dEdx()[1];
     _pi0_energy2_U = shr2->Energy()[0];
     _pi0_dedx2_U   = shr2->dEdx()[0];
+    _pi0_dir2_x    = shr2->Direction()[0];
+    _pi0_dir2_y    = shr2->Direction()[1];
+    _pi0_dir2_z    = shr2->Direction()[2];
     
     _pi0_gammadot = shr1->Direction().Dot(shr2->Direction());
     _pi0_mass_Y = sqrt( 2 * _pi0_energy1_Y * _pi0_energy2_Y * (1 - _pi0_gammadot ) );
@@ -591,6 +597,12 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
     _tree->Branch("pi0_dot2",&_pi0_dot2,"pi0_dot2/F");
     _tree->Branch("pi0_energy1_Y",&_pi0_energy1_Y,"pi0_energy1_Y/F");
     _tree->Branch("pi0_energy2_Y",&_pi0_energy2_Y,"pi0_energy2_Y/F");
+    _tree->Branch("pi0_dir1_x",&_pi0_dir1_x,"pi0_dir1_x/F");
+    _tree->Branch("pi0_dir1_y",&_pi0_dir1_y,"pi0_dir1_y/F");
+    _tree->Branch("pi0_dir1_z",&_pi0_dir1_z,"pi0_dir1_z/F");
+    _tree->Branch("pi0_dir2_x",&_pi0_dir2_x,"pi0_dir2_x/F");
+    _tree->Branch("pi0_dir2_y",&_pi0_dir2_y,"pi0_dir2_y/F");
+    _tree->Branch("pi0_dir2_z",&_pi0_dir2_z,"pi0_dir2_z/F");
     _tree->Branch("pi0_dedx1_Y",&_pi0_dedx1_Y,"pi0_dedx1_Y/F");
     _tree->Branch("pi0_dedx2_Y",&_pi0_dedx2_Y,"pi0_dedx2_Y/F");
     _tree->Branch("pi0_dedx1_fit_Y",&_pi0_dedx1_fit_Y,"pi0_dedx1_fit_Y/F");
@@ -755,6 +767,13 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
     _pi0_mcrce1 = 0;
     _pi0_mcrcdot0 = -1;
     _pi0_mcrcdot1 = -1;
+
+    _pi0_dir1_x = 0;
+    _pi0_dir1_y = 0;
+    _pi0_dir1_z = 0;
+    _pi0_dir2_x = 0;
+    _pi0_dir2_y = 0;
+    _pi0_dir2_z = 0;
 
     _pi0_dot1 = -1;
     _pi0_dot2 = -1;
