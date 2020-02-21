@@ -96,6 +96,7 @@ Pi0TaggerTool: {
     CALproducer: "shrreco3dKalmanShowercali" # "pandoraKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
     Hitproducer: "gaushit"
     ADCtoE: @local::microboone_reco_data_producers.shrreco3d.ADCtoE
+    RecalibrateHits: true
 }
 
 DefaultAnalysisTool: {
