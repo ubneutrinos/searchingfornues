@@ -222,7 +222,7 @@ Parsing file /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/Sec/home
 /home/travis/build/ubneutrinos/searchingfornues/FlashMatching/ACPTTrigFlashMatch_module.cc:47: warning: Compound ACPTTrigFlashMatch is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/NeutrinoEnergy_tool.cc:36: warning: Compound analysis::NeutrinoEnergy is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/SelectionTools/SelectionExample_tool.cc:24: warning: Compound selection::SelectionExample is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:29: warning: Compound analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:32: warning: Compound analysis::Pi0Tagger is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/MCFilter_tool.cc:29: warning: Compound analysis::MCFilter is not documented.
 ondShowerPurity_module.cc...
 Preprocessing /home/travis/build/ubneutrinos/searchingfornues/ShowerReco/ShowerMerger_module.cc...
@@ -1169,64 +1169,72 @@ Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selecti
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ObviousCosmicFlashMatching_tool.cc:104: warning: argument 'pset' of command @param is not found in the argument list of analysis::ObviousCosmicFlashMatching::ObviousCosmicFlashMatching(const fhicl::ParameterSet &p)
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/ObviousCosmicFlashMatching_tool.cc:46: warning: The following parameters of analysis::ObviousCosmicFlashMatching::ObviousCosmicFlashMatching(const fhicl::ParameterSet &p) are not documented:
   parameter 'p'
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:70: warning: Member VtxCompatibility(const TVector3 &nuvtx, const TVector3 &shrvtx, const TVector3 &shrdir) (function) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:82: warning: Member Reset() (function) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:87: warning: Member _pi0_ispi0 (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:88: warning: Member _pi0_mcgamma0_mom (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:88: warning: Member _pi0_mcgamma1_mom (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:89: warning: Member _pi0_mcgamma0_e (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:89: warning: Member _pi0_mcgamma0_px (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:89: warning: Member _pi0_mcgamma0_py (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:89: warning: Member _pi0_mcgamma0_pz (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:90: warning: Member _pi0_mcgamma1_e (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:90: warning: Member _pi0_mcgamma1_px (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:90: warning: Member _pi0_mcgamma1_py (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:90: warning: Member _pi0_mcgamma1_pz (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:91: warning: Member _pi0_mcrcdot0 (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:91: warning: Member _pi0_mcrcdot1 (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:92: warning: Member _pi0_mcrce0 (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:92: warning: Member _pi0_mcrce1 (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:95: warning: Member _pi0_nshower (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:96: warning: Member _pi0_ntrack (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:97: warning: Member _pi0_ngamma (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:98: warning: Member _pi0_radlen1 (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:98: warning: Member _pi0_radlen2 (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:99: warning: Member _pi0_dot1 (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:99: warning: Member _pi0_dot2 (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:100: warning: Member _pi0_energy1_Y (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:100: warning: Member _pi0_energy2_Y (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:101: warning: Member _pi0_dedx1_Y (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:101: warning: Member _pi0_dedx2_Y (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:102: warning: Member _pi0_dedx1_fit_Y (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:102: warning: Member _pi0_dedx2_fit_Y (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:103: warning: Member _pi0_energy1_V (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:103: warning: Member _pi0_energy2_V (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:104: warning: Member _pi0_dedx1_V (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:104: warning: Member _pi0_dedx2_V (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:105: warning: Member _pi0_dedx1_fit_V (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:105: warning: Member _pi0_dedx2_fit_V (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:106: warning: Member _pi0_energy1_U (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:106: warning: Member _pi0_energy2_U (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:107: warning: Member _pi0_dedx1_U (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:107: warning: Member _pi0_dedx2_U (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:108: warning: Member _pi0_dedx1_fit_U (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:108: warning: Member _pi0_dedx2_fit_U (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:109: warning: Member _pi0_shrscore1 (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:109: warning: Member _pi0_shrscore2 (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:110: warning: Member _pi0_gammadot (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:111: warning: Member _pi0_mass_Y (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:111: warning: Member _pi0_mass_V (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:111: warning: Member _pi0_mass_U (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:112: warning: Member _pi0_rc_vtx_x (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:112: warning: Member _pi0_rc_vtx_y (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:112: warning: Member _pi0_rc_vtx_z (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:116: warning: Member _pi0_onlyshower (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:117: warning: Member _pi0_dmin (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:118: warning: Member _pi0_dotmin (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:119: warning: Member _pi0_trkshrscore (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:121: warning: Member fADCtoE (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:123: warning: Member fTRKproducer (variable) of class analysis::Pi0Tagger is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:124: warning: Member fCALproducer (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:73: warning: Member VtxCompatibility(const TVector3 &nuvtx, const TVector3 &shrvtx, const TVector3 &shrdir) (function) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:85: warning: Member Reset() (function) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:90: warning: Member _pi0_ispi0 (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:91: warning: Member _pi0_mcgamma0_mom (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:91: warning: Member _pi0_mcgamma1_mom (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:92: warning: Member _pi0_mcgamma0_e (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:92: warning: Member _pi0_mcgamma0_px (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:92: warning: Member _pi0_mcgamma0_py (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:92: warning: Member _pi0_mcgamma0_pz (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:93: warning: Member _pi0_mcgamma1_e (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:93: warning: Member _pi0_mcgamma1_px (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:93: warning: Member _pi0_mcgamma1_py (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:93: warning: Member _pi0_mcgamma1_pz (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:94: warning: Member _pi0_mcrcdot0 (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:94: warning: Member _pi0_mcrcdot1 (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:95: warning: Member _pi0_mcrce0 (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:95: warning: Member _pi0_mcrce1 (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:98: warning: Member _pi0_nshower (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:99: warning: Member _pi0_ntrack (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:100: warning: Member _pi0_ngamma (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:101: warning: Member _pi0_radlen1 (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:101: warning: Member _pi0_radlen2 (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:102: warning: Member _pi0_dot1 (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:102: warning: Member _pi0_dot2 (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:103: warning: Member _pi0_energy1_Y (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:103: warning: Member _pi0_energy2_Y (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:104: warning: Member _pi0_dedx1_Y (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:104: warning: Member _pi0_dedx2_Y (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:105: warning: Member _pi0_dedx1_fit_Y (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:105: warning: Member _pi0_dedx2_fit_Y (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:106: warning: Member _pi0_energy1_V (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:106: warning: Member _pi0_energy2_V (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:107: warning: Member _pi0_dedx1_V (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:107: warning: Member _pi0_dedx2_V (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:108: warning: Member _pi0_dedx1_fit_V (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:108: warning: Member _pi0_dedx2_fit_V (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:109: warning: Member _pi0_energy1_U (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:109: warning: Member _pi0_energy2_U (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:110: warning: Member _pi0_dedx1_U (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:110: warning: Member _pi0_dedx2_U (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:111: warning: Member _pi0_dedx1_fit_U (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:111: warning: Member _pi0_dedx2_fit_U (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:112: warning: Member _pi0_shrscore1 (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:112: warning: Member _pi0_shrscore2 (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:113: warning: Member _pi0_gammadot (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:114: warning: Member _pi0_mass_Y (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:114: warning: Member _pi0_mass_V (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:114: warning: Member _pi0_mass_U (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:115: warning: Member _pi0_rc_vtx_x (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:115: warning: Member _pi0_rc_vtx_y (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:115: warning: Member _pi0_rc_vtx_z (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:119: warning: Member _pi0_onlyshower (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:120: warning: Member _pi0_dmin (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:121: warning: Member _pi0_dotmin (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:122: warning: Member _pi0_trkshrscore (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:124: warning: Member fLocaldEdx (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:125: warning: Member fADCtoE (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:126: warning: Member fRecalibrateHits (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:127: warning: Member fEnergyThresholdForMCHits (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:129: warning: Member fTRKproducer (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:130: warning: Member fCALproducer (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:131: warning: Member fHitproducer (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:132: warning: Member fBacktrackTag (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:135: warning: Member llr_pid_calculator_shr (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:136: warning: Member electronphoton_parameters (variable) of class analysis::Pi0Tagger is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0Tagger_tool.cc:137: warning: Member correction_parameters (variable) of class analysis::Pi0Tagger is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:80: warning: Member fMCTproducer (variable) of class analysis::Pi0TruthAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:81: warning: Member fMCSproducer (variable) of class analysis::Pi0TruthAnalysis is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/Pi0TruthAnalysis_tool.cc:82: warning: Member fMCPproducer (variable) of class analysis::Pi0TruthAnalysis is not documented.
@@ -1947,5 +1955,5 @@ Generating file member index...
 Generating example index...
 finalizing index lists...
 writing tag file...
-lookup cache used 959/65536 hits=5296 misses=1000
+lookup cache used 963/65536 hits=5318 misses=1009
 finished...
