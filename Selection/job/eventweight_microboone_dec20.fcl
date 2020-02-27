@@ -1,7 +1,7 @@
 BEGIN_PROLOG
 
 #include "eventweight_microboone_flux.fcl"
-#include "eventweight_microboone_genie_genieall.fcl"
+#include "eventweight_microboone_genie_dec20.fcl"
 #include "eventweight_microboone_genie_single_knobs.fcl"
 #include "eventweight_microboone_spline.fcl"
 
