@@ -36,13 +36,16 @@ void \hyperlink{classanalysis_1_1CalorimetryAnalysis_adc92db8dddbb8a7e1cde1a2568
 \subsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-void {\bfseries Fill\+Calorimetry} (art\+::\+Event const \&e, const searchingfornues\+::\+Proxy\+Pfp\+Elem\+\_\+t pfp, const searchingfornues\+::\+Proxy\+Calo\+Coll\+\_\+t calo\+\_\+proxy, const searchingfornues\+::\+Proxy\+P\+I\+D\+Coll\+\_\+t pid\+\_\+proxy, const searchingfornues\+::\+Proxy\+Clus\+Coll\+\_\+t clus\+\_\+proxy, const bool f\+Data, const bool f\+Shr\+Fit, const std\+::vector$<$ \hyperlink{structsearchingfornues_1_1BtPart}{searchingfornues\+::\+Bt\+Part} $>$ btparts\+\_\+v, const std\+::unique\+\_\+ptr$<$ art\+::\+Find\+ManyP$<$ simb\+::\+M\+C\+Particle, anab\+::\+Back\+Tracker\+Hit\+Matching\+Data $>$$>$ \&assoc\+M\+C\+Part)\hypertarget{classanalysis_1_1CalorimetryAnalysis_af0f65a8080fbc0840646dcdd8761f806}{}\label{classanalysis_1_1CalorimetryAnalysis_af0f65a8080fbc0840646dcdd8761f806}
+void {\bfseries Fill\+Calorimetry} (art\+::\+Event const \&e, const searchingfornues\+::\+Proxy\+Pfp\+Elem\+\_\+t pfp, const searchingfornues\+::\+Proxy\+Calo\+Coll\+\_\+t calo\+\_\+proxy, const searchingfornues\+::\+Proxy\+P\+I\+D\+Coll\+\_\+t pid\+\_\+proxy, const searchingfornues\+::\+Proxy\+Clus\+Coll\+\_\+t clus\+\_\+proxy, const T\+Vector3 nu\+\_\+vtx, const bool f\+Data, const bool f\+Shr\+Fit, const float f\+Energy\+Threshold\+For\+M\+C\+Hits, const std\+::vector$<$ \hyperlink{structsearchingfornues_1_1BtPart}{searchingfornues\+::\+Bt\+Part} $>$ btparts\+\_\+v, const std\+::unique\+\_\+ptr$<$ art\+::\+Find\+ManyP$<$ simb\+::\+M\+C\+Particle, anab\+::\+Back\+Tracker\+Hit\+Matching\+Data $>$$>$ \&assoc\+M\+C\+Part)\hypertarget{classanalysis_1_1CalorimetryAnalysis_a97381249ff3570e0fbfc013836b412ce}{}\label{classanalysis_1_1CalorimetryAnalysis_a97381249ff3570e0fbfc013836b412ce}
 
 \end{DoxyCompactItemize}
 \subsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
-trkf\+::\+Track\+Momentum\+Calculator {\bfseries \+\_\+trkmom}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a831a5c89492a3a6e0ed31150f536de5a}{}\label{classanalysis_1_1CalorimetryAnalysis_a831a5c89492a3a6e0ed31150f536de5a}
+const trkf\+::\+Track\+Momentum\+Calculator {\bfseries \+\_\+trkmom}\hypertarget{classanalysis_1_1CalorimetryAnalysis_adc097118fdfdb6fd407e8aa4e4f2a5eb}{}\label{classanalysis_1_1CalorimetryAnalysis_adc097118fdfdb6fd407e8aa4e4f2a5eb}
+
+\item 
+const trkf\+::\+Trajectory\+M\+C\+S\+Fitter {\bfseries \+\_\+mcsfitter}\hypertarget{classanalysis_1_1CalorimetryAnalysis_acabafca9a18ae5875d916b0ecd2d0405}{}\label{classanalysis_1_1CalorimetryAnalysis_acabafca9a18ae5875d916b0ecd2d0405}
 
 \item 
 T\+Particle\+P\+DG $\ast$ {\bfseries proton} = T\+Database\+P\+D\+G\+::\+Instance()-\/$>$Get\+Particle(2212)\hypertarget{classanalysis_1_1CalorimetryAnalysis_a459860690c1c2a7535a4e4536cc072e3}{}\label{classanalysis_1_1CalorimetryAnalysis_a459860690c1c2a7535a4e4536cc072e3}
@@ -72,16 +75,19 @@ art\+::\+Input\+Tag {\bfseries f\+Backtrack\+Tag}\hypertarget{classanalysis_1_1C
 art\+::\+Input\+Tag {\bfseries f\+Hproducer}\hypertarget{classanalysis_1_1CalorimetryAnalysis_ae6cbb931d736fe6e554b1a285ba6e150}{}\label{classanalysis_1_1CalorimetryAnalysis_ae6cbb931d736fe6e554b1a285ba6e150}
 
 \item 
+float {\bfseries f\+Energy\+Threshold\+For\+M\+C\+Hits}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a23fb5bc788c29877abad6ad8de595735}{}\label{classanalysis_1_1CalorimetryAnalysis_a23fb5bc788c29877abad6ad8de595735}
+
+\item 
 art\+::\+Input\+Tag {\bfseries f\+M\+C\+Rproducer}\hypertarget{classanalysis_1_1CalorimetryAnalysis_ace7a4232ef1ce384559faa8e6e0cc0a6}{}\label{classanalysis_1_1CalorimetryAnalysis_ace7a4232ef1ce384559faa8e6e0cc0a6}
+
+\item 
+art\+::\+Input\+Tag {\bfseries f\+M\+C\+Tproducer}\hypertarget{classanalysis_1_1CalorimetryAnalysis_af306cb6102d750c1fe83bb6bba895a10}{}\label{classanalysis_1_1CalorimetryAnalysis_af306cb6102d750c1fe83bb6bba895a10}
 
 \item 
 art\+::\+Input\+Tag {\bfseries f\+T0producer}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a260e52a5756bb4d735df4d4e5b33db14}{}\label{classanalysis_1_1CalorimetryAnalysis_a260e52a5756bb4d735df4d4e5b33db14}
 
 \item 
 art\+::\+Input\+Tag {\bfseries f\+M\+C\+Pproducer}\hypertarget{classanalysis_1_1CalorimetryAnalysis_acee71d82b900257b551c72e389fec32d}{}\label{classanalysis_1_1CalorimetryAnalysis_acee71d82b900257b551c72e389fec32d}
-
-\item 
-bool {\bfseries f\+Backtrack}\hypertarget{classanalysis_1_1CalorimetryAnalysis_ac88146bcc5d598200c9dbaa007502c4a}{}\label{classanalysis_1_1CalorimetryAnalysis_ac88146bcc5d598200c9dbaa007502c4a}
 
 \item 
 bool {\bfseries f\+Shr\+Fit}\hypertarget{classanalysis_1_1CalorimetryAnalysis_af467ce848f82d3ef65b87ce822a44ec5}{}\label{classanalysis_1_1CalorimetryAnalysis_af467ce848f82d3ef65b87ce822a44ec5}
@@ -103,6 +109,45 @@ int {\bfseries \+\_\+sub}\hypertarget{classanalysis_1_1CalorimetryAnalysis_ab99f
 
 \item 
 int {\bfseries \+\_\+evt}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a1afd7dc15419093b025214c740b7fed0}{}\label{classanalysis_1_1CalorimetryAnalysis_a1afd7dc15419093b025214c740b7fed0}
+
+\item 
+float {\bfseries \+\_\+true\+\_\+nu\+\_\+vtx\+\_\+t}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a585e051785a185ba1bd986fd5893be0f}{}\label{classanalysis_1_1CalorimetryAnalysis_a585e051785a185ba1bd986fd5893be0f}
+
+\item 
+float {\bfseries \+\_\+true\+\_\+nu\+\_\+vtx\+\_\+x}\hypertarget{classanalysis_1_1CalorimetryAnalysis_aa739ec781cb8ef53da66caa4b2ccfd13}{}\label{classanalysis_1_1CalorimetryAnalysis_aa739ec781cb8ef53da66caa4b2ccfd13}
+
+\item 
+float {\bfseries \+\_\+true\+\_\+nu\+\_\+vtx\+\_\+y}\hypertarget{classanalysis_1_1CalorimetryAnalysis_ad57804ce4a3b3ff6365de22d063a440e}{}\label{classanalysis_1_1CalorimetryAnalysis_ad57804ce4a3b3ff6365de22d063a440e}
+
+\item 
+float {\bfseries \+\_\+true\+\_\+nu\+\_\+vtx\+\_\+z}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a976f74b3cd6c9fc4d0ba30722b6ab98b}{}\label{classanalysis_1_1CalorimetryAnalysis_a976f74b3cd6c9fc4d0ba30722b6ab98b}
+
+\item 
+float {\bfseries \+\_\+true\+\_\+nu\+\_\+vtx\+\_\+sce\+\_\+x}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a1654d26e577bc3c2b15c29c5f41903be}{}\label{classanalysis_1_1CalorimetryAnalysis_a1654d26e577bc3c2b15c29c5f41903be}
+
+\item 
+float {\bfseries \+\_\+true\+\_\+nu\+\_\+vtx\+\_\+sce\+\_\+y}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a4acf3421b294cc752d3f9da404dac5a2}{}\label{classanalysis_1_1CalorimetryAnalysis_a4acf3421b294cc752d3f9da404dac5a2}
+
+\item 
+float {\bfseries \+\_\+true\+\_\+nu\+\_\+vtx\+\_\+sce\+\_\+z}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a0366caa5ee659de6aac8bab90de44742}{}\label{classanalysis_1_1CalorimetryAnalysis_a0366caa5ee659de6aac8bab90de44742}
+
+\item 
+float {\bfseries \+\_\+reco\+\_\+nu\+\_\+vtx\+\_\+x}\hypertarget{classanalysis_1_1CalorimetryAnalysis_aa91ffb61b40926f9a3f787fe4206a3bb}{}\label{classanalysis_1_1CalorimetryAnalysis_aa91ffb61b40926f9a3f787fe4206a3bb}
+
+\item 
+float {\bfseries \+\_\+reco\+\_\+nu\+\_\+vtx\+\_\+y}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a019883d0741bc6cb9fb689103668d64e}{}\label{classanalysis_1_1CalorimetryAnalysis_a019883d0741bc6cb9fb689103668d64e}
+
+\item 
+float {\bfseries \+\_\+reco\+\_\+nu\+\_\+vtx\+\_\+z}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a448e14e489d7d726fb26b85fc3b7d304}{}\label{classanalysis_1_1CalorimetryAnalysis_a448e14e489d7d726fb26b85fc3b7d304}
+
+\item 
+float {\bfseries \+\_\+reco\+\_\+nu\+\_\+vtx\+\_\+sce\+\_\+x}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a417692df8ae55336068bf67087840bfb}{}\label{classanalysis_1_1CalorimetryAnalysis_a417692df8ae55336068bf67087840bfb}
+
+\item 
+float {\bfseries \+\_\+reco\+\_\+nu\+\_\+vtx\+\_\+sce\+\_\+y}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a32fe53f1463a71a0ecc0c848721def1c}{}\label{classanalysis_1_1CalorimetryAnalysis_a32fe53f1463a71a0ecc0c848721def1c}
+
+\item 
+float {\bfseries \+\_\+reco\+\_\+nu\+\_\+vtx\+\_\+sce\+\_\+z}\hypertarget{classanalysis_1_1CalorimetryAnalysis_ad747c254695b3a4dedd7b6a10faad5f2}{}\label{classanalysis_1_1CalorimetryAnalysis_ad747c254695b3a4dedd7b6a10faad5f2}
 
 \item 
 int {\bfseries \+\_\+backtracked\+\_\+pdg}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a3aba5ee7371083d023fe185f19ca138b}{}\label{classanalysis_1_1CalorimetryAnalysis_a3aba5ee7371083d023fe185f19ca138b}
@@ -211,6 +256,9 @@ float {\bfseries \+\_\+trk\+\_\+dir\+\_\+z}\hypertarget{classanalysis_1_1Calorim
 
 \item 
 float {\bfseries \+\_\+trk\+\_\+len}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a381132d11f23024e0314e1e6147a4fbc}{}\label{classanalysis_1_1CalorimetryAnalysis_a381132d11f23024e0314e1e6147a4fbc}
+
+\item 
+float {\bfseries \+\_\+trk\+\_\+distance}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a09a318e60b0a80400466e5dd2ba09de0}{}\label{classanalysis_1_1CalorimetryAnalysis_a09a318e60b0a80400466e5dd2ba09de0}
 
 \item 
 float {\bfseries \+\_\+trk\+\_\+start\+\_\+x}\hypertarget{classanalysis_1_1CalorimetryAnalysis_af8e625437823b8ad72e398f67a62a57c}{}\label{classanalysis_1_1CalorimetryAnalysis_af8e625437823b8ad72e398f67a62a57c}
@@ -327,6 +375,9 @@ float {\bfseries \+\_\+trk\+\_\+bragg\+\_\+p\+\_\+three\+\_\+planes}\hypertarget
 float {\bfseries \+\_\+trk\+\_\+mcs\+\_\+muon\+\_\+mom}\hypertarget{classanalysis_1_1CalorimetryAnalysis_ae42fe891664185594ef2d5ac2d469adb}{}\label{classanalysis_1_1CalorimetryAnalysis_ae42fe891664185594ef2d5ac2d469adb}
 
 \item 
+float {\bfseries \+\_\+trk\+\_\+range\+\_\+muon\+\_\+mom}\hypertarget{classanalysis_1_1CalorimetryAnalysis_acfb546477990f7bd333d9f054308c9ab}{}\label{classanalysis_1_1CalorimetryAnalysis_acfb546477990f7bd333d9f054308c9ab}
+
+\item 
 float {\bfseries \+\_\+trk\+\_\+energy\+\_\+proton}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a770fbc2656af6d85910670336a474af5}{}\label{classanalysis_1_1CalorimetryAnalysis_a770fbc2656af6d85910670336a474af5}
 
 \item 
@@ -424,6 +475,15 @@ std\+::vector$<$ float $>$ {\bfseries \+\_\+dir\+\_\+z\+\_\+v}\hypertarget{class
 
 \item 
 std\+::vector$<$ float $>$ {\bfseries \+\_\+dir\+\_\+z\+\_\+y}\hypertarget{classanalysis_1_1CalorimetryAnalysis_ad756ad4ab219a0651feaa1060f3943b4}{}\label{classanalysis_1_1CalorimetryAnalysis_ad756ad4ab219a0651feaa1060f3943b4}
+
+\item 
+std\+::vector$<$ bool $>$ {\bfseries \+\_\+is\+\_\+hit\+\_\+montecarlo\+\_\+u}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a87fdc64cfcbf8ea4c68278a8f1245a8e}{}\label{classanalysis_1_1CalorimetryAnalysis_a87fdc64cfcbf8ea4c68278a8f1245a8e}
+
+\item 
+std\+::vector$<$ bool $>$ {\bfseries \+\_\+is\+\_\+hit\+\_\+montecarlo\+\_\+v}\hypertarget{classanalysis_1_1CalorimetryAnalysis_af54411213cda83a952153d6d1073fa3f}{}\label{classanalysis_1_1CalorimetryAnalysis_af54411213cda83a952153d6d1073fa3f}
+
+\item 
+std\+::vector$<$ bool $>$ {\bfseries \+\_\+is\+\_\+hit\+\_\+montecarlo\+\_\+y}\hypertarget{classanalysis_1_1CalorimetryAnalysis_a6692c685e9927a1b8199425a4108ac4b}{}\label{classanalysis_1_1CalorimetryAnalysis_a6692c685e9927a1b8199425a4108ac4b}
 
 \end{DoxyCompactItemize}
 
