@@ -6,6 +6,7 @@
 #include "lardataobj/RecoBase/SpacePoint.h"
 #include "art/Framework/Services/Registry/ServiceHandle.h"
 #include "lardata/Utilities/AssociationUtil.h"
+#include "SCECorrections.h"
 
 namespace searchingfornues
 {
@@ -117,7 +118,27 @@ namespace searchingfornues
             dqdx_cali[plane_nr] = (start_corr + middle_corr + end_corr) / 3;
         }
     }
-
+    
+    //----------------------------------------------------------------------------------                                                                           
+    // Modified Box model correction                                                                                                                                     
+    double ModBoxCorrection(const double dQdx, const float x, const float y, const float z) {
+      
+      double rho = 1.383;//detprop->Density();            // LAr density in g/cm^3
+      double Wion = 23.6/1e6;//util::kGeVToElectrons;  // 23.6 eV = 1e, Wion in MeV/e
+      
+      auto E_field = GetLocalEFieldMag(x,y,z); // kV / cm
+      
+      double fModBoxA = 0.930;
+      double fModBoxB = 0.212;
+      
+      double Beta = fModBoxB / (rho * E_field);
+      double Alpha = fModBoxA;
+      double dEdx = (exp(Beta * Wion * dQdx ) - Alpha) / Beta;
+      
+      return dEdx;
+      
+    }
+    
 } // namespace searchingfornues
 
 #endif

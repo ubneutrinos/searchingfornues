@@ -485,6 +485,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
         }
     }
 
+    //std::cout << "[MODBOX] : dQdx of " << 200.*fADCtoE[2] << " gives dEdx of " << searchingfornues::ModBoxCorrection(200.*fADCtoE[2],150.,0.,500.) << std::endl;
+
     // START checking if vertex is in the fiducial volume
     double nu_vtx[3] = {};
     TVector3 nuvtx;
