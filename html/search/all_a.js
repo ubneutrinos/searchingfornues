@@ -77,5 +77,7 @@ var searchData=
   ['m_5fz',['m_z',['../classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate_1_1Deposition.html#a60c7bb1d964b765e1d51755a709eee09',1,'flashmatch::FlashMatchingTool::SliceCandidate::Deposition']]],
   ['mcfilter',['MCFilter',['../classanalysis_1_1MCFilter.html',1,'analysis']]],
   ['mcfilter',['MCFilter',['../classanalysis_1_1MCFilter.html#a4674d0a8c4bb203b107cbf33b132cf4e',1,'analysis::MCFilter']]],
+  ['mcs',['MCS',['../classanalysis_1_1MCS.html#a5b7cf9263cda1533b6d519fa7a062669',1,'analysis::MCS']]],
+  ['mcs',['MCS',['../classanalysis_1_1MCS.html',1,'analysis']]],
   ['mucsflashmatch',['MuCSFlashMatch',['../classMuCSFlashMatch.html',1,'']]]
 ];

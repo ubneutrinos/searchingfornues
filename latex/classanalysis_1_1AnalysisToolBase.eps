@@ -5,7 +5,7 @@
 %%For: 
 %Magnification: 1.00
 %%Orientation: Portrait
-%%BoundingBox: 0 0 500 905.349794
+%%BoundingBox: 0 0 500 946.502058
 %%Pages: 0
 %%BeginSetup
 %%EndSetup
@@ -19,12 +19,12 @@
 /marginwidth 10 def
 /distx 20 def
 /disty 40 def
-/boundaspect 0.552273 def  % aspect ratio of the BoundingBox (width/height)
+/boundaspect 0.528261 def  % aspect ratio of the BoundingBox (width/height)
 /boundx 500 def
 /boundy boundx boundaspect div def
 /xspacing 0 def
 /yspacing 0 def
-/rows 22 def
+/rows 23 def
 /cols 2 def
 /scalefactor 0 def
 /boxfont /Times-Roman findfont fontheight scalefont def
@@ -184,6 +184,7 @@ boxfont setfont
 (analysis::EventWeightTree) cw
 (analysis::FlashMatching) cw
 (analysis::MCFilter) cw
+(analysis::MCS) cw
 (analysis::NeutrinoEnergy) cw
 (analysis::ObviousCosmicFlashMatching) cw
 (analysis::Pi0Tagger) cw
@@ -206,17 +207,18 @@ boundx scalefactor div boundy scalefactor div scale
 
 % ----- classes -----
 
- (analysis::AnalysisToolBase) 0.000000 21.000000 box
- (analysis::BDT) 1.000000 20.000000 box
- (analysis::CalorimetryAnalysis) 1.000000 19.000000 box
- (analysis::ContainmentAnalysis) 1.000000 18.000000 box
- (analysis::CosmicIP) 1.000000 17.000000 box
- (analysis::CRTApproachAnalysis) 1.000000 16.000000 box
- (analysis::DefaultAnalysis) 1.000000 15.000000 box
- (analysis::EventFilter) 1.000000 14.000000 box
- (analysis::EventWeightTree) 1.000000 13.000000 box
- (analysis::FlashMatching) 1.000000 12.000000 box
- (analysis::MCFilter) 1.000000 11.000000 box
+ (analysis::AnalysisToolBase) 0.000000 22.000000 box
+ (analysis::BDT) 1.000000 21.000000 box
+ (analysis::CalorimetryAnalysis) 1.000000 20.000000 box
+ (analysis::ContainmentAnalysis) 1.000000 19.000000 box
+ (analysis::CosmicIP) 1.000000 18.000000 box
+ (analysis::CRTApproachAnalysis) 1.000000 17.000000 box
+ (analysis::DefaultAnalysis) 1.000000 16.000000 box
+ (analysis::EventFilter) 1.000000 15.000000 box
+ (analysis::EventWeightTree) 1.000000 14.000000 box
+ (analysis::FlashMatching) 1.000000 13.000000 box
+ (analysis::MCFilter) 1.000000 12.000000 box
+ (analysis::MCS) 1.000000 11.000000 box
  (analysis::NeutrinoEnergy) 1.000000 10.000000 box
  (analysis::ObviousCosmicFlashMatching) 1.000000 9.000000 box
  (analysis::Pi0Tagger) 1.000000 8.000000 box
@@ -232,7 +234,9 @@ boundx scalefactor div boundy scalefactor div scale
 % ----- relations -----
 
 solid
-1 0.000000 20.250000 out
+1 0.000000 21.250000 out
+solid
+0 0.000000 21.500000 hedge
 solid
 0 0.000000 20.500000 hedge
 solid
@@ -276,4 +280,4 @@ solid
 solid
 0 0.000000 0.500000 hedge
 solid
-0.000000 21.000000 0.500000 vedge
+0.000000 22.000000 0.500000 vedge

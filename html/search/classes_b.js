@@ -10,5 +10,6 @@ var searchData=
   ['showerselection',['ShowerSelection',['../classselection_1_1ShowerSelection.html',1,'selection']]],
   ['showerstartpoint',['ShowerStartPoint',['../classanalysis_1_1ShowerStartPoint.html',1,'analysis']]],
   ['slicecandidate',['SliceCandidate',['../classflashmatch_1_1FlashMatchingTool_1_1SliceCandidate.html',1,'flashmatch::FlashMatchingTool']]],
-  ['slicepurcompl',['SlicePurCompl',['../classanalysis_1_1SlicePurCompl.html',1,'analysis']]]
+  ['slicepurcompl',['SlicePurCompl',['../classanalysis_1_1SlicePurCompl.html',1,'analysis']]],
+  ['spcpoint',['SpcPoint',['../structSpcPoint.html',1,'']]]
 ];
