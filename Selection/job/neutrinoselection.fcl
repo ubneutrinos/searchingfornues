@@ -118,6 +118,27 @@ DefaultAnalysisTool: {
     fidvolZend: 50.
 }
 
+MCSTool: {
+    tool_type: "MCS"
+    CRTVetoproducer: ""
+    CLSproducer: "pandora"
+    MCTproducer: "generator"
+    SpacePointproducer: "pandora"
+    PFPproducer: "pandora"
+    Hproducer: "gaushit"
+    BacktrackTag: "gaushitTruthMatch"
+    MCRproducer: "mcreco"
+    SLCproducer: "pandora"
+    MCPproducer: "largeant"
+    ProtonThreshold: 0.04 # GeV
+    fidvolXstart: 10.
+    fidvolXend: 10.
+    fidvolYstart: 15.
+    fidvolYend: 15.
+    fidvolZstart: 10.
+    fidvolZend: 50.
+}
+
 MCFilterAnalysisTool: {
     tool_type: "MCFilter"
     MCTproducer: "generator"
