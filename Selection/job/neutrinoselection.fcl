@@ -20,12 +20,13 @@ CalorimetryAnalysisTool: {
 
     CLSproducer: "pandora"
     Hproducer: "gaushit"
-    Backtrack: "true"
     BacktrackTag: "gaushitTruthMatch"
     MCRproducer: "mcreco"
     MCPproducer: "largeant"
+    MCTproducer: "generator"
     GetCaloID: false
     ADCtoE: @local::microboone_reco_data_producers.shrreco3d.ADCtoE
+    mcsfitmu: @local::microboone_reco_data_producers.pandoraMCSMu.fitter
 }
 
 VertexAnalysisTool: {

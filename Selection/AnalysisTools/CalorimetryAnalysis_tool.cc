@@ -18,6 +18,7 @@
 
 #include "lardataobj/AnalysisBase/T0.h"
 
+#include "larreco/RecoAlg/TrajectoryMCSFitter.h"
 #include "ubana/ParticleID/Algorithms/uB_PlaneIDBitsetHelperFunctions.h"
 #include "larreco/RecoAlg/TrackMomentumCalculator.h"
 
@@ -98,14 +99,16 @@ private:
            const searchingfornues::ProxyCaloColl_t calo_proxy,
            const searchingfornues::ProxyPIDColl_t pid_proxy,
            const searchingfornues::ProxyClusColl_t clus_proxy,
+           const TVector3 nu_vtx,
            const bool fData,
            const bool fShrFit,
+           const float fEnergyThresholdForMCHits,
            const std::vector<searchingfornues::BtPart> btparts_v,
            const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart);
 
 
-  trkf::TrackMomentumCalculator _trkmom;
-
+  const trkf::TrackMomentumCalculator _trkmom;
+  const trkf::TrajectoryMCSFitter _mcsfitter;
 
   TParticlePDG *proton = TDatabasePDG::Instance()->GetParticle(2212);
   TParticlePDG *muon = TDatabasePDG::Instance()->GetParticle(13);
@@ -117,11 +120,11 @@ private:
   art::InputTag fCLSproducer;
   art::InputTag fBacktrackTag;
   art::InputTag fHproducer;
+  float fEnergyThresholdForMCHits;
   art::InputTag fMCRproducer;
+  art::InputTag fMCTproducer;
   art::InputTag fT0producer;
   art::InputTag fMCPproducer;
-
-  bool fBacktrack; // do the backtracking needed for this module?
 
   bool fShrFit; // use shower track-fitter info?
 
@@ -133,6 +136,12 @@ private:
   TTree* _calo_tree;
 
   int _run, _sub, _evt;
+
+  float _true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z;
+  float _true_nu_vtx_sce_x, _true_nu_vtx_sce_y, _true_nu_vtx_sce_z;
+  float _reco_nu_vtx_x, _reco_nu_vtx_y, _reco_nu_vtx_z;
+  float _reco_nu_vtx_sce_x, _reco_nu_vtx_sce_y, _reco_nu_vtx_sce_z;
+
   // backtracking information
   int _backtracked_pdg;            // PDG code of backtracked particle
   float _backtracked_e;            // energy of backtracked particle
@@ -179,6 +188,7 @@ private:
   float _trk_dir_z;
 
   float _trk_len;
+  float _trk_distance;
 
   float _trk_start_x;
   float _trk_start_y;
@@ -226,6 +236,7 @@ private:
   float _trk_bragg_p_three_planes;
 
   float _trk_mcs_muon_mom;
+  float _trk_range_muon_mom;
   float _trk_energy_proton;
   float _trk_energy_muon;
 
@@ -271,6 +282,10 @@ private:
   std::vector<float> _dir_z_u;
   std::vector<float> _dir_z_v;
   std::vector<float> _dir_z_y;
+
+  std::vector<bool> _is_hit_montecarlo_u;
+  std::vector<bool> _is_hit_montecarlo_v;
+  std::vector<bool> _is_hit_montecarlo_y;
 };
 
 //----------------------------------------------------------------------------
@@ -280,7 +295,8 @@ private:
 ///
 /// pset - Fcl parameters.
 ///
-CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p)
+CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p) :
+_mcsfitter(fhicl::Table<trkf::TrajectoryMCSFitter::Config>(p.get<fhicl::ParameterSet>("mcsfitmu")))
 {
   fPFPproducer  = p.get< art::InputTag > ("PFPproducer","pandora");
   fCALOproducer = p.get< art::InputTag > ("CALOproducer");
@@ -291,10 +307,11 @@ CalorimetryAnalysis::CalorimetryAnalysis(const fhicl::ParameterSet &p)
   fCLSproducer = p.get<art::InputTag>("CLSproducer");
   fBacktrackTag = p.get<art::InputTag>("BacktrackTag");
   fHproducer = p.get<art::InputTag>("Hproducer");
+  fEnergyThresholdForMCHits = p.get<float>("EnergyThresholdForMCHits", 0.1);
   fMCRproducer = p.get<art::InputTag>("MCRproducer");
   fMCPproducer = p.get<art::InputTag>("MCPproducer");
+  fMCTproducer = p.get<art::InputTag>("MCTproducer");
 
-  fBacktrack = p.get<bool>("Backtrack", true);
   fShrFit    = p.get<bool>("ShrFit"   , false);
   fGetCaloID = p.get<bool>("GetCaloID", false);
 
@@ -353,7 +370,7 @@ void CalorimetryAnalysis::analyzeEvent(art::Event const &e, bool fData)
   std::vector<searchingfornues::BtPart> btparts_v;
   std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
 
-  if (fBacktrack)
+  if (fData)
   {
     const std::vector<sim::MCShower> &inputMCShower = *(e.getValidHandle<std::vector<sim::MCShower>>(fMCRproducer));
     const std::vector<sim::MCTrack> &inputMCTrack = *(e.getValidHandle<std::vector<sim::MCTrack>>(fMCRproducer));
@@ -381,9 +398,22 @@ void CalorimetryAnalysis::analyzeEvent(art::Event const &e, bool fData)
   std::cout << "hit backtracked!" << std::endl;
     }
     */
-
-
   }
+
+  _true_nu_vtx_t = std::numeric_limits<float>::lowest();
+  _true_nu_vtx_x = std::numeric_limits<float>::lowest();
+  _true_nu_vtx_y = std::numeric_limits<float>::lowest();
+  _true_nu_vtx_z = std::numeric_limits<float>::lowest();
+  _true_nu_vtx_sce_x = std::numeric_limits<float>::lowest();
+  _true_nu_vtx_sce_y = std::numeric_limits<float>::lowest();
+  _true_nu_vtx_sce_z = std::numeric_limits<float>::lowest();
+  _reco_nu_vtx_x = std::numeric_limits<float>::lowest();
+  _reco_nu_vtx_y = std::numeric_limits<float>::lowest();
+  _reco_nu_vtx_z = std::numeric_limits<float>::lowest();
+  _reco_nu_vtx_sce_x = std::numeric_limits<float>::lowest();
+  _reco_nu_vtx_sce_y = std::numeric_limits<float>::lowest();
+  _reco_nu_vtx_sce_z = std::numeric_limits<float>::lowest();
+
 
 
   // load calorimetry
@@ -413,13 +443,17 @@ void CalorimetryAnalysis::analyzeEvent(art::Event const &e, bool fData)
     auto const T0_v = trk_t0_assn_v.at( trk.key() );
     if (T0_v.size() == 1)
     {
+      TVector3 nuvtx;
+      nuvtx.SetXYZ(0, 0, 0);
       FillCalorimetry(e,
           pfp_pxy,
           calo_proxy,
           pid_proxy,
           clus_proxy,
-          !fBacktrack,
+          nuvtx,
+          fData,
           fShrFit,
+          fEnergyThresholdForMCHits,
           btparts_v,
     assocMCPart);
 
@@ -448,6 +482,42 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
     art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
     assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
     btparts_v = searchingfornues::initBacktrackingParticleVec(inputMCShower, inputMCTrack, *inputHits, assocMCPart);
+
+    // save truth
+    // load MCTruth
+    auto const &mct_h = e.getValidHandle<std::vector<simb::MCTruth>>(fMCTproducer);
+
+    auto mct = mct_h->at(0);
+    auto neutrino = mct.GetNeutrino();
+    auto nu = neutrino.Nu();
+
+    _true_nu_vtx_t = nu.T();
+    _true_nu_vtx_x = nu.Vx();
+    _true_nu_vtx_y = nu.Vy();
+    _true_nu_vtx_z = nu.Vz();
+
+    float _true_nu_vtx_sce[3];
+    searchingfornues::True2RecoMappingXYZ(_true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z, _true_nu_vtx_sce);
+
+    _true_nu_vtx_sce_x = _true_nu_vtx_sce[0];
+    _true_nu_vtx_sce_y = _true_nu_vtx_sce[1];
+    _true_nu_vtx_sce_z = _true_nu_vtx_sce[2];
+  }
+  else
+  {
+    _true_nu_vtx_t = std::numeric_limits<float>::lowest();
+    _true_nu_vtx_x = std::numeric_limits<float>::lowest();
+    _true_nu_vtx_y = std::numeric_limits<float>::lowest();
+    _true_nu_vtx_z = std::numeric_limits<float>::lowest();
+    _true_nu_vtx_sce_x = std::numeric_limits<float>::lowest();
+    _true_nu_vtx_sce_y = std::numeric_limits<float>::lowest();
+    _true_nu_vtx_sce_z = std::numeric_limits<float>::lowest();
+    _reco_nu_vtx_x = std::numeric_limits<float>::lowest();
+    _reco_nu_vtx_y = std::numeric_limits<float>::lowest();
+    _reco_nu_vtx_z = std::numeric_limits<float>::lowest();
+    _reco_nu_vtx_sce_x = std::numeric_limits<float>::lowest();
+    _reco_nu_vtx_sce_y = std::numeric_limits<float>::lowest();
+    _reco_nu_vtx_sce_z = std::numeric_limits<float>::lowest();
   }
 
   // load calorimetry
@@ -464,6 +534,39 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
   lar_pandora::PFParticleMap particleMap;
   larpandora.CollectPFParticles(e, "pandora", pfparticles);
   larpandora.BuildPFParticleMap(pfparticles, particleMap);
+
+  //find vertex
+  TVector3 nuvtx;
+  for (auto pfp : slice_pfp_v)
+  {
+    if (pfp->IsPrimary())
+    {
+      double xyz[3] = {};
+      auto vtx = pfp.get<recob::Vertex>();
+      if (vtx.size() != 1)
+      {
+        std::cout << "ERROR. Found neutrino PFP w/ != 1 associated vertices..." << std::endl;
+      }
+      else
+      {
+        // save vertex to array
+        vtx.at(0)->XYZ(xyz);
+        nuvtx.SetXYZ(xyz[0], xyz[1], xyz[2]);
+
+        _reco_nu_vtx_x = nuvtx.X();
+        _reco_nu_vtx_y = nuvtx.Y();
+        _reco_nu_vtx_z = nuvtx.Z();
+
+        float _reco_nu_vtx_sce[3];
+        searchingfornues::ApplySCECorrectionXYZ(_reco_nu_vtx_x, _reco_nu_vtx_y, _reco_nu_vtx_z, _reco_nu_vtx_sce);
+        _reco_nu_vtx_sce_x = _reco_nu_vtx_sce[0];
+        _reco_nu_vtx_sce_y = _reco_nu_vtx_sce[1];
+        _reco_nu_vtx_sce_z = _reco_nu_vtx_sce[2];
+      }
+      break;
+    }
+  }
+
 
   // find longest track
   float  lenmax = 0;
@@ -522,8 +625,10 @@ void CalorimetryAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfp
         calo_proxy,
         pid_proxy,
         clus_proxy,
+        nuvtx,
         fData,
         fShrFit,
+        fEnergyThresholdForMCHits,
         btparts_v,
         assocMCPart);
   } // for all PFParticles
@@ -571,6 +676,7 @@ void CalorimetryAnalysis::fillDefault()
   _trk_theta = std::numeric_limits<float>::lowest();
   _trk_phi = std::numeric_limits<float>::lowest();
   _trk_len = std::numeric_limits<float>::lowest();
+  _trk_distance = std::numeric_limits<float>::lowest();
 
   _trk_dir_x = std::numeric_limits<float>::lowest();
   _trk_dir_y = std::numeric_limits<float>::lowest();
@@ -624,6 +730,7 @@ void CalorimetryAnalysis::fillDefault()
   _longest = std::numeric_limits<int>::lowest();
 
   _trk_mcs_muon_mom = std::numeric_limits<float>::lowest();
+  _trk_range_muon_mom = std::numeric_limits<float>::lowest();
   _trk_energy_proton = std::numeric_limits<float>::lowest();
   _trk_energy_muon = std::numeric_limits<float>::lowest();
 
@@ -667,6 +774,10 @@ void CalorimetryAnalysis::fillDefault()
   _dir_z_u.clear();
   _dir_z_v.clear();
   _dir_z_y.clear();
+
+  _is_hit_montecarlo_u.clear();
+  _is_hit_montecarlo_v.clear();
+  _is_hit_montecarlo_y.clear();
 }
 
 void CalorimetryAnalysis::setBranches(TTree *_tree)
@@ -674,6 +785,20 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
   _calo_tree->Branch("run", &_run, "run/i");
   _calo_tree->Branch("sub", &_sub, "sub/i");
   _calo_tree->Branch("evt", &_evt, "evt/i");
+
+  _calo_tree->Branch("true_nu_vtx_t", &_true_nu_vtx_t, "true_nu_vtx_t/F");
+  _calo_tree->Branch("true_nu_vtx_x", &_true_nu_vtx_x, "true_nu_vtx_x/F");
+  _calo_tree->Branch("true_nu_vtx_y", &_true_nu_vtx_y, "true_nu_vtx_y/F");
+  _calo_tree->Branch("true_nu_vtx_z", &_true_nu_vtx_z, "true_nu_vtx_z/F");
+  _calo_tree->Branch("true_nu_vtx_sce_x", &_true_nu_vtx_sce_x, "true_nu_vtx_sce_x/F");
+  _calo_tree->Branch("true_nu_vtx_sce_y", &_true_nu_vtx_sce_y, "true_nu_vtx_sce_y/F");
+  _calo_tree->Branch("true_nu_vtx_sce_z", &_true_nu_vtx_sce_z, "true_nu_vtx_sce_z/F");
+  _calo_tree->Branch("reco_nu_vtx_x", &_reco_nu_vtx_x, "reco_nu_vtx_x/F");
+  _calo_tree->Branch("reco_nu_vtx_y", &_reco_nu_vtx_y, "reco_nu_vtx_y/F");
+  _calo_tree->Branch("reco_nu_vtx_z", &_reco_nu_vtx_z, "reco_nu_vtx_z/F");
+  _calo_tree->Branch("reco_nu_vtx_sce_x", &_reco_nu_vtx_sce_x, "reco_nu_vtx_sce_x/F");
+  _calo_tree->Branch("reco_nu_vtx_sce_y", &_reco_nu_vtx_sce_y, "reco_nu_vtx_sce_y/F");
+  _calo_tree->Branch("reco_nu_vtx_sce_z", &_reco_nu_vtx_sce_z, "reco_nu_vtx_sce_z/F");
   // backtracking information
   _calo_tree->Branch("backtracked_pdg", &_backtracked_pdg, "backtracked_pdg/I");            // PDG code of backtracked particle
   _calo_tree->Branch("backtracked_e", &_backtracked_e, "backtracked_e/f");            // energy of backtracked particle
@@ -711,6 +836,7 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
   _calo_tree->Branch("trk_theta", &_trk_theta, "trk_theta/f");
   _calo_tree->Branch("trk_phi", &_trk_phi, "trk_phi/f");
   _calo_tree->Branch("trk_len", &_trk_len, "trk_len/f");
+  _calo_tree->Branch("trk_distance", &_trk_distance, "trk_distance/f");
 
   _calo_tree->Branch("trk_dir_x", &_trk_dir_x, "trk_dir_x/f");
   _calo_tree->Branch("trk_dir_y", &_trk_dir_y, "trk_dir_y/f");
@@ -764,6 +890,7 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
   _calo_tree->Branch("trk_bragg_p_three_planes", &_trk_bragg_p_three_planes, "trk_bragg_p_three_planes/f");
 
   _calo_tree->Branch("trk_mcs_muon_mom", &_trk_mcs_muon_mom, "trk_mcs_muon_mom/f");
+  _calo_tree->Branch("trk_range_muon_mom", &_trk_range_muon_mom, "trk_range_muon_mom/f");
   _calo_tree->Branch("trk_energy_proton", &_trk_energy_proton, "trk_energy_proton/f");
   _calo_tree->Branch("trk_energy_muon", &_trk_energy_muon, "trk_energy_muon/f");
 
@@ -807,6 +934,10 @@ void CalorimetryAnalysis::setBranches(TTree *_tree)
   _calo_tree->Branch("dir_z_u", "std::vector<float>", &_dir_z_u);
   _calo_tree->Branch("dir_z_v", "std::vector<float>", &_dir_z_v);
   _calo_tree->Branch("dir_z_y", "std::vector<float>", &_dir_z_y);
+
+  _calo_tree->Branch("is_hit_montecarlo_u", "std::vector<bool>", &_is_hit_montecarlo_u);
+  _calo_tree->Branch("is_hit_montecarlo_v", "std::vector<bool>", &_is_hit_montecarlo_v);
+  _calo_tree->Branch("is_hit_montecarlo_y", "std::vector<bool>", &_is_hit_montecarlo_y);
 }
 
 void CalorimetryAnalysis::resetTTree(TTree *_tree)
@@ -819,8 +950,10 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
             const searchingfornues::ProxyCaloColl_t calo_proxy,
             const searchingfornues::ProxyPIDColl_t pid_proxy,
             const searchingfornues::ProxyClusColl_t clus_proxy,
+            const TVector3 nu_vtx,
             const bool fData,
             const bool fShrFit,
+            const float fEnergyThresholdForMCHits,
             const std::vector<searchingfornues::BtPart> btparts_v,
             const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart)
 {
@@ -986,17 +1119,19 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
 
 
   // Kinetic energy using tabulated stopping power (GeV)
-  float mcs_momentum_muon = _trkmom.GetTrackMomentum(trk->Length(), 13);
-  float energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), 2212), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
-  float energy_muon = std::sqrt(std::pow(mcs_momentum_muon, 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
-
-  _trk_mcs_muon_mom = mcs_momentum_muon;
-  _trk_energy_proton = energy_proton;
-  _trk_energy_muon = energy_muon;
+  _trk_mcs_muon_mom = _mcsfitter.fitMcs(trk->Trajectory(), 13).bestMomentum();
+  _trk_range_muon_mom = _trkmom.GetTrackMomentum(searchingfornues::GetSCECorrTrackLength(trk), 13);
+  _trk_energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(searchingfornues::GetSCECorrTrackLength(trk), 2212), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
+  _trk_energy_muon = std::sqrt(std::pow(_trk_mcs_muon_mom, 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
 
   _trk_theta = trk->Theta();
   _trk_phi = trk->Phi();
   _trk_len = searchingfornues::GetSCECorrTrackLength(trk);
+
+  TVector3 trk_vtx_v;
+  trk_vtx_v.SetXYZ(trk->Start().X(), trk->Start().Y(), trk->Start().Z());
+  trk_vtx_v -= nu_vtx;
+  _trk_distance = trk_vtx_v.Mag();
 
   _trk_dir_x = trk->StartDirection().X();
   _trk_dir_y = trk->StartDirection().Y();
@@ -1052,11 +1187,36 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
     }
     auto const& xyz_v = calo->XYZ();
 
+    // fill vector of boolean to determine if hit has to be corrected or not
+    std::vector<bool> is_hit_montecarlo;
+
+    if (!fData)
+    {
+      art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
+      std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
+      assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
+
+      const std::vector< size_t > &tp_indices = calo->TpIndices();
+      for (size_t i = 0; i < tp_indices.size(); i++)
+      {
+        size_t tp_index = tp_indices[i];
+        is_hit_montecarlo.push_back(searchingfornues::isHitBtMonteCarlo(tp_index, assocMCPart, fEnergyThresholdForMCHits));
+      }
+    }
+    else
+    {
+      for (size_t i = 0; i < xyz_v.size(); i++)
+      {
+        is_hit_montecarlo.push_back(false);
+      }
+    }
+
     if (plane == 0)
     {
       _dqdx_u = calo->dQdx();
       _rr_u = calo->ResidualRange();
       _pitch_u = calo->TrkPitchVec();
+      _is_hit_montecarlo_u = is_hit_montecarlo;
       for (auto xyz : xyz_v)
       {
         _x_u.push_back(xyz.X());
@@ -1069,14 +1229,21 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _dir_y_u.push_back(_dir_u[1]);
         _dir_z_u.push_back(_dir_u[2]);
       }
-      if (fShrFit) { _dedx_u = searchingfornues::GetdEdxfromdQdx(_dqdx_u, _x_u, _y_u, _z_u, 2.1, fADCtoE[plane]); }
-      else {_dedx_u = calo->dEdx();}
+      if (fShrFit)
+      {
+        _dedx_u = searchingfornues::GetdEdxfromdQdx(_dqdx_u, _x_u, _y_u, _z_u, 2.1, fADCtoE[plane]);
+      }
+      else
+      {
+        _dedx_u = calo->dEdx();
+      }
     }
     else if (plane == 1)
     {
       _dqdx_v = calo->dQdx();
       _rr_v = calo->ResidualRange();
       _pitch_v = calo->TrkPitchVec();
+      _is_hit_montecarlo_v = is_hit_montecarlo;
       for (auto xyz : xyz_v)
       {
         _x_v.push_back(xyz.X());
@@ -1089,14 +1256,21 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _dir_y_v.push_back(_dir_v[1]);
         _dir_z_v.push_back(_dir_v[2]);
       }
-      if (fShrFit) { _dedx_v = searchingfornues::GetdEdxfromdQdx(_dqdx_v, _x_v, _y_v, _z_v, 2.1, fADCtoE[plane]); }
-      else {_dedx_v = calo->dEdx();}
+      if (fShrFit)
+      {
+        _dedx_v = searchingfornues::GetdEdxfromdQdx(_dqdx_v, _x_v, _y_v, _z_v, 2.1, fADCtoE[plane]);
+      }
+      else
+      {
+        _dedx_v = calo->dEdx();
+      }
     }
     else if (plane == 2) //collection
     {
       _dqdx_y = calo->dQdx();
       _rr_y = calo->ResidualRange();
       _pitch_y = calo->TrkPitchVec();
+      _is_hit_montecarlo_y = is_hit_montecarlo;
       for (auto xyz : xyz_v)
       {
         _x_y.push_back(xyz.X());
@@ -1109,8 +1283,14 @@ void CalorimetryAnalysis::FillCalorimetry(art::Event const &e,
         _dir_y_y.push_back(_dir_y[1]);
         _dir_z_y.push_back(_dir_y[2]);
       }
-      if (fShrFit) { _dedx_y = searchingfornues::GetdEdxfromdQdx(_dqdx_y, _x_y, _y_y, _z_y, 2.1, fADCtoE[plane]); }
-      else {_dedx_y = calo->dEdx();}
+      if (fShrFit)
+      {
+        _dedx_y = searchingfornues::GetdEdxfromdQdx(_dqdx_y, _x_y, _y_y, _z_y, 2.1, fADCtoE[plane]);
+      }
+      else
+      {
+        _dedx_y = calo->dEdx();
+      }
     }
   }
 

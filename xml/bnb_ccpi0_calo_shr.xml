@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE project [
 <!ENTITY name "bnb_ccpi0_shr">
-<!ENTITY project_version "v05">
+<!ENTITY project_version "v06">
 <!ENTITY release "v08_00_00_33">
 <!ENTITY qualifier "e17:prof">
 <!ENTITY user "foppiani">

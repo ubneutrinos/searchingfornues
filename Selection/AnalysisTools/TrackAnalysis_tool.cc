@@ -480,10 +480,6 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
           }
           // correct hits
           dedx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(dedx_values, corr_par_values, is_hit_montecarlo, plane);
-          for (size_t i = 0; i < dedx_values_corrected.size(); i++)
-          {
-            //std::cout << "track point: " << i << " isHitBtMonteCarlo = " << is_hit_montecarlo[i] << " dedx before = " << dedx_values[i] << " dedx after = " << dedx_values_corrected[i] << std::endl;
-          }
         }
 
         for (size_t i = 0; i < dedx_values_corrected.size(); i++)

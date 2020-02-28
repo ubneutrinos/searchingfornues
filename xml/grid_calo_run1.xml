@@ -1,0 +1,279 @@
+<?xml version="1.0"?>
+
+<!-- Production Project -->
+
+<!DOCTYPE project [
+<!ENTITY release "v08_00_00_33">
+<!ENTITY file_type "mcc9">
+<!ENTITY run_type "physics">
+<!ENTITY name "calo">
+<!ENTITY tag "devel">
+<!ENTITY date "0219">
+<!ENTITY user "foppiani">
+
+<!ENTITY project_version "v06">
+<!ENTITY resilient "/pnfs/uboone/resilient/users">
+<!ENTITY scratch "/pnfs/uboone/scratch/users">
+<!ENTITY data "/uboone/data/users">
+<!ENTITY fcl_name "run_calorimetryanalysis_run1_overlay.fcl">
+<!ENTITY folder_name "calorimetry">
+<!ENTITY tar_name "local">
+
+<!ENTITY bnb_nu    "prodgenie_bnb_nu_uboone_overlay_mcc9.1_v08_00_00_26_filter_run1_reco2_reco2" >
+<!ENTITY ncpi0   "prodgenie_nc_pi0_uboone_overlay-v08_00_00_26_run1_reco2_reco2" >
+<!ENTITY ccpi0   "prodgenie_cc_pi0_uboone_overlay_v08_00_00_26_run1_reco2" >
+<!ENTITY bnb_nue     "prodgenie_bnb_intrinsice_nue_uboone_overlay_mcc9.1_v08_00_00_26_run1_reco2_reco2" >
+<!ENTITY bnb_dirt    "prodgenie_bnb_dirt_overlay_mcc9.1_v08_00_00_26_run1_reco2_reco2" >
+<!ENTITY nuelow  "prestage_prodgenie_eLee_low_overlay_det_var_run1_mcc9.1_v08_00_00_26_cv_reco2" >
+<!ENTITY nuehigh "prestage_prodgenie_eLee_high_overlay_det_var_run1_mcc9.1_v08_00_00_26_cv_reco2" >
+<!ENTITY beam_on     "data_bnb_mcc9.1_v08_00_00_25_reco2_C1_beam_good_reco2_5e19" >
+<!ENTITY beam_off1   "data_extbnb_mcc9.1_v08_00_00_25_reco2_C1_all_reco2" >
+<!ENTITY beam_off2   "data_extbnb_mcc9.1_v08_00_00_25_reco2_C2_all_reco2" >
+
+
+<!ENTITY version   "v06" >
+
+
+]>
+
+<job>
+
+<project name="&name;">
+
+  <!-- Project size -->
+  <numevents>10000</numevents>
+
+  <!-- Operating System -->
+  <os>SL6</os>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC,OFFSITE</resource>
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&release;</tag>
+    <qual>e17:prof</qual>
+    <local>&resilient;/&user;/&folder_name;/&project_version;/&tar_name;.tar</local>
+  </larsoft>
+
+  <!-- Project stages -->
+
+  <stage name="bnb_nu">
+    <inputdef>&bnb_nu;</inputdef>
+    <fcl>run_calorimetryanalysis_run1_overlay.fcl</fcl>
+
+    <outdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&bnb_nu;/&version;</outdir>
+    <logdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&bnb_nu;/&version;</logdir>
+    <workdir>/pnfs/uboone/scratch/users/&user;/work/&release;/&name;/&date;/&bnb_nu;/&version;</workdir>
+    <bookdir>/uboone/data/users/&user;/book/&release;/&name;/&date;/&bnb_nu;/&version;</bookdir>
+    <datatier>reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>2000</numjobs>
+    <maxfilesperjob>13</maxfilesperjob>
+    <!--<schema>root</schema>-->
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600 </jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+
+  <stage name="bnb_nu">
+    <inputdef>&bnb_nu;</inputdef>
+    <fcl>run_calorimetryanalysis_run1_overlay.fcl</fcl>
+    <outdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&bnb_nu;/&version;</outdir>
+    <logdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&bnb_nu;/&version;</logdir>
+    <workdir>/pnfs/uboone/scratch/users/&user;/work/&release;/&name;/&date;/&bnb_nu;/&version;</workdir>
+    <bookdir>/uboone/data/users/&user;/book/&release;/&name;/&date;/&bnb_nu;/&version;</bookdir>
+    <datatier>reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>300</numjobs>
+    <maxfilesperjob>10</maxfilesperjob>
+    <!--<schema>root</schema>-->
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600 </jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+  <stage name="ncpi0">
+    <inputdef>&ncpi0;</inputdef>
+    <fcl>run_calorimetryanalysis_run1_overlay.fcl</fcl>
+    <outdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&ncpi0;/&version;</outdir>
+    <logdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&ncpi0;/&version;</logdir>
+    <workdir>/pnfs/uboone/scratch/users/&user;/work/&release;/&name;/&date;/&ncpi0;/&version;</workdir>
+    <bookdir>/uboone/data/users/&user;/book/&release;/&name;/&date;/&ncpi0;/&version;</bookdir>
+    <datatier>reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>500</numjobs>
+    <maxfilesperjob>5</maxfilesperjob>
+    <!--<schema>root</schema>-->
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600 </jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+  <stage name="ccpi0">
+    <inputdef>&ccpi0;</inputdef>
+    <fcl>run_calorimetryanalysis_run1_overlay.fcl</fcl>
+    <outdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&ccpi0;/&version;</outdir>
+    <logdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&ccpi0;/&version;</logdir>
+    <workdir>/pnfs/uboone/scratch/users/&user;/work/&release;/&name;/&date;/&ccpi0;/&version;</workdir>
+    <bookdir>/uboone/data/users/&user;/book/&release;/&name;/&date;/&ccpi0;/&version;</bookdir>
+    <datatier>reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>500</numjobs>
+    <maxfilesperjob>5</maxfilesperjob>
+    <!--<schema>root</schema>-->
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600 </jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+
+  <stage name="bnb_dirt">
+    <inputdef>&bnb_dirt;</inputdef>
+    <fcl>run_calorimetryanalysis_run1_overlay.fcl</fcl>
+    <outdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&bnb_dirt;/&version;</outdir>
+    <logdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&bnb_dirt;/&version;</logdir>
+    <workdir>/pnfs/uboone/scratch/users/&user;/work/&release;/&name;/&date;/&bnb_dirt;/&version;</workdir>
+    <bookdir>/uboone/data/users/&user;/book/&release;/&name;/&date;/&bnb_dirt;/&version;</bookdir>
+    <datatier>reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>300</numjobs>
+    <maxfilesperjob>10</maxfilesperjob>
+    <!--<schema>root</schema>-->
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600 </jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+
+  <stage name="nuelow">
+    <inputdef>&nuelow;</inputdef>
+    <fcl>run_calorimetryanalysis_run1_overlay.fcl</fcl>
+    <outdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&nuelow;/&version;</outdir>
+    <logdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&nuelow;/&version;</logdir>
+    <workdir>/pnfs/uboone/scratch/users/&user;/work/&release;/&name;/&date;/&nuelow;/&version;</workdir>
+    <bookdir>/uboone/data/users/&user;/book/&release;/&name;/&date;/&nuelow;/&version;</bookdir>
+    <datatier>reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>497</numjobs>
+    <maxfilesperjob>1</maxfilesperjob>
+    <!--<schema>root</schema>-->
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600 </jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+
+  <stage name="nuehigh">
+    <inputdef>&nuehigh;</inputdef>
+    <fcl>run_calorimetryanalysis_run1_overlay.fcl</fcl>
+    <outdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&nuehigh;/&version;</outdir>
+    <logdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&nuehigh;/&version;</logdir>
+    <workdir>/pnfs/uboone/scratch/users/&user;/work/&release;/&name;/&date;/&nuehigh;/&version;</workdir>
+    <bookdir>/uboone/data/users/&user;/book/&release;/&name;/&date;/&nuehigh;/&version;</bookdir>
+    <datatier>reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>510</numjobs>
+    <maxfilesperjob>1</maxfilesperjob>
+    <!--<schema>root</schema>-->
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600 </jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+
+  <stage name="beam_on">
+    <inputdef>&beam_on;</inputdef>
+    <fcl>run_calorimetryanalysis_run1_data.fcl</fcl>
+    <outdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&beam_on;/&version;</outdir>
+    <logdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&beam_on;/&version;</logdir>
+    <workdir>/pnfs/uboone/scratch/users/&user;/work/&release;/&name;/&date;/&beam_on;/&version;</workdir>
+    <bookdir>/uboone/data/users/&user;/book/&release;/&name;/&date;/&beam_on;/&version;</bookdir>
+    <datatier>reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>1100</numjobs>
+    <maxfilesperjob>1</maxfilesperjob>
+    <!--<schema>root</schema>-->
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600 </jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+
+
+  <stage name="beam_off1">
+    <inputdef>&beam_off1;</inputdef>
+    <fcl>run_calorimetryanalysis_run1_data.fcl</fcl>
+    <outdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&beam_off1;/&version;</outdir>
+    <logdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&beam_off1;/&version;</logdir>
+    <workdir>/pnfs/uboone/scratch/users/&user;/work/&release;/&name;/&date;/&beam_off1;/&version;</workdir>
+    <bookdir>/uboone/data/users/&user;/book/&release;/&name;/&date;/&beam_off1;/&version;</bookdir>
+    <datatier>reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>900</numjobs>
+    <maxfilesperjob>2</maxfilesperjob>
+    <!--<schema>root</schema>-->
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600 </jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+
+  <stage name="beam_off2">
+    <inputdef>&beam_off2;</inputdef>
+    <fcl>run_calorimetryanalysis_run1_data.fcl</fcl>
+    <outdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&beam_off2;/&version;</outdir>
+    <logdir>/pnfs/uboone/scratch/users/&user;/&release;/&name;/&date;/&beam_off2;/&version;</logdir>
+    <workdir>/pnfs/uboone/scratch/users/&user;/work/&release;/&name;/&date;/&beam_off2;/&version;</workdir>
+    <bookdir>/uboone/data/users/&user;/book/&release;/&name;/&date;/&beam_off2;/&version;</bookdir>
+    <datatier>reconstructed</datatier>
+    <defname>&name;_&tag;_reco</defname>
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>600</numjobs>
+    <maxfilesperjob>2</maxfilesperjob>
+    <!--<schema>root</schema>-->
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600 </jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+
+  <!-- file type -->
+  <filetype>&file_type;</filetype>
+
+  <!-- run type -->
+  <runtype>&run_type;</runtype>
+
+</project>
+
+</job>
