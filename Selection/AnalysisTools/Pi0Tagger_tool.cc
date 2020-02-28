@@ -8,6 +8,9 @@
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "../CommonDefs/TrackFitterFunctions.h"
 #include "../CommonDefs/SCECorrections.h"
+#include "../CommonDefs/LLR_PID.h"
+#include "../CommonDefs/LLRPID_correction_lookup.h"
+#include "../CommonDefs/LLRPID_electron_photon_lookup.h"
 
 namespace analysis
 {
@@ -97,6 +100,8 @@ namespace analysis
     int _pi0_ngamma;
     float _pi0_radlen1, _pi0_radlen2;
     float _pi0_dot1, _pi0_dot2;
+    float _pi0_dir1_x, _pi0_dir1_y, _pi0_dir1_z;
+    float _pi0_dir2_x, _pi0_dir2_y, _pi0_dir2_z;
     float _pi0_energy1_Y, _pi0_energy2_Y;
     float _pi0_dedx1_Y, _pi0_dedx2_Y;
     float _pi0_dedx1_fit_Y, _pi0_dedx2_fit_Y;
@@ -118,10 +123,20 @@ namespace analysis
     float _pi0_dotmin;      // maximum dot product between shower direction and vtx->start vector
     float _pi0_trkshrscore; // score on which to cut for track/shower classification
 
-  std::vector<float> fADCtoE; // vector of ADC to # of e- conversion [to be taken from production reco2 fhicl files]
+    bool fLocaldEdx;               // use local dE/dx from calorimetry (true) or globally convert Q -> MeV (false)
+    std::vector<float> fADCtoE; // vector of ADC to # of e- conversion [to be taken from production reco2 fhicl files]
+  bool fRecalibrateHits;
+  float fEnergyThresholdForMCHits;
 
     art::InputTag fTRKproducer;
     art::InputTag fCALproducer;
+    art::InputTag fHitproducer;
+    art::InputTag fBacktrackTag;
+
+  // re-calibration tools
+  searchingfornues::LLRPID llr_pid_calculator_shr;
+  searchingfornues::ElectronPhotonLookUpParameters electronphoton_parameters;
+  searchingfornues::CorrectionLookUpParameters correction_parameters;
     
   };
   
@@ -135,6 +150,28 @@ namespace analysis
   Pi0Tagger::Pi0Tagger(const fhicl::ParameterSet& pset)
   {
     configure(pset);
+
+    // configure shower PID tools
+    llr_pid_calculator_shr.set_dedx_binning(0, electronphoton_parameters.dedx_edges_pl_0);
+    llr_pid_calculator_shr.set_par_binning(0, electronphoton_parameters.parameters_edges_pl_0);
+    llr_pid_calculator_shr.set_lookup_tables(0, electronphoton_parameters.dedx_pdf_pl_0);
+    
+    llr_pid_calculator_shr.set_dedx_binning(1, electronphoton_parameters.dedx_edges_pl_1);
+    llr_pid_calculator_shr.set_par_binning(1, electronphoton_parameters.parameters_edges_pl_1);
+    llr_pid_calculator_shr.set_lookup_tables(1, electronphoton_parameters.dedx_pdf_pl_1);
+    
+    llr_pid_calculator_shr.set_dedx_binning(2, electronphoton_parameters.dedx_edges_pl_2);
+    llr_pid_calculator_shr.set_par_binning(2, electronphoton_parameters.parameters_edges_pl_2);
+    llr_pid_calculator_shr.set_lookup_tables(2, electronphoton_parameters.dedx_pdf_pl_2);
+
+    if (fRecalibrateHits){
+      llr_pid_calculator_shr.set_corr_par_binning(0, correction_parameters.parameter_correction_edges_pl_0);
+      llr_pid_calculator_shr.set_correction_tables(0, correction_parameters.correction_table_pl_0);
+      llr_pid_calculator_shr.set_corr_par_binning(1, correction_parameters.parameter_correction_edges_pl_1);
+      llr_pid_calculator_shr.set_correction_tables(1, correction_parameters.correction_table_pl_1);
+      llr_pid_calculator_shr.set_corr_par_binning(2, correction_parameters.parameter_correction_edges_pl_2);
+      llr_pid_calculator_shr.set_correction_tables(2, correction_parameters.correction_table_pl_2);
+    }
   }
   
   //----------------------------------------------------------------------------
@@ -152,9 +189,14 @@ namespace analysis
     _pi0_trkshrscore = pset.get< float > ("trkshrscore");
 
     fADCtoE = pset.get<std::vector<float>>("ADCtoE");
+    fLocaldEdx = pset.get<bool>("LocaldEdx", false);       // use dE/dx from calo?
+    fRecalibrateHits = pset.get<bool>("RecalibrateHits", false);
+    fEnergyThresholdForMCHits = pset.get<float>("EnergyThresholdForMCHits", 0.1);
 
     fTRKproducer = pset.get< art::InputTag > ("TRKproducer", "");
     fCALproducer = pset.get< art::InputTag > ("CALproducer", "");
+    fHitproducer     = pset.get<art::InputTag>("Hitproducer" , "");
+    fBacktrackTag = pset.get<art::InputTag>("BacktrackTag", "gaushitTruthMatch");
 
 }
 
@@ -184,6 +226,15 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
     Double_t xyz[3] = {};
 
     Reset();
+
+    // load backtrack information
+    std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
+    if (!fData)
+      {
+        art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHitproducer);
+        assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
+    }
+
 
     searchingfornues::ProxyCaloColl_t const* tkcalo_proxy = NULL;
     if (fTRKproducer!="") {
@@ -307,7 +358,7 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
 
     _pi0_shrscore1 = searchingfornues::GetTrackShowerScore(slice_pfp_v.at(i1));
     _pi0_shrscore2 = searchingfornues::GetTrackShowerScore(slice_pfp_v.at(i2));
-
+    
     auto vtxcompat1 = VtxCompatibility(nuvtx, shr1->ShowerStart(), shr1->Direction());
     
     if (tkcalo_proxy!=NULL) {
@@ -315,24 +366,69 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
 	// find track with ID matching the pfp index (this convention apparently works only for shower fits...)
 	if (tk->ID()==int(slice_pfp_v[i1].index())) {
 
+
+	  float shr_tkfit_start_x = tk->Start().X();
+	  float shr_tkfit_start_y = tk->Start().Y();
+	  float shr_tkfit_start_z = tk->Start().Z();
+	  float shr_tkfit_start_sce[3];
+	  searchingfornues::ApplySCECorrectionXYZ(shr_tkfit_start_x,shr_tkfit_start_y,shr_tkfit_start_z,shr_tkfit_start_sce);
+
 	  auto const trkcalos = tk.get<anab::Calorimetry>();
-	  
-	  int nhits = 0;
 
 	  for (const auto& tkcalo : trkcalos) {
+	    
+	    if (tkcalo->ResidualRange().size() == 0)
+	      continue;
+	    
+	    auto const& xyz_v = tkcalo->XYZ();
+	    
+	    // collect XYZ coordinates of track-fitted shower
+	    std::vector<float> x_v, y_v, z_v;
+	    std::vector<float> dist_from_start_v;
+	    for (auto xyz : xyz_v){
+	      x_v.push_back(xyz.X());
+	      y_v.push_back(xyz.Y());
+	      z_v.push_back(xyz.Z());
+	      float dist_from_start = searchingfornues::distance3d(xyz.X(), xyz.Y(), xyz.Z(),
+								   shr_tkfit_start_sce[0],shr_tkfit_start_sce[1],shr_tkfit_start_sce[2]);
+
+	      dist_from_start_v.push_back(dist_from_start);
+	    }// collect XYZ coordinates of track-fitted shower
+	    
+	    std::vector<float> dqdx_values_corrected;
+	    
+	    if (fData || !fRecalibrateHits) {
+	      if (!fLocaldEdx)
+		dqdx_values_corrected = tkcalo->dQdx();
+	      else
+		dqdx_values_corrected = tkcalo->dEdx();
+	    }// if re-calibration is not necessary
+	    
+	    else 
+	      dqdx_values_corrected = llr_pid_calculator_shr.correct_many_hits_one_plane(tkcalo, tk, assocMCPart, fRecalibrateHits, fEnergyThresholdForMCHits, fLocaldEdx);
+	    
+	    
+	    int nhits = 0;
+
+
+	    
+	    
 	    if (tkcalo->PlaneID().Plane == 0) {
-	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx1_fit_U, nhits);
+	      searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), 0., 4., _pi0_dedx1_fit_U, nhits);
+	      //searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx1_fit_U, nhits);
 	      _pi0_dedx1_fit_U = searchingfornues::GetdEdxfromdQdx(_pi0_dedx1_fit_U, shr1->ShowerStart()[0], shr1->ShowerStart()[2], shr1->ShowerStart()[2], 2.1, fADCtoE[0] );
 	    }
 	    if (tkcalo->PlaneID().Plane == 1) {
-	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx1_fit_V, nhits);
+	      searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), 0., 4., _pi0_dedx1_fit_V, nhits);
+	      //searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx1_fit_V, nhits);
 	      _pi0_dedx1_fit_V = searchingfornues::GetdEdxfromdQdx(_pi0_dedx1_fit_V, shr1->ShowerStart()[0], shr1->ShowerStart()[2], shr1->ShowerStart()[2], 2.1, fADCtoE[1] );
 	    }
 	    if (tkcalo->PlaneID().Plane == 2) {
-	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx1_fit_Y, nhits);
+	      searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), 0., 4., _pi0_dedx1_fit_Y, nhits);
+	      //searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx1_fit_Y, nhits);
 	      _pi0_dedx1_fit_Y = searchingfornues::GetdEdxfromdQdx(_pi0_dedx1_fit_Y, shr1->ShowerStart()[0], shr1->ShowerStart()[2], shr1->ShowerStart()[2], 2.1, fADCtoE[2] );
 	    }
-
+	    
 	  }// for all calorimetry objects
 	}// if track matches shower index -> this is the track-fitted to the shower
       }// for all track fits to showers
@@ -346,39 +442,90 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
     _pi0_dedx1_V    = shr1->dEdx()[1];
     _pi0_energy1_U  = shr1->Energy()[0];
     _pi0_dedx1_U    = shr1->dEdx()[0];
+    _pi0_dir1_x     = shr1->Direction()[0];
+    _pi0_dir1_y     = shr1->Direction()[1];
+    _pi0_dir1_z     = shr1->Direction()[2];
     
     auto vtxcompat2 = VtxCompatibility(nuvtx, shr2->ShowerStart(), shr2->Direction());
-
+    
     if (tkcalo_proxy!=NULL) {
       for (const searchingfornues::ProxyCaloElem_t& tk : *tkcalo_proxy) {
 	// find track with ID matching the pfp index (this convention apparently works only for shower fits...)
 	if (tk->ID()==int(slice_pfp_v[i2].index())) {
-
+	  
+	  float shr_tkfit_start_x = tk->Start().X();
+	  float shr_tkfit_start_y = tk->Start().Y();
+	  float shr_tkfit_start_z = tk->Start().Z();
+	  float shr_tkfit_start_sce[3];
+	  searchingfornues::ApplySCECorrectionXYZ(shr_tkfit_start_x,shr_tkfit_start_y,shr_tkfit_start_z,shr_tkfit_start_sce);
+	  
 	  auto const trkcalos = tk.get<anab::Calorimetry>();
 	  
-	  int nhits = 0;
-	  
 	  for (const auto& tkcalo : trkcalos) {
+	    
+	    if (tkcalo->ResidualRange().size() == 0)
+	      continue;
+	    
+	    auto const& xyz_v = tkcalo->XYZ();
+	    
+	    // collect XYZ coordinates of track-fitted shower
+	    std::vector<float> x_v, y_v, z_v;
+	    std::vector<float> dist_from_start_v;
+	    for (auto xyz : xyz_v){
+	      x_v.push_back(xyz.X());
+	      y_v.push_back(xyz.Y());
+	      z_v.push_back(xyz.Z());
+	      float dist_from_start = searchingfornues::distance3d(xyz.X(), xyz.Y(), xyz.Z(),
+								   shr_tkfit_start_sce[0],shr_tkfit_start_sce[1],shr_tkfit_start_sce[2]);
+	      
+	      dist_from_start_v.push_back(dist_from_start);
+	    }// collect XYZ coordinates of track-fitted shower
+	    
+	    std::vector<float> dqdx_values_corrected;
+	    
+	    if (fData || !fRecalibrateHits) {
+	      if (!fLocaldEdx)
+		dqdx_values_corrected = tkcalo->dQdx();
+	      else
+		dqdx_values_corrected = tkcalo->dEdx();
+	    }// if re-calibration is not necessary
+	    
+	    else 
+	      dqdx_values_corrected = llr_pid_calculator_shr.correct_many_hits_one_plane(tkcalo, tk, assocMCPart, fRecalibrateHits, fEnergyThresholdForMCHits, fLocaldEdx);
+	    
+	    
+	    int nhits = 0;
 
+	    
 	    if (tkcalo->PlaneID().Plane == 0) {
-	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx2_fit_U, nhits);
+	      searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), 0., 4., _pi0_dedx2_fit_U, nhits);
+	      //std::cout << "[DEDX] 0 : " << _pi0_dedx2_fit_U << std::endl;
+	      //searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx2_fit_U, nhits);
+	      //std::cout << "[DEDX] 0 : " << _pi0_dedx2_fit_U << std::endl;
 	      _pi0_dedx2_fit_U = searchingfornues::GetdEdxfromdQdx(_pi0_dedx2_fit_U, shr2->ShowerStart()[0], shr2->ShowerStart()[2], shr2->ShowerStart()[2], 2.1, fADCtoE[0] );
 	    }
 	    if (tkcalo->PlaneID().Plane == 1) {
-	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx2_fit_V, nhits);
+	      searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), 0., 4., _pi0_dedx2_fit_V, nhits);
+	      //std::cout << "[DEDX] 1 : " << _pi0_dedx2_fit_V << std::endl;
+	      //searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx2_fit_V, nhits);
+	      //std::cout << "[DEDX] 1 : " << _pi0_dedx2_fit_V << std::endl;
+	      
 	      _pi0_dedx2_fit_V = searchingfornues::GetdEdxfromdQdx(_pi0_dedx2_fit_V, shr2->ShowerStart()[0], shr2->ShowerStart()[2], shr2->ShowerStart()[2], 2.1, fADCtoE[1] );
 	    }
 	    if (tkcalo->PlaneID().Plane == 2) {
-	      searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx2_fit_Y, nhits);
+	      searchingfornues::GetTrackFitdEdx(dqdx_values_corrected,tkcalo->ResidualRange(), 0., 4., _pi0_dedx2_fit_Y, nhits);
+	      //std::cout << "[DEDX] 2 : " << _pi0_dedx2_fit_Y << std::endl;
+	      //searchingfornues::GetTrackFitdEdx(tkcalo, 0., 4., false, _pi0_dedx2_fit_Y, nhits);
+	      //std::cout << "[DEDX] 2 : " << _pi0_dedx2_fit_Y << std::endl;
 	      _pi0_dedx2_fit_Y = searchingfornues::GetdEdxfromdQdx(_pi0_dedx2_fit_Y, shr2->ShowerStart()[0], shr2->ShowerStart()[2], shr2->ShowerStart()[2], 2.1, fADCtoE[2] );
 	    }
-
+	    
 	  }// for all calorimetry objects
 	  
 	}// if track matches shower index -> this is the track-fitted to the shower
       }// for all track fits to showers
     }// if track-fits to showers exist
-
+    
     _pi0_radlen2   = vtxcompat2.second;
     _pi0_dot2      = vtxcompat2.first;
     _pi0_energy2_Y = shr2->Energy()[2];
@@ -387,6 +534,9 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
     _pi0_dedx2_V   = shr2->dEdx()[1];
     _pi0_energy2_U = shr2->Energy()[0];
     _pi0_dedx2_U   = shr2->dEdx()[0];
+    _pi0_dir2_x    = shr2->Direction()[0];
+    _pi0_dir2_y    = shr2->Direction()[1];
+    _pi0_dir2_z    = shr2->Direction()[2];
     
     _pi0_gammadot = shr1->Direction().Dot(shr2->Direction());
     _pi0_mass_Y = sqrt( 2 * _pi0_energy1_Y * _pi0_energy2_Y * (1 - _pi0_gammadot ) );
@@ -447,6 +597,12 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
     _tree->Branch("pi0_dot2",&_pi0_dot2,"pi0_dot2/F");
     _tree->Branch("pi0_energy1_Y",&_pi0_energy1_Y,"pi0_energy1_Y/F");
     _tree->Branch("pi0_energy2_Y",&_pi0_energy2_Y,"pi0_energy2_Y/F");
+    _tree->Branch("pi0_dir1_x",&_pi0_dir1_x,"pi0_dir1_x/F");
+    _tree->Branch("pi0_dir1_y",&_pi0_dir1_y,"pi0_dir1_y/F");
+    _tree->Branch("pi0_dir1_z",&_pi0_dir1_z,"pi0_dir1_z/F");
+    _tree->Branch("pi0_dir2_x",&_pi0_dir2_x,"pi0_dir2_x/F");
+    _tree->Branch("pi0_dir2_y",&_pi0_dir2_y,"pi0_dir2_y/F");
+    _tree->Branch("pi0_dir2_z",&_pi0_dir2_z,"pi0_dir2_z/F");
     _tree->Branch("pi0_dedx1_Y",&_pi0_dedx1_Y,"pi0_dedx1_Y/F");
     _tree->Branch("pi0_dedx2_Y",&_pi0_dedx2_Y,"pi0_dedx2_Y/F");
     _tree->Branch("pi0_dedx1_fit_Y",&_pi0_dedx1_fit_Y,"pi0_dedx1_fit_Y/F");
@@ -611,6 +767,13 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
     _pi0_mcrce1 = 0;
     _pi0_mcrcdot0 = -1;
     _pi0_mcrcdot1 = -1;
+
+    _pi0_dir1_x = 0;
+    _pi0_dir1_y = 0;
+    _pi0_dir1_z = 0;
+    _pi0_dir2_x = 0;
+    _pi0_dir2_y = 0;
+    _pi0_dir2_z = 0;
 
     _pi0_dot1 = -1;
     _pi0_dot2 = -1;

@@ -19,6 +19,7 @@
 #include "../CommonDefs/LLR_PID.h"
 #include "../CommonDefs/LLRPID_proton_muon_lookup.h"
 #include "../CommonDefs/LLRPID_correction_lookup.h"
+#include "../CommonDefs/CalibrationFuncs.h"
 
 #include "larreco/RecoAlg/TrajectoryMCSFitter.h"
 #include "ubana/ParticleID/Algorithms/uB_PlaneIDBitsetHelperFunctions.h"

@@ -346,19 +346,14 @@ CC0piNpSelection::CC0piNpSelection(const fhicl::ParameterSet &pset)
     llr_pid_calculator_shr.set_par_binning(2, electronphoton_parameters.parameters_edges_pl_2);
     llr_pid_calculator_shr.set_lookup_tables(2, electronphoton_parameters.dedx_pdf_pl_2);
 
-
-
-    if (fRecalibrateHits)
-      {
-
-	llr_pid_calculator_shr.set_corr_par_binning(0, correction_parameters.parameter_correction_edges_pl_0);
-	llr_pid_calculator_shr.set_correction_tables(0, correction_parameters.correction_table_pl_0);
-	llr_pid_calculator_shr.set_corr_par_binning(1, correction_parameters.parameter_correction_edges_pl_1);
-	llr_pid_calculator_shr.set_correction_tables(1, correction_parameters.correction_table_pl_1);
-	llr_pid_calculator_shr.set_corr_par_binning(2, correction_parameters.parameter_correction_edges_pl_2);
-	llr_pid_calculator_shr.set_correction_tables(2, correction_parameters.correction_table_pl_2);
-	
-      }
+    if (fRecalibrateHits){
+      llr_pid_calculator_shr.set_corr_par_binning(0, correction_parameters.parameter_correction_edges_pl_0);
+      llr_pid_calculator_shr.set_correction_tables(0, correction_parameters.correction_table_pl_0);
+      llr_pid_calculator_shr.set_corr_par_binning(1, correction_parameters.parameter_correction_edges_pl_1);
+      llr_pid_calculator_shr.set_correction_tables(1, correction_parameters.correction_table_pl_1);
+      llr_pid_calculator_shr.set_corr_par_binning(2, correction_parameters.parameter_correction_edges_pl_2);
+      llr_pid_calculator_shr.set_correction_tables(2, correction_parameters.correction_table_pl_2);
+    }
 }
 
 //----------------------------------------------------------------------------
@@ -489,6 +484,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
             }
         }
     }
+
+    //std::cout << "[MODBOX] : dQdx of " << 200.*fADCtoE[2] << " gives dEdx of " << searchingfornues::ModBoxCorrection(200.*fADCtoE[2],150.,0.,500.) << std::endl;
 
     // START checking if vertex is in the fiducial volume
     double nu_vtx[3] = {};
@@ -838,7 +835,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 			      y_v.push_back(xyz.Y());
 			      z_v.push_back(xyz.Z());
 			      float dist_from_start = searchingfornues::distance3d(xyz.X(), xyz.Y(), xyz.Z(),
-										   _shr_tkfit_start_x, _shr_tkfit_start_y, _shr_tkfit_start_z);
+										   shr_tkfit_start_sce[0], shr_tkfit_start_sce[1], shr_tkfit_start_sce[2]);
 			      dist_from_start_v.push_back(dist_from_start);
 			    }// collect XYZ coordinates of track-fitted shower
 			    

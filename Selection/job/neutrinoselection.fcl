@@ -95,7 +95,9 @@ Pi0TaggerTool: {
     trkshrscore: 0.8
     TRKproducer: "shrreco3dKalmanShower"     # "pandoraKalmanShower"     #remove or leave empty of there are no track fits of the shower
     CALproducer: "shrreco3dKalmanShowercali" # "pandoraKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
+    Hitproducer: "gaushit"
     ADCtoE: @local::microboone_reco_data_producers.shrreco3d.ADCtoE
+    RecalibrateHits: true
 }
 
 DefaultAnalysisTool: {
@@ -114,6 +116,27 @@ DefaultAnalysisTool: {
     fidvolYstart: 6.
     fidvolYend: 6.
     fidvolZstart: 20.
+    fidvolZend: 50.
+}
+
+MCSTool: {
+    tool_type: "MCS"
+    CRTVetoproducer: ""
+    CLSproducer: "pandora"
+    MCTproducer: "generator"
+    SpacePointproducer: "pandora"
+    PFPproducer: "pandora"
+    Hproducer: "gaushit"
+    BacktrackTag: "gaushitTruthMatch"
+    MCRproducer: "mcreco"
+    SLCproducer: "pandora"
+    MCPproducer: "largeant"
+    ProtonThreshold: 0.04 # GeV
+    fidvolXstart: 10.
+    fidvolXend: 10.
+    fidvolYstart: 15.
+    fidvolYend: 15.
+    fidvolZstart: 10.
     fidvolZend: 50.
 }
 
@@ -230,6 +253,7 @@ NuSelectionFilter:{
         #vertex:         @local::VertexAnalysisTool
         #calorimetry:   @local::CalorimetryAnalysisTool
         pmtnoise:      @local::PMTNoiseTool
+	mcs:           @local::MCSTool
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
         nuenergy:      @local::NeutrinoEnergyTool
