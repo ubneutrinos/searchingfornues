@@ -66,6 +66,7 @@ TrackAnalysisTool: {
     CALOproducer: "pandoraTrackcali"     # "pandoraKalmanShower"     #remove or leave empty of there are no track fits of the shower
     PIDproducer: "pandoraTrackcalipid" # "pandoraKalmanShowercalo" #remove or leave empty of there are no track fits of the shower
     mcsfitmu: @local::microboone_reco_data_producers.pandoraMCSMu.fitter
+    ADCtoE: @local::microboone_reco_data_producers.shrreco3d.ADCtoE
     RecalibrateHits: true
 }
 

@@ -109,6 +109,7 @@ private:
   art::InputTag fHproducer;
   bool fRecalibrateHits;
   float fEnergyThresholdForMCHits;
+  std::vector<float> fADCtoE; // vector of ADC to # of e- conversion [to be taken from production reco2 fhicl files]
 
   int _run, _sub, _evt;
 
@@ -200,6 +201,7 @@ TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p) : _mcsfitter(fhicl::T
   fHproducer = p.get<art::InputTag>("Hproducer", "gaushit");
   fEnergyThresholdForMCHits = p.get<float>("EnergyThresholdForMCHits", 0.1);
   fRecalibrateHits = p.get<bool>("RecalibrateHits", false);
+  fADCtoE = p.get<std::vector<float>>("ADCtoE");
 
   // set dedx pdf parameters
   llr_pid_calculator.set_dedx_binning(0, protonmuon_parameters.dedx_edges_pl_0);
@@ -281,6 +283,16 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       }
       break;
     }
+  }
+
+  // grab hit backtracked information to be able to apply hit-by-hit re-calibrations
+  // only to MC charge
+  std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
+
+  if (!fData)
+  {
+    art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
+    assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
   }
 
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
@@ -435,57 +447,33 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       for (auto const &calo : calo_v)
       {
         auto const &plane = calo->PlaneID().Plane;
-        auto const &dedx_values = calo->dEdx();
+        auto const &dqdx_values = calo->dQdx();
         auto const &rr = calo->ResidualRange();
         auto const &pitch = calo->TrkPitchVec();
+        auto const& xyz_v = calo->XYZ();
         std::vector<std::vector<float>> par_values;
         par_values.push_back(rr);
         par_values.push_back(pitch);
 
         float calo_energy = 0;
+        std::vector<float> dqdx_values_corrected, dedx_values_corrected;
 
-        std::vector<float> dedx_values_corrected;
+
         if (fData || !fRecalibrateHits)
         {
-          dedx_values_corrected = dedx_values;
+          dqdx_values_corrected = dqdx_values;
         }
         else
         {
-          std::vector<float> direction_x, direction_y, direction_z;
-          auto const& xyz_v = calo->XYZ();
-          for (auto xyz : xyz_v)
-          {
-            float _dir[3];
-            searchingfornues::TrkDirectionAtXYZ(trk.value(), xyz.X(), xyz.Y(), xyz.Z(), _dir);
-
-            direction_x.push_back(_dir[0]);
-            direction_y.push_back(_dir[1]);
-            direction_z.push_back(_dir[2]);
-          }
-
-          std::vector<std::vector<float>> corr_par_values;
-          corr_par_values = searchingfornues::polarAngles(direction_x, direction_y, direction_z, 2, plane);
-
-          // fill vector of boolean to determine if hit has to be corrected or not
-          std::vector<bool> is_hit_montecarlo;
-
-          art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
-          std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
-          assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
-
-          const std::vector< size_t > &tp_indices = calo->TpIndices();
-          for (size_t i = 0; i < tp_indices.size(); i++)
-          {
-            size_t tp_index = tp_indices[i];
-            is_hit_montecarlo.push_back(searchingfornues::isHitBtMonteCarlo(tp_index, assocMCPart, fEnergyThresholdForMCHits));
-          }
-          // correct hits
-          dedx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(dedx_values, corr_par_values, is_hit_montecarlo, plane);
+          dqdx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(calo, trk.value(), assocMCPart, fRecalibrateHits, fEnergyThresholdForMCHits, false);
         }
 
-        for (size_t i = 0; i < dedx_values_corrected.size(); i++)
+        for (size_t i = 0; i < dqdx_values_corrected.size(); i++)
         {
-          calo_energy += dedx_values_corrected[i] * pitch[i];
+          float aux_dedx;
+          aux_dedx = searchingfornues::ModBoxCorrection(dqdx_values_corrected[i]*fADCtoE[plane], xyz_v[i].X(), xyz_v[i].Y(), xyz_v[i].Z());
+          dedx_values_corrected.push_back(aux_dedx);
+          calo_energy += aux_dedx * pitch[i];
         }
 
         float llr_pid = llr_pid_calculator.LLR_many_hits_one_plane(dedx_values_corrected, par_values, plane);

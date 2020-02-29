@@ -152,12 +152,7 @@ namespace searchingfornues
         float aux_dedx = dedx_values[i];
         if (is_to_correct[i])
         {
-          std::vector<float> aux_par;
-          for(std::vector<float> par_value: corr_par_values)
-          {
-            aux_par.push_back(par_value[i]);
-          }
-          aux_dedx *= correction_hit_one_plane(aux_par, plane);
+          aux_dedx *= correction_hit_one_plane(corr_par_values[i], plane);
         }
         dedx_values_corrected.push_back(aux_dedx);
       }
@@ -165,7 +160,7 @@ namespace searchingfornues
     }
 
     std::vector<float> correct_many_hits_one_plane(const art::Ptr<anab::Calorimetry> tkcalo,
-               const searchingfornues::ProxyCaloElem_t tk,
+               const recob::Track trk,
                const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart,
                const bool fRecalibrateHits,
                const float fEnergyThresholdForMCHits,
@@ -182,25 +177,23 @@ namespace searchingfornues
         dqdx_values_corrected = dqdx_values;
       else
       {
-        std::vector<float> direction_x, direction_y, direction_z;
+        auto const &pitch = tkcalo->TrkPitchVec();
         auto const& xyz_v = tkcalo->XYZ();
-        for (auto xyz : xyz_v)
-        {
-          float _dir[3];
-          searchingfornues::TrkDirectionAtXYZ(*tk, xyz.X(), xyz.Y(), xyz.Z(), _dir);
-          direction_x.push_back(_dir[0]);
-          direction_y.push_back(_dir[1]);
-          direction_z.push_back(_dir[2]);
-        }
 
         std::vector<std::vector<float>> corr_par_values;
-        corr_par_values = searchingfornues::polarAngles(direction_x, direction_y, direction_z, 2, plane);
+        for (size_t i = 0; i < xyz_v.size(); i++)
+        {
+          auto xyz = xyz_v[i];
+          float _dir[3];
+          searchingfornues::TrkDirectionAtXYZ(trk, xyz.X(), xyz.Y(), xyz.Z(), _dir);
+          std::vector<float> corr_par_value = searchingfornues::polarAngles(_dir[0], _dir[1], _dir[2], 2, plane);
+          corr_par_value[0] = pitch[i];
+          corr_par_values.push_back(corr_par_value);
+        }
 
         // fill vector of boolean to determine if hit has to be corrected or not
         std::vector<bool> is_hit_montecarlo;
-
         const std::vector< size_t > &tp_indices = tkcalo->TpIndices();
-
         for (size_t i = 0; i < tp_indices.size(); i++)
         {
           size_t tp_index = tp_indices[i];

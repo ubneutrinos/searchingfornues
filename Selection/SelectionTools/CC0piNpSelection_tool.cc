@@ -113,7 +113,7 @@ private:
   searchingfornues::LLRPID llr_pid_calculator_shr;
   searchingfornues::ElectronPhotonLookUpParameters electronphoton_parameters;
   searchingfornues::CorrectionLookUpParameters correction_parameters;
-  
+
   art::InputTag fCLSproducer;
   art::InputTag fPIDproducer;
   art::InputTag fTRKproducer;
@@ -337,11 +337,11 @@ CC0piNpSelection::CC0piNpSelection(const fhicl::ParameterSet &pset)
     llr_pid_calculator_shr.set_dedx_binning(0, electronphoton_parameters.dedx_edges_pl_0);
     llr_pid_calculator_shr.set_par_binning(0, electronphoton_parameters.parameters_edges_pl_0);
     llr_pid_calculator_shr.set_lookup_tables(0, electronphoton_parameters.dedx_pdf_pl_0);
-    
+
     llr_pid_calculator_shr.set_dedx_binning(1, electronphoton_parameters.dedx_edges_pl_1);
     llr_pid_calculator_shr.set_par_binning(1, electronphoton_parameters.parameters_edges_pl_1);
     llr_pid_calculator_shr.set_lookup_tables(1, electronphoton_parameters.dedx_pdf_pl_1);
-    
+
     llr_pid_calculator_shr.set_dedx_binning(2, electronphoton_parameters.dedx_edges_pl_2);
     llr_pid_calculator_shr.set_par_binning(2, electronphoton_parameters.parameters_edges_pl_2);
     llr_pid_calculator_shr.set_lookup_tables(2, electronphoton_parameters.dedx_pdf_pl_2);
@@ -673,7 +673,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 _shr_energy_tot_cali += shr->Energy()[2] / 1000 * cali_corr[2];
 
                 _shr_hits_tot += shr_hits;
-		
+
 		// if this is the shower with most hits, take as the main shower
                 if (shr_hits > _shr_hits_max)
                 {
@@ -738,7 +738,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr_py = shr_p.Y();
                     _shr_pz = shr_p.Z();
                     _shr_openangle = shr->OpenAngle();
-		    
+
                     if (tkcalo_proxy == NULL)
                     {
                         _shr_tkfit_start_x = std::numeric_limits<float>::lowest();
@@ -826,7 +826,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
 
 			    auto const& xyz_v = tkcalo->XYZ();
-			    
+
 			    // collect XYZ coordinates of track-fitted shower
 			    std::vector<float> x_v, y_v, z_v;
 			    std::vector<float> dist_from_start_v;
@@ -838,19 +838,19 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 										   shr_tkfit_start_sce[0], shr_tkfit_start_sce[1], shr_tkfit_start_sce[2]);
 			      dist_from_start_v.push_back(dist_from_start);
 			    }// collect XYZ coordinates of track-fitted shower
-			    
+
 			    std::vector<float> dqdx_values_corrected;
-			    
+
 			    if (fData || !fRecalibrateHits) {
 			      if (!fLocaldEdx)
 				dqdx_values_corrected = tkcalo->dQdx();
 			      else
 				dqdx_values_corrected = tkcalo->dEdx();
 			    }// if re-calibration is not necessary
-			    
-			    else 
-			      dqdx_values_corrected = llr_pid_calculator_shr.correct_many_hits_one_plane(tkcalo, tk, assocMCPart, fRecalibrateHits, fEnergyThresholdForMCHits, fLocaldEdx);
-			    
+
+			    else
+			      dqdx_values_corrected = llr_pid_calculator_shr.correct_many_hits_one_plane(tkcalo, *tk, assocMCPart, fRecalibrateHits, fEnergyThresholdForMCHits, fLocaldEdx);
+
                             // using function from CommonDefs/TrackFitterFunctions.h
                             //searchingfornues::GetTrackFitdEdx(tkcalo->dQdx(),tkcalo->ResidualRange(), fdEdxcmSkip, fdEdxcmLen, calodEdx, caloNpts);
 			    //std::cout << "DAVIDC (a) : " << calodEdx << std::endl;
@@ -970,10 +970,10 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
             {
                 double trk_start[3] = {trk->Start().X(), trk->Start().Y(), trk->Start().Z()};
                 double trk_end[3] = {trk->End().X(), trk->End().Y(), trk->End().Z()};
-		
+
                 auto clus_pxy_v = pfp_pxy.get<recob::Cluster>();
 
-                if (!searchingfornues::isFiducial(trk_start,fFidvolXstart,fFidvolYstart,fFidvolZstart,fFidvolXend,fFidvolYend,fFidvolZend) || 
+                if (!searchingfornues::isFiducial(trk_start,fFidvolXstart,fFidvolYstart,fFidvolZstart,fFidvolXend,fFidvolYend,fFidvolZend) ||
 		    !searchingfornues::isFiducial(trk_end,fFidvolXstart,fFidvolYstart,fFidvolZstart,fFidvolXend,fFidvolYend,fFidvolZend) )
                 {
                     for (auto ass_clus : clus_pxy_v)
@@ -1125,33 +1125,33 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     auto const& hit_h = e.getValidHandle<std::vector<recob::Hit> >(fHitproducer);
 
     for (unsigned int pl=0; pl < 3; pl++) {
-    
+
       // reset plane variables
       float mosthits = 0;
       float charge = 0.;
       float vtxdistancemin = 1e6; // min distance to neutrino vertex
-      
+
       TVectorD eigenVal(2);
       TMatrixD eigenVec(2,2);
 
       // loop through clusters
       for (size_t c=0; c < cluster_h->size(); c++) {
 	auto clus = cluster_h->at(c);
-	
+
 	// get associated hits
 	auto clus_hit_v = clus_hit_assn_v.at( c );
-	
+
 	// create vector of gaushits corresponding to new proton hits
 	auto gaushit_hit_v = searchingfornues::getGaussHits(clus_hit_v, hit_h);
-	
+
 	// no hits associated to the cluster? weird...skip...
 	if (gaushit_hit_v.size() == 0) continue;
-	
+
 	unsigned int PLANE = (gaushit_hit_v.at(0))->WireID().Plane;
-	
+
 	// focus one plane at a time
 	if (PLANE != pl) continue;
-	
+
 	int clushits = clus_hit_v.size();
 
 	// we are focusing on the largest cluster per plane
@@ -1159,21 +1159,21 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 	if (clushits <= mosthits) continue;
 
 	mosthits = clushits;
-	
+
 	// reset variables
 	charge = 0;
 	vtxdistancemin = 1e6;
 	// and store the wire-tick closest to the vertex
 	float clusStartW, clusStartT;
-	
+
 	for (size_t hi=0; hi < gaushit_hit_v.size(); hi++) {
 	  auto hit = gaushit_hit_v.at(hi);
 	  //gammaWire += hit->WireID().Wire * _wire2cm * hit->Integral();
 	  //gammaTime += (hit->PeakTime() - detp->TriggerOffset())  * _time2cm * hit->Integral();
 	  charge += hit->Integral();
 	  auto vtxdistance = searchingfornues::HitPtDistance(nuvtx,hit,_wire2cm,_time2cm);
-	  if (vtxdistance < vtxdistancemin) { 
-	    vtxdistancemin = vtxdistance; 
+	  if (vtxdistance < vtxdistancemin) {
+	    vtxdistancemin = vtxdistance;
 	    searchingfornues::GetHitWireTime(hit,_wire2cm, _time2cm, clusStartW,clusStartT);
 	  }
 	}
@@ -1187,12 +1187,12 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
 	// apply cut on dot-product
 	if (nuedot < 0.9) continue;
-	
+
 	/*
 	// measure alignment between cluster direction and vtx -> cluster start
 	dot = searchingfornues::ClusterVtxAlignment(nuvtx, clus_hit_v,_wire2cm,_time2cm);
 
-	// save charge-weieghted 2D direction of cluster hits to neutrino vertex 
+	// save charge-weieghted 2D direction of cluster hits to neutrino vertex
 	// this will be used to compare the direction with the candidate shower direction
 	angle = searchingfornues::ClusterVtxDirection(nuvtx, clus_hit_v,_wire2cm,_time2cm);
 	*/
@@ -1209,20 +1209,20 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 	  _elecclusters_Y_charge  += charge;
 	  _elecclusters_Y_N       += 1;
 	}// for all 2D clusters
-	
+
       }
-      
+
     }// for all planes
 
     // END CLUSTER-TAGGING
-    
+
     TVector3 _merge_vtx;
 
     _ismerged = searchingfornues::FindShowerTrunk(_shr_pfp_id,pfp_pxy_v,_merge_vtx,_merge_tk_ipfp, _merge_bestdot, _merge_bestdist);
     _merge_vtx_x = _merge_vtx.X();
     _merge_vtx_y = _merge_vtx.Y();
     _merge_vtx_z = _merge_vtx.Z();
-    
+
     auto trkshrhitdist_v = searchingfornues::GetPFPHitDistance(pfp_pxy_v[_trk_pfp_id], pfp_pxy_v[_shr_pfp_id], clus_proxy);
     _trkshrhitdist0 = trkshrhitdist_v[0];
     _trkshrhitdist1 = trkshrhitdist_v[1];
@@ -1385,7 +1385,7 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _elecclusters_U_charge = 0;
     _elecclusters_V_charge = 0;
     _elecclusters_Y_charge = 0;
-    
+
     _elecclusters_U_N = 0;
     _elecclusters_V_N = 0;
     _elecclusters_Y_N = 0;

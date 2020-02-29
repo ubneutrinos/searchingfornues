@@ -271,7 +271,8 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
   // only to MC charge
   std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
 
-  if (!fData) {
+  if (!fData)
+  {
     art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
     assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
   }
@@ -434,22 +435,22 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
               dqdx_values_corrected = tkcalo->dEdx();
           }// if re-calibration is not necessary
           else
-            dqdx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(tkcalo, tk, assocMCPart, fRecalibrateHits, fEnergyThresholdForMCHits, fLocaldEdx);
+            dqdx_values_corrected = llr_pid_calculator.correct_many_hits_one_plane(tkcalo, *tk, assocMCPart, fRecalibrateHits, fEnergyThresholdForMCHits, fLocaldEdx);
 
           auto const& xyz_v = tkcalo->XYZ();
 
           std::vector<float> x_v, y_v, z_v;
           std::vector<float> dist_from_start_v;
 
-	  float shr_tkfit_start_sce[3];
-	  searchingfornues::ApplySCECorrectionXYZ(_shr_tkfit_start_x_v.back(),_shr_tkfit_start_y_v.back(),_shr_tkfit_start_z_v.back(),shr_tkfit_start_sce);
+          float shr_tkfit_start_sce[3];
+          searchingfornues::ApplySCECorrectionXYZ(_shr_tkfit_start_x_v.back(),_shr_tkfit_start_y_v.back(),_shr_tkfit_start_z_v.back(),shr_tkfit_start_sce);
 
           for (auto xyz : xyz_v)
           {
             x_v.push_back(xyz.X());
             y_v.push_back(xyz.Y());
             z_v.push_back(xyz.Z());
-	    
+
             float dist_from_start = searchingfornues::distance3d(xyz.X(), xyz.Y(), xyz.Z(),
 								 shr_tkfit_start_sce[0], shr_tkfit_start_sce[1], shr_tkfit_start_sce[2]);
             dist_from_start_v.push_back(dist_from_start);
@@ -527,7 +528,7 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
           }
           _shr_llr_pid_v.back() += llr_pid;
         } // for all calorimetry objects
-        _shr_llr_pid_score_v.back() = atan(_shr_llr_pid_v.back() / 100.) * 2 / 3.14159266;
+        _shr_llr_pid_score_v.back() = atan(_shr_llr_pid_v.back() / 10.) * 2 / 3.14159266;
       }
     }
   }

@@ -2,8 +2,9 @@
 
 physics.filters.nuselection.AnalysisTools : {
   track:         @local::TrackAnalysisTool
-  shower:        @local::ShowerAnalysisTool
+  #shower:        @local::ShowerAnalysisTool
 }
+physics.filters.nuselection.AnalysisTools.track.RecalibrateHits : true
 
 physics.filters.nuselection.SelectionTool : {
   tool_type: "EmptySelection"
