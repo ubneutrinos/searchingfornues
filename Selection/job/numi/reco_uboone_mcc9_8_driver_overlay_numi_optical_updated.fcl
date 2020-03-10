@@ -1,0 +1,17 @@
+#include "reco_uboone_mcc9_8_driver_overlay_optical.fcl"
+
+process_name: DataOverlayOpticalNuMI
+
+physics.filters.opfiltercommon: @local::physics.filters.opfiltercommonextnumi
+physics.filters.opfiltercommon.OpHitProducer: "ophitBeam"
+
+physics.producers.saturation.LGProducer: "mixer"
+physics.producers.saturation.HGProducer: "mixer"
+physics.producers.saturation.HGProducerCosmic: "pmtreadout"
+
+#temporary since new RawDigits are baseline corrected
+services.DetPedestalService.DetPedestalRetrievalAlg.UseDB:           false
+services.DetPedestalService.DetPedestalRetrievalAlg.DefaultCollMean: 0
+services.DetPedestalService.DetPedestalRetrievalAlg.DefaultIndMean:  0
+
+physics.producers.nfspl1.wcls_main.params.raw_input_label: "mixer"
