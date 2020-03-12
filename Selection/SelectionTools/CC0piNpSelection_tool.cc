@@ -144,7 +144,6 @@ private:
     unsigned int _shr_hits_v_tot;      /**< Total number of shower hits on the V plane */
     unsigned int _shr_hits_u_tot;      /**< Total number of shower hits on the U plane */
     float _shr_energy;                 /**< Energy of the shower with the largest number of hits (in GeV) */
-    float _shr_energy_second;          /**< Energy of the shower with the second largest number of hits (in GeV) */
     float _shr_energy_tot;             /**< Sum of the energy of the showers (in GeV) */
     float _shr_energy_cali;            /**< Energy of the calibrated shower with the largest number of hits (in GeV) */
     float _shr_energy_tot_cali;        /**< Sum of the energy of the calibrated showers (in GeV) */
@@ -733,8 +732,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr_start_x = shr->ShowerStart().X();
                     _shr_start_y = shr->ShowerStart().Y();
                     _shr_start_z = shr->ShowerStart().Z();
-
-                    _shr_energy_second = _shr_energy; 
+ 
                     _shr_energy = shr->Energy()[2] / 1000; // GeV
                     _shr_energy_cali = _shr_energy * cali_corr[2];
 
