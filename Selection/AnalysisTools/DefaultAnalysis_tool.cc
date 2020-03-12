@@ -147,6 +147,7 @@ private:
   float _nu_e;  /**< neutrino energy [GeV] */
   float _nu_pt; /**< transverse momentum of interaction [GeV/c] */
   float _theta; /**< angle between incoming and outgoing leptons, in radians */
+  float _true_nu_px, _true_nu_py, _true_nu_pz; /** MCTruth neutrino momentum information **/
 
   int _nu_pdg;           /**< neutrino PDG code */
   int _ccnc;             /**< CC or NC tag from GENIE */
@@ -818,6 +819,9 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("interaction", &_interaction, "interaction/I");
   _tree->Branch("nu_e", &_nu_e, "nu_e/F");
   _tree->Branch("nu_pt", &_nu_pt, "nu_pt/F");
+  _tree->Branch("true_nu_px", &_true_nu_px, "true_nu_px/F");
+  _tree->Branch("true_nu_py", &_true_nu_py, "true_nu_py/F");
+  _tree->Branch("true_nu_pz", &_true_nu_pz, "true_nu_pz/F");
   _tree->Branch("theta", &_theta, "theta/F");
   _tree->Branch("isVtxInFiducial", &_isVtxInFiducial, "isVtxInFiducial/O");
   _tree->Branch("truthFiducial", &_truthFiducial, "truthFiducial/O");
@@ -978,6 +982,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _leeweight = 0;
   _nu_e = std::numeric_limits<float>::lowest();
   _theta = std::numeric_limits<float>::lowest();
+  _true_nu_px = std::numeric_limits<float>::lowest();
+  _true_nu_py = std::numeric_limits<float>::lowest();
+  _true_nu_pz = std::numeric_limits<float>::lowest(); 
   _nu_pt = std::numeric_limits<float>::lowest();
 
   _swtrig = std::numeric_limits<int>::lowest();
@@ -1146,6 +1153,10 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _nu_pdg = nu.PdgCode();
   _nu_e = nu.Trajectory().E(0);
   _lep_e = neutrino.Lepton().E();
+
+  _true_nu_px = nu.Px();
+  _true_nu_py = nu.Py();
+  _true_nu_pz = nu.Pz();
 
   _true_nu_vtx_t = nu.T();
   _true_nu_vtx_x = nu.Vx();
