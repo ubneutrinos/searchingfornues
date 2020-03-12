@@ -144,6 +144,7 @@ private:
     unsigned int _shr_hits_v_tot;      /**< Total number of shower hits on the V plane */
     unsigned int _shr_hits_u_tot;      /**< Total number of shower hits on the U plane */
     float _shr_energy;                 /**< Energy of the shower with the largest number of hits (in GeV) */
+    float _shr_energy_second;          /**< Energy of the shower with the second largest number of hits (in GeV) */
     float _shr_energy_tot;             /**< Sum of the energy of the showers (in GeV) */
     float _shr_energy_cali;            /**< Energy of the calibrated shower with the largest number of hits (in GeV) */
     float _shr_energy_tot_cali;        /**< Sum of the energy of the calibrated showers (in GeV) */
@@ -177,6 +178,9 @@ private:
 
     size_t _shr_pfp_id; /**< Index of the leading shower in the PFParticle vector */
 
+    std::vector<int> _all_shr_hits; /** vector of hits for each shower **/
+    std::vector<float> _all_shr_energies; /** vector of energies for all showers **/
+
     float _trk_len;             /**< Length of the longest track */
     float _trk_energy;          /**< Energy of the longest track assuming it's a proton and using stopping power in LAr */
   //float _trk_energy_sce;      /**< Energy of the longest track assuming it's a proton and using stopping power in LAr (with SCE corrections) */
@@ -189,6 +193,9 @@ private:
     float _trk_theta;           /**< Reconstructed theta angle for the longest track */
     float _trk_phi;             /**< Reconstructed phi angle for the longest track */
     size_t _trk_pfp_id;         /**< Index of the longest track in the PFParticle vector */
+
+    std::vector<int> _all_trk_hits; /** vector of hits for each tracks **/
+    std::vector<float> _all_trk_energies; /** vector of energies for all tracks **/
 
     float _hits_ratio;     /**< Ratio between hits from showers and total number of hits */
     float _trk_bragg_p;    /**< Proton Bragg likelihood score for the longest track */
@@ -667,13 +674,14 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 } // for all planes
 
                 _shr_energy_tot += shr->Energy()[2] / 1000;
+		_all_shr_energies.push_back(shr->Energy()[2] / 1000); 
 
                 std::vector<float> cali_corr(3);
                 searchingfornues::getCali(spcpnts, *assocSpacePointHit, cali_corr);
                 _shr_energy_tot_cali += shr->Energy()[2] / 1000 * cali_corr[2];
 
                 _shr_hits_tot += shr_hits;
-
+		_all_shr_hits.push_back(shr_hits); 
 		// if this is the shower with most hits, take as the main shower
                 if (shr_hits > _shr_hits_max)
                 {
@@ -726,6 +734,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr_start_y = shr->ShowerStart().Y();
                     _shr_start_z = shr->ShowerStart().Z();
 
+                    _shr_energy_second = _shr_energy; 
                     _shr_energy = shr->Energy()[2] / 1000; // GeV
                     _shr_energy_cali = _shr_energy * cali_corr[2];
 
@@ -937,6 +946,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 			_shr_llrpid_dedx = atan(_shr_llrpid_dedx / 100.) * 2 / 3.14159266;
                     }
                 }
+               
+
             }
 
             for (const auto &trk : pfp_pxy.get<recob::Track>())
@@ -1018,8 +1029,12 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 // Kinetic energy from stopping power of proton in LAr
                 //float energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), proton->PdgCode()), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
                 float energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(searchingfornues::GetSCECorrTrackLength(trk), proton->PdgCode()), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
+
                 _trk_energy_tot += energy_proton;
+		_all_trk_energies.push_back(energy_proton); 
+
                 _trk_hits_tot += trk_hits;
+		_all_trk_hits.push_back(trk_hits); 
 
                 //float energy_muon     = std::sqrt(std::pow(_trkmom.GetTrackMomentum(trk->Length(), muon->PdgCode()), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
                 float energy_muon = std::sqrt(std::pow(_trkmom.GetTrackMomentum(searchingfornues::GetSCECorrTrackLength(trk), muon->PdgCode()), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
@@ -1044,6 +1059,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         _trk_pidchimu_worst = chimu;
                 }
 
+		
                 if (trk_hits > _trk_hits_max)
                 {
                     if (!fData)
@@ -1085,7 +1101,10 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     //_trk_energy_muon_sce = energy_muon_sce;
                     _trk_energy_muon_mcs = std::sqrt(std::pow(mcsfitter.fitMcs(trk->Trajectory(), muon->PdgCode()).bestMomentum(), 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
                     _trk_pfp_id = i_pfp;
+
                     _trk_hits_max = trk_hits;
+          
+
                     _trk_theta = trk->Theta();
                     _trk_phi = trk->Phi();
                     trk_p.SetXYZ(trk->StartDirection().X(), trk->StartDirection().Y(), trk->StartDirection().Z());
@@ -1111,6 +1130,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     }
                     _trk_score = trkshrscore;
                 }
+               
             }
         }
     }
@@ -1263,6 +1283,7 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _trk_pfp_id = 0;
 
     _trk_hits_max = 0;
+    
     _shr_hits_max = 0;
 
     _shr_dedx_Y = std::numeric_limits<float>::lowest();
@@ -1279,6 +1300,9 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_distance = std::numeric_limits<float>::lowest();
     _tksh_distance = std::numeric_limits<float>::lowest();
     _tksh_angle = std::numeric_limits<float>::lowest();
+
+    _all_shr_hits.clear(); 
+    _all_shr_energies.clear(); 
 
     _n_showers_contained = 0;
     _n_tracks_contained = 0;
@@ -1302,6 +1326,9 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_hits_y_tot = 0;
     _shr_hits_v_tot = 0;
     _shr_hits_u_tot = 0;
+
+    _all_trk_hits.clear(); 
+    _all_trk_energies.clear(); 
 
     _trk_bragg_p = std::numeric_limits<float>::lowest();
     _trk_bragg_mu = std::numeric_limits<float>::lowest();
@@ -1582,7 +1609,12 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("trk_bragg_pion", &_trk_bragg_pion, "trk_bragg_pion/F");
 
     _tree->Branch("trk_hits_max", &_trk_hits_max, "trk_hits_max/i");
-    _tree->Branch("shr_hits_max", &_shr_hits_max, "shr_hits_max/i");
+    _tree->Branch("shr_hits_max", &_shr_hits_max, "shr_hits_max/i"); 
+
+    _tree->Branch("all_shr_hits", "std::vector< int >", &_all_shr_hits);
+    _tree->Branch("all_trk_hits", "std::vector< int >", &_all_trk_hits);
+    _tree->Branch("all_shr_energies", "std::vector< float >", &_all_shr_energies); 
+    _tree->Branch("all_trk_energies", "std::vector< float >", &_all_trk_energies);
 
     _tree->Branch("trkshrhitdist0", &_trkshrhitdist0, "trkshrhitdist0/F");
     _tree->Branch("trkshrhitdist1", &_trkshrhitdist1, "trkshrhitdist1/F");

@@ -135,6 +135,7 @@ private:
 
   float _true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z;
   float _true_nu_vtx_sce_x, _true_nu_vtx_sce_y, _true_nu_vtx_sce_z;
+  float _true_nu_px, _true_nu_py, _true_nu_pz; /**< True momentum components for the incoming neutrino [GeV/c] */
   float _reco_nu_vtx_x, _reco_nu_vtx_y, _reco_nu_vtx_z;
   float _reco_nu_vtx_sce_x, _reco_nu_vtx_sce_y, _reco_nu_vtx_sce_z;
 
@@ -335,7 +336,7 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   }
   
   // storing trigger result output for software trigger
-  art::InputTag swtrig_tag("TriggerResults", "", "DataOverlayOptical");
+  art::InputTag swtrig_tag("TriggerResults", "", "DataOverlayOpticalNuMI");
   art::Handle<art::TriggerResults> swtrig_handle;
   e.getByLabel(swtrig_tag, swtrig_handle);
   if (swtrig_handle.isValid())
@@ -829,6 +830,9 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("true_nu_vtx_sce_x", &_true_nu_vtx_sce_x, "true_nu_vtx_sce_x/F");
   _tree->Branch("true_nu_vtx_sce_y", &_true_nu_vtx_sce_y, "true_nu_vtx_sce_y/F");
   _tree->Branch("true_nu_vtx_sce_z", &_true_nu_vtx_sce_z, "true_nu_vtx_sce_z/F");
+  _tree->Branch("true_nu_px", &_true_nu_px, "true_nu_px/F");
+  _tree->Branch("true_nu_py", &_true_nu_py, "true_nu_py/F");
+  _tree->Branch("true_nu_pz", &_true_nu_pz, "true_nu_pz/F");
   _tree->Branch("reco_nu_vtx_x", &_reco_nu_vtx_x, "reco_nu_vtx_x/F");
   _tree->Branch("reco_nu_vtx_y", &_reco_nu_vtx_y, "reco_nu_vtx_y/F");
   _tree->Branch("reco_nu_vtx_z", &_reco_nu_vtx_z, "reco_nu_vtx_z/F");
@@ -999,6 +1003,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _true_nu_vtx_sce_x = std::numeric_limits<float>::lowest();
   _true_nu_vtx_sce_y = std::numeric_limits<float>::lowest();
   _true_nu_vtx_sce_z = std::numeric_limits<float>::lowest();
+  _true_nu_px = std::numeric_limits<float>::lowest();
+  _true_nu_py = std::numeric_limits<float>::lowest();
+  _true_nu_pz = std::numeric_limits<float>::lowest();
   _reco_nu_vtx_x = std::numeric_limits<float>::lowest();
   _reco_nu_vtx_y = std::numeric_limits<float>::lowest();
   _reco_nu_vtx_z = std::numeric_limits<float>::lowest();
@@ -1151,6 +1158,9 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _true_nu_vtx_x = nu.Vx();
   _true_nu_vtx_y = nu.Vy();
   _true_nu_vtx_z = nu.Vz();
+  _true_nu_px = nu.Px();
+  _true_nu_py = nu.Py();
+  _true_nu_pz = nu.Pz();
 
   float _true_nu_vtx_sce[3];
   searchingfornues::True2RecoMappingXYZ(_true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z, _true_nu_vtx_sce);
