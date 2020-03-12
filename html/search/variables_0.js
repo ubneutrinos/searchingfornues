@@ -1,5 +1,7 @@
 var searchData=
 [
+  ['_5fall_5fshr_5fenergies',['_all_shr_energies',['../classselection_1_1CC0piNpSelection.html#a0397406f8ed009ad17e2759168c21163',1,'selection::CC0piNpSelection']]],
+  ['_5fall_5ftrk_5fenergies',['_all_trk_energies',['../classselection_1_1CC0piNpSelection.html#af7caaefffdb29a2e1faa921507f0f253',1,'selection::CC0piNpSelection']]],
   ['_5fccnc',['_ccnc',['../classanalysis_1_1DefaultAnalysis.html#ac2df5c78c8d06e090d0b6cd195fa83d8',1,'analysis::DefaultAnalysis']]],
   ['_5fcontained_5ffraction',['_contained_fraction',['../classselection_1_1CC0piNpSelection.html#a8e7933222bce1424aee24bae8dcf4864',1,'selection::CC0piNpSelection::_contained_fraction()'],['../classselection_1_1NuMuSelection.html#a5d7cbf03836116170b56615ab3b073c2',1,'selection::NuMuSelection::_contained_fraction()']]],
   ['_5fcrthitpe',['_crthitpe',['../classanalysis_1_1DefaultAnalysis.html#a900ec35e3ca4a00d4625a1e632bb6b40',1,'analysis::DefaultAnalysis']]],
