@@ -1,0 +1,17 @@
+#include "run_neutrinoselectionfilter_run3_overlay_cc0pinp_numi.fcl"
+
+# Here we turn off the genie weighting as we dont need that for dirt events, need to keep both of these consistent
+physics.producers.eventweight.weight_functions_genie: [
+    #RPA_CCQE, XSecShape_CCMEC, AxFFCCQEshape,
+    #VecFFCCQEshape, DecayAngMEC, Theta_Delta2Npi,
+    TunedCentralValue
+    #All
+  ]
+
+physics.producers.eventweight.weight_functions: [
+    #RPA_CCQE, XSecShape_CCMEC, AxFFCCQEshape,
+    #VecFFCCQEshape, DecayAngMEC, Theta_Delta2Npi,
+    TunedCentralValue
+    #All
+  ]
+
