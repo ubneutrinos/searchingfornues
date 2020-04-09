@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['_5fall_5fshr_5fenergies',['_all_shr_energies',['../classselection_1_1CC0piNpSelection.html#a0397406f8ed009ad17e2759168c21163',1,'selection::CC0piNpSelection']]],
-  ['_5fall_5ftrk_5fenergies',['_all_trk_energies',['../classselection_1_1CC0piNpSelection.html#af7caaefffdb29a2e1faa921507f0f253',1,'selection::CC0piNpSelection']]],
   ['_5fccnc',['_ccnc',['../classanalysis_1_1DefaultAnalysis.html#ac2df5c78c8d06e090d0b6cd195fa83d8',1,'analysis::DefaultAnalysis']]],
   ['_5fcontained_5ffraction',['_contained_fraction',['../classselection_1_1CC0piNpSelection.html#a8e7933222bce1424aee24bae8dcf4864',1,'selection::CC0piNpSelection::_contained_fraction()'],['../classselection_1_1NuMuSelection.html#a5d7cbf03836116170b56615ab3b073c2',1,'selection::NuMuSelection::_contained_fraction()']]],
   ['_5fcrthitpe',['_crthitpe',['../classanalysis_1_1DefaultAnalysis.html#a900ec35e3ca4a00d4625a1e632bb6b40',1,'analysis::DefaultAnalysis']]],
@@ -42,6 +40,7 @@ var searchData=
   ['_5fpt',['_pt',['../classselection_1_1CC0piNpSelection.html#a98281b58b33ff8c03fa9b00f3f3baa06',1,'selection::CC0piNpSelection::_pt()'],['../classselection_1_1NuMuSelection.html#aab5bb47332ae2489a5ab96078397d075',1,'selection::NuMuSelection::_pt()']]],
   ['_5fpt_5fassume_5fmuon',['_pt_assume_muon',['../classselection_1_1CC0piNpSelection.html#a4213e006ba267c2ff55415cc9ef07bf8',1,'selection::CC0piNpSelection']]],
   ['_5fpt_5fmuon',['_pt_muon',['../classselection_1_1NuMuSelection.html#abcba7cd55395fa3ae3822f84abad4d73',1,'selection::NuMuSelection']]],
+  ['_5freco_5fe',['_reco_e',['../classselection_1_1CC0piNpSelection.html#a166bb6e0c4e300f95d51f125b5ef5b61',1,'selection::CC0piNpSelection']]],
   ['_5fshr_5fbkt_5fcompleteness',['_shr_bkt_completeness',['../classselection_1_1CC0piNpSelection.html#ac3c3c9895ca501c3b73f14addfddf495',1,'selection::CC0piNpSelection::_shr_bkt_completeness()'],['../classselection_1_1NuMuSelection.html#a18224668e51654b8322757c2db5d8b9d',1,'selection::NuMuSelection::_shr_bkt_completeness()']]],
   ['_5fshr_5fbkt_5fe',['_shr_bkt_E',['../classselection_1_1CC0piNpSelection.html#aa1a21f48d99a4de5f1d444aa3d64dedf',1,'selection::CC0piNpSelection::_shr_bkt_E()'],['../classselection_1_1NuMuSelection.html#aa6e475979c9554cb14bf7a082385a128',1,'selection::NuMuSelection::_shr_bkt_E()']]],
   ['_5fshr_5fbkt_5fpdg',['_shr_bkt_pdg',['../classselection_1_1CC0piNpSelection.html#aab09f93d7cd57031de714956414f3230',1,'selection::CC0piNpSelection::_shr_bkt_pdg()'],['../classselection_1_1NuMuSelection.html#ab5695d0d13afa6fe27e38b63951ade58',1,'selection::NuMuSelection::_shr_bkt_pdg()']]],
@@ -93,6 +92,7 @@ var searchData=
   ['_5fshr_5ftkfit_5f2cm_5fnhits_5fu',['_shr_tkfit_2cm_nhits_U',['../classselection_1_1CC0piNpSelection.html#ab659c0c62a77c77e745829478828e100',1,'selection::CC0piNpSelection']]],
   ['_5fshr_5ftkfit_5f2cm_5fnhits_5fv',['_shr_tkfit_2cm_nhits_V',['../classselection_1_1CC0piNpSelection.html#a4d79a5a52fba98286c68079f9a3e04cb',1,'selection::CC0piNpSelection']]],
   ['_5fshr_5ftkfit_5f2cm_5fnhits_5fy',['_shr_tkfit_2cm_nhits_Y',['../classselection_1_1CC0piNpSelection.html#a267f9073fa07d7c1c5e40b79a935c585',1,'selection::CC0piNpSelection']]],
+  ['_5fshr_5ftkfit_5fdedx_5fmax',['_shr_tkfit_dedx_max',['../classselection_1_1CC0piNpSelection.html#aa2829c32ada27f079948064a94f3d285',1,'selection::CC0piNpSelection']]],
   ['_5fshr_5ftkfit_5fdedx_5fu',['_shr_tkfit_dedx_U',['../classselection_1_1CC0piNpSelection.html#aaaef69409457695e2300bf847a13804c',1,'selection::CC0piNpSelection::_shr_tkfit_dedx_U()'],['../classselection_1_1NuMuSelection.html#ab7a3a2abb7bf04a5e3d6a190d1c8c415',1,'selection::NuMuSelection::_shr_tkfit_dedx_U()']]],
   ['_5fshr_5ftkfit_5fdedx_5fu_5falt',['_shr_tkfit_dedx_U_alt',['../classselection_1_1CC0piNpSelection.html#af4cca20b2f900cbff5390127a05b6f9d',1,'selection::CC0piNpSelection']]],
   ['_5fshr_5ftkfit_5fdedx_5fv',['_shr_tkfit_dedx_V',['../classselection_1_1CC0piNpSelection.html#a428fc549513bea0e1ca92cf90c1148cd',1,'selection::CC0piNpSelection::_shr_tkfit_dedx_V()'],['../classselection_1_1NuMuSelection.html#a9a054c559dfa6e536562f2e74d2954e0',1,'selection::NuMuSelection::_shr_tkfit_dedx_V()']]],
