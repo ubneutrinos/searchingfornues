@@ -213,6 +213,8 @@ private:
     float _p;              /**< Total reconstructed momentum, assuming all the tracks are protons and all the showers are electrons */
     float _p_assume_muon;  /**< Total reconstructed momentum, assuming all the tracks are muons and all the showers are electrons */
 
+    float _reco_e; /**< Reconstructed neutrino energy */
+
     float _shr_bkt_purity;       /**< Purity of the leading shower */
     float _shr_bkt_completeness; /**< Completeness of the leading shower */
     float _shr_bkt_E;            /**< Energy of the MCParticle matched to the leading shower */
@@ -225,6 +227,7 @@ private:
     float _matched_E; /**< Total kinetic energy of the MCParticles matched to PFParticles */
 
     int _shrsubclusters0, _shrsubclusters1, _shrsubclusters2; /**< in how many sub-clusters can the shower be broken based on proximity clustering? */
+    int _subcluster;
     float _shrclusfrac0, _shrclusfrac1, _shrclusfrac2;        /**< what fraction of the total charge does the dominant shower sub-cluster carry? */
     float _shrclusdir0, _shrclusdir1, _shrclusdir2;        /**< 2D charge-weighted direction of shower hits calculated from neutrino vertex w.r.t. vertical in plane */
     float _trkshrhitdist0, _trkshrhitdist1, _trkshrhitdist2;  /**< distance between hits of shower and track in 2D on each palne based on hit-hit distances */
@@ -247,6 +250,7 @@ private:
 
   size_t _merge_tk_ipfp;
 
+    float _trkfit;
     int _shr_tkfit_npoints;      // number of points associated to shower fitted track
     int _shr_tkfit_npointsvalid; // number of VALID points associated to shower fitted track
 
@@ -263,6 +267,7 @@ private:
     float _shr_tkfit_dedx_Y;  /**< dE/dx of the leading shower on the Y plane with the track fitting */
     float _shr_tkfit_dedx_V;  /**< dE/dx of the leading shower on the V plane with the track fitting */
     float _shr_tkfit_dedx_U;  /**< dE/dx of the leading shower on the U plane with the track fitting */
+    float _shr_tkfit_dedx_max;  /**< dE/dx of the leading shower on the plane with most hits */
 
     float _shr_tkfit_dedx_Y_alt;  /**< dE/dx of the leading shower on the Y plane with the track fitting  [calculated using XYZ instead of RR]  */
     float _shr_tkfit_dedx_V_alt;  /**< dE/dx of the leading shower on the V plane with the track fitting  [calculated using XYZ instead of RR]  */
@@ -666,6 +671,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     }
                 } // for all planes
 
+		_subcluster = _shrsubclusters0 + _shrsubclusters1 + _shrsubclusters2;
                 _shr_energy_tot += shr->Energy()[2] / 1000;
 
                 std::vector<float> cali_corr(3);
@@ -779,6 +785,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
                         _shr_tkfit_npoints = tk->NumberTrajectoryPoints();
                         _shr_tkfit_npointsvalid = tk->CountValidPoints();
+			_trkfit = float(_shr_tkfit_npointsvalid)/float(_shr_tkfit_npoints);
 
                         _shr_trkfitmedangle = searchingfornues::GetTrackRMSDeflection(tk, 10.);
 
@@ -935,6 +942,9 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                             }
                         } // for all calo objects
 			_shr_llrpid_dedx = atan(_shr_llrpid_dedx / 100.) * 2 / 3.14159266;
+			_shr_tkfit_dedx_max = _shr_tkfit_dedx_Y;
+			if (_shr_tkfit_nhits_U > _shr_tkfit_nhits_Y) _shr_tkfit_dedx_max = _shr_tkfit_dedx_U;
+			if ( (_shr_tkfit_nhits_V > _shr_tkfit_nhits_Y) && (_shr_tkfit_nhits_V > _shr_tkfit_nhits_U) ) _shr_tkfit_dedx_max = _shr_tkfit_dedx_V;
                     }
                 }
             }
@@ -1136,7 +1146,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
       // loop through clusters
       for (size_t c=0; c < cluster_h->size(); c++) {
-	auto clus = cluster_h->at(c);
+	//auto clus = cluster_h->at(c);
 
 	// get associated hits
 	auto clus_hit_v = clus_hit_assn_v.at( c );
@@ -1245,6 +1255,8 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     _contained_fraction = ((float)(_trk_hits_tot + _shr_hits_tot)) / (_trk_hits_tot + _shr_hits_tot + _hits_outfv);
     _sps_contained_fraction = float(sps_fv) / float(sps_all);
 
+    _reco_e = _shr_energy_tot_cali/0.83 + _trk_energy_tot;
+
     if (_contained_fraction < 0.9)
         return false;
 
@@ -1328,6 +1340,8 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _pt_assume_muon = 0;
     _p_assume_muon = 0;
 
+    _reco_e = 0;
+
     _trkshrhitdist0 = std::numeric_limits<float>::lowest();
     _trkshrhitdist1 = std::numeric_limits<float>::lowest();
     _trkshrhitdist2 = std::numeric_limits<float>::lowest();
@@ -1355,6 +1369,7 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_start_y = std::numeric_limits<float>::lowest();
     _shr_start_z = std::numeric_limits<float>::lowest();
 
+    _subcluster = std::numeric_limits<int>::lowest();
     _shrsubclusters0 = std::numeric_limits<int>::lowest();
     _shrsubclusters1 = std::numeric_limits<int>::lowest();
     _shrsubclusters2 = std::numeric_limits<int>::lowest();
@@ -1372,6 +1387,7 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_tkfit_dedx_Y = std::numeric_limits<float>::lowest();
     _shr_tkfit_dedx_U = std::numeric_limits<float>::lowest();
     _shr_tkfit_dedx_V = std::numeric_limits<float>::lowest();
+    _shr_tkfit_dedx_max = std::numeric_limits<float>::lowest();
     _shr_tkfit_nhits_Y = 0;
     _shr_tkfit_nhits_U = 0;
     _shr_tkfit_nhits_V = 0;
@@ -1391,6 +1407,7 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _elecclusters_Y_N = 0;
 
 
+    _trkfit = 1.;//should be: std::numeric_limits<float>::lowest();, but setting to 1 to make compatible with notebook implementation
     _shr_tkfit_npoints = std::numeric_limits<int>::lowest();
     _shr_tkfit_npointsvalid = std::numeric_limits<int>::lowest();
 
@@ -1487,6 +1504,7 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_tkfit_dedx_Y", &_shr_tkfit_dedx_Y, "shr_tkfit_dedx_Y/F");
     _tree->Branch("shr_tkfit_dedx_V", &_shr_tkfit_dedx_V, "shr_tkfit_dedx_V/F");
     _tree->Branch("shr_tkfit_dedx_U", &_shr_tkfit_dedx_U, "shr_tkfit_dedx_U/F");
+    _tree->Branch("shr_tkfit_dedx_max", &_shr_tkfit_dedx_max, "shr_tkfit_dedx_max/F");
     _tree->Branch("shr_tkfit_nhits_Y", &_shr_tkfit_nhits_Y, "shr_tkfit_nhits_Y/i");
     _tree->Branch("shr_tkfit_nhits_V", &_shr_tkfit_nhits_V, "shr_tkfit_nhits_V/i");
     _tree->Branch("shr_tkfit_nhits_U", &_shr_tkfit_nhits_U, "shr_tkfit_nhits_U/i");
@@ -1500,6 +1518,7 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_tkfit_nhits_Y_alt", &_shr_tkfit_nhits_Y_alt, "shr_tkfit_nhits_Y_alt/i");
     _tree->Branch("shr_tkfit_nhits_V_alt", &_shr_tkfit_nhits_V_alt, "shr_tkfit_nhits_V_alt/i");
     _tree->Branch("shr_tkfit_nhits_U_alt", &_shr_tkfit_nhits_U_alt, "shr_tkfit_nhits_U_alt/i");
+    _tree->Branch("trkfit", &_trkfit, "_trkfit/F");
     _tree->Branch("shr_tkfit_npoints", &_shr_tkfit_npoints, "shr_tkfit_npoints/i");
     _tree->Branch("shr_tkfit_npointsvalid", &_shr_tkfit_npointsvalid, "shr_tkfit_npointsvalid/i");
     _tree->Branch("shr_trkfitmedangle", &_shr_trkfitmedangle, "shr_trkfitmedangle/f");
@@ -1592,6 +1611,7 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("extra_energy_y", &_extra_energy_y, "extra_energy_y/F");
     _tree->Branch("trk_energy_hits_tot", &_trk_energy_hits_tot, "trk_energy_hits_tot/F");
 
+    _tree->Branch("subcluster", &_subcluster, "subcluster/i");
     _tree->Branch("shrsubclusters0", &_shrsubclusters0, "shrsubclusters0/i");
     _tree->Branch("shrsubclusters1", &_shrsubclusters1, "shrsubclusters1/i");
     _tree->Branch("shrsubclusters2", &_shrsubclusters2, "shrsubclusters2/i");
@@ -1634,6 +1654,8 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("p", &_p, "p/F");
     _tree->Branch("pt_assume_muon", &_pt_assume_muon, "pt_assume_muon/F");
     _tree->Branch("p_assume_muon", &_p_assume_muon, "p_assume_muon/F");
+
+    _tree->Branch("reco_e", &_reco_e, "reco_e/F");
 }
 
 DEFINE_ART_CLASS_TOOL(CC0piNpSelection)

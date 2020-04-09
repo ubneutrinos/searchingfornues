@@ -2,4 +2,8 @@
 
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
 physics.filters.nuselection.IsData: false
+
+physics.filters.nuselection.AnalysisTools.shower:      @local::ShowerAnalysisTool
+physics.filters.nuselection.AnalysisTools.zbdt: @local::BDTTool
+
 physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool
