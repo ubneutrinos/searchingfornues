@@ -93,6 +93,7 @@ namespace analysis
     float _trkpid;
     TTree* _mytree;
     bool fVerbose;
+    bool fOnlyLegacy;
   };
   
   //----------------------------------------------------------------------------
@@ -106,6 +107,7 @@ namespace analysis
   {
     fTrigResProducer = p.get<art::InputTag>("TrigResProducer");
     fVerbose = p.get<bool>("Verbose", false);
+    fOnlyLegacy = p.get<bool>("OnlyLegacy", false);
     //documentation in xgboost/include/xgboost/c_api.h
     int xgtest = -1;
     xgtest = XGBoosterCreate(NULL, 0, &booster_nuNCpi0);
@@ -176,16 +178,17 @@ namespace analysis
   ///
   void BDT::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
   {
-
     art::Handle<art::TriggerResults> trigRes;
-    e.getByLabel(fTrigResProducer,trigRes);
-    fhicl::ParameterSet pset;
-    if (!fhicl::ParameterSetRegistry::get(trigRes->parameterSetID(), pset)) { throw cet::exception("PSet Not Found???"); }
-    std::vector<std::string> trigger_path_names = pset.get<std::vector<std::string> >("trigger_paths", {});
-    if (trigger_path_names.size()!=trigRes->size()) { throw cet::exception("Size mismatch???"); }
-    for (size_t itp=0;itp<trigRes->size();itp++) {
-      if (fVerbose) std::cout << "filter name=" << trigger_path_names.at(itp) << " decision=" << trigRes->at(itp).accept() << std::endl;
-      if (trigger_path_names.at(itp)=="antibdt") _pass_antibdt_filter = trigRes->at(itp).accept();
+    if (fTrigResProducer!="") {
+      e.getByLabel(fTrigResProducer,trigRes);
+      fhicl::ParameterSet pset;
+      if (!fhicl::ParameterSetRegistry::get(trigRes->parameterSetID(), pset)) { throw cet::exception("PSet Not Found???"); }
+      std::vector<std::string> trigger_path_names = pset.get<std::vector<std::string> >("trigger_paths", {});
+      if (trigger_path_names.size()!=trigRes->size()) { throw cet::exception("Size mismatch???"); }
+      for (size_t itp=0;itp<trigRes->size();itp++) {
+	if (fVerbose) std::cout << "filter name=" << trigger_path_names.at(itp) << " decision=" << trigRes->at(itp).accept() << std::endl;
+	if (trigger_path_names.at(itp)=="antibdt") _pass_antibdt_filter = trigRes->at(itp).accept();
+      }
     }
 
     std::vector<float> data;
@@ -283,8 +286,9 @@ namespace analysis
     _bdt_global    = *out_result_global   ;
     if (fVerbose) std::cout << "bdt_global=" << *out_result_global << " " << _bdt_global << std::endl;
 
-    //new BDTs
+    if (fOnlyLegacy) return;
 
+    //new BDTs
     float* secondshower_Y_dir = (float*) _mytree->GetBranch("secondshower_Y_dir")->GetAddress();
     float* secondshower_V_dir = (float*) _mytree->GetBranch("secondshower_V_dir")->GetAddress();
     float* secondshower_U_dir = (float*) _mytree->GetBranch("secondshower_U_dir")->GetAddress();

@@ -63,7 +63,8 @@ microboone_antibdtfilter:
        }
        zbdt: {
           tool_type: "BDT"
-          TrigResProducer: "TriggerResults::DataFiltersPostStage2"
+          OnlyLegacy: true
+          TrigResProducer: ""
        }
     }
 }
