@@ -326,14 +326,14 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << e.run() << ", SubRun: " << e.subRun() << ", Event: " << e.event() << std::endl;
 
   // store common optical filter tag
-  if (!fData) {
+  //if (!fData) {
     art::Handle<uboone::UbooneOpticalFilter> CommonOpticalFilter_h;
     art::InputTag fCommonOpFiltTag("opfiltercommon");
     e.getByLabel(fCommonOpFiltTag, CommonOpticalFilter_h);
     
     _opfilter_pe_beam = CommonOpticalFilter_h->PE_Beam();
     _opfilter_pe_veto = CommonOpticalFilter_h->PE_Veto();
-  }
+  //}
   
   // storing trigger result output for software trigger
   art::InputTag swtrig_tag("TriggerResults", "", "DataOverlayOpticalNuMI");
