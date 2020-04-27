@@ -135,7 +135,7 @@ namespace searchingfornues
     dwire /= charge;
     dtime /= charge;
 
-    if (charge==0 || ( (dwire*dwire) + (dtime*dtime) )==0 || ( (vtx2start_w*vtx2start_w) + (vtx2start_t*vtx2start_t) )==0) return 0;
+    if (charge==0 || ( (dwire*dwire) + (dtime*dtime) )==0 || ( (vtx2start_w*vtx2start_w) + (vtx2start_t*vtx2start_t) )==0) return std::numeric_limits<float>::max();
 
     // calculate dot product
     float dot = (dwire * vtx2start_w) + (dtime * vtx2start_t);

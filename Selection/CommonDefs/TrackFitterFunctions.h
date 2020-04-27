@@ -306,6 +306,12 @@ namespace searchingfornues
 
     }// for all spacepoints
 
+    if (angle_v.size()==0) {
+      medangle = std::numeric_limits<float>::max();
+      rmsangle = std::numeric_limits<float>::max();
+      return;
+    }
+
     // calculate average...
     for (size_t d=0; d < angle_v.size(); d++)
     {
