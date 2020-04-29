@@ -16,17 +16,17 @@ EventWeightTreeTool: {
 
 
 #event weighting for switching between splines                                                                                                                                                              
-microboone_eventweight_justSplines: {
-  module_type: "EventWeight"
+#microboone_eventweight_justSplines: {
+#  module_type: "EventWeight"
 
-  min_weight: 0.0
-  max_weight: 100
+#  min_weight: 0.0
+#  max_weight: 100
 
-  genie_module_label: "generator"
-  @table::microboone_eventweight_spline
-}
+#  genie_module_label: "generator"
+#  @table::microboone_eventweight_spline
+#}
 
-microboone_eventweight_justSplines.weight_functions: [ splines_general ]
+#microboone_eventweight_justSplines.weight_functions: [ splines_general ]
 
 
 #For Nicolo
@@ -34,25 +34,25 @@ calotemp.p1: @local::physics.p1
 
 #Systematic weights
 physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeightTreeTool
-physics.producers.eventweight:        @local::microboone_eventweight_dec20
-physics.p1: [ eventweight, @sequence::physics.p1] #Uncomment line to run systematic weights, or comment line to not run them
+#physics.producers.eventweight:        @local::microboone_eventweight_dec20
+#physics.p1: [ eventweight, @sequence::physics.p1] #Uncomment line to run systematic weights, or comment line to not run them
 
 #Genie spline weights
-physics.producers.eventweightSplines: @local::microboone_eventweight_justSplines
-physics.p1: [ eventweightSplines, @sequence::physics.p1]
+#physics.producers.eventweightSplines: @local::microboone_eventweight_justSplines
+#physics.p1: [ eventweightSplines, @sequence::physics.p1]
 
 
 #Change number of universes
-physics.producers.eventweight.piplus.number_of_multisims: 100
-physics.producers.eventweight.piminus.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.kplus.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.kzero.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.kminus.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.horncurrent.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.pioninexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.nucleontotxsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.nucleonqexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.nucleoninexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.pionqexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.piontotxsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
-physics.producers.eventweight.expskin.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+#physics.producers.eventweight.piplus.number_of_multisims: 100
+#physics.producers.eventweight.piminus.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+#physics.producers.eventweight.kplus.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+#physics.producers.eventweight.kzero.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+#physics.producers.eventweight.kminus.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+#physics.producers.eventweight.horncurrent.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+#physics.producers.eventweight.pioninexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+#physics.producers.eventweight.nucleontotxsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+#physics.producers.eventweight.nucleonqexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+#physics.producers.eventweight.nucleoninexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+#physics.producers.eventweight.pionqexsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+#3physics.producers.eventweight.piontotxsec.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
+#physics.producers.eventweight.expskin.number_of_multisims: @local::physics.producers.eventweight.piplus.number_of_multisims
