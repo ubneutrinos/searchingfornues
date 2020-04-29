@@ -1147,9 +1147,11 @@ Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selecti
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:80: warning: Member _createSplineBranch (variable) of class analysis::EventWeightTree is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:81: warning: Member _createTuneBranch (variable) of class analysis::EventWeightTree is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:82: warning: Member _createSplineTimesTuneBranch (variable) of class analysis::EventWeightTree is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:83: warning: Member _run (variable) of class analysis::EventWeightTree is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:84: warning: Member _subRun (variable) of class analysis::EventWeightTree is not documented.
-/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:85: warning: Member _evt (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:83: warning: Member _SaveAllFlux (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:84: warning: Member _GenieAllUniverses (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:85: warning: Member _run (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:86: warning: Member _subRun (variable) of class analysis::EventWeightTree is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/EventWeightTree_tool.cc:87: warning: Member _evt (variable) of class analysis::EventWeightTree is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:77: warning: Member fPFPproducer (variable) of class analysis::FlashMatching is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:78: warning: Member fT0producer (variable) of class analysis::FlashMatching is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/AnalysisTools/FlashMatching_tool.cc:79: warning: Member fFLASHproducer (variable) of class analysis::FlashMatching is not documented.
