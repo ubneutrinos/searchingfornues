@@ -326,14 +326,21 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << e.run() << ", SubRun: " << e.subRun() << ", Event: " << e.event() << std::endl;
 
   // store common optical filter tag
-  //if (!fData) {
-    art::Handle<uboone::UbooneOpticalFilter> CommonOpticalFilter_h;
+  art::Handle<uboone::UbooneOpticalFilter> CommonOpticalFilter_h;
+
+  // Updated comon optical filter tag for data
+  art::InputTag fCommonOpFiltTag("opfiltercommon", "", "DataStage1OpticalNuMI");
+  e.getByLabel(fCommonOpFiltTag, CommonOpticalFilter_h);
+  
+  // Try to get the common optical filter tag for other types
+  if (!CommonOpticalFilter_h.isValid()){ 
+    std::cout << "Could not find data override for common op filter using default... (this is expected for overlay)" << std::endl;
     art::InputTag fCommonOpFiltTag("opfiltercommon");
     e.getByLabel(fCommonOpFiltTag, CommonOpticalFilter_h);
+  }
     
-    _opfilter_pe_beam = CommonOpticalFilter_h->PE_Beam();
-    _opfilter_pe_veto = CommonOpticalFilter_h->PE_Veto();
-  //}
+  _opfilter_pe_beam = CommonOpticalFilter_h->PE_Beam();
+  _opfilter_pe_veto = CommonOpticalFilter_h->PE_Veto();
   
   // storing trigger result output for software trigger
   art::InputTag swtrig_tag("TriggerResults", "", "DataOverlayOpticalNuMI");
