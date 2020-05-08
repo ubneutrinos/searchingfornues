@@ -12,6 +12,7 @@ EventWeightTreeTool: {
     createSplineBranch: true
     createTuneBranch: true
     createSplineTimesTuneBranch: true
+    createPPFXBranch: true
 }
 
 

@@ -11,6 +11,8 @@ physics.producers.eventweight.weight_functions_genie: [
 physics.producers.eventweight.weight_functions: [
     #RPA_CCQE, XSecShape_CCMEC, AxFFCCQEshape,
     #VecFFCCQEshape, DecayAngMEC, Theta_Delta2Npi,
-    TunedCentralValue
+    TunedCentralValue, ppfx_cv, ppfx_mipppi, ppfx_mippk, ppfx_thinmes, ppfx_thinpi,
+    ppfx_other, ppfx_thinnpi, ppfx_totabs, ppfx_targatt, ppfx_thinna,
+    ppfx_think, ppfx_thinn, ppfx_ms
     #All
   ]

@@ -72,6 +72,7 @@ namespace analysis
             float _weightSpline;
             float _weightTune;
             float _weightSplineTimesTune;
+	    float _ppfx_cv;
             bool _createDedicatedTree;
             bool _createMapBranch;
             bool _createFluxBranch;
@@ -80,6 +81,7 @@ namespace analysis
             bool _createSplineBranch;
             bool _createTuneBranch;
             bool _createSplineTimesTuneBranch;
+	    bool _createPPFXBranch;
             int _run;
             int _subRun;
             int _evt;
@@ -93,6 +95,7 @@ namespace analysis
         _createReintBranch = p.get<bool>("createReintBranch");
         _createSplineBranch = p.get<bool>("createSplineBranch");
         _createTuneBranch = p.get<bool>("createTuneBranch");
+	_createPPFXBranch = p.get<bool>("createPPFXBranch");
         _createSplineTimesTuneBranch = p.get<bool>("createSplineTimesTuneBranch");
         
         if(_createDedicatedTree){
@@ -134,6 +137,10 @@ namespace analysis
                 evtwgt_map.erase("TunedCentralValue_Genie");
                 
                 if(_weightSpline != -1 && _weightTune != -1) _weightSplineTimesTune = _weightSpline * _weightTune;
+
+                // Get the PPFX Central Value
+		if(evtwgt_map.find("ppfx_cv_PPFXCV") != evtwgt_map.end()) _ppfx_cv = evtwgt_map.find("ppfx_cv_PPFXCV")->second[0];
+	        evtwgt_map.erase("ppfx_cv_PPFXCV");	
                 
                 _mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
                 
@@ -216,6 +223,7 @@ namespace analysis
         if(_createReintBranch) _tree->Branch("weightsReint", "std::vector<double>", &_vecWeightsReint);
         if(_createSplineBranch) _tree->Branch("weightSpline",&_weightSpline,"weightSpline/F");
         if(_createTuneBranch) _tree->Branch("weightTune",&_weightTune,"weightTune/F");
+	if(_createPPFXBranch) _tree->Branch("ppfx_cv",&_ppfx_cv,"ppfx_cv/F");
         if(_createSplineTimesTuneBranch) _tree->Branch("weightSplineTimesTune",&_weightSplineTimesTune,"weightSplineTimesTune/F");
     }
     
@@ -229,6 +237,7 @@ namespace analysis
         _weightSpline = -1;
         _weightTune = -1;
         _weightSplineTimesTune = -1;
+	_ppfx_cv = -1;
         _run = -1;
         _subRun = -1;
         _evt = -1;
