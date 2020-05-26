@@ -25,6 +25,10 @@
 #include "canvas/Persistency/Common/TriggerResults.h"
 #include "larpandora/LArPandoraInterface/LArPandoraHelper.h"
 
+// Trigger objects
+#include "lardataobj/RawData/TriggerData.h"
+#include "ubobj/Trigger/ubdaqSoftwareTriggerData.h"
+
 namespace analysis
 {
 ////////////////////////////////////////////////////////////////////////
@@ -141,6 +145,11 @@ private:
 
   // has the swtrigger fired?
   int _swtrig;
+  int _swtrig_pre;      // software trigger with beam on  window before sw trigger change
+  int _swtrig_post;     // software trigger with beam on  window after  sw trigger change
+  int _swtrig_pre_ext;  // software trigger with beam off window before sw trigger change
+  int _swtrig_post_ext; // software trigger with beam off window after  sw trigger change
+  
   // common optical filter decision
   float  _opfilter_pe_beam, _opfilter_pe_veto;
 
@@ -353,6 +362,36 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
     else
       _swtrig = 0;
   } // if software trigger run by this producer
+
+  if(!fData) { 
+    
+    // Also store all the software trigger results for study of the correct one to use
+    art::InputTag triggerTag ("swtrigger", "", "DataOverlayOpticalNuMI" );  
+    const auto& triggerHandle = e.getValidHandle< raw::ubdaqSoftwareTriggerData >(triggerTag);
+    std::vector<std::string> triggerName = triggerHandle->getListOfAlgorithms();  
+    for (int j=0; j!=triggerHandle->getNumberOfAlgorithms(); j++) {
+
+      if (triggerName[j] == "EXT_NUMIwin_FEMBeamTriggerAlgo"){
+        _swtrig_pre_ext = triggerHandle->passedAlgo(triggerName[j]);
+      }
+      else if (triggerName[j] == "EXT_NUMIwin_2018May_FEMBeamTriggerAlgo"){
+        _swtrig_post_ext = triggerHandle->passedAlgo(triggerName[j]);
+      }
+      else if (triggerName[j] == "NUMI_FEMBeamTriggerAlgo"){
+        _swtrig_pre = triggerHandle->passedAlgo(triggerName[j]);
+      }
+      else if (triggerName[j] == "NUMI_2018May_FEMBeamTriggerAlgo"){
+        _swtrig_post = triggerHandle->passedAlgo(triggerName[j]);
+      }
+      else continue;
+
+      // Print the trigger and the result
+      std::cout<<triggerName[j]<<": ";
+      std::cout<<triggerHandle->passedAlgo(triggerName[j])<<std::endl;
+
+    }
+
+  }
 
   if (!fData)
   {
@@ -928,7 +967,11 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("lep_e", &_lep_e, "lep_e/F");
   _tree->Branch("pass", &_pass, "pass/I");
 
-  _tree->Branch("swtrig", &_swtrig, "swtrig/I");
+  _tree->Branch("swtrig",          &_swtrig,          "swtrig/I");
+  _tree->Branch("swtrig_pre",      &_swtrig_pre,      "swtrig_pre/I");
+  _tree->Branch("swtrig_post",     &_swtrig_post,     "swtrig_post/I");
+  _tree->Branch("swtrig_pre_ext",  &_swtrig_pre_ext,  "swtrig_pre_ext/I");
+  _tree->Branch("swtrig_post_ext", &_swtrig_post_ext, "swtrig_post_ext/I");
 
   _tree->Branch("evnhits", &evnhits, "evnhits/I");
   _tree->Branch("slpdg", &slpdg, "slpdg/I");
@@ -991,7 +1034,12 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _theta = std::numeric_limits<float>::lowest();
   _nu_pt = std::numeric_limits<float>::lowest();
 
-  _swtrig = std::numeric_limits<int>::lowest();
+  // By default let the swtrigger value be 1
+  _swtrig = 1;
+  _swtrig_pre = 1;
+  _swtrig_post = 1;
+  _swtrig_pre_ext = 1;
+  _swtrig_post_ext = 1; 
 
   _nu_pdg = std::numeric_limits<int>::lowest();
   _ccnc = std::numeric_limits<int>::lowest();

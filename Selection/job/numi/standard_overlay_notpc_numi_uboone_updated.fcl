@@ -4,7 +4,12 @@
 
 process_name : DataOverlayOpticalNuMI
 
-physics.filters.swtrigger:       @local::microboone_swtrigger_mc_numi
+#physics.filters.swtrigger:       @local::microboone_swtrigger_mc_numi
+
+# try running all the software triggers and pick the one we need in the searchingfornues code
+physics.filters.swtrigger: @local::microboone_swtrigger_data
 
 physics.filters.swtrigger.OpDataModule: "mixer"
 physics.filters.swtrigger.DAQHeaderModule: "mixer"
+physics.filters.swtrigger.OpFlashModule:    ""
+
