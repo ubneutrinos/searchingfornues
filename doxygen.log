@@ -433,6 +433,7 @@ Generating code for file /home/travis/build/ubneutrinos/searchingfornues/Selecti
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:74: warning: Member fMCTproducer (variable) of class NeutrinoSelectionFilter is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:75: warning: Member fVerbose (variable) of class NeutrinoSelectionFilter is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:76: warning: Member fData (variable) of class NeutrinoSelectionFilter is not documented.
+/home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:76: warning: Member fFakeData (variable) of class NeutrinoSelectionFilter is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:77: warning: Member fFilter (variable) of class NeutrinoSelectionFilter is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:78: warning: Member fBDT_branch (variable) of class NeutrinoSelectionFilter is not documented.
 /home/travis/build/ubneutrinos/searchingfornues/Selection/NeutrinoSelectionFilter_module.cc:79: warning: Member fBDT_cut (variable) of class NeutrinoSelectionFilter is not documented.
