@@ -175,7 +175,8 @@ PMTNoiseTool: {
 
 BDTTool: {
     tool_type: "BDT"
-    TrigResProducer: "TriggerResults::DataFiltersPostStage2"
+    TrigResProducer: ""
+    #TrigResProducer: "TriggerResults::DataFiltersPostStage2"
 }
 
 ContainmentAnalysis: {
