@@ -181,6 +181,9 @@ art::InputTag&#160;</td><td class="memItemRight" valign="bottom"><b>fMCTproducer
 <tr class="memitem:ad10d6b02fc6fcd46a25c30877f1fb634"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad10d6b02fc6fcd46a25c30877f1fb634"></a>
 art::InputTag&#160;</td><td class="memItemRight" valign="bottom"><b>fMCPproducer</b></td></tr>
 <tr class="separator:ad10d6b02fc6fcd46a25c30877f1fb634"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada2516622fdd865b7ebf6281089b981f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ada2516622fdd865b7ebf6281089b981f"></a>
+art::InputTag&#160;</td><td class="memItemRight" valign="bottom"><b>fMCFluxproducer</b></td></tr>
+<tr class="separator:ada2516622fdd865b7ebf6281089b981f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8dab9b6e3afeeb11bf7baf043daa5ecd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8dab9b6e3afeeb11bf7baf043daa5ecd"></a>
 art::InputTag&#160;</td><td class="memItemRight" valign="bottom"><b>fBacktrackTag</b></td></tr>
 <tr class="separator:a8dab9b6e3afeeb11bf7baf043daa5ecd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -319,6 +322,12 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>_opfilter_pe_veto</b
 <tr class="separator:a625c353bb8912893b77a14f44d4f00b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2df5c78c8d06e090d0b6cd195fa83d8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1DefaultAnalysis.html#ac2df5c78c8d06e090d0b6cd195fa83d8">_ccnc</a></td></tr>
 <tr class="separator:ac2df5c78c8d06e090d0b6cd195fa83d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27768aec98194b50f92adb395e885fdf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1DefaultAnalysis.html#a27768aec98194b50f92adb395e885fdf">_nu_parent_pdg</a></td></tr>
+<tr class="separator:a27768aec98194b50f92adb395e885fdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8924c41a602c88b98dde5a0cf199cdbf"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1DefaultAnalysis.html#a8924c41a602c88b98dde5a0cf199cdbf">_nu_hadron_pdg</a></td></tr>
+<tr class="separator:a8924c41a602c88b98dde5a0cf199cdbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a247716df8aa01b1a72398af0fb795a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1DefaultAnalysis.html#a6a247716df8aa01b1a72398af0fb795a">_nu_decay_mode</a></td></tr>
+<tr class="separator:a6a247716df8aa01b1a72398af0fb795a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35c01b4be6d678e89cada927ab2ba45c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1DefaultAnalysis.html#a35c01b4be6d678e89cada927ab2ba45c">_interaction</a></td></tr>
 <tr class="separator:a35c01b4be6d678e89cada927ab2ba45c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3235e005677abb89da08d1668257bca3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanalysis_1_1DefaultAnalysis.html#a3235e005677abb89da08d1668257bca3">_isVtxInFiducial</a></td></tr>
@@ -1079,6 +1088,27 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>_leeweight</b></td><
 
 </div>
 </div>
+<a class="anchor" id="a6a247716df8aa01b1a72398af0fb795a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int analysis::DefaultAnalysis::_nu_decay_mode</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>decay mode that lead to this neutrino in beam simulation [<a href="http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/">http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/</a>] </p>
+
+</div>
+</div>
 <a class="anchor" id="a41a1c23e4cb1a09e08024c7fa33572ce"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1097,6 +1127,48 @@ float&#160;</td><td class="memItemRight" valign="bottom"><b>_leeweight</b></td><
 </table>
 </div><div class="memdoc">
 <p>neutrino energy [GeV] </p>
+
+</div>
+</div>
+<a class="anchor" id="a8924c41a602c88b98dde5a0cf199cdbf"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int analysis::DefaultAnalysis::_nu_hadron_pdg</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>PDG code of hadron eventually producing neutrino [<a href="http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/">http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/</a>] </p>
+
+</div>
+</div>
+<a class="anchor" id="a27768aec98194b50f92adb395e885fdf"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int analysis::DefaultAnalysis::_nu_parent_pdg</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>neutrino parent's PDG code [<a href="http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/">http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/</a>] </p>
 
 </div>
 </div>

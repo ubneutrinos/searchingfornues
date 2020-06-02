@@ -69,6 +69,9 @@ art\+::\+Input\+Tag {\bfseries f\+M\+C\+Tproducer}\hypertarget{classanalysis_1_1
 art\+::\+Input\+Tag {\bfseries f\+M\+C\+Pproducer}\hypertarget{classanalysis_1_1DefaultAnalysis_ad10d6b02fc6fcd46a25c30877f1fb634}{}\label{classanalysis_1_1DefaultAnalysis_ad10d6b02fc6fcd46a25c30877f1fb634}
 
 \item 
+art\+::\+Input\+Tag {\bfseries f\+M\+C\+Fluxproducer}\hypertarget{classanalysis_1_1DefaultAnalysis_ada2516622fdd865b7ebf6281089b981f}{}\label{classanalysis_1_1DefaultAnalysis_ada2516622fdd865b7ebf6281089b981f}
+
+\item 
 art\+::\+Input\+Tag {\bfseries f\+Backtrack\+Tag}\hypertarget{classanalysis_1_1DefaultAnalysis_a8dab9b6e3afeeb11bf7baf043daa5ecd}{}\label{classanalysis_1_1DefaultAnalysis_a8dab9b6e3afeeb11bf7baf043daa5ecd}
 
 \item 
@@ -206,6 +209,12 @@ float \hyperlink{classanalysis_1_1DefaultAnalysis_adb169ccacccada1a17b6699a25f3f
 int \hyperlink{classanalysis_1_1DefaultAnalysis_a625c353bb8912893b77a14f44d4f00b0}{\+\_\+nu\+\_\+pdg}
 \item 
 int \hyperlink{classanalysis_1_1DefaultAnalysis_ac2df5c78c8d06e090d0b6cd195fa83d8}{\+\_\+ccnc}
+\item 
+int \hyperlink{classanalysis_1_1DefaultAnalysis_a27768aec98194b50f92adb395e885fdf}{\+\_\+nu\+\_\+parent\+\_\+pdg}
+\item 
+int \hyperlink{classanalysis_1_1DefaultAnalysis_a8924c41a602c88b98dde5a0cf199cdbf}{\+\_\+nu\+\_\+hadron\+\_\+pdg}
+\item 
+int \hyperlink{classanalysis_1_1DefaultAnalysis_a6a247716df8aa01b1a72398af0fb795a}{\+\_\+nu\+\_\+decay\+\_\+mode}
 \item 
 int \hyperlink{classanalysis_1_1DefaultAnalysis_a35c01b4be6d678e89cada927ab2ba45c}{\+\_\+interaction}
 \item 
@@ -611,10 +620,19 @@ how many pions are there? \index{analysis\+::\+Default\+Analysis@{analysis\+::\+
 how many protons are there? \index{analysis\+::\+Default\+Analysis@{analysis\+::\+Default\+Analysis}!\+\_\+nslice@{\+\_\+nslice}}
 \index{\+\_\+nslice@{\+\_\+nslice}!analysis\+::\+Default\+Analysis@{analysis\+::\+Default\+Analysis}}
 \subsubsection[{\texorpdfstring{\+\_\+nslice}{_nslice}}]{\setlength{\rightskip}{0pt plus 5cm}int analysis\+::\+Default\+Analysis\+::\+\_\+nslice\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classanalysis_1_1DefaultAnalysis_a3eddf49910782afed7f324755fffe681}{}\label{classanalysis_1_1DefaultAnalysis_a3eddf49910782afed7f324755fffe681}
-number of slice in the event \index{analysis\+::\+Default\+Analysis@{analysis\+::\+Default\+Analysis}!\+\_\+nu\+\_\+e@{\+\_\+nu\+\_\+e}}
+number of slice in the event \index{analysis\+::\+Default\+Analysis@{analysis\+::\+Default\+Analysis}!\+\_\+nu\+\_\+decay\+\_\+mode@{\+\_\+nu\+\_\+decay\+\_\+mode}}
+\index{\+\_\+nu\+\_\+decay\+\_\+mode@{\+\_\+nu\+\_\+decay\+\_\+mode}!analysis\+::\+Default\+Analysis@{analysis\+::\+Default\+Analysis}}
+\subsubsection[{\texorpdfstring{\+\_\+nu\+\_\+decay\+\_\+mode}{_nu_decay_mode}}]{\setlength{\rightskip}{0pt plus 5cm}int analysis\+::\+Default\+Analysis\+::\+\_\+nu\+\_\+decay\+\_\+mode\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classanalysis_1_1DefaultAnalysis_a6a247716df8aa01b1a72398af0fb795a}{}\label{classanalysis_1_1DefaultAnalysis_a6a247716df8aa01b1a72398af0fb795a}
+decay mode that lead to this neutrino in beam simulation \mbox{[}\href{http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/}{\tt http\+://www.\+hep.\+utexas.\+edu/$\sim$zarko/wwwgnumi/v19/}\mbox{]} \index{analysis\+::\+Default\+Analysis@{analysis\+::\+Default\+Analysis}!\+\_\+nu\+\_\+e@{\+\_\+nu\+\_\+e}}
 \index{\+\_\+nu\+\_\+e@{\+\_\+nu\+\_\+e}!analysis\+::\+Default\+Analysis@{analysis\+::\+Default\+Analysis}}
 \subsubsection[{\texorpdfstring{\+\_\+nu\+\_\+e}{_nu_e}}]{\setlength{\rightskip}{0pt plus 5cm}float analysis\+::\+Default\+Analysis\+::\+\_\+nu\+\_\+e\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classanalysis_1_1DefaultAnalysis_a41a1c23e4cb1a09e08024c7fa33572ce}{}\label{classanalysis_1_1DefaultAnalysis_a41a1c23e4cb1a09e08024c7fa33572ce}
-neutrino energy \mbox{[}GeV\mbox{]} \index{analysis\+::\+Default\+Analysis@{analysis\+::\+Default\+Analysis}!\+\_\+nu\+\_\+pdg@{\+\_\+nu\+\_\+pdg}}
+neutrino energy \mbox{[}GeV\mbox{]} \index{analysis\+::\+Default\+Analysis@{analysis\+::\+Default\+Analysis}!\+\_\+nu\+\_\+hadron\+\_\+pdg@{\+\_\+nu\+\_\+hadron\+\_\+pdg}}
+\index{\+\_\+nu\+\_\+hadron\+\_\+pdg@{\+\_\+nu\+\_\+hadron\+\_\+pdg}!analysis\+::\+Default\+Analysis@{analysis\+::\+Default\+Analysis}}
+\subsubsection[{\texorpdfstring{\+\_\+nu\+\_\+hadron\+\_\+pdg}{_nu_hadron_pdg}}]{\setlength{\rightskip}{0pt plus 5cm}int analysis\+::\+Default\+Analysis\+::\+\_\+nu\+\_\+hadron\+\_\+pdg\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classanalysis_1_1DefaultAnalysis_a8924c41a602c88b98dde5a0cf199cdbf}{}\label{classanalysis_1_1DefaultAnalysis_a8924c41a602c88b98dde5a0cf199cdbf}
+P\+DG code of hadron eventually producing neutrino \mbox{[}\href{http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/}{\tt http\+://www.\+hep.\+utexas.\+edu/$\sim$zarko/wwwgnumi/v19/}\mbox{]} \index{analysis\+::\+Default\+Analysis@{analysis\+::\+Default\+Analysis}!\+\_\+nu\+\_\+parent\+\_\+pdg@{\+\_\+nu\+\_\+parent\+\_\+pdg}}
+\index{\+\_\+nu\+\_\+parent\+\_\+pdg@{\+\_\+nu\+\_\+parent\+\_\+pdg}!analysis\+::\+Default\+Analysis@{analysis\+::\+Default\+Analysis}}
+\subsubsection[{\texorpdfstring{\+\_\+nu\+\_\+parent\+\_\+pdg}{_nu_parent_pdg}}]{\setlength{\rightskip}{0pt plus 5cm}int analysis\+::\+Default\+Analysis\+::\+\_\+nu\+\_\+parent\+\_\+pdg\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classanalysis_1_1DefaultAnalysis_a27768aec98194b50f92adb395e885fdf}{}\label{classanalysis_1_1DefaultAnalysis_a27768aec98194b50f92adb395e885fdf}
+neutrino parent\textquotesingle{}s P\+DG code \mbox{[}\href{http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/}{\tt http\+://www.\+hep.\+utexas.\+edu/$\sim$zarko/wwwgnumi/v19/}\mbox{]} \index{analysis\+::\+Default\+Analysis@{analysis\+::\+Default\+Analysis}!\+\_\+nu\+\_\+pdg@{\+\_\+nu\+\_\+pdg}}
 \index{\+\_\+nu\+\_\+pdg@{\+\_\+nu\+\_\+pdg}!analysis\+::\+Default\+Analysis@{analysis\+::\+Default\+Analysis}}
 \subsubsection[{\texorpdfstring{\+\_\+nu\+\_\+pdg}{_nu_pdg}}]{\setlength{\rightskip}{0pt plus 5cm}int analysis\+::\+Default\+Analysis\+::\+\_\+nu\+\_\+pdg\hspace{0.3cm}{\ttfamily [private]}}\hypertarget{classanalysis_1_1DefaultAnalysis_a625c353bb8912893b77a14f44d4f00b0}{}\label{classanalysis_1_1DefaultAnalysis_a625c353bb8912893b77a14f44d4f00b0}
 neutrino P\+DG code \index{analysis\+::\+Default\+Analysis@{analysis\+::\+Default\+Analysis}!\+\_\+nu\+\_\+pt@{\+\_\+nu\+\_\+pt}}
