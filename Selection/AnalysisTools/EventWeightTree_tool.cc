@@ -69,6 +69,18 @@ namespace analysis
     std::vector<double> _vecWeightsGenie_vec;
     std::vector<int> _vecWeightsGenie_nam;
     std::vector<double> _vecWeightsReint;
+    double _knobRPAup;
+    double _knobCCMECup;
+    double _knobAxFFCCQEup;
+    double _knobVecFFCCQEup;
+    double _knobDecayAngMECup;
+    double _knobThetaDelta2Npiup;
+    double _knobRPAdn;
+    double _knobCCMECdn;
+    double _knobAxFFCCQEdn;
+    double _knobVecFFCCQEdn;
+    double _knobDecayAngMECdn;
+    double _knobThetaDelta2Npidn;
     float _weightSpline;
     float _weightTune;
     float _weightSplineTimesTune;
@@ -148,6 +160,31 @@ namespace analysis
 	std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
 	art::fill_ptr_vector(eventweights, eventweights_handle);
 	std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
+
+	if (evtwgt_map.find("RPA_CCQE_UBGenie") != evtwgt_map.end()) { 
+	  _knobRPAup = evtwgt_map.find("RPA_CCQE_UBGenie")->second[0]; 
+	  _knobRPAup = evtwgt_map.find("RPA_CCQE_UBGenie")->second[1]; 
+	}
+	if (evtwgt_map.find("XSecShape_CCMEC_UBGenie") != evtwgt_map.end()) { 
+	  _knobCCMECup = evtwgt_map.find("XSecShape_CCMEC_UBGenie")->second[0]; 
+	  _knobCCMECup = evtwgt_map.find("XSecShape_CCMEC_UBGenie")->second[1]; 
+	}
+	if (evtwgt_map.find("AxFFCCQEshape_UBGenie") != evtwgt_map.end()) { 
+	  _knobAxFFCCQEup = evtwgt_map.find("AxFFCCQEshape_UBGenie")->second[0]; 
+	  _knobAxFFCCQEdn = evtwgt_map.find("AxFFCCQEshape_UBGenie")->second[1]; 
+	}
+	if (evtwgt_map.find("VecFFCCQEshape_UBGenie") != evtwgt_map.end()) { 
+	  _knobVecFFCCQEup = evtwgt_map.find("VecFFCCQEshape_UBGenie")->second[0]; 
+	  _knobVecFFCCQEdn = evtwgt_map.find("VecFFCCQEshape_UBGenie")->second[1]; 
+	}
+	if (evtwgt_map.find("DecayAngMEC_UBGenie") != evtwgt_map.end()) { 
+	  _knobDecayAngMECup = evtwgt_map.find("DecayAngMEC_UBGenie")->second[0]; 
+	  _knobDecayAngMECdn = evtwgt_map.find("DecayAngMEC_UBGenie")->second[1]; 
+	}
+	if (evtwgt_map.find("Theta_Delta2Npi_UBGenie") != evtwgt_map.end()) { 
+	  _knobThetaDelta2Npiup = evtwgt_map.find("Theta_Delta2Npi_UBGenie")->second[0]; 
+	  _knobThetaDelta2Npidn = evtwgt_map.find("Theta_Delta2Npi_UBGenie")->second[1]; 
+	}
         
 	if(evtwgt_map.find("splines_general_Spline") != evtwgt_map.end()) _weightSpline = evtwgt_map.find("splines_general_Spline")->second[0];
 	//evtwgt_map.erase("splines_general_Spline");
@@ -279,6 +316,22 @@ namespace analysis
     if(_createSplineBranch) _tree->Branch("weightSpline",&_weightSpline,"weightSpline/F");
     if(_createTuneBranch) _tree->Branch("weightTune",&_weightTune,"weightTune/F");
     if(_createSplineTimesTuneBranch) _tree->Branch("weightSplineTimesTune",&_weightSplineTimesTune,"weightSplineTimesTune/F");
+
+    if (_createGenieBranch) {
+      _tree->Branch("knobRPAup",&_knobRPAup,"knobRPAup/D");
+      _tree->Branch("knobRPAdn",&_knobRPAdn,"knobRPAdn/D");
+      _tree->Branch("knobCCMECup",&_knobCCMECup,"knobCCMECup/D");
+      _tree->Branch("knobCCMECdn",&_knobCCMECdn,"knobCCMECdn/D");
+      _tree->Branch("knobAxFFCCQEup",&_knobAxFFCCQEup,"knobAxFFCCQEup/D");
+      _tree->Branch("knobAxFFCCQEdn",&_knobAxFFCCQEdn,"knobAxFFCCQEdn/D");
+      _tree->Branch("knobVecFFCCQEup",&_knobVecFFCCQEup,"knobVecFFCCQEup/D");
+      _tree->Branch("knobVecFFCCQEdn",&_knobVecFFCCQEdn,"knobVecFFCCQEdn/D");
+      _tree->Branch("knobDecayAngMECup",&_knobDecayAngMECup,"knobDecayAngMECup/D");
+      _tree->Branch("knobDecayAngMECdn",&_knobDecayAngMECdn,"knobDecayAngMECdn/D");
+      _tree->Branch("knobThetaDelta2Npiup",&_knobThetaDelta2Npiup,"knobThetaDelta2Npiup/D");
+      _tree->Branch("knobThetaDelta2Npidn",&_knobThetaDelta2Npidn,"knobThetaDelta2Npidn/D");
+    }
+
   }
   
   void EventWeightTree::resetTTree(TTree *_tree){
@@ -291,6 +344,21 @@ namespace analysis
     _weightSpline = -1;
     _weightTune = -1;
     _weightSplineTimesTune = -1;
+
+    _knobRPAup = 1;
+    _knobCCMECup = 1;
+    _knobAxFFCCQEup = 1;
+    _knobVecFFCCQEup = 1;
+    _knobDecayAngMECup = 1;
+    _knobThetaDelta2Npiup = 1;
+    _knobRPAdn = 1;
+    _knobCCMECdn = 1;
+    _knobAxFFCCQEdn = 1;
+    _knobVecFFCCQEdn = 1;
+    _knobDecayAngMECdn = 1;
+    _knobThetaDelta2Npidn = 1;
+
+
     _run = -1;
     _subRun = -1;
     _evt = -1;
