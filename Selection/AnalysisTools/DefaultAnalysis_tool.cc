@@ -176,6 +176,8 @@ private:
   int _npion;                            /**< how many pions are there? */
   //int _pion;                             /**< is there a final-state charged pion from the neutrino? [1=yes 0=no] */
   float _pion_e, _pion_p, _pion_c; /**< energy, purity, completeness. */
+  int _neta;                         /**< is there a final-state eta from the neutrino? [1=yes 0=no] */
+  float _eta_e;                       /**< energy of MC eta */
 
   std::string _endmuonprocess; /**< End muon process name */
   float _endmuonmichel;        /**< End muon Michel electron energy */
@@ -886,6 +888,10 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("pion_c", &_pion_c, "pion_c/F");
   _tree->Branch("pion_p", &_pion_p, "pion_p/F");
 
+  // eta
+  _tree->Branch("neta", &_neta, "neta/I");
+  _tree->Branch("eta_e", &_eta_e, "eta_e/F");
+
   _tree->Branch("nslice", &_nslice, "nslice/I");
   _tree->Branch("crtveto", &_crtveto, "crtveto/I");
   _tree->Branch("crthitpe", &_crthitpe, "crthitpe/F");
@@ -1048,6 +1054,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _pion_e = 0;
   _pion_p = 0;
   _pion_c = 0;
+
+  _neta = 0;
+  _eta_e = 0;
 
   _nneutron = 0;
 
@@ -1223,6 +1232,13 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   {
 
     auto const &part = mct.GetParticle(i);
+
+    // for eta does not have to be statuscode==1
+    if (part.PdgCode() == 221) { 
+      _neta += 1; 
+      _eta_e = part.Momentum(0).E(); 
+    }
+
     if (part.StatusCode() != 1)
     {
       continue;
