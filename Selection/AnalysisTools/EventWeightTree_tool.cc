@@ -64,11 +64,14 @@ namespace analysis
   private:
     TTree *_weightstree;
     std::map<std::string, std::vector<double>> _mapWeight;
-    std::vector<double> _vecWeightFlux;
-    std::vector<double> _vecWeightsGenie;
+    std::vector<unsigned short> _vecWeightFlux;
+    std::vector<double> _vecWeightFluxD;
+    std::vector<unsigned short> _vecWeightsGenie;
+    std::vector<double> _vecWeightsGenieD;
     std::vector<double> _vecWeightsGenie_vec;
     std::vector<int> _vecWeightsGenie_nam;
-    std::vector<double> _vecWeightsReint;
+    std::vector<unsigned short> _vecWeightsReint;
+    std::vector<double> _vecWeightsReintD;
     double _knobRPAup;
     double _knobCCMECup;
     double _knobAxFFCCQEup;
@@ -126,7 +129,8 @@ namespace analysis
     _subRun = evt.subRun();
     _evt = evt.event();
 
-    _vecWeightsGenie = std::vector<double>(_GenieAllUniverses,1.0);
+    _vecWeightsGenie  = std::vector<unsigned short>(_GenieAllUniverses,1);
+    _vecWeightsGenieD = std::vector<double>(_GenieAllUniverses,1.0);
 
     //std::cout << " [ EventWeightTree ]" << " begin " << std::endl;
     
@@ -145,6 +149,7 @@ namespace analysis
     //vecTag.push_back(eventweight_spline_tag);
 
     int ctr = 0;
+    int GenieCounter = 0;
     
     for(auto& thisTag : vecTag){
 
@@ -163,11 +168,11 @@ namespace analysis
 
 	if (evtwgt_map.find("RPA_CCQE_UBGenie") != evtwgt_map.end()) { 
 	  _knobRPAup = evtwgt_map.find("RPA_CCQE_UBGenie")->second[0]; 
-	  _knobRPAup = evtwgt_map.find("RPA_CCQE_UBGenie")->second[1]; 
+	  _knobRPAdn = evtwgt_map.find("RPA_CCQE_UBGenie")->second[1]; 
 	}
 	if (evtwgt_map.find("XSecShape_CCMEC_UBGenie") != evtwgt_map.end()) { 
 	  _knobCCMECup = evtwgt_map.find("XSecShape_CCMEC_UBGenie")->second[0]; 
-	  _knobCCMECup = evtwgt_map.find("XSecShape_CCMEC_UBGenie")->second[1]; 
+	  _knobCCMECdn = evtwgt_map.find("XSecShape_CCMEC_UBGenie")->second[1]; 
 	}
 	if (evtwgt_map.find("AxFFCCQEshape_UBGenie") != evtwgt_map.end()) { 
 	  _knobAxFFCCQEup = evtwgt_map.find("AxFFCCQEshape_UBGenie")->second[0]; 
@@ -198,7 +203,7 @@ namespace analysis
 	// old implementation -> just add all weights as they come from the input
 	//_mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
 	
-	int GenieCounter = 0;
+
 	bool isFirstVectorFlux   = true;
 	bool isFirstVectorReint  = true;
 	
@@ -233,45 +238,47 @@ namespace analysis
 	    else {
 	      // is this the first flux variation in the event?
 	      if(isFirstVectorFlux){
-		_vecWeightFlux = it->second;
+		_vecWeightFluxD = it->second;
 		isFirstVectorFlux = false;
 	      }
 	      else{
 		// make sure same-size flux-weight vector
-		if ( (it->second).size() == _vecWeightFlux.size() ) {
-		  for(unsigned int i = 0; i < it->second.size(); ++i)
-		    _vecWeightFlux[i] *= it->second[i];
+		if ( (it->second).size() == _vecWeightFluxD.size() ) {
+		  for(unsigned int i = 0; i < it->second.size(); ++i) 
+		    _vecWeightFluxD[i] *= it->second[i];
 		}// if same-size flux-weight vector
 	      }// if not the first flux weight
 	    }// if not storing flux variations one-by-one
 	  }// if a flux-variation
 	  // if this is a genie-all variation
 	  else if (keyname.find("All") != std::string::npos) {
-	    for(unsigned int i = 0; i < it->second.size(); ++i)
-	      if ( (i + (100 * GenieCounter) ) < _vecWeightsGenie.size())
-		_vecWeightsGenie[i + (100 * GenieCounter) ] *= it->second[i];
-	      else
-		//std::cout << " [ EventWeightTree ]" << " ERROR FILLING GENIE WEIGHTS " << std::endl;
+	    //std::cout << " [ EventWeightTree ]" << " Entering Genie ALL variation number " << GenieCounter << std::endl;
+	    for(unsigned int i = 0; i < it->second.size(); ++i) {
+	      if ( (i + (100 * GenieCounter) ) < _vecWeightsGenie.size()) 
+		_vecWeightsGenieD[i + (100 * GenieCounter) ] *= it->second[i];
+	    }
+	    //else
+	    //std::cout << " [ EventWeightTree ]" << " ERROR FILLING GENIE WEIGHTS " << std::endl;
 	    GenieCounter += 1;
 	  }// if a genie-all variation
 	  // if a GEANT4 variation
-	  else if ( (keyname.find("reinteractions") != std::string::npos) ) {
+	    else if ( (keyname.find("reinteractions") != std::string::npos) ) {
 	      // is this the first G4 variation in the event?
 	      if(isFirstVectorReint){
-		_vecWeightsReint = it->second;
+		_vecWeightsReintD = it->second;
 		isFirstVectorReint = false;
 	      }
 	      else{
 		// make sure same-size flux-weight vector
-		if ( (it->second).size() == _vecWeightsReint.size() ) {
+		if ( (it->second).size() == _vecWeightsReintD.size() ) {
 		  for(unsigned int i = 0; i < it->second.size(); ++i)
-		    _vecWeightsReint[i] *= it->second[i];
+		    _vecWeightsReintD[i] *= it->second[i];
 		}// if same-size G4-weight vector
 	      }// if not the first G4 weight
-	  }// if a G4 variation
-	  else{ // if not a genie-all variation
-	    _mapWeight.insert(*it);
-	  }// end if not a genie-all variation
+	    }// if a G4 variation
+	    else{ // if not a genie-all variation
+	      _mapWeight.insert(*it);
+	    }// end if not a genie-all variation
 	}// for all weith vectors in map
       }//if the event-weight handle is valid
       
@@ -282,16 +289,44 @@ namespace analysis
     // if we are filling the flux-weights as one map:
     if (!_SaveAllFlux) {
       //std::cout << " [ EventWeightTree ] " << "flux-all weight vector now has " << _vecWeightFlux.size() << " elements" << std::endl;
-      _mapWeight.insert( std::pair<std::string,std::vector<double> >("flux_all",_vecWeightFlux) );
+      _mapWeight.insert( std::pair<std::string,std::vector<double> >("flux_all",_vecWeightFluxD) );
     }
     // store geinie-all map
     //std::cout << " [ EventWeightTree ] " << "flux-all weight vector now has " << _vecWeightsGenie.size() << " elements" << std::endl;
-    _mapWeight.insert( std::pair<std::string,std::vector<double> >("All_UBGenie",_vecWeightsGenie) );
+    _mapWeight.insert( std::pair<std::string,std::vector<double> >("All_UBGenie",_vecWeightsGenieD) );
 
     // store reinteraction map
     //std::cout << " [ EventWeightTree ] " << "reinteraction (G4) weight vector now has " << _vecWeightsReint.size() << " elements" << std::endl;
-    _mapWeight.insert( std::pair<std::string,std::vector<double> >("reint_all",_vecWeightsReint) );
+    _mapWeight.insert( std::pair<std::string,std::vector<double> >("reint_all",_vecWeightsReintD) );
 
+
+    _vecWeightFlux = std::vector<unsigned short>(_vecWeightFluxD.size(), 1);
+    for (size_t i=0; i < _vecWeightFluxD.size(); i++) {
+      auto w = _vecWeightFluxD[i];
+      unsigned short wshort = (unsigned short)(w*1000.);
+      if (w > 65535)  { wshort = std::numeric_limits<unsigned short>::max(); }
+      if (w < 0) { wshort = 1; }
+      _vecWeightFlux[i] = wshort;
+    }
+
+    _vecWeightsGenie = std::vector<unsigned short>(_vecWeightsGenieD.size(), 1);
+    for (size_t i=0; i < _vecWeightsGenieD.size(); i++) {
+      auto w = _vecWeightsGenieD[i];
+      unsigned short wshort = (unsigned short)(w*1000.);
+      if (w > 65535)  { wshort = std::numeric_limits<unsigned short>::max(); }
+      if (w < 0) { wshort = 1; }
+      _vecWeightsGenie[i] = wshort;
+    }
+
+    _vecWeightsReint = std::vector<unsigned short>(_vecWeightsReintD.size(), 1);
+    for (size_t i=0; i < _vecWeightsReintD.size(); i++) {
+      auto w = _vecWeightsReintD[i];
+      unsigned short wshort = (unsigned short)(w*1000.);
+      if (w > 65535)  { wshort = std::numeric_limits<unsigned short>::max(); }
+      if (w < 0) { wshort = 1; }
+      _vecWeightsReint[i] = wshort;
+    }
+      
     // store genie-all variation
 
     if(_createDedicatedTree) _weightstree->Fill();
@@ -308,11 +343,11 @@ namespace analysis
       _weightstree->Branch("evt",&_evt,"evt/I");
     }
     if(_createMapBranch) _tree->Branch("weights", "std::map<std::string, std::vector<double>>", &_mapWeight);
-    if(_createFluxBranch) _tree->Branch("weightsFlux", "std::vector<double>", &_vecWeightFlux);
-    if(_createGenieBranch) _tree->Branch("weightsGenie", "std::vector<double>", &_vecWeightsGenie);
+    if(_createFluxBranch) _tree->Branch("weightsFlux", "std::vector<unsigned short>", &_vecWeightFlux);
+    if(_createGenieBranch) _tree->Branch("weightsGenie", "std::vector<unsigned short>", &_vecWeightsGenie);
     //if(_createGenieBranch) _tree->Branch("weightsGenie_vec", "std::vector<double>", &_vecWeightsGenie_vec);
     //if(_createGenieBranch) _tree->Branch("weightsGenie_nam", "std::vector<int>", &_vecWeightsGenie_nam);
-    if(_createReintBranch) _tree->Branch("weightsReint", "std::vector<double>", &_vecWeightsReint);
+    if(_createReintBranch) _tree->Branch("weightsReint", "std::vector<unsigned short>", &_vecWeightsReint);
     if(_createSplineBranch) _tree->Branch("weightSpline",&_weightSpline,"weightSpline/F");
     if(_createTuneBranch) _tree->Branch("weightTune",&_weightTune,"weightTune/F");
     if(_createSplineTimesTuneBranch) _tree->Branch("weightSplineTimesTune",&_weightSplineTimesTune,"weightSplineTimesTune/F");
@@ -337,10 +372,13 @@ namespace analysis
   void EventWeightTree::resetTTree(TTree *_tree){
     _mapWeight.clear();
     _vecWeightFlux.clear();
+    _vecWeightFluxD.clear();
     _vecWeightsGenie.clear();
+    _vecWeightsGenieD.clear();
     _vecWeightsGenie_vec.clear();
     _vecWeightsGenie_nam.clear();
     _vecWeightsReint.clear();
+    _vecWeightsReintD.clear();
     _weightSpline = -1;
     _weightTune = -1;
     _weightSplineTimesTune = -1;
