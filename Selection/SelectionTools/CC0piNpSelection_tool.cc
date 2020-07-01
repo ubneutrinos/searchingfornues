@@ -818,9 +818,6 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         _shr_trkfitmedangle = searchingfornues::GetTrackRMSDeflection(tk, 10.);
 
 			searchingfornues::GetMoliereRadius(pfp_pxy,_shrmoliereavg,_shrmoliererms);
-			searchingfornues::GetMoliereRadiusMergedShowers(pfp_pxy,pfp_pxy_v[_shr2_pfp_id],_shr1shr2moliereavg,_shr1shr2moliererms);
-			searchingfornues::GetMoliereRadiusMergedShowers(pfp_pxy,pfp_pxy_v[_trk_pfp_id],_shr1trk1moliereavg,_shr1trk1moliererms);
-			searchingfornues::GetMoliereRadiusMergedShowers(pfp_pxy,pfp_pxy_v[_trk2_pfp_id],_shr1trk2moliereavg,_shr1trk2moliererms);
 
                         _shr_tkfit_start_x = tk->Start().X();
                         _shr_tkfit_start_y = tk->Start().Y();
@@ -1292,6 +1289,13 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
     _trk1trk2hitdist0 = trk1trk2hitdist_v[0];
     _trk1trk2hitdist1 = trk1trk2hitdist_v[1];
     _trk1trk2hitdist2 = trk1trk2hitdist_v[2];
+
+    // compute the merged moliere averages after we figured out all ids... but for consistency skip if the original failed
+    if (_shrmoliereavg>0.) {
+      searchingfornues::GetMoliereRadiusMergedShowers(pfp_pxy_v[_shr_pfp_id],pfp_pxy_v[_shr2_pfp_id],_shr1shr2moliereavg,_shr1shr2moliererms);
+      searchingfornues::GetMoliereRadiusMergedShowers(pfp_pxy_v[_shr_pfp_id],pfp_pxy_v[_trk_pfp_id],_shr1trk1moliereavg,_shr1trk1moliererms);
+      searchingfornues::GetMoliereRadiusMergedShowers(pfp_pxy_v[_shr_pfp_id],pfp_pxy_v[_trk2_pfp_id],_shr1trk2moliereavg,_shr1trk2moliererms);
+    }
 
     _extra_energy_y -= (_trk_energy_hits_tot + _shr_energy_tot);
     _pt = total_p.Perp();
