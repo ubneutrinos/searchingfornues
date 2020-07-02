@@ -1331,6 +1331,7 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
 
     _shr_pfp_id = 0;
     _trk_pfp_id = 0;
+    _shr2_pfp_id = 0;
     _trk2_pfp_id = 0;
 
     _trk_hits_max = 0;
