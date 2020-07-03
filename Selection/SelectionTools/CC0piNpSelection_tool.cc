@@ -594,96 +594,42 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
 
                 _n_showers_contained++;
 
-                auto &pca_pxy_v = pfp_pxy.get<recob::PCAxis>();
-                if (pca_pxy_v.size() > 0)
-                {
-                    _shr_pca_0 = pca_pxy_v[0]->getEigenValues()[0];
-                    _shr_pca_1 = pca_pxy_v[0]->getEigenValues()[1];
-                    _shr_pca_2 = pca_pxy_v[0]->getEigenValues()[2];
-                }
+		// store hits for each plane
+		std::vector<std::vector<art::Ptr<recob::Hit>>> cluster_hits_v_v(3, std::vector<art::Ptr<recob::Hit>>());
 
-                // store hits for each plane
-                std::vector<std::vector<art::Ptr<recob::Hit>>> cluster_hits_v_v(3, std::vector<art::Ptr<recob::Hit>>());
+		for (auto ass_clus : clus_pxy_v)
+		{
+		  // get cluster proxy
+		  const auto &clus = clus_proxy[ass_clus.key()];
+		  auto clus_hit_v = clus.get<recob::Hit>();
+		  shr_hits += clus_hit_v.size();
+		  for (const auto &hit : clus_hit_v)
+		  {
+		    hit_v.push_back(hit);
+		  }
+		  if (clus->Plane().Plane == 0)
+		  {
+		    _shr_hits_u_tot += clus_hit_v.size();
+		    // gather hits from this plane's cluster
+		    for (size_t h = 0; h < clus_hit_v.size(); h++)
+		      cluster_hits_v_v[0].push_back(clus_hit_v[h]);
+		  }
+		  else if (clus->Plane().Plane == 1)
+		  {
+		    _shr_hits_v_tot += clus_hit_v.size();
+		    // gather hits from this plane's cluster
+		    for (size_t h = 0; h < clus_hit_v.size(); h++)
+		      cluster_hits_v_v[1].push_back(clus_hit_v[h]);
+		  }
+		  else if (clus->Plane().Plane == 2)
+		  {
+		    _shr_hits_y_tot += clus_hit_v.size();
+		    // gather hits from this plane's cluster
+		    for (size_t h = 0; h < clus_hit_v.size(); h++)
+		      cluster_hits_v_v[2].push_back(clus_hit_v[h]);
+		  }
+		} // for all clusters associated to this shower
 
-                for (auto ass_clus : clus_pxy_v)
-                {
-                    // get cluster proxy
-                    const auto &clus = clus_proxy[ass_clus.key()];
-                    auto clus_hit_v = clus.get<recob::Hit>();
-                    shr_hits += clus_hit_v.size();
-                    for (const auto &hit : clus_hit_v)
-                    {
-                        hit_v.push_back(hit);
-                    }
-                    if (clus->Plane().Plane == 0)
-                    {
-                        _shr_hits_u_tot += clus_hit_v.size();
-                        // gather hits from this plane's cluster
-                        for (size_t h = 0; h < clus_hit_v.size(); h++)
-                            cluster_hits_v_v[0].push_back(clus_hit_v[h]);
-                    }
-                    else if (clus->Plane().Plane == 1)
-                    {
-                        _shr_hits_v_tot += clus_hit_v.size();
-                        // gather hits from this plane's cluster
-                        for (size_t h = 0; h < clus_hit_v.size(); h++)
-                            cluster_hits_v_v[1].push_back(clus_hit_v[h]);
-                    }
-                    else if (clus->Plane().Plane == 2)
-                    {
-                        _shr_hits_y_tot += clus_hit_v.size();
-                        // gather hits from this plane's cluster
-                        for (size_t h = 0; h < clus_hit_v.size(); h++)
-                            cluster_hits_v_v[2].push_back(clus_hit_v[h]);
-                    }
-                } // for all clusters associated to this shower
-
-                for (size_t pl = 0; pl < 3; pl++)
-                {
-                    int nclus = 0;
-                    float hitfracmax = 0.;
-		    // store direction of 2Dhits in cluster w.r.t. vertical on plane
-		    float clusterdir = 0;
-                    std::vector<std::vector<unsigned int>> out_cluster_v;
-                    if (cluster_hits_v_v[pl].size())
-                    {
-		      searchingfornues::cluster(cluster_hits_v_v[pl], out_cluster_v, 2.0, 1.0);
-		      clusterdir = searchingfornues::ClusterVtxDirection(nuvtx,cluster_hits_v_v[pl],_wire2cm,_time2cm);
-                        // find how many clusters above some # of hit threshold there are
-                        // find cluste with largest fraction of all hits
-                        float tothits = cluster_hits_v_v[pl].size();
-                        for (size_t nc = 0; nc < out_cluster_v.size(); nc++)
-                        {
-                            auto clus_hit_idx_v = out_cluster_v.at(nc);
-                            int nhitclus = clus_hit_idx_v.size();
-                            if (nhitclus > 3.)
-                                nclus += 1;
-                            float hitfrac = nhitclus / tothits;
-                            if (hitfrac > hitfracmax)
-                                hitfracmax = hitfrac;
-                        } // for all sub-clusters
-                    }     // if there are any hits on this plane
-                    if (pl == 0)
-                    {
-                        _shrsubclusters0 = nclus;
-                        _shrclusfrac0 = hitfracmax;
-			_shrclusdir0  = clusterdir;
-                    }
-                    if (pl == 1)
-                    {
-                        _shrsubclusters1 = nclus;
-                        _shrclusfrac1 = hitfracmax;
-			_shrclusdir1  = clusterdir;
-                    }
-                    if (pl == 2)
-                    {
-                        _shrsubclusters2 = nclus;
-                        _shrclusfrac2 = hitfracmax;
-			_shrclusdir2  = clusterdir;
-                    }
-                } // for all planes
-
-		_subcluster = _shrsubclusters0 + _shrsubclusters1 + _shrsubclusters2;
                 _shr_energy_tot += shr->Energy()[2] / 1000;
 
                 std::vector<float> cali_corr(3);
@@ -772,6 +718,61 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr_py = shr_p.Y();
                     _shr_pz = shr_p.Z();
                     _shr_openangle = shr->OpenAngle();
+
+		    auto &pca_pxy_v = pfp_pxy.get<recob::PCAxis>();
+		    if (pca_pxy_v.size() > 0)
+		    {
+		      _shr_pca_0 = pca_pxy_v[0]->getEigenValues()[0];
+		      _shr_pca_1 = pca_pxy_v[0]->getEigenValues()[1];
+		      _shr_pca_2 = pca_pxy_v[0]->getEigenValues()[2];
+		    }
+
+		    for (size_t pl = 0; pl < 3; pl++)
+		    {
+		      int nclus = 0;
+		      float hitfracmax = 0.;
+		      // store direction of 2Dhits in cluster w.r.t. vertical on plane
+		      float clusterdir = 0;
+		      std::vector<std::vector<unsigned int>> out_cluster_v;
+		      if (cluster_hits_v_v[pl].size())
+		      {
+			searchingfornues::cluster(cluster_hits_v_v[pl], out_cluster_v, 2.0, 1.0);
+			clusterdir = searchingfornues::ClusterVtxDirection(nuvtx,cluster_hits_v_v[pl],_wire2cm,_time2cm);
+                        // find how many clusters above some # of hit threshold there are
+                        // find cluste with largest fraction of all hits
+                        float tothits = cluster_hits_v_v[pl].size();
+                        for (size_t nc = 0; nc < out_cluster_v.size(); nc++)
+			{
+			  auto clus_hit_idx_v = out_cluster_v.at(nc);
+			  int nhitclus = clus_hit_idx_v.size();
+			  if (nhitclus > 3.)
+			    nclus += 1;
+			  float hitfrac = nhitclus / tothits;
+			  if (hitfrac > hitfracmax)
+			    hitfracmax = hitfrac;
+                        } // for all sub-clusters
+		      }     // if there are any hits on this plane
+		      if (pl == 0)
+		      {
+                        _shrsubclusters0 = nclus;
+                        _shrclusfrac0 = hitfracmax;
+			_shrclusdir0  = clusterdir;
+		      }
+		      if (pl == 1)
+		      {
+                        _shrsubclusters1 = nclus;
+                        _shrclusfrac1 = hitfracmax;
+			_shrclusdir1  = clusterdir;
+		      }
+		      if (pl == 2)
+		      {
+                        _shrsubclusters2 = nclus;
+                        _shrclusfrac2 = hitfracmax;
+			_shrclusdir2  = clusterdir;
+		      }
+		    } // for all planes
+
+		    _subcluster = _shrsubclusters0 + _shrsubclusters1 + _shrsubclusters2;
 
                     if (tkcalo_proxy == NULL)
                     {
