@@ -306,6 +306,107 @@ namespace searchingfornues
 
     }// for all spacepoints
 
+    if (angle_v.size()==0) {
+      medangle = std::numeric_limits<float>::max();
+      rmsangle = std::numeric_limits<float>::max();
+      return;
+    }
+
+    // calculate average...
+    for (size_t d=0; d < angle_v.size(); d++)
+    {
+      medangle += angle_v[d];
+    }
+    medangle /= angle_v.size();
+    // ... and RMS
+    for (size_t d=0; d < angle_v.size(); d++)
+    {
+      rmsangle += (angle_v[d] - medangle) * (angle_v[d] - medangle);
+    }
+    rmsangle /= sqrt( angle_v.size() );
+
+    return;
+
+  }// end of function
+
+  /**
+   * @brief Return rms angular deviation of a shower's spacepoints w.r.t. direction; this version is for a shower to be merged with a second pfp.
+   * @input shower proxy  : track being provided as input
+   */
+  void GetMoliereRadiusMergedShowers(const searchingfornues::ProxyPfpElem_t pfp_pxy, const searchingfornues::ProxyPfpElem_t pfp2_pxy,
+      float& medangle, float& rmsangle) {
+
+    auto shower_v  = pfp_pxy.get<recob::Shower>();
+    auto spcpnts_v = pfp_pxy.get<recob::SpacePoint>();
+
+    auto shower2_v  = pfp2_pxy.get<recob::Shower>();
+    auto spcpnts2_v = pfp2_pxy.get<recob::SpacePoint>();
+
+    if (shower_v.size() != 1) return;
+    if (shower2_v.size() != 1) return;
+
+    auto shower = shower_v[0];
+    auto shower2 = shower2_v[0];
+
+    auto dir3D = shower->Direction();
+    TVector3 shrdir(dir3D.X(), dir3D.Y(), dir3D.Z() );
+
+    auto vtx3D = shower->ShowerStart();
+    TVector3 shrvtx(vtx3D.X(), vtx3D.Y(), vtx3D.Z() );
+
+    //if the 2nd pfp is upstream of the shower, use it for vtx and dir
+    auto vtx3D_shr2 = shower2->ShowerStart();
+    if ( (vtx3D_shr2-vtx3D).Dot(shower->Direction()) < 0. ) {
+      shrvtx = TVector3(vtx3D_shr2.X(), vtx3D_shr2.Y(), vtx3D_shr2.Z() );
+      shrdir = TVector3(shower2->Direction().X(),shower2->Direction().Y(),shower2->Direction().Z());
+    }
+
+    std::vector<float> angle_v;
+
+    medangle = 0;
+    rmsangle = 0;
+
+    for (auto &sp : spcpnts_v)
+    {
+      auto spxyz = sp->XYZ();
+
+      TVector3 sppos(spxyz[0],spxyz[1],spxyz[2]);
+
+      TVector3 sptovtx = sppos-shrvtx;
+
+      if (sptovtx.Mag() == 0) continue;
+
+      float angle = acos( sptovtx.Dot( shrdir ) / ( sptovtx.Mag() * shrdir.Mag() ) );
+      angle *= (180./3.14);
+
+      angle_v.push_back( angle );
+
+    }// for all spacepoints
+
+    //add also the spacepoints from the 2nd shower
+    for (auto &sp : spcpnts2_v)
+    {
+      auto spxyz = sp->XYZ();
+
+      TVector3 sppos(spxyz[0],spxyz[1],spxyz[2]);
+
+      TVector3 sptovtx = sppos-shrvtx;
+
+      if (sptovtx.Mag() == 0) continue;
+
+      float angle = acos( sptovtx.Dot( shrdir ) / ( sptovtx.Mag() * shrdir.Mag() ) );
+      angle *= (180./3.14);
+
+      angle_v.push_back( angle );
+
+    }// for all spacepoints
+
+    if (angle_v.size()==0) {
+      medangle = std::numeric_limits<float>::max();
+      rmsangle = std::numeric_limits<float>::max();
+      return;
+    }
+
     // calculate average...
     for (size_t d=0; d < angle_v.size(); d++)
     {

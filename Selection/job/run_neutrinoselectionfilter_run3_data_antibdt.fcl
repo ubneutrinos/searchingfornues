@@ -1,4 +1,4 @@
-#include "run_neutrinoselectionfilter_run3_data.fcl"
+#include "run_neutrinoselectionfilter_run3_dataON.fcl"
 
 # CC0PiNp Selection Tool
 physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool

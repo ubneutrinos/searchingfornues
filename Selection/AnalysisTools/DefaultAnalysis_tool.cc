@@ -9,6 +9,7 @@
 #include "TDatabasePDG.h"
 #include "TParticlePDG.h"
 #include "nusimdata/SimulationBase/MCTruth.h"
+#include "nusimdata/SimulationBase/MCFlux.h"
 #include "larcore/Geometry/Geometry.h"
 #include "larsim/EventWeight/Base/MCEventWeight.h"
 // backtracking tools
@@ -104,6 +105,7 @@ private:
   art::InputTag fCLSproducer;     // cluster associated to PFP
   art::InputTag fMCTproducer;     // MCTruth from neutrino generator
   art::InputTag fMCPproducer;     // MCParticle from Geant4 stage
+  art::InputTag fMCFluxproducer;  // MCFlux producer
   art::InputTag fBacktrackTag;
   art::InputTag fHproducer;
   art::InputTag fMCRproducer;
@@ -160,6 +162,9 @@ private:
 
   int _nu_pdg;           /**< neutrino PDG code */
   int _ccnc;             /**< CC or NC tag from GENIE */
+  int _nu_parent_pdg;    /**< neutrino parent's PDG code [http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/] */
+  int _nu_hadron_pdg;    /**< PDG code of hadron eventually producing neutrino [http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/] */
+  int _nu_decay_mode;    /**< decay mode that lead to this neutrino in beam simulation [http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/] */
   int _interaction;      /**< Interaction code from GENIE */
   bool _isVtxInFiducial; /**< true if neutrino in fiducial volume */
   bool _truthFiducial;   /**< is the truth information contained. Require all track start/end point in FV and showers deposit > 60% of energy in TPC or deposit at least 100 MeV in TPC */
@@ -181,6 +186,8 @@ private:
   int _npion;                            /**< how many pions are there? */
   //int _pion;                             /**< is there a final-state charged pion from the neutrino? [1=yes 0=no] */
   float _pion_e, _pion_p, _pion_c; /**< energy, purity, completeness. */
+  int _neta;                         /**< is there a final-state eta from the neutrino? [1=yes 0=no] */
+  float _eta_e;                       /**< energy of MC eta */
 
   std::string _endmuonprocess; /**< End muon process name */
   float _endmuonmichel;        /**< End muon Michel electron energy */
@@ -291,6 +298,7 @@ DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
   fCLSproducer = p.get<art::InputTag>("CLSproducer");
   fMCTproducer = p.get<art::InputTag>("MCTproducer");
   fMCPproducer = p.get<art::InputTag>("MCPproducer");
+  fMCFluxproducer = p.get<art::InputTag>("MCFluxproducer");
   fBacktrackTag = p.get<art::InputTag>("BacktrackTag");
   fHproducer = p.get<art::InputTag>("Hproducer");
   fMCRproducer = p.get<art::InputTag>("MCRproducer");
@@ -862,6 +870,9 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   // neutrino information
   _tree->Branch("nu_pdg", &_nu_pdg, "nu_pdg/I");
   _tree->Branch("ccnc", &_ccnc, "ccnc/I");
+  _tree->Branch("nu_parent_pdg", &_nu_parent_pdg, "nu_parent_pdg/I");
+  _tree->Branch("nu_hadron_pdg", &_nu_hadron_pdg, "nu_hadron_pdg/I");
+  _tree->Branch("nu_decay_mode", &_nu_decay_mode, "nu_decay_mode/I");
   _tree->Branch("interaction", &_interaction, "interaction/I");
   _tree->Branch("nu_e", &_nu_e, "nu_e/F");
   _tree->Branch("nu_pt", &_nu_pt, "nu_pt/F");
@@ -926,6 +937,10 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("pion_e", &_pion_e, "pion_e/F");
   _tree->Branch("pion_c", &_pion_c, "pion_c/F");
   _tree->Branch("pion_p", &_pion_p, "pion_p/F");
+
+  // eta
+  _tree->Branch("neta", &_neta, "neta/I");
+  _tree->Branch("eta_e", &_eta_e, "eta_e/F");
 
   _tree->Branch("nslice", &_nslice, "nslice/I");
   _tree->Branch("crtveto", &_crtveto, "crtveto/I");
@@ -1043,6 +1058,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
 
   _nu_pdg = std::numeric_limits<int>::lowest();
   _ccnc = std::numeric_limits<int>::lowest();
+  _nu_parent_pdg = std::numeric_limits<int>::lowest();
+  _nu_hadron_pdg = std::numeric_limits<int>::lowest();
+  _nu_decay_mode = std::numeric_limits<int>::lowest();
   _interaction = std::numeric_limits<int>::lowest();
   _pass = 0;
 
@@ -1098,6 +1116,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _pion_e = 0;
   _pion_p = 0;
   _pion_c = 0;
+
+  _neta = 0;
+  _eta_e = 0;
 
   _nneutron = 0;
 
@@ -1199,6 +1220,33 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   // load MCTruth [from geant]
   auto const &mcp_h = e.getValidHandle<std::vector<simb::MCParticle>>(fMCPproducer);
 
+  // load MCFlux
+  auto const& mcflux_h = e.getValidHandle<std::vector<simb::MCFlux>>(fMCFluxproducer);
+
+  // reference: http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/
+  /*
+    Decay mode that produced neutrino:
+
+    1  K0L -> nue pi- e+
+    2  K0L -> nuebar pi+ e-
+    3  K0L -> numu pi- mu+
+    4  K0L -> numubar pi+ mu-
+    5  K+  -> numu mu+
+    6  K+  -> nue pi0 e+
+    7  K+  -> numu pi0 mu+
+    8  K-  -> numubar mu-
+    9  K-  -> nuebar pi0 e-
+    10  K-  -> numubar pi0 mu-
+    11  mu+ -> numubar nue e+
+    12  mu- -> numu nuebar e-
+    13  pi+ -> numu mu+
+    14  pi- -> numubar mu-
+   */
+  auto flux = mcflux_h->at(0);
+  _nu_parent_pdg = flux.fptype;
+  _nu_hadron_pdg = flux.ftptype;
+  _nu_decay_mode = flux.fndecay;
+
   auto mct = mct_h->at(0);
   auto neutrino = mct.GetNeutrino();
   auto nu = neutrino.Nu();
@@ -1249,6 +1297,13 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   {
 
     auto const &part = mct.GetParticle(i);
+
+    // for eta does not have to be statuscode==1
+    if (part.PdgCode() == 221) { 
+      _neta += 1; 
+      _eta_e = part.Momentum(0).E(); 
+    }
+
     if (part.StatusCode() != 1)
     {
       continue;

@@ -73,7 +73,7 @@ private:
   art::InputTag fPCAproducer; // PCAxis associated to PFP
   art::InputTag fMCTproducer;
   bool fVerbose;
-  bool fData;
+  bool fData, fFakeData;
   bool fFilter;
   std::string fBDT_branch;
   float fBDT_cut;
@@ -158,6 +158,7 @@ NeutrinoSelectionFilter::NeutrinoSelectionFilter(fhicl::ParameterSet const &p)
   fMCTproducer = p.get<art::InputTag>("MCTproducer");
   fVerbose = p.get<bool>("Verbose");
   fData = p.get<bool>("IsData");
+  fFakeData = p.get<bool>("IsFakeData",false);
   fFilter = p.get<bool>("Filter", false);
   fBDT_branch = p.get<std::string>("BDT_branch", "");
   fBDT_cut = p.get<float>("BDT_cut", -1);
@@ -173,7 +174,7 @@ NeutrinoSelectionFilter::NeutrinoSelectionFilter(fhicl::ParameterSet const &p)
   _subrun_tree->Branch("run", &_run_sr, "run/I");
   _subrun_tree->Branch("subRun", &_sub_sr, "subRun/I");
 
-  if (!fData)
+  if ( (!fData) || (fFakeData) )
     _subrun_tree->Branch("pot", &_pot, "pot/F");
 
   // configure and construct Selection Tool
@@ -408,7 +409,7 @@ void NeutrinoSelectionFilter::ResetTTree()
 
 bool NeutrinoSelectionFilter::endSubRun(art::SubRun &subrun)
 {
-  if (!fData)
+  if ( (!fData) || (fFakeData) )
   {
     art::Handle<sumdata::POTSummary> potSummaryHandle;
     _pot = subrun.getByLabel(fMCTproducer, potSummaryHandle) ? static_cast<float>(potSummaryHandle->totpot) : 0.f;

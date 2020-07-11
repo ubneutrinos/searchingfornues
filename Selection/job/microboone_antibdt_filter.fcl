@@ -1,3 +1,5 @@
+#include "mcsfitproducer.fcl"
+
 BEGIN_PROLOG
 
 microboone_antibdtfilter: 
@@ -18,14 +20,21 @@ microboone_antibdtfilter:
     BDT_cut: 9e-1
     Verbose: false
     SelectionTool: {
-       tool_type: "CC0piNpSelection"
-       CLSproducer: "pandora"
-       TRKproducer: "pandora"
-       CALproducer: "pandoracali"
-       PIDproducer: "pandoracalipid"
-       TRKproducerTrkFit: "shrreco3dKalmanShower"
-       CALproducerTrkFit: "shrreco3dKalmanShowercali"
-       TrkShrscore: 5e-1
+        tool_type: "CC0piNpSelection"
+        TrkShrscore: 0.5
+        CLSproducer: "pandora"
+        TRKproducer: "pandora"
+        CALproducer: "pandoracali"
+        PIDproducer: "pandoracalipid"
+        CALproducerTrkFit: "shrreco3dKalmanShowercali"
+        TRKproducerTrkFit: "shrreco3dKalmanShower"
+        Clusterproducer: "pandora"
+        Hitproducer: "gaushit"
+        mcsfitmu: @local::mcsfitproducer.fitter # @local::microboone_reco_data_producers.pandoraMCSMu.fitter
+        LocaldEdx: false # use dQdx and convert to dEdx with fixed conversion
+        # ADC to E conversion taken from reco2 production fhicl file
+        ADCtoE: [232,249,243.7] # e-/ADC @local::microboone_reco_data_producers.shrreco3d.ADCtoE
+        RecalibrateHits: true
     }
     AnalysisTools: {
        cosmicip: {
@@ -35,19 +44,27 @@ microboone_antibdtfilter:
           TrkShrScore: 5e-1
        }
        default: {
-          tool_type: "DefaultAnalysis"
-          BacktrackTag: ""
-          CLSproducer: "pandora"
-          CRTVetoproducer: "crtveto"
-          Hproducer: "gaushit"
-          MCPproducer: "largeant"
-          MCRproducer: "mcreco"
-          MCTproducer: "generator"
-          ProtonThreshold: 4e-2
-          SLCproducer: "pandora"
+            tool_type: "DefaultAnalysis"
+            CRTVetoproducer: ""
+            CLSproducer: "pandora"
+            MCTproducer: "generator"
+            Hproducer: "gaushit"
+            BacktrackTag: "gaushitTruthMatch"
+            MCRproducer: "mcreco"
+            SLCproducer: "pandora"
+            MCPproducer: "largeant"
+            ProtonThreshold: 0.04 # GeV
+            fidvolXstart: 5.
+            fidvolXend: 5.
+            fidvolYstart: 6.
+            fidvolYend: 6.
+            fidvolZstart: 20.
+            fidvolZend: 50.
        }
        zbdt: {
           tool_type: "BDT"
+          OnlyLegacy: true
+          TrigResProducer: ""
        }
     }
 }

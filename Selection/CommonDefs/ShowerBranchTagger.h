@@ -135,6 +135,8 @@ namespace searchingfornues
     dwire /= charge;
     dtime /= charge;
 
+    if (charge==0 || ( (dwire*dwire) + (dtime*dtime) )==0 || ( (vtx2start_w*vtx2start_w) + (vtx2start_t*vtx2start_t) )==0) return std::numeric_limits<float>::max();
+
     // calculate dot product
     float dot = (dwire * vtx2start_w) + (dtime * vtx2start_t);
     dot /= sqrt( (dwire*dwire) + (dtime*dtime) );
@@ -373,7 +375,7 @@ namespace searchingfornues
     // loop through clusters
     for (size_t c=0; c < cluster_h->size(); c++) {
       
-      auto clus = cluster_h->at(c);
+      //auto clus = cluster_h->at(c);
       
       // get associated hits
       auto clus_hit_v = clus_hit_assn_v.at( c );
