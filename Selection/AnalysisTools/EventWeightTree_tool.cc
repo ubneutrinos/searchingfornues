@@ -135,21 +135,23 @@ namespace analysis
     _vecWeightsGenie  = std::vector<unsigned short>(_GenieAllUniverses,1);
     _vecWeightsGenieD = std::vector<double>(_GenieAllUniverses,1.0);
 
-    //std::cout << " [ EventWeightTree ]" << " begin " << std::endl;
+    std::cout << " [ EventWeightTree ]" << " begin " << std::endl;
 
     std::vector<art::InputTag> vecTag;
-    art::InputTag eventweight_tag_00("eventweight","","EventWeightMar18");
-    art::InputTag eventweight_tag_01("eventweight","","EventWeightMar18ExtraGENIE1");
-    art::InputTag eventweight_tag_02("eventweight","","EventWeightMar18ExtraGENIE2");
-    art::InputTag eventweight_tag_03("eventweight","","EventWeightMar18ExtraGENIE3");
-    art::InputTag eventweight_tag_04("eventweight","","EventWeightMar18ExtraGENIE4");
+    //art::InputTag eventweight_tag_00("eventweight","","EventWeightMar18");
+    //art::InputTag eventweight_tag_01("eventweight","","EventWeightMar18ExtraGENIE1");
+    //art::InputTag eventweight_tag_02("eventweight","","EventWeightMar18ExtraGENIE2");
+    //art::InputTag eventweight_tag_03("eventweight","","EventWeightMar18ExtraGENIE3");
+    //art::InputTag eventweight_tag_04("eventweight","","EventWeightMar18ExtraGENIE4");
     //art::InputTag eventweight_spline_tag("eventweightSplines");
-    vecTag.push_back(eventweight_tag_00);
-    vecTag.push_back(eventweight_tag_01);
-    vecTag.push_back(eventweight_tag_02);
-    vecTag.push_back(eventweight_tag_03);
-    vecTag.push_back(eventweight_tag_04);
+    art::InputTag eventweight_tag("eventweight");
+    //vecTag.push_back(eventweight_tag_00);
+    //vecTag.push_back(eventweight_tag_01);
+    //vecTag.push_back(eventweight_tag_02);
+    //vecTag.push_back(eventweight_tag_03);
+    //vecTag.push_back(eventweight_tag_04);
     //vecTag.push_back(eventweight_spline_tag);
+    vecTag.push_back(eventweight_tag);
 
     int ctr = 0;
     int GenieCounter = 0;
@@ -163,7 +165,7 @@ namespace analysis
 
       if(eventweights_handle.isValid()){
 
-        //std::cout << " [ EventWeightTree ]" << " isValid! " << std::endl;
+        std::cout << " [ EventWeightTree ]" << " isValid! " << std::endl;
 
         std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
         art::fill_ptr_vector(eventweights, eventweights_handle);
@@ -204,7 +206,8 @@ namespace analysis
         if(_weightSpline != -1 && _weightTune != -1) _weightSplineTimesTune = _weightSpline * _weightTune;
 
         // Get the PPFX Central Value
-        if(evtwgt_map.find("ppfx_cv_PPFXCV") != evtwgt_map.end()) _ppfx_cv = evtwgt_map.find("ppfx_cv_PPFXCV")->second[0];
+        if(evtwgt_map.find("ppfx_cv_UBPPFXCV") != evtwgt_map.end()) _ppfx_cv = evtwgt_map.find("ppfx_cv_UBPPFXCV")->second[0];
+        std::cout << "ppfx cv weight: "<< _ppfx_cv<<  std::endl;
         // evtwgt_map.erase("ppfx_cv_PPFXCV");
 
 

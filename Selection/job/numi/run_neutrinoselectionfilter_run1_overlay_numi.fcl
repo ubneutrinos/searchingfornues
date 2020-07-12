@@ -1,8 +1,37 @@
-#include "eventweight_microboone_dec20_numi.fcl"
+#include "eventweight_microboone_mar18_numi.fcl"
 #include "seedservice_microboone.fcl"
 #include "microboone_eventweight_service.fcl"
 #include "run_neutrinoselectionfilter_run1_data.fcl"
-#include "eventweight.fcl"
+
+
+#Two things need to be specified below to get event weights: 1) which to calculate, via the physics.p1 parameter, and 2) how to store them, via the EventWeightTreeTool parameters
+#Force loading ubsim EventWeight calculator libraries instead of larsim default
+services.UBEventWeight: @local::microboone_eventweight_service
+services.NuRandomService: @local::microboone_seedservice #might not be necessary
+
+
+EventWeightTreeTool: {
+    tool_type: "EventWeightTree"
+    createDedicatedTree: false
+    createMapBranch: true # true if std::map<string,std::vector<float>> should be saved
+    createFluxBranch: true
+    createGenieBranch: true
+    createReintBranch: true
+    createSplineBranch: true
+    createTuneBranch: true
+    createSplineTimesTuneBranch: true
+    createPPFXBranch: true
+}
+
+#For Nicolo
+calotemp.p1: @local::physics.p1
+
+#Systematic weights
+physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeightTreeTool
+physics.producers.eventweight:        @local::microboone_eventweight_mar18
+physics.p1: [ eventweight, @sequence::physics.p1] #Uncomment line to run systematic weights, or comment line to not run them
+
+
 
 services.DetectorClocksService.TrigModuleName: "triggersim"
 
