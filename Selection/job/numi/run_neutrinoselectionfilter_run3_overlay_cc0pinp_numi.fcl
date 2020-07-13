@@ -9,18 +9,3 @@ physics.filters.nuselection.AnalysisTools.zbdt.TrigResProducer: "TriggerResults:
 physics.filters.nuselection.AnalysisTools.zbdt: @local::BDTTool
 
 physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool
-
-# Set the Horn Current Configuration
-physics.producers.eventweight.ppfx_cv.horn_curr:      "-200i"
-physics.producers.eventweight.ppfx_ms.horn_curr:      "-200i"
-physics.producers.eventweight.ppfx_mipppi.horn_curr:  "-200i"
-physics.producers.eventweight.ppfx_mippk.horn_curr:   "-200i"
-physics.producers.eventweight.ppfx_thinmes.horn_curr: "-200i"
-physics.producers.eventweight.ppfx_thinpi.horn_curr:  "-200i"
-physics.producers.eventweight.ppfx_other.horn_curr:   "-200i"
-physics.producers.eventweight.ppfx_thinnpi.horn_curr: "-200i"
-physics.producers.eventweight.ppfx_totabs.horn_curr:  "-200i"
-physics.producers.eventweight.ppfx_targatt.horn_curr: "-200i"
-physics.producers.eventweight.ppfx_thinna.horn_curr:  "-200i"
-physics.producers.eventweight.ppfx_think.horn_curr:   "-200i"
-physics.producers.eventweight.ppfx_thinn.horn_curr:   "-200i"

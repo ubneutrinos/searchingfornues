@@ -69,6 +69,8 @@ namespace analysis
       std::vector<unsigned short> _vecWeightsGenie;
       std::vector<double> _vecWeightsGenieD;
       std::vector<double> _vecWeightsGenie_vec;
+      std::vector<unsigned short> _vecWeightsPPFX;
+      std::vector<double> _vecWeightsPPFXD;
       std::vector<int> _vecWeightsGenie_nam;
       std::vector<unsigned short> _vecWeightsReint;
       std::vector<double> _vecWeightsReintD;
@@ -78,12 +80,20 @@ namespace analysis
       double _knobVecFFCCQEup;
       double _knobDecayAngMECup;
       double _knobThetaDelta2Npiup;
+      double _knobThetaDelta2NRadup;
+      double _knobRPA_CCQE_Reducedup;
+      double _knobNormCCCOHup;
+      double _knobNormNCCOHup;
       double _knobRPAdn;
       double _knobCCMECdn;
       double _knobAxFFCCQEdn;
       double _knobVecFFCCQEdn;
       double _knobDecayAngMECdn;
       double _knobThetaDelta2Npidn;
+      double _knobThetaDelta2NRaddn;
+      double _knobRPA_CCQE_Reduceddn;
+      double _knobNormCCCOHdn;
+      double _knobNormNCCOHdn;
       float _weightSpline;
       float _weightTune;
       float _weightSplineTimesTune;
@@ -138,23 +148,24 @@ namespace analysis
     std::cout << " [ EventWeightTree ]" << " begin " << std::endl;
 
     std::vector<art::InputTag> vecTag;
-    //art::InputTag eventweight_tag_00("eventweight","","EventWeightMar18");
-    //art::InputTag eventweight_tag_01("eventweight","","EventWeightMar18ExtraGENIE1");
-    //art::InputTag eventweight_tag_02("eventweight","","EventWeightMar18ExtraGENIE2");
-    //art::InputTag eventweight_tag_03("eventweight","","EventWeightMar18ExtraGENIE3");
-    //art::InputTag eventweight_tag_04("eventweight","","EventWeightMar18ExtraGENIE4");
+    art::InputTag eventweight_tag_00("eventweight","","EventWeightMar18");
+    art::InputTag eventweight_tag_01("eventweight","","EventWeightMar18ExtraGENIE1");
+    art::InputTag eventweight_tag_02("eventweight","","EventWeightMar18ExtraGENIE2");
+    art::InputTag eventweight_tag_03("eventweight","","EventWeightMar18ExtraGENIE3");
+    art::InputTag eventweight_tag_04("eventweight","","EventWeightMar18ExtraGENIE4");
     //art::InputTag eventweight_spline_tag("eventweightSplines");
-    art::InputTag eventweight_tag("eventweight");
-    //vecTag.push_back(eventweight_tag_00);
-    //vecTag.push_back(eventweight_tag_01);
-    //vecTag.push_back(eventweight_tag_02);
-    //vecTag.push_back(eventweight_tag_03);
-    //vecTag.push_back(eventweight_tag_04);
+    // art::InputTag eventweight_tag("eventweight");
+    vecTag.push_back(eventweight_tag_00);
+    vecTag.push_back(eventweight_tag_01);
+    vecTag.push_back(eventweight_tag_02);
+    vecTag.push_back(eventweight_tag_03);
+    vecTag.push_back(eventweight_tag_04);
     //vecTag.push_back(eventweight_spline_tag);
-    vecTag.push_back(eventweight_tag);
+    // vecTag.push_back(eventweight_tag);
 
     int ctr = 0;
     int GenieCounter = 0;
+    int PPFXCounter = 0;
 
     for(auto& thisTag : vecTag){
 
@@ -194,6 +205,22 @@ namespace analysis
         if (evtwgt_map.find("Theta_Delta2Npi_UBGenie") != evtwgt_map.end()) { 
           _knobThetaDelta2Npiup = evtwgt_map.find("Theta_Delta2Npi_UBGenie")->second[0]; 
           _knobThetaDelta2Npidn = evtwgt_map.find("Theta_Delta2Npi_UBGenie")->second[1]; 
+        }
+        if (evtwgt_map.find("ThetaDelta2NRad_UBGenie") != evtwgt_map.end()) { 
+          _knobThetaDelta2NRadup = evtwgt_map.find("ThetaDelta2NRad_UBGenie")->second[0]; 
+          _knobThetaDelta2NRaddn = evtwgt_map.find("ThetaDelta2NRad_UBGenie")->second[1]; 
+        }
+        if (evtwgt_map.find("RPA_CCQE_Reduced_UBGenie") != evtwgt_map.end()) { 
+          _knobRPA_CCQE_Reducedup = evtwgt_map.find("RPA_CCQE_Reduced_UBGenie")->second[0]; 
+          _knobRPA_CCQE_Reduceddn = evtwgt_map.find("RPA_CCQE_Reduced_UBGenie")->second[1]; 
+        }
+        if (evtwgt_map.find("NormCCCOH_UBGenie") != evtwgt_map.end()) { 
+          _knobNormCCCOHup = evtwgt_map.find("NormCCCOH_UBGenie")->second[0]; 
+          _knobNormCCCOHdn = evtwgt_map.find("NormCCCOH_UBGenie")->second[1]; 
+        }
+        if (evtwgt_map.find("NormNCCOH_UBGenie") != evtwgt_map.end()) { 
+          _knobNormNCCOHup = evtwgt_map.find("NormNCCOH_UBGenie")->second[0]; 
+          _knobNormNCCOHdn = evtwgt_map.find("NormNCCOH_UBGenie")->second[1]; 
         }
 
         if(evtwgt_map.find("splines_general_Spline") != evtwgt_map.end()) _weightSpline = evtwgt_map.find("splines_general_Spline")->second[0];
@@ -272,6 +299,19 @@ namespace analysis
             //std::cout << " [ EventWeightTree ]" << " ERROR FILLING GENIE WEIGHTS " << std::endl;
             GenieCounter += 1;
           }// if a genie-all variation
+          
+          // if this is a ppfx multisim variation
+          else if (keyname.find("ppfx_ms_UBPPFX") != std::string::npos) {
+            //std::cout << " [ EventWeightTree ]" << " Entering PPFX variation number " << PPFXCounter << std::endl;
+            for(unsigned int i = 0; i < it->second.size(); ++i) {
+              if ( (i + (100 * PPFXCounter) ) < _vecWeightsPPFXD.size()) 
+                _vecWeightsPPFXD[i + (100 * PPFXCounter) ] *= it->second[i];
+            }
+            //else
+            //std::cout << " [ EventWeightTree ]" << " ERROR FILLING PPFX WEIGHTS " << std::endl;
+            PPFXCounter += 1;
+          }// if a ppfx-all variation
+          
           // if a GEANT4 variation
           else if ( (keyname.find("reinteractions") != std::string::npos) ) {
             // is this the first G4 variation in the event?
@@ -310,6 +350,10 @@ namespace analysis
     //std::cout << " [ EventWeightTree ] " << "reinteraction (G4) weight vector now has " << _vecWeightsReint.size() << " elements" << std::endl;
     _mapWeight.insert( std::pair<std::string,std::vector<double> >("reint_all",_vecWeightsReintD) );
 
+    // store PPFX map
+    //std::cout << " [ EventWeightTree ] " << "PPFX weight vector now has " << _vecWeightsPPFX.size() << " elements" << std::endl;
+    _mapWeight.insert( std::pair<std::string,std::vector<double> >("ppfx_all",_vecWeightsPPFXD) );
+
 
     _vecWeightFlux = std::vector<unsigned short>(_vecWeightFluxD.size(), 1);
     for (size_t i=0; i < _vecWeightFluxD.size(); i++) {
@@ -338,6 +382,15 @@ namespace analysis
       _vecWeightsReint[i] = wshort;
     }
 
+    _vecWeightsPPFX = std::vector<unsigned short>(_vecWeightsPPFXD.size(), 1);
+    for (size_t i=0; i < _vecWeightsPPFXD.size(); i++) {
+      auto w = _vecWeightsPPFXD[i];
+      unsigned short wshort = (unsigned short)(w*1000.);
+      if (w > 65535)  { wshort = std::numeric_limits<unsigned short>::max(); }
+      if (w < 0) { wshort = 1; }
+      _vecWeightsPPFX[i] = wshort;
+    }
+
     // store genie-all variation
 
     if(_createDedicatedTree) _weightstree->Fill();
@@ -363,6 +416,7 @@ namespace analysis
     if(_createTuneBranch) _tree->Branch("weightTune",&_weightTune,"weightTune/F");
     if(_createSplineTimesTuneBranch) _tree->Branch("weightSplineTimesTune",&_weightSplineTimesTune,"weightSplineTimesTune/F");
     if(_createPPFXBranch) _tree->Branch("ppfx_cv",&_ppfx_cv,"ppfx_cv/F");
+    if(_createPPFXBranch) _tree->Branch("weightsPPFX", "std::vector<unsigned short>", &_vecWeightsPPFX);
 
     if (_createGenieBranch) {
       _tree->Branch("knobRPAup",&_knobRPAup,"knobRPAup/D");
@@ -377,6 +431,14 @@ namespace analysis
       _tree->Branch("knobDecayAngMECdn",&_knobDecayAngMECdn,"knobDecayAngMECdn/D");
       _tree->Branch("knobThetaDelta2Npiup",&_knobThetaDelta2Npiup,"knobThetaDelta2Npiup/D");
       _tree->Branch("knobThetaDelta2Npidn",&_knobThetaDelta2Npidn,"knobThetaDelta2Npidn/D");
+      _tree->Branch("knobThetaDelta2NRadup",&_knobThetaDelta2NRadup,"knobThetaDelta2NRadup/D");
+      _tree->Branch("knobThetaDelta2NRaddn",&_knobThetaDelta2NRaddn,"knobThetaDelta2NRaddn/D");
+      _tree->Branch("knobRPA_CCQE_Reducedup",&_knobRPA_CCQE_Reducedup,"knobRPA_CCQE_Reducedup/D");
+      _tree->Branch("knobRPA_CCQE_Reduceddn",&_knobRPA_CCQE_Reduceddn,"knobRPA_CCQE_Reduceddn/D");
+      _tree->Branch("knobNormCCCOHup",&_knobNormCCCOHup,"knobNormCCCOHup/D");
+      _tree->Branch("knobNormCCCOHdn",&_knobNormCCCOHdn,"knobNormCCCOHdn/D");
+      _tree->Branch("knobNormNCCOHup",&_knobNormNCCOHup,"knobNormNCCOHup/D");
+      _tree->Branch("knobNormNCCOHdn",&_knobNormNCCOHdn,"knobNormNCCOHdn/D");
     }
 
   }
@@ -391,6 +453,8 @@ namespace analysis
     _vecWeightsGenie_nam.clear();
     _vecWeightsReint.clear();
     _vecWeightsReintD.clear();
+    _vecWeightsPPFX.clear();
+    _vecWeightsPPFXD.clear();
     _weightSpline = -1;
     _weightTune = -1;
     _weightSplineTimesTune = -1;
@@ -402,12 +466,20 @@ namespace analysis
     _knobVecFFCCQEup = 1;
     _knobDecayAngMECup = 1;
     _knobThetaDelta2Npiup = 1;
+    _knobThetaDelta2NRadup = 1;
+    _knobRPA_CCQE_Reducedup = 1;
+    _knobNormCCCOHup = 1;
+    _knobNormNCCOHup = 1;
     _knobRPAdn = 1;
     _knobCCMECdn = 1;
     _knobAxFFCCQEdn = 1;
     _knobVecFFCCQEdn = 1;
     _knobDecayAngMECdn = 1;
     _knobThetaDelta2Npidn = 1;
+    _knobThetaDelta2NRaddn = 1;
+    _knobRPA_CCQE_Reduceddn = 1;
+    _knobNormCCCOHdn = 1;
+    _knobNormNCCOHdn = 1;
 
 
     _run = -1;
