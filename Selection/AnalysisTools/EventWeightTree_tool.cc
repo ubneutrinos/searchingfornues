@@ -144,6 +144,8 @@ namespace analysis
 
     _vecWeightsGenie  = std::vector<unsigned short>(_GenieAllUniverses,1);
     _vecWeightsGenieD = std::vector<double>(_GenieAllUniverses,1.0);
+    _vecWeightsPPFX  = std::vector<unsigned short>(600,1);
+    _vecWeightsPPFXD = std::vector<double>(600,1.0);
 
     std::cout << " [ EventWeightTree ]" << " begin " << std::endl;
 
