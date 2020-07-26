@@ -32,7 +32,6 @@ var searchData=
   ['_5fnu_5fdecay_5fmode',['_nu_decay_mode',['../classanalysis_1_1DefaultAnalysis.html#a6a247716df8aa01b1a72398af0fb795a',1,'analysis::DefaultAnalysis']]],
   ['_5fnu_5fe',['_nu_e',['../classanalysis_1_1DefaultAnalysis.html#a41a1c23e4cb1a09e08024c7fa33572ce',1,'analysis::DefaultAnalysis']]],
   ['_5fnu_5fhadron_5fpdg',['_nu_hadron_pdg',['../classanalysis_1_1DefaultAnalysis.html#a8924c41a602c88b98dde5a0cf199cdbf',1,'analysis::DefaultAnalysis']]],
-  ['_5fnu_5fl',['_nu_l',['../classanalysis_1_1DefaultAnalysis.html#a558f0132de3e55c28dcf436940492eae',1,'analysis::DefaultAnalysis']]],
   ['_5fnu_5fparent_5fpdg',['_nu_parent_pdg',['../classanalysis_1_1DefaultAnalysis.html#a27768aec98194b50f92adb395e885fdf',1,'analysis::DefaultAnalysis']]],
   ['_5fnu_5fpdg',['_nu_pdg',['../classanalysis_1_1DefaultAnalysis.html#a625c353bb8912893b77a14f44d4f00b0',1,'analysis::DefaultAnalysis']]],
   ['_5fnu_5fpt',['_nu_pt',['../classanalysis_1_1DefaultAnalysis.html#a901956985dfd610c781bedf7bfc9754a',1,'analysis::DefaultAnalysis']]],
