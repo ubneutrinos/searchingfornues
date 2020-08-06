@@ -125,7 +125,7 @@ namespace analysis
     _createSplineTimesTuneBranch = p.get<bool>("createSplineTimesTuneBranch");
     _createPPFXBranch = p.get<bool>("createPPFXBranch");
     _SaveAllFlux = p.get<bool>("SaveAllFlux",false);
-    _GenieAllUniverses = p.get<int>("GenieAllUniverses",500);
+    _GenieAllUniverses = p.get<int>("GenieAllUniverses",600);
 
     if(_createDedicatedTree){
       art::ServiceHandle<art::TFileService> tfs;
