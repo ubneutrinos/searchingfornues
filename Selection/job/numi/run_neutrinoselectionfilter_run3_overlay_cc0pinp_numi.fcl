@@ -9,3 +9,5 @@ physics.filters.nuselection.AnalysisTools.zbdt.TrigResProducer: "TriggerResults:
 physics.filters.nuselection.AnalysisTools.zbdt: @local::BDTTool
 
 physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool
+
+physics.filters.nuselection.AnalysisTools.shower:   @local::ShowerAnalysisTool

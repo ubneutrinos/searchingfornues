@@ -1405,7 +1405,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
       continue;
     }
 
-    if (mcp.PdgCode() == electron->PdgCode())
+    if (std::abs(mcp.PdgCode()) == electron->PdgCode())
     {
       _elec_vx = mcp.Vx();
       _elec_vy = mcp.Vy();
