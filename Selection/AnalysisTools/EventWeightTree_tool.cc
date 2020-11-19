@@ -135,11 +135,12 @@ namespace analysis
     //std::cout << " [ EventWeightTree ]" << " begin " << std::endl;
     
     std::vector<art::InputTag> vecTag;
-    art::InputTag eventweight_tag_00("eventweight","","EventWeightMar18");
-    art::InputTag eventweight_tag_01("eventweight","","EventWeightMar18ExtraGENIE1");
-    art::InputTag eventweight_tag_02("eventweight","","EventWeightMar18ExtraGENIE2");
-    art::InputTag eventweight_tag_03("eventweight","","EventWeightMar18ExtraGENIE3");
-    art::InputTag eventweight_tag_04("eventweight","","EventWeightMar18ExtraGENIE4");
+    art::InputTag eventweight_tag_00("eventweightSep24","","EventWeightSep24");
+    //art::InputTag eventweight_tag_00("eventweight","","EventWeightMar18");
+    art::InputTag eventweight_tag_01("eventweightSep24","","EventWeightSep24ExtraGENIE1");
+    art::InputTag eventweight_tag_02("eventweightSep24","","EventWeightSep24ExtraGENIE2");
+    art::InputTag eventweight_tag_03("eventweightSep24","","EventWeightSep24ExtraGENIE3");
+    art::InputTag eventweight_tag_04("eventweightSep24","","EventWeightSep24ExtraGENIE4");
     //art::InputTag eventweight_spline_tag("eventweightSplines");
     vecTag.push_back(eventweight_tag_00);
     vecTag.push_back(eventweight_tag_01);
