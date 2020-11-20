@@ -157,6 +157,7 @@ private:
 
   // neutrino information
   float _nu_e;  /**< neutrino energy [GeV] */
+  float _nu_l;  /**< propagation length [m] */
   float _nu_pt; /**< transverse momentum of interaction [GeV/c] */
   float _theta; /**< angle between incoming and outgoing leptons, in radians */
 
@@ -875,6 +876,7 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("nu_decay_mode", &_nu_decay_mode, "nu_decay_mode/I");
   _tree->Branch("interaction", &_interaction, "interaction/I");
   _tree->Branch("nu_e", &_nu_e, "nu_e/F");
+  _tree->Branch("nu_l", &_nu_l, "nu_l/F");
   _tree->Branch("nu_pt", &_nu_pt, "nu_pt/F");
   _tree->Branch("theta", &_theta, "theta/F");
   _tree->Branch("isVtxInFiducial", &_isVtxInFiducial, "isVtxInFiducial/O");
@@ -1046,6 +1048,7 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
 {
   _leeweight = 0;
   _nu_e = std::numeric_limits<float>::lowest();
+  _nu_l = std::numeric_limits<float>::lowest();
   _theta = std::numeric_limits<float>::lowest();
   _nu_pt = std::numeric_limits<float>::lowest();
 
@@ -1255,6 +1258,8 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _interaction = neutrino.Mode();
   _nu_pdg = nu.PdgCode();
   _nu_e = nu.Trajectory().E(0);
+  _nu_l = flux.fdk2gen + flux.fgen2vtx;
+  std::cout << "total Lenght = " << flux.fdk2gen << " + " << flux.fgen2vtx << " = " << _nu_l << std::endl;
   _lep_e = neutrino.Lepton().E();
 
   _true_nu_vtx_t = nu.T();
