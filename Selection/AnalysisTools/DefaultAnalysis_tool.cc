@@ -112,6 +112,9 @@ private:
   art::InputTag fSLCproducer; // slice associated to PFP
   float fTrkShrScore;         /**< Threshold on the Pandora track score (default 0.5) */
 
+  std::string NuMIOpFilterProd;
+  std::string NuMISWTrigProd;
+
   float fFidvolXstart;
   float fFidvolXend;
   float fFidvolYstart;
@@ -319,6 +322,9 @@ DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
 
   fFidvolZstart = p.get<double>("fidvolZstart", 10);
   fFidvolZend = p.get<double>("fidvolZend", 50);
+
+  NuMIOpFilterProd = p.get<std::string>("NuMIOpFiltProcName");
+  NuMISWTrigProd   = p.get<std::string>("NuMISWTriggerProcName" );
 }
 
 //----------------------------------------------------------------------------
@@ -347,7 +353,8 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   art::Handle<uboone::UbooneOpticalFilter> CommonOpticalFilter_h;
 
   // Updated comon optical filter tag for data
-  art::InputTag fCommonOpFiltTag("opfiltercommon", "", "DataStage1OpticalNuMI");
+  std::cout << "Test1: "<< NuMIOpFilterProd << std::endl;
+  art::InputTag fCommonOpFiltTag("opfiltercommon", "", NuMIOpFilterProd);
   e.getByLabel(fCommonOpFiltTag, CommonOpticalFilter_h);
   
   // Try to get the common optical filter tag for other types
@@ -361,7 +368,8 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   _opfilter_pe_veto = CommonOpticalFilter_h->PE_Veto();
   
   // storing trigger result output for software trigger
-  art::InputTag swtrig_tag("TriggerResults", "", "DataOverlayOpticalNuMI");
+  std::cout << "Test2: "<< NuMISWTrigProd << std::endl;
+  art::InputTag swtrig_tag("TriggerResults", "", NuMISWTrigProd);
   art::Handle<art::TriggerResults> swtrig_handle;
   e.getByLabel(swtrig_tag, swtrig_handle);
   if (swtrig_handle.isValid())
@@ -375,7 +383,7 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   if(!fData) { 
     
     // Also store all the software trigger results for study of the correct one to use
-    art::InputTag triggerTag ("swtrigger", "", "DataOverlayOpticalNuMI" );  
+    art::InputTag triggerTag ("swtrigger", "", NuMISWTrigProd );  
     const auto& triggerHandle = e.getValidHandle< raw::ubdaqSoftwareTriggerData >(triggerTag);
     std::vector<std::string> triggerName = triggerHandle->getListOfAlgorithms();  
     for (int j=0; j!=triggerHandle->getNumberOfAlgorithms(); j++) {

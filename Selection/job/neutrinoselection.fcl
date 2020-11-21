@@ -119,6 +119,8 @@ DefaultAnalysisTool: {
     fidvolYend: 6.
     fidvolZstart: 20.
     fidvolZend: 50.
+    NuMIOpFiltProcName:    "DataStage1Optical"
+    NuMISWTriggerProcName: "DataOverlayOpticalNuMI"
 }
 
 MCSTool: {
