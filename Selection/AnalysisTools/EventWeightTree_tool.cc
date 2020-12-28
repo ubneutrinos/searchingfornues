@@ -156,6 +156,7 @@ namespace analysis
     art::InputTag eventweight_tag_02("eventweight","","EventWeightSept24ExtraGENIE2");
     art::InputTag eventweight_tag_03("eventweight","","EventWeightSept24ExtraGENIE3");
     art::InputTag eventweight_tag_04("eventweight","","EventWeightSept24ExtraGENIE4");
+    art::InputTag eventweight_tag_05("eventweight","","EventWeightSept24ExtraGENIE5");
     //art::InputTag eventweight_spline_tag("eventweightSplines");
     // art::InputTag eventweight_tag("eventweight");
     vecTag.push_back(eventweight_tag_00);
@@ -163,6 +164,7 @@ namespace analysis
     vecTag.push_back(eventweight_tag_02);
     vecTag.push_back(eventweight_tag_03);
     vecTag.push_back(eventweight_tag_04);
+    vecTag.push_back(eventweight_tag_05);
     //vecTag.push_back(eventweight_spline_tag);
     // vecTag.push_back(eventweight_tag);
 
