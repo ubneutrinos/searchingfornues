@@ -84,6 +84,8 @@ namespace analysis
       double _knobRPA_CCQE_Reducedup;
       double _knobNormCCCOHup;
       double _knobNormNCCOHup;
+      double _knobxsr_scc_Fv3up;
+      double _knobxsr_scc_Fa3up;
       double _knobRPAdn;
       double _knobCCMECdn;
       double _knobAxFFCCQEdn;
@@ -94,10 +96,13 @@ namespace analysis
       double _knobRPA_CCQE_Reduceddn;
       double _knobNormCCCOHdn;
       double _knobNormNCCOHdn;
+      double _knobxsr_scc_Fv3dn;
+      double _knobxsr_scc_Fa3dn;
       float _weightSpline;
       float _weightTune;
       float _weightSplineTimesTune;
       float _ppfx_cv;
+      float _RootinoFix;
       bool _createDedicatedTree;
       bool _createMapBranch;
       bool _createFluxBranch;
@@ -186,7 +191,7 @@ namespace analysis
         std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
         art::fill_ptr_vector(eventweights, eventweights_handle);
         std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
-
+          
         if (evtwgt_map.find("RPA_CCQE_UBGenie") != evtwgt_map.end()) { 
           _knobRPAup = evtwgt_map.find("RPA_CCQE_UBGenie")->second[0]; 
           _knobRPAdn = evtwgt_map.find("RPA_CCQE_UBGenie")->second[1]; 
@@ -226,6 +231,17 @@ namespace analysis
         if (evtwgt_map.find("NormNCCOH_UBGenie") != evtwgt_map.end()) { 
           _knobNormNCCOHup = evtwgt_map.find("NormNCCOH_UBGenie")->second[0]; 
           _knobNormNCCOHdn = evtwgt_map.find("NormNCCOH_UBGenie")->second[1]; 
+        }
+        if (evtwgt_map.find("xsr_scc_Fv3_SCC") != evtwgt_map.end()) { 
+          _knobxsr_scc_Fv3up = evtwgt_map.find("xsr_scc_Fv3_SCC")->second[0]; 
+          _knobxsr_scc_Fv3dn = evtwgt_map.find("xsr_scc_Fv3_SCC")->second[1]; 
+        }
+        if (evtwgt_map.find("xsr_scc_Fa3_SCC") != evtwgt_map.end()) { 
+          _knobxsr_scc_Fa3up = evtwgt_map.find("xsr_scc_Fa3_SCC")->second[0]; 
+          _knobxsr_scc_Fa3dn = evtwgt_map.find("xsr_scc_Fa3_SCC")->second[1]; 
+        }
+        if (evtwgt_map.find("RootinoFix_UBGenie") != evtwgt_map.end()) { 
+          _RootinoFix = evtwgt_map.find("RootinoFix_UBGenie")->second[0]; 
         }
 
         if(evtwgt_map.find("splines_general_Spline") != evtwgt_map.end()) _weightSpline = evtwgt_map.find("splines_general_Spline")->second[0];
@@ -444,6 +460,11 @@ namespace analysis
       _tree->Branch("knobNormCCCOHdn",&_knobNormCCCOHdn,"knobNormCCCOHdn/D");
       _tree->Branch("knobNormNCCOHup",&_knobNormNCCOHup,"knobNormNCCOHup/D");
       _tree->Branch("knobNormNCCOHdn",&_knobNormNCCOHdn,"knobNormNCCOHdn/D");
+      _tree->Branch("knobxsr_scc_Fv3up",&_knobxsr_scc_Fv3up,"knobxsr_scc_Fv3up/D");
+      _tree->Branch("knobxsr_scc_Fv3dn",&_knobxsr_scc_Fv3dn,"knobxsr_scc_Fv3dn/D");
+      _tree->Branch("knobxsr_scc_Fa3up",&_knobxsr_scc_Fa3up,"knobxsr_scc_Fa3up/D");
+      _tree->Branch("knobxsr_scc_Fa3dn",&_knobxsr_scc_Fa3dn,"knobxsr_scc_Fa3dn/D");
+      _tree->Branch("RootinoFix",&_RootinoFix,"RootinoFix/D");
     }
 
   }
@@ -475,6 +496,8 @@ namespace analysis
     _knobRPA_CCQE_Reducedup = 1;
     _knobNormCCCOHup = 1;
     _knobNormNCCOHup = 1;
+    _knobxsr_scc_Fv3up = 1;
+    _knobxsr_scc_Fa3up = 1;
     _knobRPAdn = 1;
     _knobCCMECdn = 1;
     _knobAxFFCCQEdn = 1;
@@ -485,6 +508,9 @@ namespace analysis
     _knobRPA_CCQE_Reduceddn = 1;
     _knobNormCCCOHdn = 1;
     _knobNormNCCOHdn = 1;
+    _knobxsr_scc_Fv3dn = 1;
+    _knobxsr_scc_Fa3dn = 1;
+    _RootinoFix = 1;
 
 
     _run = -1;
