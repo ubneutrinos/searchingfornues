@@ -102,7 +102,7 @@ namespace analysis
       float _weightTune;
       float _weightSplineTimesTune;
       float _ppfx_cv;
-      float _RootinoFix;
+      double _RootinoFix;
       bool _createDedicatedTree;
       bool _createMapBranch;
       bool _createFluxBranch;
