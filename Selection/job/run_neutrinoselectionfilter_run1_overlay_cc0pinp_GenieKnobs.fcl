@@ -1,0 +1,18 @@
+#include "run_neutrinoselectionfilter_run1_overlay_cc0pinp.fcl"
+
+physics.producers.eventweightGenieKnobs: @local::EventweightGenieKnobs
+physics.filters.nuselection.AnalysisTools.eventweighttree.createGenieUpDnVecs: true
+physics.p1: [
+      "nuslicehits",
+      "proximity",
+      "shrreco3dKalmanShower",
+      "shrreco3dKalmanShowercalo",
+      "shrreco3dKalmanShowercali",
+      "pandoraTrack",
+      "pandoraTrackcalo",
+      "pandoraTrackpid",
+      "pandoraTrackcali",
+      "pandoraTrackcalipid",
+      "eventweightGenieKnobs",
+      "nuselection"
+   ]

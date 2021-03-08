@@ -72,6 +72,8 @@ namespace analysis
     std::vector<int> _vecWeightsGenie_nam;
     std::vector<unsigned short> _vecWeightsReint;
     std::vector<double> _vecWeightsReintD;
+    std::vector<unsigned short> _vecWeightsGenieUp;
+    std::vector<unsigned short> _vecWeightsGenieDn;
     double _knobRPAup;
     double _knobCCMECup;
     double _knobAxFFCCQEup;
@@ -96,6 +98,7 @@ namespace analysis
     bool _createTuneBranch;
     bool _createSplineTimesTuneBranch;
     bool _SaveAllFlux;
+    bool _createGenieUpDnVecs;
     int _GenieAllUniverses;
     int _run;
     int _subRun;
@@ -112,6 +115,7 @@ namespace analysis
     _createTuneBranch = p.get<bool>("createTuneBranch");
     _createSplineTimesTuneBranch = p.get<bool>("createSplineTimesTuneBranch");
     _SaveAllFlux = p.get<bool>("SaveAllFlux",false);
+    _createGenieUpDnVecs = p.get<bool>("createGenieUpDnVecs", false);
     _GenieAllUniverses = p.get<int>("GenieAllUniverses",500);
     
     if(_createDedicatedTree){
@@ -141,12 +145,14 @@ namespace analysis
     art::InputTag eventweight_tag_02("eventweightSep24","","EventWeightSep24ExtraGENIE2");
     art::InputTag eventweight_tag_03("eventweightSep24","","EventWeightSep24ExtraGENIE3");
     art::InputTag eventweight_tag_04("eventweightSep24","","EventWeightSep24ExtraGENIE4");
+    art::InputTag eventweight_tag_knobs("eventweightGenieKnobs");
     //art::InputTag eventweight_spline_tag("eventweightSplines");
     vecTag.push_back(eventweight_tag_00);
     vecTag.push_back(eventweight_tag_01);
     vecTag.push_back(eventweight_tag_02);
     vecTag.push_back(eventweight_tag_03);
     vecTag.push_back(eventweight_tag_04);
+    vecTag.push_back(eventweight_tag_knobs);
     //vecTag.push_back(eventweight_spline_tag);
 
     int ctr = 0;
@@ -154,7 +160,7 @@ namespace analysis
     
     for(auto& thisTag : vecTag){
 
-      //std::cout << " [ EventWeightTree ]" << " newTag " << std::endl;
+      //std::cout << " [ EventWeightTree ]" << " newTag " << thisTag.label() << std::endl;
       
       art::Handle<std::vector<evwgh::MCEventWeight>> eventweights_handle;
       evt.getByLabel(thisTag, eventweights_handle);
@@ -165,6 +171,60 @@ namespace analysis
 
 	std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
 	art::fill_ptr_vector(eventweights, eventweights_handle);
+
+	if (_createGenieUpDnVecs && thisTag.label()=="eventweightGenieKnobs") {
+
+	  // we enforce that the index in vecWeightsGenieUp/Dn matches this vector
+	  std::vector<std::string> knobList = {"AGKYpT1pi_Genie","AGKYxF1pi_Genie","AhtBY_Genie","AxFFCCQEshape_Genie","BhtBY_Genie",
+					       "CV1uBY_Genie","CV2uBY_Genie","DecayAngMEC_Genie","EtaNCEL_Genie","FrAbs_N_Genie",
+					       "FrAbs_pi_Genie","FrCEx_N_Genie","FrCEx_pi_Genie","FrInel_N_Genie","FrInel_pi_Genie",
+					       "FrPiProd_N_Genie","FrPiProd_pi_Genie","FracDelta_CCMEC_Genie","FracPN_CCMEC_Genie","MFP_N_Genie",
+					       "MFP_pi_Genie","MaCCQE_Genie","MaCCRES_Genie","MaNCEL_Genie","MaNCRES_Genie",
+					       "MvCCRES_Genie","MvNCRES_Genie","NonRESBGvbarnCC1pi_Genie","NonRESBGvbarnCC2pi_Genie","NonRESBGvbarnNC1pi_Genie",
+					       "NonRESBGvbarnNC2pi_Genie","NonRESBGvbarpCC1pi_Genie","NonRESBGvbarpCC2pi_Genie","NonRESBGvbarpNC1pi_Genie","NonRESBGvbarpNC2pi_Genie",
+					       "NonRESBGvnCC1pi_Genie","NonRESBGvnCC2pi_Genie","NonRESBGvnNC1pi_Genie","NonRESBGvnNC2pi_Genie","NonRESBGvpCC1pi_Genie",
+					       "NonRESBGvpCC2pi_Genie","NonRESBGvpNC1pi_Genie","NonRESBGvpNC2pi_Genie","NormCCMEC_Genie","NormNCMEC_Genie",
+					       "RDecBR1eta_Genie","RDecBR1gamma_Genie","RPA_CCQE_Genie","Theta_Delta2Npi_Genie","TunedCentralValue_Genie",
+					       "VecFFCCQEshape_Genie","XSecShape_CCMEC_Genie","splines_general_Spline"};
+
+	  std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
+	  size_t count=0;
+	  for(std::map<std::string, std::vector<double>>::iterator it=evtwgt_map.begin(); it!=evtwgt_map.end(); ++it, ++count){
+
+	    //std::cout << " [ EventWeightTree ]" << "Entering variation " << it->first << " with " << (it->second).size() << " weights " << std::endl;
+	    std::vector<double>& vals = it->second;
+
+	    // if the index is not in the order we expect, terminate the program
+	    if (it->first != knobList[count]) {
+	      std::cout << "knobs are not in the exact order!  " << it->first << " != " << knobList[count] << ", count=" << count << std::endl;
+	      assert(0);
+	    }
+
+	    if (vals.size()==1) {
+	      float w0 = vals[0];
+	      unsigned short w0short = (unsigned short)(w0*1000.);
+	      if (w0 > 65535)  { w0short = std::numeric_limits<unsigned short>::max(); }
+	      if (w0 < 0) { w0short = 1; }
+	      _vecWeightsGenieUp.push_back(w0short);
+	      _vecWeightsGenieDn.push_back((unsigned short)(0));
+	    }
+	    else if (vals.size()==2) {
+	      float w0 = vals[0];
+	      unsigned short w0short = (unsigned short)(w0*1000.);
+	      if (w0 > 65535)  { w0short = std::numeric_limits<unsigned short>::max(); }
+	      if (w0 < 0) { w0short = 1; }
+	      _vecWeightsGenieUp.push_back(w0short);
+	      float w1 = vals[1];
+	      unsigned short w1short = (unsigned short)(w1*1000.);
+	      if (w1 > 65535)  { w1short = std::numeric_limits<unsigned short>::max(); }
+	      if (w1 < 0) { w1short = 1; }
+	      _vecWeightsGenieDn.push_back(w1short);
+	    }
+	    else std::cout << "Argh, this is unexpected! Size should be either 0 or 1..." << std::endl;
+	  }
+	  continue;
+	}
+
 	std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
 
 	if (evtwgt_map.find("RPA_CCQE_UBGenie") != evtwgt_map.end()) { 
@@ -367,6 +427,8 @@ namespace analysis
       _tree->Branch("knobThetaDelta2Npiup",&_knobThetaDelta2Npiup,"knobThetaDelta2Npiup/D");
       _tree->Branch("knobThetaDelta2Npidn",&_knobThetaDelta2Npidn,"knobThetaDelta2Npidn/D");
     }
+    if(_createGenieUpDnVecs) _tree->Branch("weightsGenieUp", "std::vector<unsigned short>", &_vecWeightsGenieUp);
+    if(_createGenieUpDnVecs) _tree->Branch("weightsGenieDn", "std::vector<unsigned short>", &_vecWeightsGenieDn);
 
   }
   
@@ -397,6 +459,8 @@ namespace analysis
     _knobDecayAngMECdn = 1;
     _knobThetaDelta2Npidn = 1;
 
+    _vecWeightsGenieUp.clear();
+    _vecWeightsGenieDn.clear();
 
     _run = -1;
     _subRun = -1;
