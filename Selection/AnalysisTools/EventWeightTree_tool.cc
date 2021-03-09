@@ -188,39 +188,42 @@ namespace analysis
 					       "VecFFCCQEshape_Genie","XSecShape_CCMEC_Genie","splines_general_Spline"};
 
 	  std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
-	  size_t count=0;
-	  for(std::map<std::string, std::vector<double>>::iterator it=evtwgt_map.begin(); it!=evtwgt_map.end(); ++it, ++count){
+	  // let's iterate over the list above, so that the order is guaranteed
+	  for (size_t count=0; count<knobList.size(); count++) {
+	    bool knobFound = false;
+	    for(std::map<std::string, std::vector<double>>::iterator it=evtwgt_map.begin(); it!=evtwgt_map.end(); ++it){
+	      if (it->first != knobList[count]) continue;
+	      knobFound = true;
+	      //std::cout << " [ EventWeightTree ]" << "Entering variation " << it->first << " with " << (it->second).size() << " weights " << std::endl;
+	      std::vector<double>& vals = it->second;
 
-	    //std::cout << " [ EventWeightTree ]" << "Entering variation " << it->first << " with " << (it->second).size() << " weights " << std::endl;
-	    std::vector<double>& vals = it->second;
-
+	      if (vals.size()==1) {
+		float w0 = vals[0];
+		unsigned short w0short = (unsigned short)(w0*1000.);
+		if (w0 > 65535)  { w0short = std::numeric_limits<unsigned short>::max(); }
+		if (w0 < 0) { w0short = 1; }
+		_vecWeightsGenieUp.push_back(w0short);
+		_vecWeightsGenieDn.push_back((unsigned short)(0));
+	      }
+	      else if (vals.size()==2) {
+		float w0 = vals[0];
+		unsigned short w0short = (unsigned short)(w0*1000.);
+		if (w0 > 65535)  { w0short = std::numeric_limits<unsigned short>::max(); }
+		if (w0 < 0) { w0short = 1; }
+		_vecWeightsGenieUp.push_back(w0short);
+		float w1 = vals[1];
+		unsigned short w1short = (unsigned short)(w1*1000.);
+		if (w1 > 65535)  { w1short = std::numeric_limits<unsigned short>::max(); }
+		if (w1 < 0) { w1short = 1; }
+		_vecWeightsGenieDn.push_back(w1short);
+	      }
+	      else std::cout << "Argh, this is unexpected! Size should be either 0 or 1..." << std::endl;
+	    }
 	    // if the index is not in the order we expect, terminate the program
-	    if (it->first != knobList[count]) {
-	      std::cout << "knobs are not in the exact order!  " << it->first << " != " << knobList[count] << ", count=" << count << std::endl;
+	    if (knobFound==false) {
+	      std::cout << "knob " << knobList[count] << " NOT found!" << std::endl;
 	      assert(0);
 	    }
-
-	    if (vals.size()==1) {
-	      float w0 = vals[0];
-	      unsigned short w0short = (unsigned short)(w0*1000.);
-	      if (w0 > 65535)  { w0short = std::numeric_limits<unsigned short>::max(); }
-	      if (w0 < 0) { w0short = 1; }
-	      _vecWeightsGenieUp.push_back(w0short);
-	      _vecWeightsGenieDn.push_back((unsigned short)(0));
-	    }
-	    else if (vals.size()==2) {
-	      float w0 = vals[0];
-	      unsigned short w0short = (unsigned short)(w0*1000.);
-	      if (w0 > 65535)  { w0short = std::numeric_limits<unsigned short>::max(); }
-	      if (w0 < 0) { w0short = 1; }
-	      _vecWeightsGenieUp.push_back(w0short);
-	      float w1 = vals[1];
-	      unsigned short w1short = (unsigned short)(w1*1000.);
-	      if (w1 > 65535)  { w1short = std::numeric_limits<unsigned short>::max(); }
-	      if (w1 < 0) { w1short = 1; }
-	      _vecWeightsGenieDn.push_back(w1short);
-	    }
-	    else std::cout << "Argh, this is unexpected! Size should be either 0 or 1..." << std::endl;
 	  }
 	  continue;
 	}
