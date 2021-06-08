@@ -175,17 +175,17 @@ namespace analysis
 	if (_createGenieUpDnVecs && thisTag.label()=="eventweightGenieKnobs") {
 
 	  // we enforce that the index in vecWeightsGenieUp/Dn matches this vector
-	  std::vector<std::string> knobList = {"AGKYpT1pi_Genie","AGKYxF1pi_Genie","AhtBY_Genie","AxFFCCQEshape_Genie","BhtBY_Genie",
-					       "CV1uBY_Genie","CV2uBY_Genie","DecayAngMEC_Genie","EtaNCEL_Genie","FrAbs_N_Genie",
-					       "FrAbs_pi_Genie","FrCEx_N_Genie","FrCEx_pi_Genie","FrInel_N_Genie","FrInel_pi_Genie",
-					       "FrPiProd_N_Genie","FrPiProd_pi_Genie","FracDelta_CCMEC_Genie","FracPN_CCMEC_Genie","MFP_N_Genie",
-					       "MFP_pi_Genie","MaCCQE_Genie","MaCCRES_Genie","MaNCEL_Genie","MaNCRES_Genie",
-					       "MvCCRES_Genie","MvNCRES_Genie","NonRESBGvbarnCC1pi_Genie","NonRESBGvbarnCC2pi_Genie","NonRESBGvbarnNC1pi_Genie",
-					       "NonRESBGvbarnNC2pi_Genie","NonRESBGvbarpCC1pi_Genie","NonRESBGvbarpCC2pi_Genie","NonRESBGvbarpNC1pi_Genie","NonRESBGvbarpNC2pi_Genie",
-					       "NonRESBGvnCC1pi_Genie","NonRESBGvnCC2pi_Genie","NonRESBGvnNC1pi_Genie","NonRESBGvnNC2pi_Genie","NonRESBGvpCC1pi_Genie",
-					       "NonRESBGvpCC2pi_Genie","NonRESBGvpNC1pi_Genie","NonRESBGvpNC2pi_Genie","NormCCMEC_Genie","NormNCMEC_Genie",
-					       "RDecBR1eta_Genie","RDecBR1gamma_Genie","RPA_CCQE_Genie","Theta_Delta2Npi_Genie","TunedCentralValue_Genie",
-					       "VecFFCCQEshape_Genie","XSecShape_CCMEC_Genie","splines_general_Spline"};
+    std::vector<std::string> knobList = {"AGKYpT1pi_UBGenie","AGKYxF1pi_UBGenie","AhtBY_UBGenie","AxFFCCQEshape_UBGenie","BhtBY_UBGenie",
+                 "CV1uBY_UBGenie","CV2uBY_UBGenie","DecayAngMEC_UBGenie","EtaNCEL_UBGenie","FrAbs_N_UBGenie",
+                 "FrAbs_pi_UBGenie","FrCEx_N_UBGenie","FrCEx_pi_UBGenie","FrInel_N_UBGenie","FrInel_pi_UBGenie",
+                 "FrPiProd_N_UBGenie","FrPiProd_pi_UBGenie","FracDelta_CCMEC_UBGenie","FracPN_CCMEC_UBGenie","MFP_N_UBGenie",
+                 "MFP_pi_UBGenie","MaCCQE_UBGenie","MaCCRES_UBGenie","MaNCEL_UBGenie","MaNCRES_UBGenie",
+                 "MvCCRES_UBGenie","MvNCRES_UBGenie","NonRESBGvbarnCC1pi_UBGenie","NonRESBGvbarnCC2pi_UBGenie","NonRESBGvbarnNC1pi_UBGenie",
+                 "NonRESBGvbarnNC2pi_UBGenie","NonRESBGvbarpCC1pi_UBGenie","NonRESBGvbarpCC2pi_UBGenie","NonRESBGvbarpNC1pi_UBGenie","NonRESBGvbarpNC2pi_UBGenie",
+                 "NonRESBGvnCC1pi_UBGenie","NonRESBGvnCC2pi_UBGenie","NonRESBGvnNC1pi_UBGenie","NonRESBGvnNC2pi_UBGenie","NonRESBGvpCC1pi_UBGenie",
+                 "NonRESBGvpCC2pi_UBGenie","NonRESBGvpNC1pi_UBGenie","NonRESBGvpNC2pi_UBGenie","NormCCMEC_UBGenie","NormNCMEC_UBGenie",
+                 "RDecBR1eta_UBGenie","RDecBR1gamma_UBGenie","RPA_CCQE_UBGenie","Theta_Delta2Npi_UBGenie","TunedCentralValue_UBGenie",
+                 "VecFFCCQEshape_UBGenie","XSecShape_CCMEC_UBGenie","splines_general_Spline"};
 
 	  std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
 	  // let's iterate over the list above, so that the order is guaranteed
@@ -225,7 +225,6 @@ namespace analysis
 	      assert(0);
 	    }
 	  }
-	  continue;
 	}
 
 	std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
