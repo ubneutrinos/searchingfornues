@@ -169,6 +169,13 @@ private:
   int _nu_parent_pdg;    /**< neutrino parent's PDG code [http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/] */
   int _nu_hadron_pdg;    /**< PDG code of hadron eventually producing neutrino [http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/] */
   int _nu_decay_mode;    /**< decay mode that lead to this neutrino in beam simulation [http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/] */
+  double _par_decay_vx;   /**< decay x postition of parent of the neutrino [beamline coord, cm] */
+  double _par_decay_vy;   /**< decay y postition of parent of the neutrino [beamline coord, cm] */
+  double _par_decay_vz;   /**< decay z postition of parent of the neutrino [beamline coord, cm] */
+  double _par_decay_px;   /**< decay x momentum of parent of the neutrino [beamline coord] */
+  double _par_decay_py;   /**< decay y momentum of parent of the neutrino [beamline coord] */
+  double _par_decay_pz;   /**< decay z momentum of parent of the neutrino [beamline coord] */
+  double _baseline;        /**< distance of the decay to uboone origin */
   int _interaction;      /**< Interaction code from GENIE */
   bool _isVtxInFiducial; /**< true if neutrino in fiducial volume */
   bool _truthFiducial;   /**< is the truth information contained. Require all track start/end point in FV and showers deposit > 60% of energy in TPC or deposit at least 100 MeV in TPC */
@@ -882,6 +889,13 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("nu_parent_pdg", &_nu_parent_pdg, "nu_parent_pdg/I");
   _tree->Branch("nu_hadron_pdg", &_nu_hadron_pdg, "nu_hadron_pdg/I");
   _tree->Branch("nu_decay_mode", &_nu_decay_mode, "nu_decay_mode/I");
+  _tree->Branch("par_decay_vx", &_par_decay_vx, "par_decay_vx/D");
+  _tree->Branch("par_decay_vy", &_par_decay_vy, "par_decay_vy/D");
+  _tree->Branch("par_decay_vz", &_par_decay_vz, "par_decay_vz/D");
+  _tree->Branch("par_decay_px", &_par_decay_px, "par_decay_px/D");
+  _tree->Branch("par_decay_py", &_par_decay_py, "par_decay_py/D");
+  _tree->Branch("par_decay_pz", &_par_decay_pz, "par_decay_pz/D");
+  _tree->Branch("baseline", &_baseline, "baseline/D");
   _tree->Branch("interaction", &_interaction, "interaction/I");
   _tree->Branch("nu_e", &_nu_e, "nu_e/F");
   _tree->Branch("nu_l", &_nu_l, "nu_l/F");
@@ -1072,6 +1086,13 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _nu_parent_pdg = std::numeric_limits<int>::lowest();
   _nu_hadron_pdg = std::numeric_limits<int>::lowest();
   _nu_decay_mode = std::numeric_limits<int>::lowest();
+  _par_decay_vx = std::numeric_limits<double>::lowest();
+  _par_decay_vy = std::numeric_limits<double>::lowest();
+  _par_decay_vz = std::numeric_limits<double>::lowest();
+  _par_decay_px = std::numeric_limits<double>::lowest();
+  _par_decay_py = std::numeric_limits<double>::lowest();
+  _par_decay_pz = std::numeric_limits<double>::lowest();
+  _baseline = std::numeric_limits<double>::lowest();
   _interaction = std::numeric_limits<int>::lowest();
   _pass = 0;
 
@@ -1257,6 +1278,20 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _nu_parent_pdg = flux.fptype;
   _nu_hadron_pdg = flux.ftptype;
   _nu_decay_mode = flux.fndecay;
+
+  _par_decay_vx = flux.fvx;
+  _par_decay_vy = flux.fvy;
+  _par_decay_vz = flux.fvz;  
+  _par_decay_px = flux.fpdpx;
+  _par_decay_py = flux.fpdpy;
+  _par_decay_pz = flux.fpdpz;  
+  
+  TVector3 Trans_Targ2Det_beam = {5502, 7259, 67270};
+  TVector3 Decay_pos = {flux.fvx, flux.fvy, flux.fvz};
+  // std::cout << "\033[0;31mKrish:" << flux.fvx << " " << flux.fvy << " " << flux.fvz << "\033[0m" << std::endl;
+
+  TVector3 baseline_vec = Trans_Targ2Det_beam - Decay_pos;
+  _baseline  = baseline_vec.Mag()/100.0;
 
   auto mct = mct_h->at(0);
   auto neutrino = mct.GetNeutrino();

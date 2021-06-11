@@ -263,7 +263,7 @@ namespace analysis
         //_mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
 
 
-        bool isFirstVectorFlux   = true;
+        // bool isFirstVectorFlux   = true;
         bool isFirstVectorReint  = true;
 
         // loop through all EventWeight variations
@@ -274,44 +274,11 @@ namespace analysis
           // variation name
           std::string keyname = it->first;
 
-          //std::cout << " [ EventWeightTree ]" << "Entering variation " << keyname << " with " << (it->second).size() << " weights " << std::endl;
+          // std::cout << " [ EventWeightTree ]" << "Entering variation " << keyname << " with " << (it->second).size() << " weights " << std::endl;
 
-          // is this a flux variation?
-          if(keyname.find("horncurrent") != std::string::npos ||
-              keyname.find("expskin") != std::string::npos ||
-              keyname.find("piplus") != std::string::npos ||
-              keyname.find("piminus") != std::string::npos ||
-              keyname.find("kplus") != std::string::npos ||
-              keyname.find("kzero") != std::string::npos ||
-              keyname.find("kminus") != std::string::npos ||
-              keyname.find("pioninexsec") != std::string::npos ||
-              keyname.find("pionqexsec") != std::string::npos ||
-              keyname.find("piontotxsec") != std::string::npos ||
-              keyname.find("nucleontotxsec") != std::string::npos ||
-              keyname.find("nucleonqexsec") != std::string::npos ||
-              keyname.find("nucleoninexsec") != std::string::npos){
-
-            // are we storing flux variations one-by-one?
-            if (_SaveAllFlux) 
-              _mapWeight.insert(*it);
-            else {
-              // is this the first flux variation in the event?
-              if(isFirstVectorFlux){
-                _vecWeightFluxD = it->second;
-                isFirstVectorFlux = false;
-              }
-              else{
-                // make sure same-size flux-weight vector
-                if ( (it->second).size() == _vecWeightFluxD.size() ) {
-                  for(unsigned int i = 0; i < it->second.size(); ++i) 
-                    _vecWeightFluxD[i] *= it->second[i];
-                }// if same-size flux-weight vector
-              }// if not the first flux weight
-            }// if not storing flux variations one-by-one
-          }// if a flux-variation
           // if this is a genie-all variation
-          else if (keyname.find("All") != std::string::npos) {
-            //std::cout << " [ EventWeightTree ]" << " Entering Genie ALL variation number " << GenieCounter << std::endl;
+          if (keyname.find("All") != std::string::npos) {
+            std::cout << " [ EventWeightTree ]" << " Entering Genie ALL variation number " << GenieCounter << " " <<keyname << std::endl;
             for(unsigned int i = 0; i < it->second.size(); ++i) {
               if ( (i + (100 * GenieCounter) ) < _vecWeightsGenie.size()) 
                 _vecWeightsGenieD[i + (100 * GenieCounter) ] *= it->second[i];
@@ -323,7 +290,7 @@ namespace analysis
           
           // if this is a ppfx multisim variation
           else if (keyname.find("ppfx_ms_UBPPFX") != std::string::npos) {
-            //std::cout << " [ EventWeightTree ]" << " Entering PPFX variation number " << PPFXCounter << std::endl;
+            std::cout << " [ EventWeightTree ]" << " Entering PPFX variation number " << PPFXCounter << " " <<keyname << std::endl;
             for(unsigned int i = 0; i < it->second.size(); ++i) {
               if ( (i + (100 * PPFXCounter) ) < _vecWeightsPPFXD.size()) 
                 _vecWeightsPPFXD[i + (100 * PPFXCounter) ] *= it->second[i];
@@ -333,8 +300,9 @@ namespace analysis
             PPFXCounter += 1;
           }// if a ppfx-all variation
           
-          // if a GEANT4 variation
-          else if ( (keyname.find("reinteractions") != std::string::npos) ) {
+          // if a GEANT4 variation proton/piplus/piminus
+          else if ( keyname == "reinteractions_piplus_Geant4" || keyname == "reinteractions_piminus_Geant4" || keyname == "reinteractions_proton_Geant4" ) {
+            std::cout << "KrishReint: " << it->first << std::endl;
             // is this the first G4 variation in the event?
             if(isFirstVectorReint){
               _vecWeightsReintD = it->second;
@@ -357,7 +325,6 @@ namespace analysis
       //std::cout << " [ EventWeightTree ] " << "genie-all handle now has " << _vecWeightsGenie.size() << " elements" << std::endl;
 
     }// for all event-weight handles
-
     // if we are filling the flux-weights as one map:
     if (!_SaveAllFlux) {
       //std::cout << " [ EventWeightTree ] " << "flux-all weight vector now has " << _vecWeightFlux.size() << " elements" << std::endl;
