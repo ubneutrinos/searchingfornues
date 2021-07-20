@@ -1,0 +1,10 @@
+#!/bin/bash
+
+hadd -f /uboone/data/users/foppiani/calorimetry/v09/cv/out.root /pnfs/uboone/scratch/users/foppiani/calorimetry/v09/cv/out/*/*.root
+hadd -f /uboone/data/users/foppiani/calorimetry/v09/wire_mod_x/out.root /pnfs/uboone/scratch/users/foppiani/calorimetry/v09/wire_mod_x/out/*/*.root
+hadd -f /uboone/data/users/foppiani/calorimetry/v09/wire_mod_yz/out.root /pnfs/uboone/scratch/users/foppiani/calorimetry/v09/wire_mod_yz/out/*/*.root
+hadd -f /uboone/data/users/foppiani/calorimetry/v09/wire_mod_theta_xz/out.root /pnfs/uboone/scratch/users/foppiani/calorimetry/v09/wire_mod_theta_xz/out/*/*.root
+hadd -f /uboone/data/users/foppiani/calorimetry/v09/wire_mod_theta_yz/out.root /pnfs/uboone/scratch/users/foppiani/calorimetry/v09/wire_mod_theta_yz/out/*/*.root
+hadd -f /uboone/data/users/foppiani/calorimetry/v09/wire_mod_dedx/out.root /pnfs/uboone/scratch/users/foppiani/calorimetry/v09/wire_mod_dedx/out/*/*.root
+hadd -f /uboone/data/users/foppiani/calorimetry/v09/sce/out.root /pnfs/uboone/scratch/users/foppiani/calorimetry/v09/sce/out/*/*.root
+hadd -f /uboone/data/users/foppiani/calorimetry/v09/recomb2/out.root /pnfs/uboone/scratch/users/foppiani/calorimetry/v09/recomb2/out/*/*.root

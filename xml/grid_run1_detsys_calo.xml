@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<!DOCTYPE project [
+<!ENTITY release "v08_00_00_51">
+<!ENTITY qualifier "e17:prof">
+<!ENTITY user "foppiani">
+
+<!ENTITY file_type "mcc9">
+<!ENTITY run_type "physics">
+<!ENTITY name "calo">
+<!ENTITY project_version "v09">
+<!ENTITY tag "devel">
+
+<!ENTITY resilient "/pnfs/uboone/resilient/users">
+<!ENTITY scratch "/pnfs/uboone/scratch/users">
+<!ENTITY data "/uboone/data/users">
+<!ENTITY fcl_name "run_calorimetryanalysis_run1_overlay.fcl">
+<!ENTITY folder_name "calorimetry">
+<!ENTITY tar_name "local">
+
+<!ENTITY cv "prodgenie_bnb_nu_overlay_CV_v08_00_00_47_run1_reco2_reco2" >
+<!ENTITY wire_mod_x "prodgenie_bnb_nu_overlay_v08_00_00_51_pandora_reco2_detvar_WireModX_run1_reco2" >
+<!ENTITY wire_mod_yz "prodgenie_bnb_nu_overlay_reco2_detvar_WireModYZ_run1_reco2" >
+<!ENTITY wire_mod_theta_xz "prodgenie_bnb_nu_overlay_reco2_detvar_WireModThetaXZ_run1_reco2" >
+<!ENTITY wire_mod_theta_yz "prodgenie_bnb_nu_overlay_reco2_detvar_WireModThetaYZ_run1_reco2" >
+<!ENTITY wire_mod_dedx "bnb_nu_uboone_overlay_detvar_500k_run1_WireModdEdX_mcc9_reco2_v08_00_00_51_reco2_run1_reco2" >
+<!ENTITY sce "prodgenie_bnb_nu_uboone_overlay_detvar_SCE_run1_reco2" >
+<!ENTITY recomb2 "high_stats_bnb_nu_detvar_run1_recomb2_run1_reco2" >
+
+]>
+
+<job>
+
+<project name="&name;">
+
+  <!-- Project size -->
+  <numevents>500000</numevents>
+
+  <!-- Operating System -->
+  <os>SL7</os>
+
+  <!-- Batch resources -->
+  <resource>DEDICATED,OPPORTUNISTIC</resource>
+
+  <!-- Larsoft information -->
+  <larsoft>
+    <tag>&release;</tag>
+    <qual>&qualifier;</qual>
+    <local>&resilient;/&user;/&folder_name;/&project_version;/&tar_name;.tar</local>
+  </larsoft>
+
+  <!-- Project stages -->
+
+  <stage name="cv">
+    <inputdef>&cv;</inputdef>
+    <fcl>&fcl_name;</fcl>
+
+    <outdir>&scratch;/&user;/&folder_name;/&project_version;/cv/out/</outdir>
+    <logdir>&scratch;/&user;/&folder_name;/&project_version;/cv/log/</logdir>
+    <workdir>&resilient;/&user;/&folder_name;/&project_version;/cv/work/</workdir>
+    <bookdir>&data;/&user;/&folder_name;/&project_version;/cv/book/</bookdir>
+
+    <datatier>reconstructed</datatier>
+    <defname>cv_&tag;_reco</defname>
+
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>1220</numjobs>
+    <maxfilesperjob>10</maxfilesperjob>
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600</jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+  <stage name="wire_mod_x">
+    <inputdef>&wire_mod_x;</inputdef>
+    <fcl>&fcl_name;</fcl>
+
+    <outdir>&scratch;/&user;/&folder_name;/&project_version;/wire_mod_x/out/</outdir>
+    <logdir>&scratch;/&user;/&folder_name;/&project_version;/wire_mod_x/log/</logdir>
+    <workdir>&resilient;/&user;/&folder_name;/&project_version;/wire_mod_x/work/</workdir>
+    <bookdir>&data;/&user;/&folder_name;/&project_version;/wire_mod_x/book/</bookdir>
+
+    <datatier>reconstructed</datatier>
+    <defname>wire_mod_x_&tag;_reco</defname>
+
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>1220</numjobs>
+    <maxfilesperjob>10</maxfilesperjob>
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600</jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+  <stage name="wire_mod_yz">
+    <inputdef>&wire_mod_yz;</inputdef>
+    <fcl>&fcl_name;</fcl>
+
+    <outdir>&scratch;/&user;/&folder_name;/&project_version;/wire_mod_yz/out/</outdir>
+    <logdir>&scratch;/&user;/&folder_name;/&project_version;/wire_mod_yz/log/</logdir>
+    <workdir>&resilient;/&user;/&folder_name;/&project_version;/wire_mod_yz/work/</workdir>
+    <bookdir>&data;/&user;/&folder_name;/&project_version;/wire_mod_yz/book/</bookdir>
+
+    <datatier>reconstructed</datatier>
+    <defname>wire_mod_yz_&tag;_reco</defname>
+
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>1220</numjobs>
+    <maxfilesperjob>10</maxfilesperjob>
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600</jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+  <stage name="wire_mod_theta_xz">
+    <inputdef>&wire_mod_theta_xz;</inputdef>
+    <fcl>&fcl_name;</fcl>
+
+    <outdir>&scratch;/&user;/&folder_name;/&project_version;/wire_mod_theta_xz/out/</outdir>
+    <logdir>&scratch;/&user;/&folder_name;/&project_version;/wire_mod_theta_xz/log/</logdir>
+    <workdir>&resilient;/&user;/&folder_name;/&project_version;/wire_mod_theta_xz/work/</workdir>
+    <bookdir>&data;/&user;/&folder_name;/&project_version;/wire_mod_theta_xz/book/</bookdir>
+
+    <datatier>reconstructed</datatier>
+    <defname>wire_mod_theta_xz_&tag;_reco</defname>
+
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>1220</numjobs>
+    <maxfilesperjob>10</maxfilesperjob>
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600</jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+  <stage name="wire_mod_theta_yz">
+    <inputdef>&wire_mod_theta_yz;</inputdef>
+    <fcl>&fcl_name;</fcl>
+
+    <outdir>&scratch;/&user;/&folder_name;/&project_version;/wire_mod_theta_yz/out/</outdir>
+    <logdir>&scratch;/&user;/&folder_name;/&project_version;/wire_mod_theta_yz/log/</logdir>
+    <workdir>&resilient;/&user;/&folder_name;/&project_version;/wire_mod_theta_yz/work/</workdir>
+    <bookdir>&data;/&user;/&folder_name;/&project_version;/wire_mod_theta_yz/book/</bookdir>
+
+    <datatier>reconstructed</datatier>
+    <defname>wire_mod_theta_yz_&tag;_reco</defname>
+
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>1220</numjobs>
+    <maxfilesperjob>10</maxfilesperjob>
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600</jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+  <stage name="wire_mod_dedx">
+    <inputdef>&wire_mod_dedx;</inputdef>
+    <fcl>&fcl_name;</fcl>
+
+    <outdir>&scratch;/&user;/&folder_name;/&project_version;/wire_mod_dedx/out/</outdir>
+    <logdir>&scratch;/&user;/&folder_name;/&project_version;/wire_mod_dedx/log/</logdir>
+    <workdir>&resilient;/&user;/&folder_name;/&project_version;/wire_mod_dedx/work/</workdir>
+    <bookdir>&data;/&user;/&folder_name;/&project_version;/wire_mod_dedx/book/</bookdir>
+
+    <datatier>reconstructed</datatier>
+    <defname>wire_mod_dedx_&tag;_reco</defname>
+
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>1220</numjobs>
+    <maxfilesperjob>10</maxfilesperjob>
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600</jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+  <stage name="sce">
+    <inputdef>&sce;</inputdef>
+    <fcl>&fcl_name;</fcl>
+
+    <outdir>&scratch;/&user;/&folder_name;/&project_version;/sce/out/</outdir>
+    <logdir>&scratch;/&user;/&folder_name;/&project_version;/sce/log/</logdir>
+    <workdir>&resilient;/&user;/&folder_name;/&project_version;/sce/work/</workdir>
+    <bookdir>&data;/&user;/&folder_name;/&project_version;/sce/book/</bookdir>
+
+    <datatier>reconstructed</datatier>
+    <defname>sce_&tag;_reco</defname>
+
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>1220</numjobs>
+    <maxfilesperjob>10</maxfilesperjob>
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600</jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+  <stage name="recomb2">
+    <inputdef>&recomb2;</inputdef>
+    <fcl>&fcl_name;</fcl>
+
+    <outdir>&scratch;/&user;/&folder_name;/&project_version;/recomb2/out/</outdir>
+    <logdir>&scratch;/&user;/&folder_name;/&project_version;/recomb2/log/</logdir>
+    <workdir>&resilient;/&user;/&folder_name;/&project_version;/recomb2/work/</workdir>
+    <bookdir>&data;/&user;/&folder_name;/&project_version;/recomb2/book/</bookdir>
+
+    <datatier>reconstructed</datatier>
+    <defname>recomb2_&tag;_reco</defname>
+
+    <check>0</check>
+    <memory>2000</memory>
+    <disk>10GB</disk>
+    <numjobs>1220</numjobs>
+    <maxfilesperjob>10</maxfilesperjob>
+    <schema>gsiftp</schema> <!-- Herb's work-around -->
+    <jobsub>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)' -e XRD_CONNECTIONRETRY=32 -e XRD_REDIRECTLIMIT=255 -e XRD_REQUESTTIMEOUT=3600</jobsub>
+    <jobsub_start>--expected-lifetime=24h --append_condor_requirements='(TARGET.HAS_CVMFS_uboone_opensciencegrid_org==true)'</jobsub_start>
+  </stage>
+
+
+  <!-- file type -->
+  <filetype>&file_type;</filetype>
+
+  <!-- run type -->
+  <runtype>&run_type;</runtype>
+
+</project>
+
+</job>

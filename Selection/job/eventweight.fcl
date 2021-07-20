@@ -5,10 +5,10 @@ services.NuRandomService: @local::microboone_seedservice #might not be necessary
 EventWeightTreeTool: {
     tool_type: "EventWeightTree"
     createDedicatedTree: false
-    createMapBranch: true # true if std::map<string,std::vector<float>> should be saved
-    createFluxBranch: true
-    createGenieBranch: true
-    createReintBranch: true
+    createMapBranch: false # true if std::map<string,std::vector<float>> should be saved
+    createFluxBranch: false
+    createGenieBranch: false
+    createReintBranch: false
     createSplineBranch: true
     createTuneBranch: true
     createSplineTimesTuneBranch: true
@@ -16,17 +16,17 @@ EventWeightTreeTool: {
 
 
 #event weighting for switching between splines                                                                                                                                                              
-#microboone_eventweight_justSplines: {
-#  module_type: "EventWeight"
+microboone_eventweight_justSplines: {
+  module_type: "EventWeight"
 
-#  min_weight: 0.0
-#  max_weight: 100
+  min_weight: 0.0
+  max_weight: 100
 
-#  genie_module_label: "generator"
-#  @table::microboone_eventweight_spline
-#}
+  genie_module_label: "generator"
+  @table::microboone_eventweight_spline
+}
 
-#microboone_eventweight_justSplines.weight_functions: [ splines_general ]
+microboone_eventweight_justSplines.weight_functions: [ splines_general ]
 
 
 #For Nicolo
@@ -34,12 +34,12 @@ calotemp.p1: @local::physics.p1
 
 #Systematic weights
 physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeightTreeTool
-#physics.producers.eventweight:        @local::microboone_eventweight_dec20
-#physics.p1: [ eventweight, @sequence::physics.p1] #Uncomment line to run systematic weights, or comment line to not run them
+physics.producers.eventweight:        @local::microboone_eventweight_dec20
+physics.p1: [ eventweight, @sequence::physics.p1] #Uncomment line to run systematic weights, or comment line to not run them
 
 #Genie spline weights
-#physics.producers.eventweightSplines: @local::microboone_eventweight_justSplines
-#physics.p1: [ eventweightSplines, @sequence::physics.p1]
+physics.producers.eventweightSplines: @local::microboone_eventweight_justSplines
+physics.p1: [ eventweightSplines, @sequence::physics.p1]
 
 
 #Change number of universes

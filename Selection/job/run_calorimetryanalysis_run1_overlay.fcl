@@ -17,4 +17,4 @@ physics.filters.nuselection.SelectionTool : {
   tool_type: "EmptySelection"
 }
 
-physics.p1: [ eventweight, eventweightSplines, @sequence::calotemp.p1 ]
+physics.p1: [ @sequence::physics.p1 ]
