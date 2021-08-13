@@ -1,6 +1,7 @@
 #include "run_neutrinoselectionfilter_run1_overlay.fcl"
 
 physics.filters.nuselection.AnalysisTools : {
+    default: @local::DefaultAnalysisTool
   pi0truth:      @local::Pi0TruthAnalysisTool
   calorimetry:   @local::CalorimetryAnalysisTool
   eventweighttree:   @local::EventWeightTreeTool
@@ -12,6 +13,8 @@ physics.filters.nuselection.AnalysisTools.eventweighttree.createFluxBranch: fals
 physics.filters.nuselection.AnalysisTools.eventweighttree.createGenieBranch: false
 physics.filters.nuselection.AnalysisTools.eventweighttree.createReintBranch: false
 physics.filters.nuselection.AnalysisTools.eventweighttree.createSplineBranch: true
+physics.filters.nuselection.AnalysisTools.eventweighttree.createTuneBranch: true
+physics.filters.nuselection.AnalysisTools.eventweighttree.createSplineTimesTuneBranch: true
 
 physics.filters.nuselection.SelectionTool : {
   tool_type: "EmptySelection"
