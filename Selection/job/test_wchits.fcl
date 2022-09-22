@@ -1,0 +1,7 @@
+#include "reco_uboone_mcc9_8_driver_overlay_stage2.fcl"
+
+physics.producers.gaushit: { module_type: "WireCellNuHitsProducer" }
+physics.reco: [ gaushit, @sequence::physics.reco ]
+
+#physics.producers.pandoraPatRec.ShouldRunAllHitsCosmicReco: false #true
+#physics.producers.pandoraPatRec.ShouldRunCosmicHitRemoval: false #true
