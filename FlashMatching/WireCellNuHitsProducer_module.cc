@@ -88,14 +88,17 @@ void WireCellNuHitsProducer::produce(art::Event& e)
 
   art::Handle< std::vector< recob::Hit > > wcHitListHandle;
   e.getByLabel(fWCHitLabel, wcHitListHandle);
+  std::vector<float> map[3][3456] = {std::vector<float>()};
+  for (size_t iwchit=0; iwchit<wcHitListHandle->size();iwchit++) {
+    art::Ptr<recob::Hit> wchit(wcHitListHandle,iwchit);
+    map[wchit->WireID().Plane][wchit->WireID().Wire].push_back(wchit->PeakTime());
+  }
 
   for (size_t ihit=0; ihit<hitListHandle->size();ihit++) {
     art::Ptr<recob::Hit> hit(hitListHandle,ihit);
 
-    for (size_t iwchit=0; iwchit<wcHitListHandle->size();iwchit++) {
-      art::Ptr<recob::Hit> wchit(wcHitListHandle,iwchit);
-      if (hit->WireID()!=wchit->WireID()) continue;
-      if ( std::fabs(hit->PeakTime()-wchit->PeakTime())>fRMSCut*hit->RMS() ) continue;
+    for (auto wct : map[hit->WireID().Plane][hit->WireID().Wire]) {
+      if ( std::fabs(hit->PeakTime()-wct)>fRMSCut*hit->RMS() ) continue;
       //
       outputHits->emplace_back(*hit);
       //
