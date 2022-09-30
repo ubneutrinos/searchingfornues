@@ -191,6 +191,9 @@ FlashMatchingTool: {
     PFPproducer: "pandora"
     T0producer: "flashmatch"
     FLASHproducer: "simpleFlashBeam"
+    SpacePointproducer: "pandora"
+    ChargeToNPhotonsTrack: 164.0
+    ChargeToNPhotonsShower: 512.815
 }
 
 shrreco3dDATA: @local::ShrReco3DPandora

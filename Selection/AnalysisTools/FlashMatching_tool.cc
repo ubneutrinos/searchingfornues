@@ -16,6 +16,8 @@
 #include "../CommonDefs/BacktrackingFuncs.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 
+#include "../../FlashMatching/SliceCandidate.h"
+
 namespace analysis
 {
     ////////////////////////////////////////////////////////////////////////
@@ -71,21 +73,32 @@ namespace analysis
      * @brief reset ttree branches
      */
     void resetTTree(TTree* _tree) override;
+
+    void AddDaughters(const art::Ptr<recob::PFParticle>& pfp,  const art::ValidHandle<std::vector<recob::PFParticle> >& pfp_h, std::vector<art::Ptr<recob::PFParticle> > &pfp_v);
     
   private:
 
     art::InputTag fPFPproducer;
     art::InputTag fT0producer;
     art::InputTag fFLASHproducer;
+    art::InputTag fSpacePointproducer;
 
     float _flash_pe;
-    float _flash_time;
+    float _flash_time, _flash_timewidth;
+    float _flash_y, _flash_z, _flash_ywidth, _flash_zwidth;
 
     float _nu_flashmatch_score;
+    float _nu_centerX, _nu_centerY, _nu_centerZ, _nu_totalCharge;
+
     float _best_cosmic_flashmatch_score;
     float _best_obviouscosmic_flashmatch_score;
     std::vector<float> _cosmic_flashmatch_score_v;
-    
+    std::vector<float> _cosmic_centerX_v, _cosmic_centerY_v, _cosmic_centerZ_v, _cosmic_totalCharge_v;
+
+    float  m_chargeToNPhotonsTrack;   ///< The conversion factor between charge and number of photons for tracks
+    float  m_chargeToNPhotonsShower;  ///< The conversion factor between charge and number of photons for showers
+
+    std::map<unsigned int, unsigned int> _pfpmap;
   };
   
   //----------------------------------------------------------------------------
@@ -101,6 +114,10 @@ namespace analysis
     fPFPproducer = p.get< art::InputTag >("PFPproducer");
     fT0producer  = p.get< art::InputTag >("T0producer" );
     fFLASHproducer  = p.get< art::InputTag >("FLASHproducer" );
+    fSpacePointproducer = p.get< art::InputTag >("SpacePointproducer");
+    m_chargeToNPhotonsTrack = p.get< float >("ChargeToNPhotonsTrack");
+    m_chargeToNPhotonsShower = p.get< float >("ChargeToNPhotonsShower");
+
   }
   
   //----------------------------------------------------------------------------
@@ -134,13 +151,15 @@ namespace analysis
       return;
     }
 
-
-
   art::ValidHandle<std::vector<recob::PFParticle>> pfp_h = e.getValidHandle<std::vector<recob::PFParticle>>(fPFPproducer);
   // grab PFP -> T0 flash-matching association for the event
   art::FindManyP< anab::T0 > pfp_t0_assn_v(pfp_h, e, fT0producer);
   // grab associated metadata
   art::FindManyP< larpandoraobj::PFParticleMetadata > pfp_meta_assn_v(pfp_h, e, fPFPproducer);
+
+  art::FindManyP<recob::SpacePoint> pfp_spacepoint_assn_v(pfp_h, e, fPFPproducer);
+  auto const& spacepoint_h = e.getValidHandle<std::vector<recob::SpacePoint> >(fSpacePointproducer);  
+  art::FindManyP<recob::Hit> spacepoint_hit_assn_v(spacepoint_h, e, fSpacePointproducer);
 
   // figure out which PFP is the neutrino
   size_t nupfp = 0;
@@ -160,10 +179,15 @@ namespace analysis
   _best_obviouscosmic_flashmatch_score = 1e6;
   _cosmic_flashmatch_score_v.clear();
 
+  // fill map: pfparticle Self() -> index/key
+  _pfpmap.clear();
+  for (unsigned int p=0; p < pfp_h->size(); p++) _pfpmap[pfp_h->at(p).Self()] = p;
+
   // loop through all PFParticles
   for (size_t p=0; p < pfp_h->size(); p++) {
 
     auto const& pfp = pfp_h->at(p);
+    const art::Ptr<recob::PFParticle> pfp_ptr(pfp_h, p);
 
     // only primary PFPs have a flash-match score
     if (pfp.IsPrimary() == false) continue;
@@ -174,14 +198,50 @@ namespace analysis
 
     auto fmscore = pfp_t0_assn_v.at(p).at(0)->TriggerConfidence();
 
+    // now build vectors of PFParticles, space-points, and hits for this slice
+    // std::vector<recob::PFParticle> pfp_v;
+    std::vector<art::Ptr<recob::PFParticle> > pfp_ptr_v;
+    std::vector<std::vector<art::Ptr<recob::SpacePoint> > > spacepoint_v_v;
+    std::vector<std::vector<art::Ptr<recob::Hit> > > hit_v_v; 
+
+    AddDaughters(pfp_ptr, pfp_h, pfp_ptr_v);
+
+    // go through these pfparticles and fill info needed for matching
+    for (size_t i=0; i < pfp_ptr_v.size(); i++) {    
+      auto key = pfp_ptr_v.at(i).key();
+      // recob::PFParticle ipfp = *pfp_ptr_v.at(i);
+      // pfp_v.push_back(ipfp);  
+      //auto const& spacepoint_ptr_v = pfp_spacepoint_assn_v.at(key);
+      const std::vector< art::Ptr<recob::SpacePoint> >& spacepoint_ptr_v = pfp_spacepoint_assn_v.at(key);
+      std::vector< art::Ptr<recob::Hit> > hit_ptr_v;
+      for (size_t sp=0; sp < spacepoint_ptr_v.size(); sp++) {
+	auto const& spkey = spacepoint_ptr_v.at(sp).key();
+	const std::vector< art::Ptr<recob::Hit> > this_hit_ptr_v = spacepoint_hit_assn_v.at( spkey );
+	for (size_t h=0; h < this_hit_ptr_v.size(); h++) {
+	  hit_ptr_v.push_back( this_hit_ptr_v.at( h ) );
+	}// for all hits associated to this spacepoint
+      }// fpr all spacepoints  
+      spacepoint_v_v.push_back( spacepoint_ptr_v );
+      hit_v_v.push_back( hit_ptr_v );
+    }// for all pfp pointers
+    flashmatch::SliceCandidate slice(pfp_ptr_v, spacepoint_v_v, hit_v_v, m_chargeToNPhotonsTrack, m_chargeToNPhotonsShower);
+
     // is this the neutrino?
     if (pfp.Self() == nupfp) { 
       _nu_flashmatch_score = fmscore;
+      _nu_centerX = slice.m_centerX;
+      _nu_centerY = slice.m_centerY;
+      _nu_centerZ = slice.m_centerZ;
+      _nu_totalCharge = slice.m_totalCharge;
       continue;
     }
 
     // if not the neutrino...
     _cosmic_flashmatch_score_v.push_back( fmscore );
+    _cosmic_centerX_v.push_back( slice.m_centerX );
+    _cosmic_centerY_v.push_back( slice.m_centerY );
+    _cosmic_centerZ_v.push_back( slice.m_centerZ );
+    _cosmic_totalCharge_v.push_back( slice.m_totalCharge );
 
     // get metadata
     if (pfp_meta_assn_v.size() <= p) { std::cout << "NO METADATA!" << std::endl; continue; }
@@ -232,6 +292,11 @@ namespace analysis
       if (flash.TotalPE() > _flash_pe) {
 	_flash_pe    = flash.TotalPE();
 	_flash_time  = flash.Time();
+	_flash_y = flash.YCenter();
+	_flash_z = flash.ZCenter();
+	_flash_ywidth = flash.TimeWidth();
+	_flash_ywidth = flash.YWidth();
+	_flash_zwidth = flash.ZWidth();
       }// if larger then other flashes
 
     }// for all flashes
@@ -244,23 +309,72 @@ namespace analysis
 
     _tree->Branch("flash_pe",&_flash_pe,"flash_pe/F");
     _tree->Branch("flash_time",&_flash_time,"flash_time/F");
+    _tree->Branch("flash_y",&_flash_y,"flash_y/F");
+    _tree->Branch("flash_z",&_flash_z,"flash_z/F");
+    _tree->Branch("flash_timewidth",&_flash_timewidth,"flash_timewidth/F");
+    _tree->Branch("flash_ywidth",&_flash_ywidth,"flash_ywidth/F");
+    _tree->Branch("flash_zwidth",&_flash_zwidth,"flash_zwidth/F");
 
     _tree->Branch("nu_flashmatch_score",&_nu_flashmatch_score,"nu_flashmatch_score/F");
+    _tree->Branch("nu_centerX",&_nu_centerX,"nu_centerX/F");
+    _tree->Branch("nu_centerY",&_nu_centerY,"nu_centerY/F");
+    _tree->Branch("nu_centerZ",&_nu_centerZ,"nu_centerZ/F");
+    _tree->Branch("nu_totalCharge",&_nu_totalCharge,"nu_totalCharge/F");
     _tree->Branch("best_cosmic_flashmatch_score",&_best_cosmic_flashmatch_score,"best_cosmic_flashmatch_score/F");
     _tree->Branch("best_obviouscosmic_flashmatch_score",&_best_obviouscosmic_flashmatch_score,"best_obviouscosmic_flashmatch_score/F");
     _tree->Branch("cosmic_flashmatch_score_v","std::vector<float>",&_cosmic_flashmatch_score_v);
+    _tree->Branch("cosmic_centerX_v","std::vector<float>",&_cosmic_centerX_v);
+    _tree->Branch("cosmic_centerY_v","std::vector<float>",&_cosmic_centerY_v);
+    _tree->Branch("cosmic_centerZ_v","std::vector<float>",&_cosmic_centerZ_v);
+    _tree->Branch("cosmic_totalCharge_v","std::vector<float>",&_cosmic_totalCharge_v);
   }
   
   void FlashMatching::resetTTree(TTree* _tree)
   {
     _nu_flashmatch_score = 1e6;
+    _nu_centerX = std::numeric_limits<float>::lowest();
+    _nu_centerY = std::numeric_limits<float>::lowest();
+    _nu_centerZ = std::numeric_limits<float>::lowest();
+    _nu_totalCharge = std::numeric_limits<float>::lowest();
     _best_cosmic_flashmatch_score = 1e6;
     _best_obviouscosmic_flashmatch_score = 1e6;
     _cosmic_flashmatch_score_v.clear();
+    _cosmic_centerX_v.clear();
+    _cosmic_centerY_v.clear();
+    _cosmic_centerZ_v.clear();
+    _cosmic_totalCharge_v.clear();
     _flash_pe   = std::numeric_limits<float>::lowest();
     _flash_time = std::numeric_limits<float>::lowest();
+    _flash_y = std::numeric_limits<float>::lowest();
+    _flash_z = std::numeric_limits<float>::lowest();
+    _flash_timewidth = std::numeric_limits<float>::lowest();
+    _flash_ywidth = std::numeric_limits<float>::lowest();
+    _flash_zwidth = std::numeric_limits<float>::lowest();
   }
 
+  void FlashMatching::AddDaughters(const art::Ptr<recob::PFParticle>& pfp_ptr,  const art::ValidHandle<std::vector<recob::PFParticle> >& pfp_h, std::vector<art::Ptr<recob::PFParticle> > &pfp_v) {
+  
+    auto daughters = pfp_ptr->Daughters();
+  
+    pfp_v.push_back(pfp_ptr);
+  
+    std::cout << "\t PFP w/ PdgCode " << pfp_ptr->PdgCode() << " has " << daughters.size() << " daughters" << std::endl;
+  
+    for(auto const& daughterid : daughters) {
+
+      if (_pfpmap.find(daughterid) == _pfpmap.end()) {
+	std::cout << "Did not find DAUGHTERID in map! error"<< std::endl;
+	continue;
+      }
+    
+      const art::Ptr<recob::PFParticle> pfp_ptr(pfp_h, _pfpmap.at(daughterid) );
+    
+      AddDaughters(pfp_ptr, pfp_h, pfp_v);
+    
+    }// for all daughters
+  
+    return;
+  }
   
   DEFINE_ART_CLASS_TOOL(FlashMatching)
 } // namespace analysis
