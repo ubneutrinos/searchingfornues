@@ -37,7 +37,8 @@ namespace analysis
     //
     // TBD
     //
-    // Created by Giuseppe Cerati (cerati@fnal.gov) on 03/15/2019
+    // Created by David Caratelli (dcaratelli@ucsb.edu) on 10/06/2022
+    // Code developed by Dante Totani and exported to LArSoft by Erin Yandel
     //
     ////////////////////////////////////////////////////////////////////////
 
