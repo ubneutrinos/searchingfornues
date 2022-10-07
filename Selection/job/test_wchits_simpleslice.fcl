@@ -1,0 +1,21 @@
+#include "reco_uboone_mcc9_8_driver_overlay_stage2.fcl"
+
+physics.producers.gaushit: { module_type: "WireCellNuHitsProducer" }
+physics.reco: [ gaushit, @sequence::physics.reco ]
+
+physics.producers.pandora.SliceIdTool: { tool_type: "SimpleNeutrinoId" }
+
+source: {
+   inputCommands: [
+      "keep *_*_*_*",
+      "drop *_*_*_Data*RecoStage2",
+      "drop *_*_*_MC*RecoStage2",
+      "drop *_*_*_OverlayRecoStage2"
+   ]
+   maxEvents: 10
+   module_type: "RootInput"
+   saveMemoryObjectThreshold: 0
+}
+
+#physics.producers.pandoraPatRec.ShouldRunAllHitsCosmicReco: false #true
+#physics.producers.pandoraPatRec.ShouldRunCosmicHitRemoval: false #true

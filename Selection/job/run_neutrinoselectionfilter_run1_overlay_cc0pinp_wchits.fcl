@@ -1,0 +1,15 @@
+#include "run_neutrinoselectionfilter_run1_overlay.fcl"
+
+physics.filters.nuselection.AnalysisTools.shower:      @local::ShowerAnalysisTool
+physics.filters.nuselection.AnalysisTools.zbdt: @local::BDTTool
+
+physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool
+
+physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushit"
+physics.filters.nuselection.AnalysisTools.mcs.BacktrackTag: "gaushit"
+
+physics.filters.nuselection.AnalysisTools.slicepurcompl.HTproducer: "gaushit"
+physics.filters.nuselection.AnalysisTools.slicepurcompl.OrigHproducer: ["gaushit","","OverlayStage1a"]
+physics.filters.nuselection.AnalysisTools.slicepurcompl.OrigHTproducer: "gaushitTruthMatch"
+
+physics.filters.nuselection.AnalysisTools.flashmatchid.HTproducer: "gaushit"

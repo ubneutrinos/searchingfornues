@@ -192,6 +192,8 @@ FlashMatchingTool: {
     T0producer: "flashmatch"
     FLASHproducer: "simpleFlashBeam"
     SpacePointproducer: "pandora"
+    Hproducer: "gaushit"
+    HTproducer: "gaushitTruthMatch"
     ChargeToNPhotonsTrack: 164.0
     ChargeToNPhotonsShower: 512.815
 }
