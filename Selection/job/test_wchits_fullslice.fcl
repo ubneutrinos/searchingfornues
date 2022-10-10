@@ -3,8 +3,6 @@
 physics.producers.gaushit: { module_type: "WireCellNuHitsProducer" }
 physics.reco: [ gaushit, @sequence::physics.reco ]
 
-physics.producers.pandora.SliceIdTool: { tool_type: "SimpleNeutrinoId" }
-
 source: {
    inputCommands: [
       "keep *_*_*_*",

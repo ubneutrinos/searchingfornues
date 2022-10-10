@@ -72,40 +72,46 @@ namespace flashmatch {
 	
 	  art::ServiceHandle<geo::Geometry> geo;
 	  // gain service
-	  const ::lariov::PmtGainProvider& gain_provider = art::ServiceHandle<lariov::PmtGainService>()->GetProvider();
-	  // pmt remapping service
-	  const ::util::PMTRemapProvider& pmtremap_provider = art::ServiceHandle<util::PMTRemapService>()->GetProvider();
+	  /* const ::lariov::PmtGainProvider& gain_provider = art::ServiceHandle<lariov::PmtGainService>()->GetProvider(); */
+	  /* // pmt remapping service */
+	  /* const ::util::PMTRemapProvider& pmtremap_provider = art::ServiceHandle<util::PMTRemapService>()->GetProvider(); */
 	
 	  const auto nOpDets(geo->NOpDets());
 	
-	  // which FEM to get?
-	  int FEM = (flash.PEs().size() / 100) * 100;
+	  /* // which FEM to get? */
+	  /* int FEM = (flash.PEs().size() / 100) * 100; */
+	  /* std::cout << "FEM=" << FEM << std::endl; */
 	
 	  m_peSpectrum.resize(nOpDets);
 	
-	  for (size_t pmt=FEM; pmt < FEM+nOpDets; pmt++) {
-	    // pmt%100 here represents the channel number
-	    size_t OpChannel = pmt%100;
+	  for (size_t OpChannel = 0; OpChannel < nOpDets; ++OpChannel) {
 	    if (!geo->IsValidOpChannel(OpChannel)) continue;
 	    size_t OpDet     = geo->OpDetFromOpChannel(OpChannel);
-	    auto PE   = flash.PEs()[pmt];
+	    m_peSpectrum.at(OpDet)  = flash.PEs()[OpChannel];
+	  }
+	  /* for (size_t pmt=FEM; pmt < FEM+nOpDets; pmt++) { */
+	  /*   // pmt%100 here represents the channel number */
+	  /*   size_t OpChannel = pmt%100; */
+	    /* if (!geo->IsValidOpChannel(OpChannel)) continue; */
+	    /* size_t OpDet     = geo->OpDetFromOpChannel(OpChannel); */
+	    /* auto PE   = flash.PEs()[pmt]; */
 
-	    // SPE calibration performed on incorrect OpDetWaveform
-	    // channel nomenclature
-	    // OpFlash channel number is after it was remapped
-	    // to apply the gain for the appropriate channel
-	    // one needs to find the OpChannel number
-	    // associated to the original waveform 
-	    // hence apply the inverse mapping
-	    auto oldch = pmtremap_provider.OriginalOpChannel( OpChannel );
-	    std::cout << "Remapping channel " << OpChannel << " to channel " << oldch << std::endl;
-	    auto gain = gain_provider.Gain( oldch );
-	    //auto gain = gain_provider.Gain(OpChannel);
+	    /* // SPE calibration performed on incorrect OpDetWaveform */
+	    /* // channel nomenclature */
+	    /* // OpFlash channel number is after it was remapped */
+	    /* // to apply the gain for the appropriate channel */
+	    /* // one needs to find the OpChannel number */
+	    /* // associated to the original waveform  */
+	    /* // hence apply the inverse mapping */
+	    /* auto oldch = pmtremap_provider.OriginalOpChannel( OpChannel ); */
+	    /* std::cout << "Remapping channel " << OpChannel << " to channel " << oldch << std::endl; */
+	    /* auto gain = gain_provider.Gain( oldch ); */
+	    /* //auto gain = gain_provider.Gain(OpChannel); */
 
-	    std::cout << "Applying gain " << gain << " for OpChannel " << OpChannel << " corresponding to flash index " << pmt << std::endl;
-	    if (gain != 0)
-	      m_peSpectrum.at(OpDet)  = PE * 120. / gain;
-	  }// or all OpChannels
+	    /* std::cout << "Applying gain " << gain << " for OpChannel " << OpChannel << " corresponding to flash index " << pmt << std::endl; */
+	    /* if (gain != 0) */
+	    /*   m_peSpectrum.at(OpDet)  = PE * 120. / gain; */
+	  /* }// or all OpChannels */
 
 	}
       
@@ -138,7 +144,6 @@ namespace flashmatch {
      */
     flashana::Flash_t ConvertFlashFormat() const
       {
-
 	// Set the flash properties
 	flashana::Flash_t flash;
 	flash.x = 0;
@@ -155,7 +160,6 @@ namespace flashmatch {
 	  flash.pe_v.push_back( pe );
 	  flash.pe_err_v.push_back( std::sqrt(pe) );
 	}
-
 	return flash;
       }
       
@@ -393,7 +397,7 @@ namespace flashmatch {
     float GetFlashMatchScore(FlashCandidate &beamFlash, flashana::FlashMatchManager &flashMatchManager)
     {
       flashMatchManager.Reset();
-	
+
       // Convert the flash and the charge cluster into the required format for flash matching
       auto flash(beamFlash.ConvertFlashFormat());
 	

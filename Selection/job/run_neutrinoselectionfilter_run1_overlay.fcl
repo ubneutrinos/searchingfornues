@@ -20,6 +20,8 @@ physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeigh
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
 physics.filters.nuselection.IsData: false
 
+physics.filters.nuselection.AnalysisTools.flashmatchid.FlashMatchConfig: @local::flash_neutrino_id_tool_overlay.FlashMatchConfig
+
 physics.filters.nuselection.AnalysisTools.zbdt.TrigResProducer: "TriggerResults::OverlayFiltersPostStage2"
 
 # I think the lines below need to be uncommented for pure MC but is ok to leave out for overlays

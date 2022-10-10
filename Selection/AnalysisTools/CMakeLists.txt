@@ -39,6 +39,9 @@ art_make( TOOL_LIBRARIES lardataobj_RecoBase
                          uboonecode_uboone_XGBoost
                          art_Persistency_Common
                          art_Framework_Services_System_TriggerNamesService_service
+                         ubreco_SelectionTool_OpT0FinderBase
+                         ubreco_SelectionTool_OpT0FinderAlgorithms
+                         ubevt_Utilities
         )
 
 install_headers()

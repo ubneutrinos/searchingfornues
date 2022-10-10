@@ -9,7 +9,7 @@ physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushit"
 physics.filters.nuselection.AnalysisTools.mcs.BacktrackTag: "gaushit"
 
 physics.filters.nuselection.AnalysisTools.slicepurcompl.HTproducer: "gaushit"
-physics.filters.nuselection.AnalysisTools.slicepurcompl.OrigHproducer: ["gaushit","","OverlayStage1a"]
+physics.filters.nuselection.AnalysisTools.slicepurcompl.OrigHproducer: "gaushit::OverlayStage1a"
 physics.filters.nuselection.AnalysisTools.slicepurcompl.OrigHTproducer: "gaushitTruthMatch"
 
 physics.filters.nuselection.AnalysisTools.flashmatchid.HTproducer: "gaushit"
