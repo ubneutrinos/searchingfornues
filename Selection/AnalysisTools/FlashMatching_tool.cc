@@ -91,6 +91,8 @@ namespace analysis
     float _flash_pe;
     float _flash_time, _flash_timewidth;
     float _flash_y, _flash_z, _flash_ywidth, _flash_zwidth;
+    std::vector<float> _flash_pe_v; //* reconstructed PE spectrum across PMT array *//
+    std::vector<float> _slice_pe_v; //* hypothesized PE spectrum based on TPC charge across PMT array *//
 
     float _nu_flashmatch_score;
     float _nu_centerX, _nu_centerY, _nu_centerZ, _nu_totalCharge;
@@ -294,6 +296,9 @@ namespace analysis
       if (ibeamFlash != flash_h->size()) {
 	flashmatch::FlashCandidate beamFlash(e,flash_h->at(ibeamFlash));
 	fmscore = slice.GetFlashMatchScore(beamFlash, m_flashMatchManager);
+	// store flash PE spectrum in the ordering as used by Flash-Matching 
+	_flash_pe_v = beamFlash.m_peSpectrum;
+	_slice_pe_v = beamFlash.m_peHypSpectrum;
       }
       // get flash-match score (in case there is a valid T0 for all outcomes...)
       // size_t key = pfp_ptr.key();
@@ -360,6 +365,8 @@ namespace analysis
   {
 
     _tree->Branch("flash_pe",&_flash_pe,"flash_pe/F");
+    _tree->Branch("flash_pe_v","std::vector<float>",&_flash_pe_v);
+    _tree->Branch("slice_pe_v","std::vector<float>",&_slice_pe_v);
     _tree->Branch("flash_time",&_flash_time,"flash_time/F");
     _tree->Branch("flash_y",&_flash_y,"flash_y/F");
     _tree->Branch("flash_z",&_flash_z,"flash_z/F");
