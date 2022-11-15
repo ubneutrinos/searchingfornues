@@ -1,6 +1,5 @@
 #include "run_neutrinoselectionfilter_run1_data.fcl"
 
-services.UBEventWeight: @local::microboone_eventweight_service
 services.NuRandomService: @local::microboone_seedservice #might not be necessary
 EventWeightTreeTool: {
     tool_type: "EventWeightTree"
