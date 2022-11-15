@@ -152,8 +152,8 @@ SlicePurCompl::SlicePurCompl(const fhicl::ParameterSet &p)
   fMCPproducer = p.get<art::InputTag>("MCPproducer");
   fHproducer = p.get<art::InputTag>("Hproducer");
   fHTproducer = p.get<art::InputTag>("HTproducer");
-  fOrigHproducer = p.get<art::InputTag>("OrigHproducer",art::InputTag());
-  fOrigHTproducer = p.get<art::InputTag>("OrigHTproducer",art::InputTag());
+  fOrigHproducer = p.get<art::InputTag>("OrigHproducer");
+  fOrigHTproducer = p.get<art::InputTag>("OrigHTproducer");
 }
 
 //----------------------------------------------------------------------------

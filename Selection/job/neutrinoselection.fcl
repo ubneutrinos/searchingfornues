@@ -169,6 +169,8 @@ SlicePurComplTool: {
     MCPproducer: "largeant"
     Hproducer: "gaushit"
     HTproducer: "gaushitTruthMatch"
+    OrigHproducer: "gaushit::OverlayStage1a"
+    OrigHTproducer: "gaushitTruthMatch::OverlayRecoStage1b"
 }
 
 PMTNoiseTool: {
