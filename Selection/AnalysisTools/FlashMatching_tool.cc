@@ -251,7 +251,8 @@ namespace analysis
 
     auto assocPfpSlice = std::unique_ptr<art::FindManyP<recob::Slice> >(new art::FindManyP<recob::Slice>(pfp_h, e, fAllPFPproducer));
     auto assocSliceHit = std::unique_ptr<art::FindManyP<recob::Hit> >(new art::FindManyP<recob::Hit>(e.getValidHandle<std::vector<recob::Slice> >(fAllPFPproducer), e, fAllPFPproducer));
-    auto assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(e.getValidHandle<std::vector<recob::Hit>>(fHproducer), e, fHTproducer));
+    std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
+    if (!fData) assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(e.getValidHandle<std::vector<recob::Hit>>(fHproducer), e, fHTproducer));
 
     // fill map: pfparticle Self() -> index/key
     _pfpmap.clear();
@@ -320,8 +321,10 @@ namespace analysis
       if (aslice.size()>0) {
 	auto slhits = assocSliceHit->at(aslice[0].key());
 	nhits = slhits.size();
-	for (size_t ih=0;ih<slhits.size();ih++) {
-	  if (assocMCPart->at(slhits[ih].key()).size()) nunhits++;
+	if (!fData) {
+	  for (size_t ih=0;ih<slhits.size();ih++) {
+	    if (assocMCPart->at(slhits[ih].key()).size()) nunhits++;
+	  }
 	}
       }
       _cosmic_nhits_v.push_back( nhits );
