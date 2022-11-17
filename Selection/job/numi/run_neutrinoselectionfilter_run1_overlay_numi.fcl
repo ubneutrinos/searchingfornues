@@ -11,6 +11,7 @@ EventWeightTreeTool: {
     createTuneBranch: true
     createSplineTimesTuneBranch: true
     createPPFXBranch: true
+    makeNuMINtuple: true
 }
 
 #For Nicolo

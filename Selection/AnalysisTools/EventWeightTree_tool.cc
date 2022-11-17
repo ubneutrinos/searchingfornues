@@ -81,7 +81,7 @@ namespace analysis
       double _knobDecayAngMECup;
       double _knobThetaDelta2Npiup;
       double _knobThetaDelta2NRadup;
-      double _knobRPA_CCQE_Reducedup;
+      //double _knobRPA_CCQE_Reducedup;
       double _knobNormCCCOHup;
       double _knobNormNCCOHup;
       double _knobxsr_scc_Fv3up;
@@ -93,7 +93,7 @@ namespace analysis
       double _knobDecayAngMECdn;
       double _knobThetaDelta2Npidn;
       double _knobThetaDelta2NRaddn;
-      double _knobRPA_CCQE_Reduceddn;
+      //double _knobRPA_CCQE_Reduceddn;
       double _knobNormCCCOHdn;
       double _knobNormNCCOHdn;
       double _knobxsr_scc_Fv3dn;
@@ -117,6 +117,7 @@ namespace analysis
       int _run;
       int _subRun;
       int _evt;
+      bool fMakeNuMINtuple;
   };
 
   EventWeightTree::EventWeightTree(const fhicl::ParameterSet &p){
@@ -128,9 +129,10 @@ namespace analysis
     _createSplineBranch = p.get<bool>("createSplineBranch");
     _createTuneBranch = p.get<bool>("createTuneBranch");
     _createSplineTimesTuneBranch = p.get<bool>("createSplineTimesTuneBranch");
-    _createPPFXBranch = p.get<bool>("createPPFXBranch");
+    _createPPFXBranch = p.get<bool>("createPPFXBranch",false);
     _SaveAllFlux = p.get<bool>("SaveAllFlux",false);
     _GenieAllUniverses = p.get<int>("GenieAllUniverses",600);
+    fMakeNuMINtuple = p.get<bool>("makeNuMINtuple", false);
 
     if(_createDedicatedTree){
       art::ServiceHandle<art::TFileService> tfs;
@@ -149,9 +151,11 @@ namespace analysis
 
     _vecWeightsGenie  = std::vector<unsigned short>(_GenieAllUniverses,1);
     _vecWeightsGenieD = std::vector<double>(_GenieAllUniverses,1.0);
-    _vecWeightsPPFX  = std::vector<unsigned short>(600,1);
-    _vecWeightsPPFXD = std::vector<double>(600,1.0);
-
+    if (fMakeNuMINtuple)
+      {
+	_vecWeightsPPFX  = std::vector<unsigned short>(600,1);
+	_vecWeightsPPFXD = std::vector<double>(600,1.0);
+      }
     std::cout << " [ EventWeightTree ]" << " begin " << std::endl;
 
     std::vector<art::InputTag> vecTag;
@@ -190,6 +194,8 @@ namespace analysis
 
         std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
         art::fill_ptr_vector(eventweights, eventweights_handle);
+
+
         std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
           
         if (evtwgt_map.find("RPA_CCQE_UBGenie") != evtwgt_map.end()) { 
@@ -220,10 +226,10 @@ namespace analysis
           _knobThetaDelta2NRadup = evtwgt_map.find("ThetaDelta2NRad_UBGenie")->second[0]; 
           _knobThetaDelta2NRaddn = evtwgt_map.find("ThetaDelta2NRad_UBGenie")->second[1]; 
         }
-        if (evtwgt_map.find("RPA_CCQE_Reduced_UBGenie") != evtwgt_map.end()) { 
-          _knobRPA_CCQE_Reducedup = evtwgt_map.find("RPA_CCQE_Reduced_UBGenie")->second[0]; 
-          _knobRPA_CCQE_Reduceddn = evtwgt_map.find("RPA_CCQE_Reduced_UBGenie")->second[1]; 
-        }
+        //if (evtwgt_map.find("RPA_CCQE_Reduced_UBGenie") != evtwgt_map.end()) { 
+        //  _knobRPA_CCQE_Reducedup = evtwgt_map.find("RPA_CCQE_Reduced_UBGenie")->second[0]; 
+        //  _knobRPA_CCQE_Reduceddn = evtwgt_map.find("RPA_CCQE_Reduced_UBGenie")->second[1]; 
+        //}
         if (evtwgt_map.find("NormCCCOH_UBGenie") != evtwgt_map.end()) { 
           _knobNormCCCOHup = evtwgt_map.find("NormCCCOH_UBGenie")->second[0]; 
           _knobNormCCCOHdn = evtwgt_map.find("NormCCCOH_UBGenie")->second[1]; 
@@ -253,17 +259,18 @@ namespace analysis
 
         if(_weightSpline != -1 && _weightTune != -1) _weightSplineTimesTune = _weightSpline * _weightTune;
 
-        // Get the PPFX Central Value
-        if(evtwgt_map.find("ppfx_cv_UBPPFXCV") != evtwgt_map.end()) _ppfx_cv = evtwgt_map.find("ppfx_cv_UBPPFXCV")->second[0];
-        std::cout << "ppfx cv weight: "<< _ppfx_cv<<  std::endl;
-        // evtwgt_map.erase("ppfx_cv_PPFXCV");
-
+        // Get the PPFX Central Value -- this will be available only for NuMI
+	if (fMakeNuMINtuple){
+	  if(evtwgt_map.find("ppfx_cv_UBPPFXCV") != evtwgt_map.end()) _ppfx_cv = evtwgt_map.find("ppfx_cv_UBPPFXCV")->second[0];
+	  std::cout << "ppfx cv weight: "<< _ppfx_cv<<  std::endl;
+	  // evtwgt_map.erase("ppfx_cv_PPFXCV");
+	}
 
         // old implementation -> just add all weights as they come from the input
         //_mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
 
 
-        // bool isFirstVectorFlux   = true;
+        bool isFirstVectorFlux   = true; // BNB Specific
         bool isFirstVectorReint  = true;
 
         // loop through all EventWeight variations
@@ -288,8 +295,10 @@ namespace analysis
             GenieCounter += 1;
           }// if a genie-all variation
           
+	  // We need to treat the flux weights differently between NuMI and BNB, so I'll try a nested condition
+	  // we start with the NuMI option
           // if this is a ppfx multisim variation
-          else if (keyname.find("ppfx_ms_UBPPFX") != std::string::npos) {
+          else if ((keyname.find("ppfx_ms_UBPPFX") != std::string::npos)&&fMakeNuMINtuple) {
             std::cout << " [ EventWeightTree ]" << " Entering PPFX variation number " << PPFXCounter << " " <<keyname << std::endl;
             for(unsigned int i = 0; i < it->second.size(); ++i) {
               if ( (i + (100 * PPFXCounter) ) < _vecWeightsPPFXD.size()) 
@@ -299,7 +308,40 @@ namespace analysis
             //std::cout << " [ EventWeightTree ]" << " ERROR FILLING PPFX WEIGHTS " << std::endl;
             PPFXCounter += 1;
           }// if a ppfx-all variation
-          
+	  // then BNB
+	  else if(!fMakeNuMINtuple &&
+		  (keyname.find("horncurrent") != std::string::npos ||
+		   keyname.find("expskin") != std::string::npos ||
+		   keyname.find("piplus") != std::string::npos ||
+		   keyname.find("piminus") != std::string::npos ||
+		   keyname.find("kplus") != std::string::npos ||
+		   keyname.find("kzero") != std::string::npos ||
+		   keyname.find("kminus") != std::string::npos ||
+		   keyname.find("pioninexsec") != std::string::npos ||
+		   keyname.find("pionqexsec") != std::string::npos ||
+		   keyname.find("piontotxsec") != std::string::npos ||
+		   keyname.find("nucleontotxsec") != std::string::npos ||
+		   keyname.find("nucleonqexsec") != std::string::npos ||
+		   keyname.find("nucleoninexsec") != std::string::npos))
+	    {
+	      // are we storing flux variations one-by-one?
+	      if (_SaveAllFlux) 
+		_mapWeight.insert(*it);
+	      else {
+		// is this the first flux variation in the event?
+		if(isFirstVectorFlux){
+		  _vecWeightFluxD = it->second;
+		  isFirstVectorFlux = false;
+		}
+		else{
+		  // make sure same-size flux-weight vector
+		  if ( (it->second).size() == _vecWeightFluxD.size() ) {
+		    for(unsigned int i = 0; i < it->second.size(); ++i) 
+		      _vecWeightFluxD[i] *= it->second[i];
+		  }// if same-size flux-weight vector
+		}// if not the first flux weight
+	      }// if not storing flux variations one-by-one
+	    }// if a flux-variation
           // if a GEANT4 variation proton/piplus/piminus
           else if ( keyname == "reinteractions_piplus_Geant4" || keyname == "reinteractions_piminus_Geant4" || keyname == "reinteractions_proton_Geant4" ) {
             std::cout << "KrishReint: " << it->first << std::endl;
@@ -319,7 +361,8 @@ namespace analysis
           else{ // if not a genie-all variation
             _mapWeight.insert(*it);
           }// end if not a genie-all variation
-        }// for all weith vectors in map
+
+        }// for all wegith vectors in map
       }//if the event-weight handle is valid
 
       //std::cout << " [ EventWeightTree ] " << "genie-all handle now has " << _vecWeightsGenie.size() << " elements" << std::endl;
@@ -370,14 +413,16 @@ namespace analysis
       _vecWeightsReint[i] = wshort;
     }
 
-    _vecWeightsPPFX = std::vector<unsigned short>(_vecWeightsPPFXD.size(), 1);
-    for (size_t i=0; i < _vecWeightsPPFXD.size(); i++) {
-      auto w = _vecWeightsPPFXD[i];
-      unsigned short wshort = (unsigned short)(w*1000.);
-      if (w > 65535)  { wshort = std::numeric_limits<unsigned short>::max(); }
-      if (w < 0) { wshort = 1; }
-      _vecWeightsPPFX[i] = wshort;
-    }
+    if (fMakeNuMINtuple)
+      {	_vecWeightsPPFX = std::vector<unsigned short>(_vecWeightsPPFXD.size(), 1);
+	for (size_t i=0; i < _vecWeightsPPFXD.size(); i++) {
+	  auto w = _vecWeightsPPFXD[i];
+	  unsigned short wshort = (unsigned short)(w*1000.);
+	  if (w > 65535)  { wshort = std::numeric_limits<unsigned short>::max(); }
+	  if (w < 0) { wshort = 1; }
+	  _vecWeightsPPFX[i] = wshort;
+	}
+      }
 
     // store genie-all variation
 
@@ -421,8 +466,8 @@ namespace analysis
       _tree->Branch("knobThetaDelta2Npidn",&_knobThetaDelta2Npidn,"knobThetaDelta2Npidn/D");
       _tree->Branch("knobThetaDelta2NRadup",&_knobThetaDelta2NRadup,"knobThetaDelta2NRadup/D");
       _tree->Branch("knobThetaDelta2NRaddn",&_knobThetaDelta2NRaddn,"knobThetaDelta2NRaddn/D");
-      _tree->Branch("knobRPA_CCQE_Reducedup",&_knobRPA_CCQE_Reducedup,"knobRPA_CCQE_Reducedup/D");
-      _tree->Branch("knobRPA_CCQE_Reduceddn",&_knobRPA_CCQE_Reduceddn,"knobRPA_CCQE_Reduceddn/D");
+      //_tree->Branch("knobRPA_CCQE_Reducedup",&_knobRPA_CCQE_Reducedup,"knobRPA_CCQE_Reducedup/D");
+      //_tree->Branch("knobRPA_CCQE_Reduceddn",&_knobRPA_CCQE_Reduceddn,"knobRPA_CCQE_Reduceddn/D");
       _tree->Branch("knobNormCCCOHup",&_knobNormCCCOHup,"knobNormCCCOHup/D");
       _tree->Branch("knobNormCCCOHdn",&_knobNormCCCOHdn,"knobNormCCCOHdn/D");
       _tree->Branch("knobNormNCCOHup",&_knobNormNCCOHup,"knobNormNCCOHup/D");
@@ -460,7 +505,7 @@ namespace analysis
     _knobDecayAngMECup = 1;
     _knobThetaDelta2Npiup = 1;
     _knobThetaDelta2NRadup = 1;
-    _knobRPA_CCQE_Reducedup = 1;
+    //_knobRPA_CCQE_Reducedup = 1;
     _knobNormCCCOHup = 1;
     _knobNormNCCOHup = 1;
     _knobxsr_scc_Fv3up = 1;
@@ -472,7 +517,7 @@ namespace analysis
     _knobDecayAngMECdn = 1;
     _knobThetaDelta2Npidn = 1;
     _knobThetaDelta2NRaddn = 1;
-    _knobRPA_CCQE_Reduceddn = 1;
+    //_knobRPA_CCQE_Reduceddn = 1;
     _knobNormCCCOHdn = 1;
     _knobNormNCCOHdn = 1;
     _knobxsr_scc_Fv3dn = 1;
