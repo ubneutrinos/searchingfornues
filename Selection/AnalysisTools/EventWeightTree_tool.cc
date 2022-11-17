@@ -74,6 +74,8 @@ namespace analysis
       std::vector<int> _vecWeightsGenie_nam;
       std::vector<unsigned short> _vecWeightsReint;
       std::vector<double> _vecWeightsReintD;
+      std::vector<unsigned short> _vecWeightsGenieUp;//new check please FIXME
+      std::vector<unsigned short> _vecWeightsGenieDn;
       double _knobRPAup;
       double _knobCCMECup;
       double _knobAxFFCCQEup;
@@ -131,9 +133,10 @@ namespace analysis
     _createSplineTimesTuneBranch = p.get<bool>("createSplineTimesTuneBranch");
     _createPPFXBranch = p.get<bool>("createPPFXBranch",false);
     _SaveAllFlux = p.get<bool>("SaveAllFlux",false);
-    _GenieAllUniverses = p.get<int>("GenieAllUniverses",600);
+    _createGenieUpDnVecs = p.get<bool>("createGenieUpDnVecs", false);
+    _GenieAllUniverses = p.get<int>("GenieAllUniverses",500);
     fMakeNuMINtuple = p.get<bool>("makeNuMINtuple", false);
-
+    
     if(_createDedicatedTree){
       art::ServiceHandle<art::TFileService> tfs;
       _weightstree = tfs->make<TTree>("EventWeights", "EventWeights TTree");
@@ -161,11 +164,11 @@ namespace analysis
     std::vector<art::InputTag> vecTag;
     art::InputTag eventweight_tag_00("eventweight","","EventWeightSept24");
     //art::InputTag eventweight_tag_00("eventweight","","EventWeightMar18");
-    art::InputTag eventweight_tag_01("eventweight","","EventWeightSept24ExtraGENIE1");
-    art::InputTag eventweight_tag_02("eventweight","","EventWeightSept24ExtraGENIE2");
-    art::InputTag eventweight_tag_03("eventweight","","EventWeightSept24ExtraGENIE3");
-    art::InputTag eventweight_tag_04("eventweight","","EventWeightSept24ExtraGENIE4");
-    art::InputTag eventweight_tag_05("eventweight","","EventWeightSept24ExtraGENIE5");
+    art::InputTag eventweight_tag_01("eventweightSep24","","EventWeightSep24ExtraGENIE1");
+    art::InputTag eventweight_tag_02("eventweightSep24","","EventWeightSep24ExtraGENIE2");
+    art::InputTag eventweight_tag_03("eventweightSep24","","EventWeightSep24ExtraGENIE3");
+    art::InputTag eventweight_tag_04("eventweightSep24","","EventWeightSep24ExtraGENIE4");
+    art::InputTag eventweight_tag_knobs("eventweightGenieKnobs");
     //art::InputTag eventweight_spline_tag("eventweightSplines");
     // art::InputTag eventweight_tag("eventweight");
     vecTag.push_back(eventweight_tag_00);
@@ -173,7 +176,7 @@ namespace analysis
     vecTag.push_back(eventweight_tag_02);
     vecTag.push_back(eventweight_tag_03);
     vecTag.push_back(eventweight_tag_04);
-    vecTag.push_back(eventweight_tag_05);
+    vecTag.push_back(eventweight_tag_knobs);
     //vecTag.push_back(eventweight_spline_tag);
     // vecTag.push_back(eventweight_tag);
 
@@ -183,8 +186,8 @@ namespace analysis
 
     for(auto& thisTag : vecTag){
 
-      //std::cout << " [ EventWeightTree ]" << " newTag " << std::endl;
-
+      //std::cout << " [ EventWeightTree ]" << " newTag " << thisTag.label() << std::endl;
+      
       art::Handle<std::vector<evwgh::MCEventWeight>> eventweights_handle;
       evt.getByLabel(thisTag, eventweights_handle);
 
@@ -192,11 +195,65 @@ namespace analysis
 
         std::cout << " [ EventWeightTree ]" << " isValid! " << std::endl;
 
-        std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
-        art::fill_ptr_vector(eventweights, eventweights_handle);
+	std::vector<art::Ptr<evwgh::MCEventWeight>> eventweights;
+	art::fill_ptr_vector(eventweights, eventweights_handle);
 
+	if (_createGenieUpDnVecs && thisTag.label()=="eventweightGenieKnobs") {
 
-        std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
+	  // we enforce that the index in vecWeightsGenieUp/Dn matches this vector
+    std::vector<std::string> knobList = {"AGKYpT1pi_UBGenie","AGKYxF1pi_UBGenie","AhtBY_UBGenie","AxFFCCQEshape_UBGenie","BhtBY_UBGenie",
+                 "CV1uBY_UBGenie","CV2uBY_UBGenie","DecayAngMEC_UBGenie","EtaNCEL_UBGenie","FrAbs_N_UBGenie",
+                 "FrAbs_pi_UBGenie","FrCEx_N_UBGenie","FrCEx_pi_UBGenie","FrInel_N_UBGenie","FrInel_pi_UBGenie",
+                 "FrPiProd_N_UBGenie","FrPiProd_pi_UBGenie","FracDelta_CCMEC_UBGenie","FracPN_CCMEC_UBGenie","MFP_N_UBGenie",
+                 "MFP_pi_UBGenie","MaCCQE_UBGenie","MaCCRES_UBGenie","MaNCEL_UBGenie","MaNCRES_UBGenie",
+                 "MvCCRES_UBGenie","MvNCRES_UBGenie","NonRESBGvbarnCC1pi_UBGenie","NonRESBGvbarnCC2pi_UBGenie","NonRESBGvbarnNC1pi_UBGenie",
+                 "NonRESBGvbarnNC2pi_UBGenie","NonRESBGvbarpCC1pi_UBGenie","NonRESBGvbarpCC2pi_UBGenie","NonRESBGvbarpNC1pi_UBGenie","NonRESBGvbarpNC2pi_UBGenie",
+                 "NonRESBGvnCC1pi_UBGenie","NonRESBGvnCC2pi_UBGenie","NonRESBGvnNC1pi_UBGenie","NonRESBGvnNC2pi_UBGenie","NonRESBGvpCC1pi_UBGenie",
+                 "NonRESBGvpCC2pi_UBGenie","NonRESBGvpNC1pi_UBGenie","NonRESBGvpNC2pi_UBGenie","NormCCMEC_UBGenie","NormNCMEC_UBGenie",
+                 "RDecBR1eta_UBGenie","RDecBR1gamma_UBGenie","RPA_CCQE_UBGenie","Theta_Delta2Npi_UBGenie","TunedCentralValue_UBGenie",
+                 "VecFFCCQEshape_UBGenie","XSecShape_CCMEC_UBGenie","splines_general_Spline"};
+
+	  std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
+	  // let's iterate over the list above, so that the order is guaranteed
+	  for (size_t count=0; count<knobList.size(); count++) {
+	    bool knobFound = false;
+	    for(std::map<std::string, std::vector<double>>::iterator it=evtwgt_map.begin(); it!=evtwgt_map.end(); ++it){
+	      if (it->first != knobList[count]) continue;
+	      knobFound = true;
+	      //std::cout << " [ EventWeightTree ]" << "Entering variation " << it->first << " with " << (it->second).size() << " weights " << std::endl;
+	      std::vector<double>& vals = it->second;
+
+	      if (vals.size()==1) {
+		float w0 = vals[0];
+		unsigned short w0short = (unsigned short)(w0*1000.);
+		if (w0 > 65535)  { w0short = std::numeric_limits<unsigned short>::max(); }
+		if (w0 < 0) { w0short = 1; }
+		_vecWeightsGenieUp.push_back(w0short);
+		_vecWeightsGenieDn.push_back((unsigned short)(0));
+	      }
+	      else if (vals.size()==2) {
+		float w0 = vals[0];
+		unsigned short w0short = (unsigned short)(w0*1000.);
+		if (w0 > 65535)  { w0short = std::numeric_limits<unsigned short>::max(); }
+		if (w0 < 0) { w0short = 1; }
+		_vecWeightsGenieUp.push_back(w0short);
+		float w1 = vals[1];
+		unsigned short w1short = (unsigned short)(w1*1000.);
+		if (w1 > 65535)  { w1short = std::numeric_limits<unsigned short>::max(); }
+		if (w1 < 0) { w1short = 1; }
+		_vecWeightsGenieDn.push_back(w1short);
+	      }
+	      else std::cout << "Argh, this is unexpected! Size should be either 0 or 1..." << std::endl;
+	    }
+	    // if the index is not in the order we expect, terminate the program
+	    if (knobFound==false) {
+	      std::cout << "knob " << knobList[count] << " NOT found!" << std::endl;
+	      assert(0);
+	    }
+	  }
+	}
+
+	std::map<std::string, std::vector<double>> evtwgt_map = eventweights.at(0)->fWeight;
           
         if (evtwgt_map.find("RPA_CCQE_UBGenie") != evtwgt_map.end()) { 
           _knobRPAup = evtwgt_map.find("RPA_CCQE_UBGenie")->second[0]; 
@@ -478,6 +535,8 @@ namespace analysis
       _tree->Branch("knobxsr_scc_Fa3dn",&_knobxsr_scc_Fa3dn,"knobxsr_scc_Fa3dn/D");
       _tree->Branch("RootinoFix",&_RootinoFix,"RootinoFix/D");
     }
+    if(_createGenieUpDnVecs) _tree->Branch("weightsGenieUp", "std::vector<unsigned short>", &_vecWeightsGenieUp);
+    if(_createGenieUpDnVecs) _tree->Branch("weightsGenieDn", "std::vector<unsigned short>", &_vecWeightsGenieDn);
 
   }
 
@@ -524,6 +583,8 @@ namespace analysis
     _knobxsr_scc_Fa3dn = 1;
     _RootinoFix = 1;
 
+    _vecWeightsGenieUp.clear();
+    _vecWeightsGenieDn.clear();
 
     _run = -1;
     _subRun = -1;
