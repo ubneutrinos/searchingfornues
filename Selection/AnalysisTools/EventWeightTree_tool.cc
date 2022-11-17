@@ -115,6 +115,7 @@ namespace analysis
       bool _createSplineTimesTuneBranch;
       bool _createPPFXBranch;
       bool _SaveAllFlux;
+      bool _createGenieUpDnVecs;
       int _GenieAllUniverses;
       int _run;
       int _subRun;
