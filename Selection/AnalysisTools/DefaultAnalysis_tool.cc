@@ -358,67 +358,96 @@ void DefaultAnalysis::configure(fhicl::ParameterSet const &p)
 void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
   std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << e.run() << ", SubRun: " << e.subRun() << ", Event: " << e.event() << std::endl;
-
-  // store common optical filter tag
-  art::Handle<uboone::UbooneOpticalFilter> CommonOpticalFilter_h;
-
-  // Updated comon optical filter tag for data
-  std::cout << "Test1: "<< NuMIOpFilterProd << std::endl;
-  art::InputTag fCommonOpFiltTag("opfiltercommon", "", NuMIOpFilterProd);
-  e.getByLabel(fCommonOpFiltTag, CommonOpticalFilter_h);
   
-  // Try to get the common optical filter tag for other types
-  if (!CommonOpticalFilter_h.isValid()){ 
-    std::cout << "Could not find data override for common op filter using default... (this is expected for overlay)" << std::endl;
+  // store common optical filter tag
+  if (!fData&&(!fMakeNuMINtuple)) {
+    art::Handle<uboone::UbooneOpticalFilter> CommonOpticalFilter_h;
     art::InputTag fCommonOpFiltTag("opfiltercommon");
     e.getByLabel(fCommonOpFiltTag, CommonOpticalFilter_h);
+    
+    _opfilter_pe_beam = CommonOpticalFilter_h->PE_Beam();
+    _opfilter_pe_veto = CommonOpticalFilter_h->PE_Veto();
   }
+
+
+  // NuMI specific common optical filter
+  if (fMakeNuMINtuple)
+    {
+      // store common optical filter tag
+      art::Handle<uboone::UbooneOpticalFilter> CommonOpticalFilter_h;
+      
+      // Updated comon optical filter tag for data
+      std::cout << "Test1: "<< NuMIOpFilterProd << std::endl;
+      art::InputTag fCommonOpFiltTag("opfiltercommon", "", NuMIOpFilterProd);
+      e.getByLabel(fCommonOpFiltTag, CommonOpticalFilter_h);
+      
+      // Try to get the common optical filter tag for other types
+      if (!CommonOpticalFilter_h.isValid()){ 
+	std::cout << "Could not find data override for common op filter using default... (this is expected for overlay)" << std::endl;
+	art::InputTag fCommonOpFiltTag("opfiltercommon");
+	e.getByLabel(fCommonOpFiltTag, CommonOpticalFilter_h);
+      }
     
-  _opfilter_pe_beam = CommonOpticalFilter_h->PE_Beam();
-  _opfilter_pe_veto = CommonOpticalFilter_h->PE_Veto();
-  
-  // storing trigger result output for software trigger
-  std::cout << "Test2: "<< NuMISWTrigProd << std::endl;
-  art::InputTag swtrig_tag("TriggerResults", "", NuMISWTrigProd);
-  art::Handle<art::TriggerResults> swtrig_handle;
-  e.getByLabel(swtrig_tag, swtrig_handle);
-  if (swtrig_handle.isValid())
-  {
-    if (swtrig_handle->accept() == true)
-      _swtrig = 1;
-    else
-      _swtrig = 0;
-  } // if software trigger run by this producer
-
-  if(!fData&&fMakeNuMINtuple) { 
+      _opfilter_pe_beam = CommonOpticalFilter_h->PE_Beam();
+      _opfilter_pe_veto = CommonOpticalFilter_h->PE_Veto();
+      
+      // storing trigger result output for software trigger
+      std::cout << "Test2: "<< NuMISWTrigProd << std::endl;
+      art::InputTag swtrig_tag("TriggerResults", "", NuMISWTrigProd);
+      art::Handle<art::TriggerResults> swtrig_handle;
+      e.getByLabel(swtrig_tag, swtrig_handle);
+      if (swtrig_handle.isValid())
+	{
+	  if (swtrig_handle->accept() == true)
+	    _swtrig = 1;
+	  else
+	    _swtrig = 0;
+	} // if software trigger run by this producer
     
-    // Also store all the software trigger results for study of the correct one to use
-    art::InputTag triggerTag ("swtrigger", "", NuMISWTrigProd );  
-    const auto& triggerHandle = e.getValidHandle< raw::ubdaqSoftwareTriggerData >(triggerTag);
-    std::vector<std::string> triggerName = triggerHandle->getListOfAlgorithms();  
-    for (int j=0; j!=triggerHandle->getNumberOfAlgorithms(); j++) {
 
-      if (triggerName[j] == "EXT_NUMIwin_FEMBeamTriggerAlgo"){
-        _swtrig_pre_ext = triggerHandle->passedAlgo(triggerName[j]);
+      if(!fData) { 
+	
+	// Also store all the software trigger results for study of the correct one to use
+	art::InputTag triggerTag ("swtrigger", "", NuMISWTrigProd );  
+	const auto& triggerHandle = e.getValidHandle< raw::ubdaqSoftwareTriggerData >(triggerTag);
+	std::vector<std::string> triggerName = triggerHandle->getListOfAlgorithms();  
+	for (int j=0; j!=triggerHandle->getNumberOfAlgorithms(); j++) {
+	  
+	  if (triggerName[j] == "EXT_NUMIwin_FEMBeamTriggerAlgo"){
+	    _swtrig_pre_ext = triggerHandle->passedAlgo(triggerName[j]);
+	  }
+	  else if (triggerName[j] == "EXT_NUMIwin_2018May_FEMBeamTriggerAlgo"){
+	    _swtrig_post_ext = triggerHandle->passedAlgo(triggerName[j]);
+	  }
+	  else if (triggerName[j] == "NUMI_FEMBeamTriggerAlgo"){
+	    _swtrig_pre = triggerHandle->passedAlgo(triggerName[j]);
+	  }
+	  else if (triggerName[j] == "NUMI_2018May_FEMBeamTriggerAlgo"){
+	    _swtrig_post = triggerHandle->passedAlgo(triggerName[j]);
+	  }
+	  else continue;
+	  
+	  // Print the trigger and the result
+	  std::cout<<triggerName[j]<<": ";
+	  std::cout<<triggerHandle->passedAlgo(triggerName[j])<<std::endl;
+	}
       }
-      else if (triggerName[j] == "EXT_NUMIwin_2018May_FEMBeamTriggerAlgo"){
-        _swtrig_post_ext = triggerHandle->passedAlgo(triggerName[j]);
-      }
-      else if (triggerName[j] == "NUMI_FEMBeamTriggerAlgo"){
-        _swtrig_pre = triggerHandle->passedAlgo(triggerName[j]);
-      }
-      else if (triggerName[j] == "NUMI_2018May_FEMBeamTriggerAlgo"){
-        _swtrig_post = triggerHandle->passedAlgo(triggerName[j]);
-      }
-      else continue;
-
-      // Print the trigger and the result
-      std::cout<<triggerName[j]<<": ";
-      std::cout<<triggerHandle->passedAlgo(triggerName[j])<<std::endl;
-
+    } // End of NuMI portion
+  else
+    { // BNB specific
+      // storing trigger result output for software trigger
+      art::InputTag swtrig_tag("TriggerResults", "", "DataOverlayOptical");
+      art::Handle<art::TriggerResults> swtrig_handle;
+      e.getByLabel(swtrig_tag, swtrig_handle);
+      if (swtrig_handle.isValid())
+	{
+	  if (swtrig_handle->accept() == true)
+	    _swtrig = 1;
+	  else
+	    _swtrig = 0;
+	} // if software trigger run by this producer
     }
 
-  }
 
   if (!fData)
   {

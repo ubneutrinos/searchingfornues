@@ -341,7 +341,7 @@ namespace analysis
 		  }// if same-size flux-weight vector
 		}// if not the first flux weight
 	      }// if not storing flux variations one-by-one
-	    }// if a flux-variation
+	    }// if a flux-variation BNB
           // if a GEANT4 variation proton/piplus/piminus
           else if ( keyname == "reinteractions_piplus_Geant4" || keyname == "reinteractions_piminus_Geant4" || keyname == "reinteractions_proton_Geant4" ) {
             std::cout << "KrishReint: " << it->first << std::endl;
