@@ -119,7 +119,7 @@ DefaultAnalysisTool: {
     fidvolYend: 6.
     fidvolZstart: 20.
     fidvolZend: 50.
-    makeNuMINtuple: false
+    makeNuMINtuple: true
     NuMIOpFiltProcName:    "DataStage1Optical"
     NuMISWTriggerProcName: "DataOverlayOpticalNuMI"
 }
