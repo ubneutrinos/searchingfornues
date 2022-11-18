@@ -1,6 +1,5 @@
 #include "run_neutrinoselectionfilter_run1_data.fcl"
 
-services.UBEventWeight: @local::microboone_eventweight_service
 services.NuRandomService: @local::microboone_seedservice #might not be necessary
 EventWeightTreeTool: {
     tool_type: "EventWeightTree"
@@ -19,6 +18,8 @@ services.DetectorClocksService.TrigModuleName: "triggersim"
 physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeightTreeTool
 physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
 physics.filters.nuselection.IsData: false
+
+physics.filters.nuselection.AnalysisTools.flashmatchid.FlashMatchConfig: @local::flash_neutrino_id_tool_overlay.FlashMatchConfig
 
 physics.filters.nuselection.AnalysisTools.zbdt.TrigResProducer: "TriggerResults::OverlayFiltersPostStage2"
 

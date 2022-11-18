@@ -79,6 +79,8 @@ private:
   art::InputTag fMCPproducer;
   art::InputTag fHproducer;
   art::InputTag fHTproducer;
+  art::InputTag fOrigHproducer;
+  art::InputTag fOrigHTproducer;
   //
   std::vector<size_t> lepid; //lepton
   std::vector<size_t> proid; //protons
@@ -100,6 +102,7 @@ private:
 
   // TTree variables
   // per event
+  int origevnunhits;
   int evnunhits;
   int evlepnhits;
   int evpronhits;
@@ -149,6 +152,8 @@ SlicePurCompl::SlicePurCompl(const fhicl::ParameterSet &p)
   fMCPproducer = p.get<art::InputTag>("MCPproducer");
   fHproducer = p.get<art::InputTag>("Hproducer");
   fHTproducer = p.get<art::InputTag>("HTproducer");
+  fOrigHproducer = p.get<art::InputTag>("OrigHproducer");
+  fOrigHTproducer = p.get<art::InputTag>("OrigHTproducer");
 }
 
 //----------------------------------------------------------------------------
@@ -282,6 +287,18 @@ void SlicePurCompl::analyzeEvent(art::Event const &e, bool fData)
   evgamnhits = ngamhits;
   evothnhits = nothhits;
 
+  if (fOrigHproducer.empty()==false) {
+    auto hitsOrig = e.getValidHandle<std::vector<recob::Hit>>(fOrigHproducer);
+    auto assocMCPartOrig = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(hitsOrig, e, fOrigHTproducer));
+    int nOrigNuHits = 0;
+    for (size_t ih=0;ih<hitsOrig->size();ih++) {
+      const art::Ptr<recob::Hit> hit_ptr(hitsOrig, ih);
+      if (assocMCPartOrig->at(hit_ptr.key()).size()) nOrigNuHits++;
+    }
+    origevnunhits = nOrigNuHits;
+  } else {
+    origevnunhits = evnunhits;
+  }
   return;
 }
 
@@ -357,13 +374,15 @@ void SlicePurCompl::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
     nu_completeness_from_pfp += npfnuhits;
   }
   nu_purity_from_pfp = nu_completeness_from_pfp / total_hits;
-  nu_completeness_from_pfp /= evnunhits;
+  nu_completeness_from_pfp /= origevnunhits;
 
   return;
 }
 
 void SlicePurCompl::setBranches(TTree *_tree)
 {
+  _tree->Branch("origevnunhits", &origevnunhits, "origevnunhits/I");
+
   _tree->Branch("evnunhits", &evnunhits, "evnunhits/I");
   _tree->Branch("evlepnhits", &evlepnhits, "evlepnhits/I");
   _tree->Branch("evpronhits", &evpronhits, "evpronhits/I");
@@ -397,6 +416,8 @@ void SlicePurCompl::setBranches(TTree *_tree)
 
 void SlicePurCompl::resetTTree(TTree *_tree)
 {
+  origevnunhits = std::numeric_limits<int>::min();
+  //
   evnunhits = std::numeric_limits<int>::min();
   evlepnhits = std::numeric_limits<int>::min();
   evpronhits = std::numeric_limits<int>::min();
