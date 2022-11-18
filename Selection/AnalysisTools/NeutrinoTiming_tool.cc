@@ -13,6 +13,9 @@
 #include "lardata/Utilities/AssociationUtil.h"
 #include "lardata/Utilities/FindManyInChainP.h"
 
+#include "larevt/CalibrationDBI/Interface/PmtGainService.h"
+#include "larevt/CalibrationDBI/Interface/PmtGainProvider.h"
+
 #include "TH1F.h"
 #include "TH2F.h"
 #include "TF1.h"
@@ -93,17 +96,10 @@ namespace analysis
     art::InputTag fSpacePointproducer;
 
     //beam timing plots
-    TH1F *H_MaxHSum;
-    TH1F *H_TickSum;
-    TH1F *H_MaxH;
-    TH1F *H_Tick;
-    TH2F *H_TickSumVsPMT;
     TH1F *H_time;
-    TH1F *H_timeS;
     TH1F *H_maxH;
-    TH1F *H_tickHalf;
-    TH1F *H_MaxDTick;
     TH1F *H_t0_Beam;
+    TH2F *H_TimeVsPh;
 
     // beam timing variables
     int _tickSum;
@@ -113,10 +109,25 @@ namespace analysis
     double _maxP[32]; 
     double _timeP[32];
     double _BeamT0;
+
+    float f_shiftoffset;
+    bool f_isrun3;
+    float f_ccnd1_a;
+    float f_ccnd1_b;
+    float f_ccnd2_a;
+    float f_ccnd2_b;
+    float f_ccnd3_a;
+    float f_ccnd3_b;
+    float f_ccnd3_c;
+    float f_ccnd3_d;
+    int _run;
+
+    float _interaction_time; // variable stored in TTree
     
     double _nuvtx_x, _nuvtx_y, _nuvtx_z;
 
     Float_t _evtDeltaTimeNS, _evtTimeNS;
+    double  calib[32];
 
     std::map<unsigned int, unsigned int> _pfpmap;
 
@@ -146,12 +157,30 @@ namespace analysis
     fPFPproducer = p.get< art::InputTag >("PFPproducer");
     fT0producer  = p.get< art::InputTag >("T0producer" );
     fPMTWFproducer  = p.get< art::InputTag >("PMTWFproducer" );
-    fLogicWFproducer = p.get< art::InputTag >("pmtreadout:UnspecifiedLogic");
+    fLogicWFproducer = p.get< art::InputTag >("LogicWFproducer");
     fFLASHproducer  = p.get< art::InputTag >("FLASHproducer" );
     fSpacePointproducer = p.get< art::InputTag >("SpacePointproducer");
 
+    f_shiftoffset = p.get<float>("ShiftOffset", 0);
+    f_isrun3 = p.get<bool>("isRun3", false);
+    f_ccnd1_a = p.get<float>("ccnd1_a", 0.529594);
+    f_ccnd1_b = p.get<float>("ccnd1_b", 7.13804);
+    f_ccnd2_a = p.get<float>("ccnd2_a", 0.068752);
+    f_ccnd2_b = p.get<float>("ccnd2_b", 2.32023);
+    f_ccnd3_a = p.get<float>("ccnd3_a", 0.4697);
+    f_ccnd3_b = p.get<float>("ccnd3_b", 0.004233);
+    f_ccnd3_c = p.get<float>("ccnd3_c", 0.000001006);
+    f_ccnd3_d = p.get<float>("ccnd3_d", -0.195);
+
+    //ns beam timing plots for validation
+    art::ServiceHandle<art::TFileService> tfs;
+    H_time= tfs->make<TH1F>("H_time","Time PMT",500, 0,6000);
+    H_maxH= tfs->make<TH1F>("H_maxH","Max amplitude",800,2000,2100);
+    H_t0_Beam= tfs->make<TH1F>("H_t0_Beam","T_0 beam",800,3000,8450);
+    H_TimeVsPh= tfs->make<TH2F>("H_TimeVsPh","H_TimeVsPh",  100, -50,50,  100, 0,500);
+
   }
-  
+
   //----------------------------------------------------------------------------
   /// Reconfigure method.
   ///
@@ -173,6 +202,13 @@ namespace analysis
   void NeutrinoTiming::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
   {
 
+
+    _run = e.run();
+
+    const lariov::PmtGainProvider& gain_provider = art::ServiceHandle<lariov::PmtGainService>()->GetProvider();
+    for (int i=0; i<32; i++){
+      calib[i] = gain_provider.ExtraInfo(i).GetFloatData("amplitude_gain");
+    }
 
     // load PMT waveforms
     art::Handle< std::vector< raw::OpDetWaveform > > wf_handle;
@@ -197,6 +233,7 @@ namespace analysis
     /*
      load waveforms into vectors
     */
+    std::cout << "[NeutrinoTiming] load waveforms into vectors " << std::endl;
 
     //clear PMT waveform
     auto wfsum = std::vector<double>(1500,0);
@@ -215,11 +252,14 @@ namespace analysis
       }// for all channels
     }// for PMT all waveforms
 
+    std::cout << "[NeutrinoTiming] calling getPMTwf() " << std::endl;
     getPMTwf(wfsum, _wf_v);
     
     /*
       load Logic waveform
      */
+    std::cout << "[NeutrinoTiming] load logic waveform " << std::endl;
+
     std::vector<double> *wf_w_03 = new std::vector<double>;
     
     for (size_t i=0; i < wf_handle_beam->size(); i++) {
@@ -239,6 +279,9 @@ namespace analysis
 
     
     // load tracks previously created for which T0 reconstruction is requested                                                                                                                                
+
+    std::cout << "[NeutrinoTiming] load T0 tagged information " << std::endl;
+
     art::Handle<std::vector<anab::T0> > t0_h;
     e.getByLabel( fT0producer , t0_h );
 
@@ -247,43 +290,43 @@ namespace analysis
       std::cerr<<"\033[93m[WARNING]\033[00m no anab::T0 for flash-matching. Skip flash-matching"<<std::endl;
       return;
     }
-
-  art::ValidHandle<std::vector<recob::PFParticle>> pfp_h = e.getValidHandle<std::vector<recob::PFParticle>>(fPFPproducer);
-
-  art::FindManyP<recob::SpacePoint> pfp_spacepoint_assn_v(pfp_h, e, fPFPproducer);
-  auto const& spacepoint_h = e.getValidHandle<std::vector<recob::SpacePoint> >(fSpacePointproducer);  
-  art::FindManyP<recob::Hit> spacepoint_hit_assn_v(spacepoint_h, e, fSpacePointproducer);
-
-
-  // figure out which PFP is the neutrino
-  //size_t nupfp = 0;
-  for (auto pfp : slice_pfp_v) {
     
-    if (pfp->IsPrimary() == false) continue;
+    art::ValidHandle<std::vector<recob::PFParticle>> pfp_h = e.getValidHandle<std::vector<recob::PFParticle>>(fPFPproducer);
     
-    if ( (pfp->PdgCode() == 12) || (pfp->PdgCode() == 14) ) {
-
-      //nupfp = pfp->Self();
+    art::FindManyP<recob::SpacePoint> pfp_spacepoint_assn_v(pfp_h, e, fPFPproducer);
+    auto const& spacepoint_h = e.getValidHandle<std::vector<recob::SpacePoint> >(fSpacePointproducer);  
+    art::FindManyP<recob::Hit> spacepoint_hit_assn_v(spacepoint_h, e, fSpacePointproducer);
+    
+    
+    // figure out which PFP is the neutrino
+    //size_t nupfp = 0;
+    for (auto pfp : slice_pfp_v) {
       
-      auto vtx = pfp.get<recob::Vertex>();
-      if (vtx.size() != 1) {
-	std::cout << "ERROR. Found neutrino PFP w/ != 1 associated vertices..." << std::endl;
-	return;
-      }
-      std::cout<<"Neutrino! \n";
-      // save vertex to array
-      TVector3 nuvtx;
-      Double_t xyz[3] = {};
-      vtx.at(0)->XYZ(xyz);
-      nuvtx = TVector3(xyz[0],xyz[1],xyz[2]);
-      _nuvtx_x = nuvtx.X();
-      _nuvtx_y = nuvtx.Y();
-      _nuvtx_z = nuvtx.Z();
+      if (pfp->IsPrimary() == false) continue;
       
-    }// if neutrino
-  }// for all PFPs in slice
-
-
+      if ( (pfp->PdgCode() == 12) || (pfp->PdgCode() == 14) ) {
+	
+	//nupfp = pfp->Self();
+	
+	auto vtx = pfp.get<recob::Vertex>();
+	if (vtx.size() != 1) {
+	  std::cout << "ERROR. Found neutrino PFP w/ != 1 associated vertices..." << std::endl;
+	  return;
+	}
+	std::cout<<"Neutrino! \n";
+	// save vertex to array
+	TVector3 nuvtx;
+	Double_t xyz[3] = {};
+	vtx.at(0)->XYZ(xyz);
+	nuvtx = TVector3(xyz[0],xyz[1],xyz[2]);
+	_nuvtx_x = nuvtx.X();
+	_nuvtx_y = nuvtx.Y();
+	_nuvtx_z = nuvtx.Z();
+	
+      }// if neutrino
+    }// for all PFPs in slice
+    
+    
     // now build vectors of PFParticles, space-points, and hits for this slice
     // std::vector<recob::PFParticle> pfp_v;
     std::vector<art::Ptr<recob::PFParticle> > pfp_ptr_v;
@@ -330,8 +373,11 @@ namespace analysis
       //flashmatch::SliceCandidate slice(pfp_ptr_v, spacepoint_v_v, hit_v_v, m_chargeToNPhotonsTrack, m_chargeToNPhotonsShower);
       
     }// for all PFPs
-
+    
+    std::cout << "[NeutrinoTiming] run ns beam timing " << std::endl;
     nsbeamtiming(spacepoint_v_v);
+
+    _interaction_time = _evtDeltaTimeNS;
   
   return;
   }
@@ -344,10 +390,12 @@ namespace analysis
 
   void NeutrinoTiming::setBranches(TTree* _tree)
   {
+    _tree->Branch("interaction_time",&_interaction_time,"interaction_time/F");
   }
   
   void NeutrinoTiming::resetTTree(TTree* _tree)
   {
+    _interaction_time = std::numeric_limits<float>::lowest();
   }
 
   void NeutrinoTiming::AddDaughters(const art::Ptr<recob::PFParticle>& pfp_ptr,  const art::ValidHandle<std::vector<recob::PFParticle> >& pfp_h, std::vector<art::Ptr<recob::PFParticle> > &pfp_v) {
@@ -385,78 +433,108 @@ namespace analysis
   {
     
     //analyze waveforms
-    
+    std::cout << "[NeutrinoTiming:getPMTwf()] check1 " << std::endl;
+
+
     //=======================================================================================================
     //=======================================================================================================
-    
-    double tx[500],tySum[500],ty[32][500], tyN[32][500],tySN[500];
-    double BBs,maxS,base[32],max[32]; int basebinmax,tickS,tick[32],pass[32], Fns;
-    double TTS,TT[32],txF[10],tyF[10],tca,tcb,tcc;
-    
+      double Help_wf_v[32][500];
+      double x_wf_v[500], Raw_wf_v[500], Base_wf_v[500], Norm_wf_v[500];
+      double maxZ,max0,base;   int basebinmax,tick;
+      double tca,tcb,tcc, TT[32], max[32];
+
+      int TF,TB,tickF,tickB,FB, Nss,is;
+      double  maxZhelp1,maxZhelp2,maxZhelp3, tickFit1,tickFit2;
+
+      //Raw waveform saturation
+      int saturation=4094;
+      //Parameters for discrete saturated WF reconstruction (1st step)
+      double Frac[100]={1.0, 0.951931, 0.93356, 0.838637, 0.719408, 0.701042, 0.565673, 0.44655, 0.39447, 0.352336, 0.28716, 0.245364, 0.216771, 0.194888, 0.178976, 0.16844, 0.161732, 0.157486, 0.154762, 0.153136, 0.152468, 0.152299, 0.152147, 0.151456, 0.150069, 0.148089, 0.145565, 0.142516, 0.139369, 0.136467, 0.133871, 0.13141, 0.128926, 0.126237, 0.12313, 0.119611, 0.115946, 0.112453, 0.111706, 0.109225, 0.106281, 0.103499, 0.100926, 0.0985215, 0.0961512, 0.0938219, 0.0917209, 0.0898817, 0.0882937, 0.0868338, 0.0854753, 0.0841353, 0.0827237, 0.081198, 0.0794796, 0.077565, 0.0756475, 0.0738863, 0.0722821, 0.0708473, 0.0695119, 0.0682504, 0.0672023, 0.0663549, 0.0656337, 0.0649918, 0.0645003, 0.0641535, 0.0638046, 0.0633435, 0.0627506, 0.0621379, 0.0615464, 0.0609178, 0.0601846, 0.0592098, 0.0580465, 0.0568861, 0.0559024, 0.0550731, 0.0541904, 0.0532532, 0.0524181, 0.0517606, 0.0512326, 0.0507392, 0.0502093, 0.0495968, 0.0488915, 0.0480173, 0.0470195, 0.0459744, 0.0448855, 0.0437359, 0.0425199, 0.0412832, 0.0400036, 0.038688, 0.0373173, 0.0358925};
+      //double Delay[100]={0.0, 0.0686367, 0.0948574, 0.230854, 0.405159, 0.432604, 0.642806, 0.845613, 0.942555, 1.02616, 1.16775, 1.26923, 1.34523, 1.40802, 1.45675, 1.49068, 1.51306, 1.52757, 1.53702, 1.54272, 1.54507, 1.54567, 1.54621, 1.54865, 1.55359, 1.56069, 1.56984, 1.58104, 1.59279, 1.60379, 1.61377, 1.62337, 1.63319, 1.64398, 1.65665, 1.67129, 1.68688, 1.70208, 1.70537, 1.71644, 1.72981, 1.74271, 1.75486, 1.76644, 1.77806, 1.78969, 1.80036, 1.80987, 1.81819, 1.82594, 1.83324, 1.84054, 1.84831, 1.85684, 1.86658, 1.87763, 1.88891, 1.89947, 1.90926, 1.91815, 1.92656, 1.93462, 1.9414, 1.94695, 1.95171, 1.95598, 1.95928, 1.96162, 1.96398, 1.96711, 1.97117, 1.97539, 1.97951, 1.98391, 1.98909, 1.99605, 2.00448, 2.01302, 2.02038, 2.02665, 2.03342, 2.04069, 2.04726, 2.0525, 2.05674, 2.06073, 2.06505, 2.0701, 2.07597, 2.08334, 2.09188, 2.10099, 2.11065, 2.12106, 2.13232, 2.14403, 2.15646, 2.16957, 2.18362, 2.19868 };
+      //Fit function parameters for saturated WF reconstruction (2nd step)
+      double pLL[8]={3.93256,4.31002,2.44182,5.12491,0.830928,0.231375,50.9081,-2.69014};
+
     //=====================================================================================================
     //=======================================================================================================
-    
-    BBs=0.; maxS=0.; tickS=0; for(int q=0; q<32; q++){base[q]=0.; max[q]=0.; tick[q]=0; pass[q]=0;}
-    for(int j=0; j<500; ++j){tx[j]=j;
-      ty[0][j]= _wf_v[0][j]; ty[10][j]= _wf_v[10][j]; ty[20][j]= _wf_v[20][j];
-      ty[1][j]= _wf_v[1][j]; ty[11][j]= _wf_v[11][j]; ty[21][j]= _wf_v[21][j];
-      ty[2][j]= _wf_v[2][j]; ty[12][j]= _wf_v[12][j]; ty[22][j]= _wf_v[22][j];
-      ty[3][j]= _wf_v[3][j]; ty[13][j]= _wf_v[13][j]; ty[23][j]= _wf_v[23][j];
-      ty[4][j]= _wf_v[4][j]; ty[14][j]= _wf_v[14][j]; ty[24][j]= _wf_v[24][j];
-      ty[5][j]= _wf_v[5][j]; ty[15][j]= _wf_v[15][j]; ty[25][j]= _wf_v[25][j];
-      ty[6][j]= _wf_v[6][j]; ty[16][j]= _wf_v[16][j]; ty[26][j]= _wf_v[26][j];
-      ty[7][j]= _wf_v[7][j]; ty[17][j]= _wf_v[17][j]; ty[27][j]= _wf_v[27][j];
-      ty[8][j]= _wf_v[8][j]; ty[18][j]= _wf_v[18][j]; ty[28][j]= _wf_v[28][j];
-      ty[9][j]= _wf_v[9][j]; ty[19][j]= _wf_v[19][j]; ty[29][j]= _wf_v[29][j];
-      tySum[j]= wfsum.at(j); ty[30][j]= _wf_v[30][j]; ty[31][j]= _wf_v[31][j];}
-    
-    _wf_v.clear(); _wf_v.shrink_to_fit(); wfsum.clear(); wfsum.shrink_to_fit();
-    
-    
+
+    for(int q=0; q<32; q++){for(int i=0; i<500; i++){Help_wf_v[q][i]=_wf_v[q][i];}}
+    _wf_v.clear(); _wf_v.shrink_to_fit();
+
+    std::cout << "[NeutrinoTiming:getPMTwf()] check2 " << std::endl;
+
     //-----------------------------------------------------------------------------------------------------
-    TH1F *basehelpS= new TH1F("basehelpS","basehelpS",300, 65400,65700);
-    basebinmax=0; for(int i=0; i<180; i++){basehelpS->Fill(tySum[i]);}
-    basebinmax=basehelpS->GetMaximumBin(); BBs=basehelpS->GetXaxis()->GetBinCenter(basebinmax);
-    basehelpS->Delete();    for(int j=0; j<500; ++j){tySum[j]=tySum[j]-BBs;}
-    for(int q=0; q<32; q++){TH1F *basehelp= new TH1F("basehelp","basehelp",400, 1900,2200);
-      basebinmax=0; for(int i=0; i<180; i++){basehelp->Fill(ty[q][i]);}
-      basebinmax=basehelp->GetMaximumBin(); base[q]=basehelp->GetXaxis()->GetBinCenter(basebinmax);
-      basehelp->Delete(); for(int j=0; j<500; ++j){ty[q][j]=ty[q][j]-base[q];}}
-    //----------------------------------------------------------------------------------------------------
-    for(int i=180; i<350; i++){if(maxS<tySum[i]){maxS=tySum[i]; tickS=i;}}
-    for(int j=0; j<500; ++j){tySN[j]=tySum[j]/maxS;}
-    H_TickSum->Fill(tickS); H_MaxHSum->Fill(maxS);
-    for(int q=0; q<32; q++){for(int i=180; i<480; i++){if(max[q]<ty[q][i]){max[q]=ty[q][i]; tick[q]=i;}}
-      for(int j=0; j<500; ++j){tyN[q][j]=ty[q][j]/max[q];}
-      if(max[q]>40 && (tick[q]>tickS-10 && tick[q]<tickS+10)){pass[q]=1;} else {pass[q]=-1;}
-      H_Tick->Fill(tick[q]); H_MaxH->Fill(max[q]); if(pass[q]==1){H_TickSumVsPMT->Fill(tickS,tick[q]);}
-    }
-    //-----------------------------------------------------------------------------------------------------
-    Fns=tickS-9;
-    for(int i=0; i<10; i++){txF[i]=tx[Fns+i]; tyF[i]=tySN[Fns+i];} TGraph *grSt = new TGraph(10,txF,tyF);
-    TF1 *fit = new TF1("fit","[2]*exp(-TMath::Power(([0]-x)/[1],4))",txF[0], txF[9]);
-    fit->SetParameters(tx[tickS],2,1);  grSt->Fit("fit","Q","",txF[0],txF[9]);
+    for(int q=0; q<32; q++){TT[q]=-9999.; max[q]=-9999.;
+    maxZ=0.; max0=0.; base=0.; tick=0; tickB=0; tickF=0; TF=0; TB=0;
+    //Getting raw waveform (Raw_wf_v[i]) only for i<500 since the beam window is between 3 and 5 us -> [i>3*64 && i<5*64]
+    for(int i=0; i<500; i++){x_wf_v[i]=i*1.0; Raw_wf_v[i]=Help_wf_v[q][i];}
+    //Getting raw wf max amplitude and max amp tick
+    for(int i=3*64; i<5*64; i++){if(maxZ<Raw_wf_v[i]){maxZ=Raw_wf_v[i]; tick=i;}}
+    //Baseline removal
+    TH1F *basehelp= new TH1F("basehelp","basehelp",400, 1900,2200);
+    basebinmax=0; for(int i=0; i<3*64; i++){basehelp->Fill(Raw_wf_v[i]);}
+    basebinmax=basehelp->GetMaximumBin(); base=basehelp->GetXaxis()->GetBinCenter(basebinmax);
+    basehelp->Delete();
+    //Getting wf max amp after baseline removal (this is proportional to number of Photons in the rising endge)
+    //getting wf baseline subtracted and wf baseline subtracted and normalized for the max amp.
+    for(int i=0; i<500; i++){max0=maxZ-base;
+    Base_wf_v[i]=Raw_wf_v[i]-base; Norm_wf_v[i]=Base_wf_v[i]/max0;}
+    //fitting the normalized baseline subtracted wf
+    TGraph *gr = new TGraph(500,x_wf_v,Norm_wf_v);
+    TF1 *fit = new TF1("fit","[2]*exp(-TMath::Power(([0]-x)/[1],4))",tick-10, tick);
+    fit->SetParameters(tick,2,1);  gr->Fit("fit","Q","",tick-10, tick);
     tca=fit->GetParameter(0);  tcb=fit->GetParameter(1);  tcc=fit->GetParameter(2);
-    TTS=(tca-abs(tcb*TMath::Power(-log(0.5/tcc),0.25)))/0.064;
-    H_timeS->Fill(TTS);
+    //timing is the risign edge half height
+    TT[q]=(tca-abs(tcb*TMath::Power(-log(0.5/tcc),0.25)))/0.064; max[q]=max0;
+    //----------------------------------------------
+    //check for saturated wf
+    std::cout << "[NeutrinoTiming:getPMTwf()] check3 " << std::endl;
+    if(maxZ<=saturation){TT[q]=TT[q]; max[q]=max[q];}
+    else if(maxZ>saturation) {
+      
+      std::cout << "[NeutrinoTiming:getPMTwf()] check3.0 " << std::endl;
+      //counting the number of ticks above the saturation
+      for(int i=3*64; i<7*64; i++){
+        if(TF==0){if(Raw_wf_v[i+1]>4094 && Raw_wf_v[i]<=4094){tickF=i; TF=1;}}
+        if(TB==0){if(Raw_wf_v[i]>4094 && Raw_wf_v[i+1]<=4094){tickB=i; TB=1;}}}
+      FB=tickB-tickF;  if(FB>99){FB=99;}
+      //amplitude discrete correction
+      std::cout << "[NeutrinoTiming:getPMTwf()] check3.0.0 " << std::endl;
+      maxZhelp1=maxZ/Frac[FB]; tick=tickF; Nss=0; is=0;
+      for(int i=3*64; i<7*64; i++){if(Raw_wf_v[i]<4095){Nss=Nss+1;}}
+      
+      std::cout << "[NeutrinoTiming:getPMTwf()] check3.1 " << std::endl;
+      
+      double txSS[256],tySS[256],txSS2[256],tySS2[256];
+      
+      for(int i=3*64; i<7*64; i++){if(Raw_wf_v[i]<4095){txSS[is]=i*1.0; tySS[is]=Raw_wf_v[i]/maxZhelp1; is=is+1;}}
+      TGraph *g1 = new TGraph(Nss,txSS,tySS);
+      TF1 *fitS1 = new TF1("fitS1","[9]*(exp(-TMath::Power(([0]-(x-[8]))/[1],4))*0.5*(TMath::Erf(-(x-[8])-[7])+1.0)+([5]+[4]*exp(-TMath::Power(([2]-(x-[8]))/[3],2)))*exp((-(x-[8]))/[6])*0.5*(TMath::Erf([7]+(x-[8]))+1.0))",tick-30, tick+250);
+      fitS1->SetParameters(pLL[0],pLL[1],pLL[2],pLL[3],pLL[4],pLL[5],pLL[6],pLL[7],tick,1.);
+      for(int i=0; i<8; i++){fitS1->FixParameter(i,pLL[i]);} g1->Fit("fitS1","Q","",tick-30, tick+250);
+      tickFit1=fitS1->GetParameter(8); maxZhelp2=fitS1->GetParameter(9);  maxZhelp3=maxZhelp1/maxZhelp2;
+      //amplitude fit correction
+      std::cout << "[NeutrinoTiming:getPMTwf()] check3.2 " << std::endl;
+      for(int i=0; i<Nss; i++){txSS2[i]=txSS[i]; tySS2[i]=tySS[i]/maxZhelp2;}
+      TGraph *g2 = new TGraph(Nss,txSS2,tySS2);
+      std::cout << "[NeutrinoTiming:getPMTwf()] check3.3 " << std::endl;
+      TF1 *fitS2 = new TF1("fitS2","exp(-TMath::Power(([0]-(x-[8]))/[1],4))*0.5*(TMath::Erf(-(x-[8])-[7])+1.0)+([5]+[4]*exp(-TMath::Power(([2]-(x-[8]))/[3],2)))*exp((-(x-[8]))/[6])*0.5*(TMath::Erf([7]+(x-[8]))+1.0)",tick-30, tick+250);
+      std::cout << "[NeutrinoTiming:getPMTwf()] check3.4 " << std::endl;
+      fitS2->SetParameters(pLL[0],pLL[1],pLL[2],pLL[3],pLL[4],pLL[5],pLL[6],pLL[7],tickFit1);
+      for(int i=0; i<8; i++){fitS2->FixParameter(i,pLL[i]);}
+      std::cout << "[NeutrinoTiming:getPMTwf()] check3.5 " << std::endl;
+      g2->Fit("fitS2","Q","",tick-30, tick+250);  tickFit2=fitS2->GetParameter(8);
+      //timing is the risign edge half height
+      TT[q]=tickFit2/0.064; max[q]=maxZhelp3;
+    }
     //-------------------------------------------------------------------------------------------------------
-    for(int q=0; q<32; q++){TT[q]=-1.;   if(pass[q]==1){Fns=tick[q]-9;
-	for(int i=0; i<10; i++){txF[i]=tx[Fns+i]; tyF[i]=tyN[q][Fns+i];}  TGraph *grHt = new TGraph(10,txF,tyF);
-	TF1 *fit = new TF1("fit","[2]*exp(-TMath::Power(([0]-x)/[1],4))",txF[0], txF[9]);
-	fit->SetParameters(tx[tick[q]],2,1);  grHt->Fit("fit","Q","",txF[0],txF[9]);
-	tca=fit->GetParameter(0);  tcb=fit->GetParameter(1);  tcc=fit->GetParameter(2);
-	TT[q]=(tca-abs(tcb*TMath::Power(-log(0.5/tcc),0.25)))/0.064;
-	H_time->Fill(TT[q]);
-      }}
+    std::cout << "[NeutrinoTiming:getPMTwf()] check3a " << std::endl;
+    H_time->Fill(TT[q]);
+    std::cout << "[NeutrinoTiming:getPMTwf()] check3b " << std::endl;
+    }
     //-------------------------------------------------------------------------------------------------------
     
-    _tickSum=tickS; _maxSum=maxS; _timeSum=TTS;
-    for(int q=0; q<32; q++){_tickP[q]=tick[q]; _maxP[q]=max[q]; _timeP[q]=TT[q];}
-    
-    /*
-    std::cout<<"tickSum: "<<tickSum<<" maxSum: "<<maxSum<<" timeSum: "<<timeSum<<std::endl;
-    std::cout<<"tickP[0]: "<<tickP[0]<<" maxP[0]: "<<maxP[0]<<" timeP[0]: "<<timeP[0]<<std::endl;
-    */
+    std::cout << "[NeutrinoTiming:getPMTwf()] check4 " << std::endl;
+    for(int q=0; q<32; q++){_maxP[q]=max[q]; _timeP[q]=TT[q];} //only two variables needed
     
   }
   
@@ -471,59 +549,48 @@ namespace analysis
     //=======================================================================================================
     //=======================================================================================================
 
-    //std::cout<<"get Beam T0"<<std::endl;
-
-    //TMultiGraph *mg0=new TMultiGraph();
-    double BBw,BBwQ,BBErr,BBmax,wx[1500],wy[1500],wxh[150],wyh[150],wxhE[150],wyhE[150];
-    int Nmc;  double XNmax, pca,pcb,pcc, TT = -99999.0;
-    int Nmax, Nrt; double XNmc;
+    double beamBase,BBmax,wx[500],wy[500],pca,pcb,pcc, TT = -99999.0;
+    int Btick,tickMax;
     //=======================================================================================================
-    BBw=0.; BBwQ=0.; BBmax=0.; BBErr=0.;
-    for(size_t j=0; j<wf_w_03->size(); ++j){wx[j]=j; wy[j]=wf_w_03->at(j);
-    if(wx[j]<300){BBw=BBw+wy[j]; BBwQ=BBwQ+TMath::Power(wy[j],2);}}
-    BBErr=sqrt((BBwQ/300.0-TMath::Power(BBw/300.0 ,2))/300.0);
-    for(size_t j=0; j<wf_w_03->size(); ++j){wy[j]=wy[j]-BBw/300.0; if(BBmax<wy[j]){BBmax=wy[j];}}
+    //-------baseline calculation-------------------------------------------
+    beamBase=0.; BBmax=0.; Btick=0; TT=-9999.;
+    for(int i=0; i<4*64; i++){beamBase=beamBase+wf_w_03->at(i);}
+    beamBase=beamBase/(4.0*64.0);
+    //baseline subtraction
+    for(int i=0; i<500; i++){wx[i]=i*1.0; wy[i]=wf_w_03->at(i)-beamBase;
+    //max amplitude
+    if(BBmax<wy[i]){BBmax=wy[i]; Btick=i;}}
     H_maxH->Fill(BBmax);
-     if(BBmax>2000 && BBmax<2100){
-        for(size_t j=0; j<wf_w_03->size(); ++j){wy[j]=wy[j]/BBmax;}
-        //-------------------------------------------------------------------------------------------------------
-        for(int i=0; i<150; i++){wxh[i]=wx[i+300]; wyh[i]=wy[i+300]; wxhE[i]=0.; wyhE[i]=BBErr*0.0;}
-        TGraphErrors *gr0 = new TGraphErrors(150,wxh,wyh,wxhE,wyhE);
-        gr0->SetMarkerStyle(24); gr0->SetLineColor(4); gr0->SetMarkerColor(4);  //if(l<grlimit2){mg0->Add(gr0);}
-        //-------------------------------------------------------------------------------------------------------
-        Nmc=0; XNmax=0.; Nrt=0; XNmc=0.; Nmax=0;
-        for(int i=0; i<80; i++){if(wyh[i-1]<0.5 && wyh[i]>=0.5){XNmc=wxh[i]; Nmc=i;}}
-        H_tickHalf->Fill(XNmc);
-        for(int i=Nmc; i<Nmc+5; i++){if(wyh[i-1]<1 && wyh[i]==1){Nmax=i; XNmax=wxh[i];}}
-        Nrt=Nmax-Nmc;
-        H_MaxDTick->Fill(Nrt);
-        //-------------------------------------------------------------------------------------------------------
-        TF1 *fit = new TF1("fit","[2]*exp(-TMath::Power((x-[0])/[1],4))",XNmax-6, XNmax+0);
-        fit->SetParameters(XNmax,2,1);     gr0->Fit("fit","Q","",XNmax-6, XNmax+0);
-        pca=fit->GetParameter(0);  pcb=fit->GetParameter(1);  pcc=fit->GetParameter(2);
-        TT=(pca-abs(pcb*TMath::Power(-log(0.5/pcc),0.25)))/0.064;
-        H_t0_Beam->Fill(TT);
+    if(BBmax>2000 && BBmax<2100){
+    //wf normalization
+    for(int i=0; i<500; i++){wy[i]=wy[i]/BBmax;}
+    //wf max check
+    tickMax=0;
+    for(int i=Btick-20; i<Btick+10; i++){if(wy[i-1]<1 && wy[i]==1){tickMax=i;}}
+    //wf fit
+    TGraph *gr0 = new TGraph(500,wx,wy);
+    TF1 *fit = new TF1("fit","[2]*exp(-TMath::Power((x-[0])/[1],4))",tickMax-6, tickMax);
+    fit->SetParameters(tickMax,2,1);     gr0->Fit("fit","Q","",tickMax-6, tickMax);
+    pca=fit->GetParameter(0); pcb=fit->GetParameter(1); pcc=fit->GetParameter(2);
+    //timing is the risign edge half height
+    TT=(pca-abs(pcb*TMath::Power(-log(0.5/pcc),0.25)))/0.064;
+    H_t0_Beam->Fill(TT);
 
     }
-
-     _BeamT0 = TT;
-     //std::cout<<"Beam T0: "<<TT<<std::endl;
-
-     //return TT;
 }
 
   void NeutrinoTiming::nsbeamtiming(
 				     std::vector<std::vector<art::Ptr<recob::SpacePoint> > > spacepoint_v_v
-				     )
+				    )
   {
     /*    
-    int tickSum = _tickSum;
-    int tick[32] = _tickP;
-    double maxSum= _maxSum;
-    double timeSum= _timeSum;
-    double max[32] = _maxP;
-    double time[32] = _tickP;
-    double BeamT0 = _BeamT0;
+	  int tickSum = _tickSum;
+	  int tick[32] = _tickP;
+	  double maxSum= _maxSum;
+	  double timeSum= _timeSum;
+	  double max[32] = _maxP;
+	  double time[32] = _tickP;
+	  double BeamT0 = _BeamT0;
     */
     //getPMTwf(e,tickSum,tick, maxSum,timeSum,max,time);
     //std::cout<<"tickSum: "<<tickSum<<" maxSum: "<<maxSum<<" timeSum: "<<timeSum<<std::endl;
@@ -531,14 +598,15 @@ namespace analysis
     //BeamT0 = getBeamWF(e);
     //std::cout<<"Beam T0: "<<BeamT0<<std::endl;
     
+
     Float_t x =	_nuvtx_x;
     Float_t y =	_nuvtx_y;
     Float_t z =	_nuvtx_z;
-
+    
     std::vector<float> *sps_x = new std::vector<float>;
     std::vector<float> *sps_y = new std::vector<float>;
     std::vector<float> *sps_z = new std::vector<float>;
-
+    
     for (size_t s=0; s < spacepoint_v_v.size(); s++) {
       auto sps_v = spacepoint_v_v[s];
       for (size_t ss=0; ss < sps_v.size(); ss++) {
@@ -548,6 +616,13 @@ namespace analysis
 	sps_z->push_back( sps->XYZ()[2] );
       }
     }
+    
+    
+    double max[32],time[32];
+    double BeamT0 = -99999.;
+    for (int ii=0; ii < 32; ii++){time[ii] = 0;}
+    
+    //getPMTwf(e,max,time);
     
     double PMT0[3]={-11.4545, -28.625, 990.356};  double PMT1[3]={-11.4175, 27.607, 989.712};
     double PMT2[3]={-11.7755, -56.514, 951.865};  double PMT3[3]={-11.6415, 55.313, 951.861};
@@ -572,34 +647,29 @@ namespace analysis
       PMT[5][j]=PMT5[j];   PMT[15][j]=PMT15[j]; PMT[25][j]=PMT25[j]; PMT[6][j]=PMT6[j];   PMT[16][j]=PMT16[j];
       PMT[18][j]=PMT18[j]; PMT[28][j]=PMT28[j]; PMT[9][j]=PMT9[j];   PMT[19][j]=PMT19[j]; PMT[29][j]=PMT29[j];
       PMT[26][j]=PMT26[j]; PMT[7][j]=PMT7[j];   PMT[17][j]=PMT17[j]; PMT[27][j]=PMT27[j]; PMT[8][j]=PMT8[j];}
-    double calib[32];  calib[30]=23.1762; calib[31]=22.7841;
-    calib[0]=22.8508;  calib[1]=23.4035;  calib[2]=23.8295;  calib[3]=21.9985;  calib[4]=22.6061;  calib[5]=27.9068;
-    calib[6]=23.4256;  calib[7]=26.3513;  calib[8]=24.7808;  calib[9]=24.5895;  calib[10]=25.1391; calib[11]=25.4291;
-    calib[12]=24.1004; calib[13]=27.3829; calib[14]=25.4302; calib[15]=25.8601; calib[16]=24.7963; calib[17]=22;
-    calib[18]=25.7944; calib[19]=23.2512; calib[20]=25.3285; calib[21]=25.5014; calib[22]=23.5923; calib[23]=23.139;
-    calib[24]=25.4383; calib[25]=21.9842; calib[26]=22.5661; calib[27]=24.2682; calib[28]=20.7202; calib[29]=22.8939;
-    //double offset[32]={1.03002, -5.18104, -2.11164, -5.99395, -1.25798, 0.633079, 2.87666, 2.21969, 0.885092, 2.35423,
-    //  -1.63039, -1.83775, -0.859883, 3.4741, 1.84833, 1.58233, -2.71783, 0, 3.18776, 0.982666, 0.728438, 0.280592, -5.27068,
-    //  -3.27857, -1.41196, 1.59643, 1.41425, -1.62682, -2.55772, 1.49136, -0.522791, 0.974533};
+    double offset[32]={1.03002, -5.18104, -2.11164, -5.99395, -1.25798, 0.633079, 2.87666, 2.21969, 0.885092, 2.35423,
+		       -1.63039, -1.83775, -0.859883, 3.4741, 1.84833, 1.58233, -2.71783, 0, 3.18776, 0.982666, 0.728438, 0.280592, -5.27068,
+		       -3.27857, -1.41196, 1.59643, 1.41425, -1.62682, -2.55772, 1.49136, -0.522791, 0.974533};
     
     
     //================================================================================================================
     double gap=18.936;
     double MaxLim=2.5;
-    std::vector<int> N_pmt; //double ccnd1, ccnd2;
-    double PhTot, RWM_T, nuToF, DPh,DLh, tPhelp,tp;
+    std::vector<int> N_pmt;
+    double ccnd1, ccnd2,ccnd3;
+    double Ph_Tot, RWM_T, nuToF, DPh,DLh, tPhelp,tp;
     //double Med_TT0,Med_TT1,Med_TT2;
     double Med_TT3=-9999.;
     double TT_merged = -9999.;
     //===================================================================================================================
     //===================================================================================================================
-    PhTot=0.;
+    Ph_Tot=0.;
     N_pmt.clear();
-    for(int q=0; q<32; q++){_maxP[q]=_maxP[q]/calib[q];
-      if((_maxP[q]>MaxLim && q!=17 && q!=28) && (_timeP[q]>3000.0 && _timeP[q]<5000.0)){N_pmt.push_back(q); PhTot=PhTot+_maxP[q];}}
-    //--------------------------------------------------------------------------------------------------------------------
+    for(int q=0; q<32; q++){max[q]=max[q]/calib[q];
+      if((max[q]>MaxLim && q!=17 && q!=28) && (time[q]>3000.0 && time[q]<5000.0)){N_pmt.push_back(q); Ph_Tot=Ph_Tot+max[q];}} 
+   //--------------------------------------------------------------------------------------------------------------------
     if(N_pmt.size()>2){
-      RWM_T=_BeamT0;///0.064;
+      RWM_T=BeamT0;
       nuToF=z*0.033356;
       std::vector<double> timeProp = std::vector<double>(N_pmt.size(),0);
       for(uint i=0; i<N_pmt.size(); i++){
@@ -614,32 +684,43 @@ namespace analysis
       }
       
       double TT3_array[32];
+      if(f_isrun3 && _run>17200 && _run<17400){if(RWM_T>5450){ f_shiftoffset=118.3;}}
+      float RWM_offset = 5700.0 - f_shiftoffset;
+      
       for(uint i=0; i<N_pmt.size(); i++){
-	//ccnd1= timeProp[i]     *(0.529594)- (7.13804);
-	//ccnd2= max[N_pmt.at(i)]*(0.068752)- (2.32023);
+	ccnd1= timeProp[i]*(f_ccnd1_a)-(f_ccnd1_b);
+	ccnd2= max[N_pmt.at(i)]*(f_ccnd2_a)-(f_ccnd2_b);
+	if(Ph_Tot>150){ccnd3=f_ccnd3_a-f_ccnd3_b*Ph_Tot+f_ccnd3_c*Ph_Tot*Ph_Tot;}
+	else if (Ph_Tot<=150){ccnd3=f_ccnd3_d;}
 	
-	//just the time of flight and time prop corrections
-	TT3_array[i]=(_timeP[N_pmt.at(i)]/*/0.064*/)-RWM_T+5312.0-nuToF-timeProp[i];
 	//all the corrections
-	//TT3_array[i]=(time[N_pmt.at(i)]/*/0.064*/)-RWM_T+5312.0-nuToF-timeProp[i]  -offset[N_pmt.at(i)] +ccnd1+ccnd2;
+	TT3_array[i]=(time[N_pmt.at(i)])-RWM_T+RWM_offset-nuToF-timeProp[i]-offset[N_pmt.at(i)]+ccnd1+ccnd2+ccnd3;
       }
       Med_TT3=TMath::Median((Long64_t)N_pmt.size(),TT3_array);
+      //Fill a 2d histogram with  TT3_array[i] vs max[N_pmt.at(i)] this is usefull to check for any errors
+      for(uint i=0; i<N_pmt.size(); i++){
+	H_TimeVsPh->Fill( TT3_array[i]-Med_TT3, max[N_pmt.at(i)]);
+      }
     }
     _evtTimeNS = Med_TT3;
     std::cout<<"evtTimeNS: "<< Med_TT3<<std::endl;
     //Merge Peaks
-    double Shift=3166.1216;
+    double Shift=3166.9;
     double TThelp=Med_TT3-Shift+gap*0.5;
-    if(TThelp>=0 && TThelp<gap*81.0){TT_merged=(TThelp-(int((TThelp)/gap))*gap)-gap*0.5;}
+    
+    //merge peaks
+    if(TThelp>=0 && TThelp<gap*81.0){
+      TT_merged=(TThelp-(int((TThelp)/gap))*gap)-gap*0.5;
+    }
     else {TT_merged=-9999;}
     
     _evtDeltaTimeNS = TT_merged;
     
-    std::cout<<"evtDeltaTimeNS: "<< TT_merged<<std::endl;
+    //std::cout<<"evtDeltaTimeNS: "<< TT_merged<<std::endl;
     
   }
-
-
+  
+  
   
   DEFINE_ART_CLASS_TOOL(NeutrinoTiming)
 } // namespace analysis

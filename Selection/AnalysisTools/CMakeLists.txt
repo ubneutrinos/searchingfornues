@@ -42,6 +42,7 @@ art_make( TOOL_LIBRARIES lardataobj_RecoBase
                          ubreco_SelectionTool_OpT0FinderBase
                          ubreco_SelectionTool_OpT0FinderAlgorithms
                          ubevt_Utilities
+			larevt_CalibrationDBI_IOVData
         )
 
 install_headers()

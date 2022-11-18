@@ -156,6 +156,18 @@ Pi0TruthAnalysisTool: {
     MCPproducer: "largeant"
 }
 
+
+NeutrinoTimingAnalysisTool: {
+    tool_type: "NeutrinoTiming"
+    PFPproducer: "pandora"
+    T0producer: "flashmatch"
+    PMTWFproducer: "pmtreadout:OpdetBeamHighGain"
+    LogicWFproducer: "pmtreadout:UnspecifiedLogic"
+    FLASHproducer: "simpleFlashBeam"
+    SpacePointproducer: "pandora"
+}
+
+
 CRTApproachAnalysisTool: {
     tool_type: "CRTApproachAnalysis"
     TrackAssnModuleLabel:"trackmatch"
