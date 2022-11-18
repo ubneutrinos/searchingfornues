@@ -1,7 +1,6 @@
 #include "reco_uboone_data_mcc9_8.fcl"
 #include "mcreco.fcl"
 #include "proximityclustering.fcl"
-#include "eventweight_microboone_genie_knobs.fcl"
 
 EventFilterTool: {
     tool_type: "EventFilter"
@@ -120,7 +119,7 @@ DefaultAnalysisTool: {
     fidvolYend: 6.
     fidvolZstart: 20.
     fidvolZend: 50.
-    makeNuMINtuple: false
+    makeNuMINtuple: true
     NuMIOpFiltProcName:    "DataStage1Optical"
     NuMISWTriggerProcName: "DataOverlayOpticalNuMI"
 }
@@ -334,5 +333,3 @@ NeutrinoSliceHits: {
     Pfpproducer: "pandora"
     Sliceproducer: "pandora"
 }
-
-EventweightGenieKnobs: @local::microboone_eventweight_genie_knobs

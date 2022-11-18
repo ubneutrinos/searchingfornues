@@ -26,6 +26,10 @@
 #include "canvas/Persistency/Common/TriggerResults.h"
 #include "larpandora/LArPandoraInterface/LArPandoraHelper.h"
 
+// Trigger objects
+#include "lardataobj/RawData/TriggerData.h"
+#include "ubobj/Trigger/ubdaqSoftwareTriggerData.h"
+
 namespace analysis
 {
 ////////////////////////////////////////////////////////////////////////
@@ -108,12 +112,17 @@ private:
   art::InputTag fSLCproducer; // slice associated to PFP
   float fTrkShrScore;         /**< Threshold on the Pandora track score (default 0.5) */
 
+  std::string NuMIOpFilterProd;
+  std::string NuMISWTrigProd;
+
   float fFidvolXstart;
   float fFidvolXend;
   float fFidvolYstart;
   float fFidvolYend;
   float fFidvolZstart;
   float fFidvolZend;
+
+  bool fMakeNuMINtuple;
 
   const int k_nu_e_other = 1;
   const int k_nu_e_cc0pi0p = 10;
@@ -137,11 +146,17 @@ private:
 
   float _true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z;
   float _true_nu_vtx_sce_x, _true_nu_vtx_sce_y, _true_nu_vtx_sce_z;
+  float _true_nu_px, _true_nu_py, _true_nu_pz; /**< True momentum components for the incoming neutrino [GeV/c] */
   float _reco_nu_vtx_x, _reco_nu_vtx_y, _reco_nu_vtx_z;
   float _reco_nu_vtx_sce_x, _reco_nu_vtx_sce_y, _reco_nu_vtx_sce_z;
 
   // has the swtrigger fired?
   int _swtrig;
+  int _swtrig_pre;      // software trigger with beam on  window before sw trigger change
+  int _swtrig_post;     // software trigger with beam on  window after  sw trigger change
+  int _swtrig_pre_ext;  // software trigger with beam off window before sw trigger change
+  int _swtrig_post_ext; // software trigger with beam off window after  sw trigger change
+  
   // common optical filter decision
   float  _opfilter_pe_beam, _opfilter_pe_veto;
 
@@ -156,6 +171,13 @@ private:
   int _nu_parent_pdg;    /**< neutrino parent's PDG code [http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/] */
   int _nu_hadron_pdg;    /**< PDG code of hadron eventually producing neutrino [http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/] */
   int _nu_decay_mode;    /**< decay mode that lead to this neutrino in beam simulation [http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/] */
+  double _par_decay_vx;   /**< decay x postition of parent of the neutrino [beamline coord, cm] */
+  double _par_decay_vy;   /**< decay y postition of parent of the neutrino [beamline coord, cm] */
+  double _par_decay_vz;   /**< decay z postition of parent of the neutrino [beamline coord, cm] */
+  double _par_decay_px;   /**< decay x momentum of parent of the neutrino [beamline coord] */
+  double _par_decay_py;   /**< decay y momentum of parent of the neutrino [beamline coord] */
+  double _par_decay_pz;   /**< decay z momentum of parent of the neutrino [beamline coord] */
+  double _baseline;        /**< distance of the decay to uboone origin */
   int _interaction;      /**< Interaction code from GENIE */
   bool _isVtxInFiducial; /**< true if neutrino in fiducial volume */
   bool _truthFiducial;   /**< is the truth information contained. Require all track start/end point in FV and showers deposit > 60% of energy in TPC or deposit at least 100 MeV in TPC */
@@ -309,6 +331,10 @@ DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
 
   fFidvolZstart = p.get<double>("fidvolZstart", 10);
   fFidvolZend = p.get<double>("fidvolZend", 50);
+
+  fMakeNuMINtuple = p.get<bool>("makeNuMINtuple", false);
+  NuMIOpFilterProd = p.get<std::string>("NuMIOpFiltProcName","");
+  NuMISWTrigProd   = p.get<std::string>("NuMISWTriggerProcName","" );
 }
 
 //----------------------------------------------------------------------------
@@ -332,9 +358,9 @@ void DefaultAnalysis::configure(fhicl::ParameterSet const &p)
 void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
   std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << e.run() << ", SubRun: " << e.subRun() << ", Event: " << e.event() << std::endl;
-
+  
   // store common optical filter tag
-  if (!fData) {
+  if (!fData&&(!fMakeNuMINtuple)) {
     art::Handle<uboone::UbooneOpticalFilter> CommonOpticalFilter_h;
     art::InputTag fCommonOpFiltTag("opfiltercommon");
     e.getByLabel(fCommonOpFiltTag, CommonOpticalFilter_h);
@@ -342,18 +368,86 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
     _opfilter_pe_beam = CommonOpticalFilter_h->PE_Beam();
     _opfilter_pe_veto = CommonOpticalFilter_h->PE_Veto();
   }
-  
-  // storing trigger result output for software trigger
-  art::InputTag swtrig_tag("TriggerResults", "", "DataOverlayOptical");
-  art::Handle<art::TriggerResults> swtrig_handle;
-  e.getByLabel(swtrig_tag, swtrig_handle);
-  if (swtrig_handle.isValid())
-  {
-    if (swtrig_handle->accept() == true)
-      _swtrig = 1;
-    else
-      _swtrig = 0;
-  } // if software trigger run by this producer
+
+
+  // NuMI specific common optical filter
+  if (fMakeNuMINtuple)
+    {
+      // store common optical filter tag
+      art::Handle<uboone::UbooneOpticalFilter> CommonOpticalFilter_h;
+      
+      // Updated comon optical filter tag for data
+      std::cout << "Test1: "<< NuMIOpFilterProd << std::endl;
+      art::InputTag fCommonOpFiltTag("opfiltercommon", "", NuMIOpFilterProd);
+      e.getByLabel(fCommonOpFiltTag, CommonOpticalFilter_h);
+      
+      // Try to get the common optical filter tag for other types
+      if (!CommonOpticalFilter_h.isValid()){ 
+	std::cout << "Could not find data override for common op filter using default... (this is expected for overlay)" << std::endl;
+	art::InputTag fCommonOpFiltTag("opfiltercommon");
+	e.getByLabel(fCommonOpFiltTag, CommonOpticalFilter_h);
+      }
+    
+      _opfilter_pe_beam = CommonOpticalFilter_h->PE_Beam();
+      _opfilter_pe_veto = CommonOpticalFilter_h->PE_Veto();
+      
+      // storing trigger result output for software trigger
+      std::cout << "Test2: "<< NuMISWTrigProd << std::endl;
+      art::InputTag swtrig_tag("TriggerResults", "", NuMISWTrigProd);
+      art::Handle<art::TriggerResults> swtrig_handle;
+      e.getByLabel(swtrig_tag, swtrig_handle);
+      if (swtrig_handle.isValid())
+	{
+	  if (swtrig_handle->accept() == true)
+	    _swtrig = 1;
+	  else
+	    _swtrig = 0;
+	} // if software trigger run by this producer
+    
+
+      if(!fData) { 
+	
+	// Also store all the software trigger results for study of the correct one to use
+	art::InputTag triggerTag ("swtrigger", "", NuMISWTrigProd );  
+	const auto& triggerHandle = e.getValidHandle< raw::ubdaqSoftwareTriggerData >(triggerTag);
+	std::vector<std::string> triggerName = triggerHandle->getListOfAlgorithms();  
+	for (int j=0; j!=triggerHandle->getNumberOfAlgorithms(); j++) {
+	  
+	  if (triggerName[j] == "EXT_NUMIwin_FEMBeamTriggerAlgo"){
+	    _swtrig_pre_ext = triggerHandle->passedAlgo(triggerName[j]);
+	  }
+	  else if (triggerName[j] == "EXT_NUMIwin_2018May_FEMBeamTriggerAlgo"){
+	    _swtrig_post_ext = triggerHandle->passedAlgo(triggerName[j]);
+	  }
+	  else if (triggerName[j] == "NUMI_FEMBeamTriggerAlgo"){
+	    _swtrig_pre = triggerHandle->passedAlgo(triggerName[j]);
+	  }
+	  else if (triggerName[j] == "NUMI_2018May_FEMBeamTriggerAlgo"){
+	    _swtrig_post = triggerHandle->passedAlgo(triggerName[j]);
+	  }
+	  else continue;
+	  
+	  // Print the trigger and the result
+	  std::cout<<triggerName[j]<<": ";
+	  std::cout<<triggerHandle->passedAlgo(triggerName[j])<<std::endl;
+	}
+      }
+    } // End of NuMI portion
+  else
+    { // BNB specific
+      // storing trigger result output for software trigger
+      art::InputTag swtrig_tag("TriggerResults", "", "DataOverlayOptical");
+      art::Handle<art::TriggerResults> swtrig_handle;
+      e.getByLabel(swtrig_tag, swtrig_handle);
+      if (swtrig_handle.isValid())
+	{
+	  if (swtrig_handle->accept() == true)
+	    _swtrig = 1;
+	  else
+	    _swtrig = 0;
+	} // if software trigger run by this producer
+    }
+
 
   if (!fData)
   {
@@ -827,6 +921,23 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("nu_parent_pdg", &_nu_parent_pdg, "nu_parent_pdg/I");
   _tree->Branch("nu_hadron_pdg", &_nu_hadron_pdg, "nu_hadron_pdg/I");
   _tree->Branch("nu_decay_mode", &_nu_decay_mode, "nu_decay_mode/I");
+  
+  if(fMakeNuMINtuple){
+    _tree->Branch("par_decay_vx", &_par_decay_vx, "par_decay_vx/D");
+    _tree->Branch("par_decay_vy", &_par_decay_vy, "par_decay_vy/D");
+    _tree->Branch("par_decay_vz", &_par_decay_vz, "par_decay_vz/D");
+    _tree->Branch("par_decay_px", &_par_decay_px, "par_decay_px/D");
+    _tree->Branch("par_decay_py", &_par_decay_py, "par_decay_py/D");
+    _tree->Branch("par_decay_pz", &_par_decay_pz, "par_decay_pz/D");
+    _tree->Branch("baseline", &_baseline, "baseline/D");
+    _tree->Branch("true_nu_px", &_true_nu_px, "true_nu_px/F");
+    _tree->Branch("true_nu_py", &_true_nu_py, "true_nu_py/F");
+    _tree->Branch("true_nu_pz", &_true_nu_pz, "true_nu_pz/F");
+    _tree->Branch("swtrig_pre",      &_swtrig_pre,      "swtrig_pre/I");
+    _tree->Branch("swtrig_post",     &_swtrig_post,     "swtrig_post/I");
+    _tree->Branch("swtrig_pre_ext",  &_swtrig_pre_ext,  "swtrig_pre_ext/I");
+    _tree->Branch("swtrig_post_ext", &_swtrig_post_ext, "swtrig_post_ext/I");
+  }
   _tree->Branch("interaction", &_interaction, "interaction/I");
   _tree->Branch("nu_e", &_nu_e, "nu_e/F");
   _tree->Branch("nu_l", &_nu_l, "nu_l/F");
@@ -842,6 +953,7 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("true_nu_vtx_sce_x", &_true_nu_vtx_sce_x, "true_nu_vtx_sce_x/F");
   _tree->Branch("true_nu_vtx_sce_y", &_true_nu_vtx_sce_y, "true_nu_vtx_sce_y/F");
   _tree->Branch("true_nu_vtx_sce_z", &_true_nu_vtx_sce_z, "true_nu_vtx_sce_z/F");
+
   _tree->Branch("reco_nu_vtx_x", &_reco_nu_vtx_x, "reco_nu_vtx_x/F");
   _tree->Branch("reco_nu_vtx_y", &_reco_nu_vtx_y, "reco_nu_vtx_y/F");
   _tree->Branch("reco_nu_vtx_z", &_reco_nu_vtx_z, "reco_nu_vtx_z/F");
@@ -934,7 +1046,8 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("lep_e", &_lep_e, "lep_e/F");
   _tree->Branch("pass", &_pass, "pass/I");
 
-  _tree->Branch("swtrig", &_swtrig, "swtrig/I");
+  _tree->Branch("swtrig",          &_swtrig,          "swtrig/I");
+
 
   _tree->Branch("evnhits", &evnhits, "evnhits/I");
   _tree->Branch("slpdg", &slpdg, "slpdg/I");
@@ -998,13 +1111,34 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _theta = std::numeric_limits<float>::lowest();
   _nu_pt = std::numeric_limits<float>::lowest();
 
-  _swtrig = std::numeric_limits<int>::lowest();
+  if(fMakeNuMINtuple){
+  // By default let the swtrigger value be 1
+  _swtrig = 1;
+  _swtrig_pre = 1;
+  _swtrig_post = 1;
+  _swtrig_pre_ext = 1;
+  _swtrig_post_ext = 1; 
+  }
 
   _nu_pdg = std::numeric_limits<int>::lowest();
   _ccnc = std::numeric_limits<int>::lowest();
   _nu_parent_pdg = std::numeric_limits<int>::lowest();
   _nu_hadron_pdg = std::numeric_limits<int>::lowest();
   _nu_decay_mode = std::numeric_limits<int>::lowest();
+
+  if(fMakeNuMINtuple){
+    _par_decay_vx = std::numeric_limits<double>::lowest();
+    _par_decay_vy = std::numeric_limits<double>::lowest();
+    _par_decay_vz = std::numeric_limits<double>::lowest();
+    _par_decay_px = std::numeric_limits<double>::lowest();
+    _par_decay_py = std::numeric_limits<double>::lowest();
+    _par_decay_pz = std::numeric_limits<double>::lowest();
+    _baseline     = std::numeric_limits<double>::lowest();
+    _true_nu_px   = std::numeric_limits<float>::lowest();
+    _true_nu_py   = std::numeric_limits<float>::lowest();
+    _true_nu_pz   = std::numeric_limits<float>::lowest();
+  }
+
   _interaction = std::numeric_limits<int>::lowest();
   _pass = 0;
 
@@ -1188,6 +1322,22 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _nu_hadron_pdg = flux.ftptype;
   _nu_decay_mode = flux.fndecay;
 
+  if(fMakeNuMINtuple){
+    _par_decay_vx = flux.fvx;
+    _par_decay_vy = flux.fvy;
+    _par_decay_vz = flux.fvz;  
+    _par_decay_px = flux.fpdpx;
+    _par_decay_py = flux.fpdpy;
+    _par_decay_pz = flux.fpdpz;  
+
+    TVector3 Trans_Targ2Det_beam = {5502, 7259, 67270};
+    TVector3 Decay_pos = {flux.fvx, flux.fvy, flux.fvz};
+    // std::cout << "\033[0;31mKrish:" << flux.fvx << " " << flux.fvy << " " << flux.fvz << "\033[0m" << std::endl;
+
+    TVector3 baseline_vec = Trans_Targ2Det_beam - Decay_pos;
+    _baseline  = baseline_vec.Mag()/100.0;
+  }
+
   auto mct = mct_h->at(0);
   auto neutrino = mct.GetNeutrino();
   auto nu = neutrino.Nu();
@@ -1204,6 +1354,12 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   _true_nu_vtx_x = nu.Vx();
   _true_nu_vtx_y = nu.Vy();
   _true_nu_vtx_z = nu.Vz();
+
+  if(fMakeNuMINtuple){
+    _true_nu_px = nu.Px();
+    _true_nu_py = nu.Py();
+    _true_nu_pz = nu.Pz();
+  }
 
   float _true_nu_vtx_sce[3];
   searchingfornues::True2RecoMappingXYZ(_true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z, _true_nu_vtx_sce);
@@ -1345,7 +1501,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
       continue;
     }
 
-    if (mcp.PdgCode() == electron->PdgCode())
+    if (std::abs(mcp.PdgCode()) == electron->PdgCode())
     {
       _elec_vx = mcp.Vx();
       _elec_vy = mcp.Vy();

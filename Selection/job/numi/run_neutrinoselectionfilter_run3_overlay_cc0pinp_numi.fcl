@@ -1,0 +1,14 @@
+#include "run_neutrinoselectionfilter_run1_overlay_numi.fcl"
+
+physics.filters.nuselection.AnalysisTools.crtApproach:   @local::CRTApproachAnalysisTool
+physics.filters.nuselection.AnalysisTools.crtApproach.TrackAssnModuleLabel:   "crttrackmatch"
+physics.filters.nuselection.AnalysisTools.default.CRTVetoproducer: "crtveto"
+
+physics.filters.nuselection.AnalysisTools.zbdt.TrigResProducer: "TriggerResults::OverlayFiltersPostStage2"
+
+physics.filters.nuselection.AnalysisTools.zbdt: @local::BDTTool
+
+physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool
+
+physics.filters.nuselection.AnalysisTools.shower:   @local::ShowerAnalysisTool
+physics.filters.nuselection.AnalysisTools.default.makeNuMINtuple: true
