@@ -1,7 +1,6 @@
 #include "reco_uboone_data_mcc9_8.fcl"
 #include "mcreco.fcl"
 #include "proximityclustering.fcl"
-#include "eventweight_microboone_genie_knobs.fcl"
 
 EventFilterTool: {
     tool_type: "EventFilter"
@@ -120,7 +119,7 @@ DefaultAnalysisTool: {
     fidvolYend: 6.
     fidvolZstart: 20.
     fidvolZend: 50.
-    makeNuMINtuple: false
+    makeNuMINtuple: true
     NuMIOpFiltProcName:    "DataStage1Optical"
     NuMISWTriggerProcName: "DataOverlayOpticalNuMI"
 }
@@ -159,18 +158,6 @@ Pi0TruthAnalysisTool: {
     MCPproducer: "largeant"
 }
 
-
-NeutrinoTimingAnalysisTool: {
-    tool_type: "NeutrinoTiming"
-    PFPproducer: "pandora"
-    T0producer: "flashmatch"
-    PMTWFproducer: "pmtreadout:OpdetBeamHighGain"
-    LogicWFproducer: "pmtreadout:UnspecifiedLogic"
-    FLASHproducer: "simpleFlashBeam"
-    SpacePointproducer: "pandora"
-}
-
-
 CRTApproachAnalysisTool: {
     tool_type: "CRTApproachAnalysis"
     TrackAssnModuleLabel:"trackmatch"
@@ -184,8 +171,6 @@ SlicePurComplTool: {
     MCPproducer: "largeant"
     Hproducer: "gaushit"
     HTproducer: "gaushitTruthMatch"
-    OrigHproducer: "gaushit::OverlayStage1a"
-    OrigHTproducer: "gaushitTruthMatch::OverlayRecoStage1b"
 }
 
 PMTNoiseTool: {
@@ -208,15 +193,6 @@ FlashMatchingTool: {
     PFPproducer: "pandora"
     T0producer: "flashmatch"
     FLASHproducer: "simpleFlashBeam"
-    SpacePointproducer: "pandora"
-    AllPFPproducer: "pandoraPatRec:allOutcomes"
-    AllSpacePointproducer: "pandoraPatRec:allOutcomes"
-    #AllT0producer: "flashmatchAllOutcomes"
-    Hproducer: "gaushit"
-    HTproducer: "gaushitTruthMatch"
-    ChargeToNPhotonsTrack: 164.0
-    ChargeToNPhotonsShower: 512.815
-    FlashMatchConfig: @local::flash_neutrino_id_tool_data.FlashMatchConfig
 }
 
 shrreco3dDATA: @local::ShrReco3DPandora
@@ -357,5 +333,3 @@ NeutrinoSliceHits: {
     Pfpproducer: "pandora"
     Sliceproducer: "pandora"
 }
-
-EventweightGenieKnobs: @local::microboone_eventweight_genie_knobs

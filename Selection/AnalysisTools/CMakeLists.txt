@@ -9,7 +9,7 @@ art_make( TOOL_LIBRARIES lardataobj_RecoBase
                          larpandora_LArPandoraInterface
                          lardata_RecoObjects
                          lardata_Utilities
-			 larreco_RecoAlg
+                         larreco_RecoAlg
                          larsim_EventWeight_Base
                          ${ART_FRAMEWORK_CORE}
                          ${ART_FRAMEWORK_PRINCIPAL}
@@ -23,7 +23,7 @@ art_make( TOOL_LIBRARIES lardataobj_RecoBase
                          art_Persistency_Provenance
                          art_Utilities
                          canvas
-			 hep_concurrency
+                         hep_concurrency
                          ${MF_MESSAGELOGGER}
                          ${MF_UTILITIES}
                          ${FHICLCPP}
@@ -42,7 +42,9 @@ art_make( TOOL_LIBRARIES lardataobj_RecoBase
                          ubreco_SelectionTool_OpT0FinderBase
                          ubreco_SelectionTool_OpT0FinderAlgorithms
                          ubevt_Utilities
-			larevt_CalibrationDBI_IOVData
+			 larevt_CalibrationDBI_IOVData
+                         lardataobj_RawData
+                         ubobj_Trigger
         )
 
 install_headers()

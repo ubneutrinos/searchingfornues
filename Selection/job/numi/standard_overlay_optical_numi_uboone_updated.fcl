@@ -1,0 +1,18 @@
+#include "triggersim_microboone.fcl"
+#include "services_microboone.fcl"
+#include "standard_overlay_optical_uboone.fcl"
+
+# This fcl re-runs the swtrigger with the correct mixer parameter needed for numi overlay
+
+process_name : DataOverlayOpticalNuMI
+
+# Add the lines necessary for a NuMI analysis.
+#physics.filters.swtrigger:       @local::microboone_swtrigger_mc_numi
+
+# try running all the software triggers and pick the one we need in the searchingfornues code
+physics.filters.swtrigger: @local::microboone_swtrigger_data
+
+
+physics.filters.swtrigger.OpDataModule: "mixer"
+physics.filters.swtrigger.DAQHeaderModule: "mixer"
+physics.filters.swtrigger.OpFlashModule:    ""

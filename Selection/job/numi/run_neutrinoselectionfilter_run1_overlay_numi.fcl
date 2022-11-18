@@ -1,0 +1,32 @@
+#include "run_neutrinoselectionfilter_run1_data.fcl"
+
+EventWeightTreeTool: {
+    tool_type: "EventWeightTree"
+    createDedicatedTree: false
+    createMapBranch: true # true if std::map<string,std::vector<float>> should be saved
+    createFluxBranch: true
+    createGenieBranch: true
+    createReintBranch: true
+    createSplineBranch: true
+    createTuneBranch: true
+    createSplineTimesTuneBranch: true
+    createPPFXBranch: true
+    makeNuMINtuple: true
+}
+
+#For Nicolo
+calotemp.p1: @local::physics.p1
+
+#Systematic weights
+physics.filters.nuselection.AnalysisTools.eventweighttree:    @local::EventWeightTreeTool
+
+services.DetectorClocksService.TrigModuleName: "triggersim"
+
+physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
+physics.filters.nuselection.IsData: false
+physics.filters.nuselection.AnalysisTools.default.makeNuMINtuple: true
+physics.filters.nuselection.AnalysisTools.zbdt.TrigResProducer: "TriggerResults::OverlayFiltersPostStage2"
+
+# I think the lines below need to be uncommented for pure MC but is ok to leave out for overlays
+###physics.producers.shrreco3dKalmanShowercalo: @local::shrreco3dKalmanShowercalomc
+###physics.producers.shrreco3dKalmanShowercali: @local::shrreco3dKalmanShowercalimc

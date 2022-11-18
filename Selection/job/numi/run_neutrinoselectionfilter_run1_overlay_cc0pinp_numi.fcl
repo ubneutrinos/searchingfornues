@@ -1,0 +1,17 @@
+#include "run_neutrinoselectionfilter_run1_overlay_numi.fcl"
+
+physics.filters.nuselection.AnalysisTools.zbdt: @local::BDTTool
+
+physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool
+
+physics.filters.nuselection.AnalysisTools.shower:   @local::ShowerAnalysisTool
+
+# Set NuMI flag 
+physics.filters.nuselection.AnalysisTools.default.makeNuMINtuple: true
+# Set Common Optical filter label
+physics.filters.nuselection.AnalysisTools.default.NuMIOpFiltProcName:    "OverlayStage1Optical"
+
+# Set the SWTrigger label. If you dont run: 
+# standard_overlay_optical_numi_uboone_updated.fcl or standard_overlay_notpc_numi_uboone_updated.fcl then use 
+# "DataOverlayOptical" here
+physics.filters.nuselection.AnalysisTools.default.NuMISWTriggerProcName: "DataOverlayOpticalNuMI"
