@@ -108,6 +108,7 @@ namespace analysis
     double _timeSum; 
     double _maxP[32]; 
     double _timeP[32];
+    double _RWM_T;
     double _BeamT0;
 
     float f_shiftoffset;
@@ -122,7 +123,8 @@ namespace analysis
     float f_ccnd3_d;
     int _run;
 
-    float _interaction_time; // variable stored in TTree
+    float _interaction_time_modulo; // variable stored in TTree
+    float _interaction_time_abs;    // variable stored in TTree
     
     double _nuvtx_x, _nuvtx_y, _nuvtx_z;
 
@@ -208,6 +210,7 @@ namespace analysis
     const lariov::PmtGainProvider& gain_provider = art::ServiceHandle<lariov::PmtGainService>()->GetProvider();
     for (int i=0; i<32; i++){
       calib[i] = gain_provider.ExtraInfo(i).GetFloatData("amplitude_gain");
+      //std::cout << "[NeutrinoTimingDebug] calib[i] for i "  << i << " is " << calib[i] << std::endl;
     }
 
     // load PMT waveforms
@@ -233,7 +236,7 @@ namespace analysis
     /*
      load waveforms into vectors
     */
-    std::cout << "[NeutrinoTiming] load waveforms into vectors " << std::endl;
+    //std::cout << "[NeutrinoTiming] load waveforms into vectors " << std::endl;
 
     //clear PMT waveform
     auto wfsum = std::vector<double>(1500,0);
@@ -252,13 +255,13 @@ namespace analysis
       }// for all channels
     }// for PMT all waveforms
 
-    std::cout << "[NeutrinoTiming] calling getPMTwf() " << std::endl;
+    //std::cout << "[NeutrinoTiming] calling getPMTwf() " << std::endl;
     getPMTwf(wfsum, _wf_v);
     
     /*
       load Logic waveform
      */
-    std::cout << "[NeutrinoTiming] load logic waveform " << std::endl;
+    //std::cout << "[NeutrinoTiming] load logic waveform " << std::endl;
 
     std::vector<double> *wf_w_03 = new std::vector<double>;
     
@@ -280,7 +283,7 @@ namespace analysis
     
     // load tracks previously created for which T0 reconstruction is requested                                                                                                                                
 
-    std::cout << "[NeutrinoTiming] load T0 tagged information " << std::endl;
+    //std::cout << "[NeutrinoTiming] load T0 tagged information " << std::endl;
 
     art::Handle<std::vector<anab::T0> > t0_h;
     e.getByLabel( fT0producer , t0_h );
@@ -374,10 +377,11 @@ namespace analysis
       
     }// for all PFPs
     
-    std::cout << "[NeutrinoTiming] run ns beam timing " << std::endl;
+    //std::cout << "[NeutrinoTiming] run ns beam timing " << std::endl;
     nsbeamtiming(spacepoint_v_v);
 
-    _interaction_time = _evtDeltaTimeNS;
+    _interaction_time_modulo = _evtDeltaTimeNS;
+    _interaction_time_abs = _evtTimeNS;
   
   return;
   }
@@ -390,12 +394,14 @@ namespace analysis
 
   void NeutrinoTiming::setBranches(TTree* _tree)
   {
-    _tree->Branch("interaction_time",&_interaction_time,"interaction_time/F");
+    _tree->Branch("interaction_time_abs",&_interaction_time_abs,"interaction_time_abs/F");
+    _tree->Branch("interaction_time_modulo",&_interaction_time_modulo,"interaction_time_modulo/F");
   }
   
   void NeutrinoTiming::resetTTree(TTree* _tree)
   {
-    _interaction_time = std::numeric_limits<float>::lowest();
+    _interaction_time_abs    = std::numeric_limits<float>::lowest();
+    _interaction_time_modulo = std::numeric_limits<float>::lowest();
   }
 
   void NeutrinoTiming::AddDaughters(const art::Ptr<recob::PFParticle>& pfp_ptr,  const art::ValidHandle<std::vector<recob::PFParticle> >& pfp_h, std::vector<art::Ptr<recob::PFParticle> > &pfp_v) {
@@ -433,116 +439,153 @@ namespace analysis
   {
     
     //analyze waveforms
-    std::cout << "[NeutrinoTiming:getPMTwf()] check1 " << std::endl;
+    //std::cout << "[NeutrinoTiming:getPMTwf()] check1 " << std::endl;
 
-
+    
     //=======================================================================================================
     //=======================================================================================================
-      double Help_wf_v[32][500];
-      double x_wf_v[500], Raw_wf_v[500], Base_wf_v[500], Norm_wf_v[500];
-      double maxZ,max0,base;   int basebinmax,tick;
-      double tca,tcb,tcc, TT[32], max[32];
-
-      int TF,TB,tickF,tickB,FB, Nss,is;
-      double  maxZhelp1,maxZhelp2,maxZhelp3, tickFit1,tickFit2;
-
-      //Raw waveform saturation
-      int saturation=4094;
-      //Parameters for discrete saturated WF reconstruction (1st step)
-      double Frac[100]={1.0, 0.951931, 0.93356, 0.838637, 0.719408, 0.701042, 0.565673, 0.44655, 0.39447, 0.352336, 0.28716, 0.245364, 0.216771, 0.194888, 0.178976, 0.16844, 0.161732, 0.157486, 0.154762, 0.153136, 0.152468, 0.152299, 0.152147, 0.151456, 0.150069, 0.148089, 0.145565, 0.142516, 0.139369, 0.136467, 0.133871, 0.13141, 0.128926, 0.126237, 0.12313, 0.119611, 0.115946, 0.112453, 0.111706, 0.109225, 0.106281, 0.103499, 0.100926, 0.0985215, 0.0961512, 0.0938219, 0.0917209, 0.0898817, 0.0882937, 0.0868338, 0.0854753, 0.0841353, 0.0827237, 0.081198, 0.0794796, 0.077565, 0.0756475, 0.0738863, 0.0722821, 0.0708473, 0.0695119, 0.0682504, 0.0672023, 0.0663549, 0.0656337, 0.0649918, 0.0645003, 0.0641535, 0.0638046, 0.0633435, 0.0627506, 0.0621379, 0.0615464, 0.0609178, 0.0601846, 0.0592098, 0.0580465, 0.0568861, 0.0559024, 0.0550731, 0.0541904, 0.0532532, 0.0524181, 0.0517606, 0.0512326, 0.0507392, 0.0502093, 0.0495968, 0.0488915, 0.0480173, 0.0470195, 0.0459744, 0.0448855, 0.0437359, 0.0425199, 0.0412832, 0.0400036, 0.038688, 0.0373173, 0.0358925};
-      //double Delay[100]={0.0, 0.0686367, 0.0948574, 0.230854, 0.405159, 0.432604, 0.642806, 0.845613, 0.942555, 1.02616, 1.16775, 1.26923, 1.34523, 1.40802, 1.45675, 1.49068, 1.51306, 1.52757, 1.53702, 1.54272, 1.54507, 1.54567, 1.54621, 1.54865, 1.55359, 1.56069, 1.56984, 1.58104, 1.59279, 1.60379, 1.61377, 1.62337, 1.63319, 1.64398, 1.65665, 1.67129, 1.68688, 1.70208, 1.70537, 1.71644, 1.72981, 1.74271, 1.75486, 1.76644, 1.77806, 1.78969, 1.80036, 1.80987, 1.81819, 1.82594, 1.83324, 1.84054, 1.84831, 1.85684, 1.86658, 1.87763, 1.88891, 1.89947, 1.90926, 1.91815, 1.92656, 1.93462, 1.9414, 1.94695, 1.95171, 1.95598, 1.95928, 1.96162, 1.96398, 1.96711, 1.97117, 1.97539, 1.97951, 1.98391, 1.98909, 1.99605, 2.00448, 2.01302, 2.02038, 2.02665, 2.03342, 2.04069, 2.04726, 2.0525, 2.05674, 2.06073, 2.06505, 2.0701, 2.07597, 2.08334, 2.09188, 2.10099, 2.11065, 2.12106, 2.13232, 2.14403, 2.15646, 2.16957, 2.18362, 2.19868 };
-      //Fit function parameters for saturated WF reconstruction (2nd step)
-      double pLL[8]={3.93256,4.31002,2.44182,5.12491,0.830928,0.231375,50.9081,-2.69014};
-
+    double Help_wf_v[32][500];
+    double x_wf_v[500], Raw_wf_v[500], Base_wf_v[500], Norm_wf_v[500];
+    double maxZ,max0,base;   int basebinmax,tick;
+    double tca,tcb,tcc, TT[32], max[32];
+    
+    int TF,TB,tickF,tickB,FB, Nss,is;
+    double  maxZhelp1,maxZhelp2,maxZhelp3, tickFit1,tickFit2;
+    
+    //Raw waveform saturation
+    int saturation=4094;
+    //Parameters for discrete saturated WF reconstruction (1st step)
+    double Frac[100]={1.0, 0.951931, 0.93356, 0.838637, 0.719408, 0.701042, 0.565673, 0.44655, 0.39447, 0.352336, 0.28716, 0.245364, 0.216771, 0.194888, 0.178976, 0.16844, 0.161732, 0.157486, 0.154762, 0.153136, 0.152468, 0.152299, 0.152147, 0.151456, 0.150069, 0.148089, 0.145565, 0.142516, 0.139369, 0.136467, 0.133871, 0.13141, 0.128926, 0.126237, 0.12313, 0.119611, 0.115946, 0.112453, 0.111706, 0.109225, 0.106281, 0.103499, 0.100926, 0.0985215, 0.0961512, 0.0938219, 0.0917209, 0.0898817, 0.0882937, 0.0868338, 0.0854753, 0.0841353, 0.0827237, 0.081198, 0.0794796, 0.077565, 0.0756475, 0.0738863, 0.0722821, 0.0708473, 0.0695119, 0.0682504, 0.0672023, 0.0663549, 0.0656337, 0.0649918, 0.0645003, 0.0641535, 0.0638046, 0.0633435, 0.0627506, 0.0621379, 0.0615464, 0.0609178, 0.0601846, 0.0592098, 0.0580465, 0.0568861, 0.0559024, 0.0550731, 0.0541904, 0.0532532, 0.0524181, 0.0517606, 0.0512326, 0.0507392, 0.0502093, 0.0495968, 0.0488915, 0.0480173, 0.0470195, 0.0459744, 0.0448855, 0.0437359, 0.0425199, 0.0412832, 0.0400036, 0.038688, 0.0373173, 0.0358925};
+    //double Delay[100]={0.0, 0.0686367, 0.0948574, 0.230854, 0.405159, 0.432604, 0.642806, 0.845613, 0.942555, 1.02616, 1.16775, 1.26923, 1.34523, 1.40802, 1.45675, 1.49068, 1.51306, 1.52757, 1.53702, 1.54272, 1.54507, 1.54567, 1.54621, 1.54865, 1.55359, 1.56069, 1.56984, 1.58104, 1.59279, 1.60379, 1.61377, 1.62337, 1.63319, 1.64398, 1.65665, 1.67129, 1.68688, 1.70208, 1.70537, 1.71644, 1.72981, 1.74271, 1.75486, 1.76644, 1.77806, 1.78969, 1.80036, 1.80987, 1.81819, 1.82594, 1.83324, 1.84054, 1.84831, 1.85684, 1.86658, 1.87763, 1.88891, 1.89947, 1.90926, 1.91815, 1.92656, 1.93462, 1.9414, 1.94695, 1.95171, 1.95598, 1.95928, 1.96162, 1.96398, 1.96711, 1.97117, 1.97539, 1.97951, 1.98391, 1.98909, 1.99605, 2.00448, 2.01302, 2.02038, 2.02665, 2.03342, 2.04069, 2.04726, 2.0525, 2.05674, 2.06073, 2.06505, 2.0701, 2.07597, 2.08334, 2.09188, 2.10099, 2.11065, 2.12106, 2.13232, 2.14403, 2.15646, 2.16957, 2.18362, 2.19868 };
+    //Fit function parameters for saturated WF reconstruction (2nd step)
+    double pLL[8]={3.93256,4.31002,2.44182,5.12491,0.830928,0.231375,50.9081,-2.69014};
+    
     //=====================================================================================================
     //=======================================================================================================
+    
+    std::vector<float> max_pmt_v(32,0);
+    std::vector<int>   max_tick_v(32,0);
+    
+    for(int q=0; q<32; q++){
+      for(int i=0; i<500; i++){
+	Help_wf_v[q][i]=_wf_v[q][i];
+	if (i > 100 && i < 110) 
+	  //std::cout << "[NeutrinoTimingDebug] PMT " << q << " @ tick " << i << " has ADC " << Help_wf_v[q][i] << std::endl;
+	if (Help_wf_v[q][i] > max_pmt_v[q]) { max_pmt_v[q] = Help_wf_v[q][i]; max_tick_v[q] = i; }
+      }
+    }
 
-    for(int q=0; q<32; q++){for(int i=0; i<500; i++){Help_wf_v[q][i]=_wf_v[q][i];}}
+    for (size_t nn=0; nn < 32; nn++) {
+      //std::cout << "[NeutrinoTimingDebug] PMT " << nn << " has maximum tick @ " <<  max_tick_v[nn] << " with value " << max_pmt_v[nn] << "." << std::endl;
+    }
+
     _wf_v.clear(); _wf_v.shrink_to_fit();
-
-    std::cout << "[NeutrinoTiming:getPMTwf()] check2 " << std::endl;
-
+    
+    //std::cout << "[NeutrinoTiming:getPMTwf()] check2 " << std::endl;
+    
     //-----------------------------------------------------------------------------------------------------
-    for(int q=0; q<32; q++){TT[q]=-9999.; max[q]=-9999.;
-    maxZ=0.; max0=0.; base=0.; tick=0; tickB=0; tickF=0; TF=0; TB=0;
-    //Getting raw waveform (Raw_wf_v[i]) only for i<500 since the beam window is between 3 and 5 us -> [i>3*64 && i<5*64]
-    for(int i=0; i<500; i++){x_wf_v[i]=i*1.0; Raw_wf_v[i]=Help_wf_v[q][i];}
-    //Getting raw wf max amplitude and max amp tick
-    for(int i=3*64; i<5*64; i++){if(maxZ<Raw_wf_v[i]){maxZ=Raw_wf_v[i]; tick=i;}}
-    //Baseline removal
-    TH1F *basehelp= new TH1F("basehelp","basehelp",400, 1900,2200);
-    basebinmax=0; for(int i=0; i<3*64; i++){basehelp->Fill(Raw_wf_v[i]);}
-    basebinmax=basehelp->GetMaximumBin(); base=basehelp->GetXaxis()->GetBinCenter(basebinmax);
-    basehelp->Delete();
-    //Getting wf max amp after baseline removal (this is proportional to number of Photons in the rising endge)
-    //getting wf baseline subtracted and wf baseline subtracted and normalized for the max amp.
-    for(int i=0; i<500; i++){max0=maxZ-base;
-    Base_wf_v[i]=Raw_wf_v[i]-base; Norm_wf_v[i]=Base_wf_v[i]/max0;}
-    //fitting the normalized baseline subtracted wf
-    TGraph *gr = new TGraph(500,x_wf_v,Norm_wf_v);
-    TF1 *fit = new TF1("fit","[2]*exp(-TMath::Power(([0]-x)/[1],4))",tick-10, tick);
-    fit->SetParameters(tick,2,1);  gr->Fit("fit","Q","",tick-10, tick);
-    tca=fit->GetParameter(0);  tcb=fit->GetParameter(1);  tcc=fit->GetParameter(2);
-    //timing is the risign edge half height
-    TT[q]=(tca-abs(tcb*TMath::Power(-log(0.5/tcc),0.25)))/0.064; max[q]=max0;
-    //----------------------------------------------
-    //check for saturated wf
-    std::cout << "[NeutrinoTiming:getPMTwf()] check3 " << std::endl;
-    if(maxZ<=saturation){TT[q]=TT[q]; max[q]=max[q];}
-    else if(maxZ>saturation) {
-      
-      std::cout << "[NeutrinoTiming:getPMTwf()] check3.0 " << std::endl;
-      //counting the number of ticks above the saturation
-      for(int i=3*64; i<7*64; i++){
-        if(TF==0){if(Raw_wf_v[i+1]>4094 && Raw_wf_v[i]<=4094){tickF=i; TF=1;}}
-        if(TB==0){if(Raw_wf_v[i]>4094 && Raw_wf_v[i+1]<=4094){tickB=i; TB=1;}}}
-      FB=tickB-tickF;  if(FB>99){FB=99;}
-      //amplitude discrete correction
-      std::cout << "[NeutrinoTiming:getPMTwf()] check3.0.0 " << std::endl;
-      maxZhelp1=maxZ/Frac[FB]; tick=tickF; Nss=0; is=0;
+    for(int q=0; q<32; q++){
+      TT[q]=-9999.;
+      max[q]=-9999.;
+      maxZ=0.;
+      max0=0.;
+      base=0.;
+      tick=0;
+      tickB=0;
+      tickF=0;
+      TF=0;
+      TB=0;
+      //Getting raw waveform (Raw_wf_v[i]) only for i<500 since the beam window is between 3 and 5 us -> [i>3*64 && i<5*64]
+      for(int i=0; i<500; i++){
+	x_wf_v[i]=i*1.0;
+	Raw_wf_v[i]=Help_wf_v[q][i];
+      }
+      //Getting raw wf max amplitude and max amp tick
+      for(int i=3*64; i<5*64; i++){if(maxZ<Raw_wf_v[i]){maxZ=Raw_wf_v[i]; tick=i;}}
+      //Baseline removal
+      TH1F *basehelp= new TH1F("basehelp","basehelp",400, 1900,2200);
+      basebinmax=0; for(int i=0; i<3*64; i++){basehelp->Fill(Raw_wf_v[i]);}
+      basebinmax=basehelp->GetMaximumBin(); base=basehelp->GetXaxis()->GetBinCenter(basebinmax);
+      basehelp->Delete();
+      //Getting wf max amp after baseline removal (this is proportional to number of Photons in the rising endge)
+      //getting wf baseline subtracted and wf baseline subtracted and normalized for the max amp.
+      for(int i=0; i<500; i++){max0=maxZ-base;
+	Base_wf_v[i]=Raw_wf_v[i]-base; Norm_wf_v[i]=Base_wf_v[i]/max0;}
+      //fitting the normalized baseline subtracted wf
+      TGraph *gr = new TGraph(500,x_wf_v,Norm_wf_v);
+      TF1 *fit = new TF1("fit","[2]*exp(-TMath::Power(([0]-x)/[1],4))",tick-10, tick);
+      fit->SetParameters(tick,2,1);  gr->Fit("fit","Q","",tick-10, tick);
+      tca=fit->GetParameter(0);  tcb=fit->GetParameter(1);  tcc=fit->GetParameter(2);
+      //timing is the risign edge half height
+      TT[q]=(tca-abs(tcb*TMath::Power(-log(0.5/tcc),0.25)))/0.064; max[q]=max0;
+      //----------------------------------------------
+      //check for saturated wf
+      //std::cout << "[NeutrinoTiming:getPMTwf()] check3 " << std::endl;
+      if(maxZ<=saturation){
+	TT[q]=TT[q];
+	max[q]=max[q];
+	//std::cout << "[NeutrinoTimingDebug] not saturated!" << std::endl;
+      }
+      else if(maxZ>saturation) {
+	
+	//std::cout << "[NeutrinoTiming:getPMTwf()] check3.0 " << std::endl;
+	//counting the number of ticks above the saturation
+	for(int i=3*64; i<7*64; i++){
+	  if(TF==0){if(Raw_wf_v[i+1]>4094 && Raw_wf_v[i]<=4094){tickF=i; TF=1;}}
+	  if(TB==0){if(Raw_wf_v[i]>4094 && Raw_wf_v[i+1]<=4094){tickB=i; TB=1;}}}
+	FB=tickB-tickF;  if(FB>99){FB=99;}
+	//amplitude discrete correction
+	//std::cout << "[NeutrinoTiming:getPMTwf()] check3.0.0 " << std::endl;
+	maxZhelp1=maxZ/Frac[FB]; tick=tickF; Nss=0; is=0;
       for(int i=3*64; i<7*64; i++){if(Raw_wf_v[i]<4095){Nss=Nss+1;}}
       
-      std::cout << "[NeutrinoTiming:getPMTwf()] check3.1 " << std::endl;
+      //std::cout << "[NeutrinoTiming:getPMTwf()] check3.1 " << std::endl;
       
       double txSS[256],tySS[256],txSS2[256],tySS2[256];
       
       for(int i=3*64; i<7*64; i++){if(Raw_wf_v[i]<4095){txSS[is]=i*1.0; tySS[is]=Raw_wf_v[i]/maxZhelp1; is=is+1;}}
       TGraph *g1 = new TGraph(Nss,txSS,tySS);
+      //for (int uu=0; uu < (7*64); uu++)
+      //std::cout << "[NeutrinoTimingDebug] value @ tick " << uu << " is " << tySS[uu] << std::endl;
       TF1 *fitS1 = new TF1("fitS1","[9]*(exp(-TMath::Power(([0]-(x-[8]))/[1],4))*0.5*(TMath::Erf(-(x-[8])-[7])+1.0)+([5]+[4]*exp(-TMath::Power(([2]-(x-[8]))/[3],2)))*exp((-(x-[8]))/[6])*0.5*(TMath::Erf([7]+(x-[8]))+1.0))",tick-30, tick+250);
       fitS1->SetParameters(pLL[0],pLL[1],pLL[2],pLL[3],pLL[4],pLL[5],pLL[6],pLL[7],tick,1.);
       for(int i=0; i<8; i++){fitS1->FixParameter(i,pLL[i]);} g1->Fit("fitS1","Q","",tick-30, tick+250);
       tickFit1=fitS1->GetParameter(8); maxZhelp2=fitS1->GetParameter(9);  maxZhelp3=maxZhelp1/maxZhelp2;
       //amplitude fit correction
-      std::cout << "[NeutrinoTiming:getPMTwf()] check3.2 " << std::endl;
+      //std::cout << "[NeutrinoTiming:getPMTwf()] check3.2 " << std::endl;
       for(int i=0; i<Nss; i++){txSS2[i]=txSS[i]; tySS2[i]=tySS[i]/maxZhelp2;}
       TGraph *g2 = new TGraph(Nss,txSS2,tySS2);
-      std::cout << "[NeutrinoTiming:getPMTwf()] check3.3 " << std::endl;
+      //std::cout << "[NeutrinoTiming:getPMTwf()] check3.3 " << std::endl;
       TF1 *fitS2 = new TF1("fitS2","exp(-TMath::Power(([0]-(x-[8]))/[1],4))*0.5*(TMath::Erf(-(x-[8])-[7])+1.0)+([5]+[4]*exp(-TMath::Power(([2]-(x-[8]))/[3],2)))*exp((-(x-[8]))/[6])*0.5*(TMath::Erf([7]+(x-[8]))+1.0)",tick-30, tick+250);
-      std::cout << "[NeutrinoTiming:getPMTwf()] check3.4 " << std::endl;
+      //std::cout << "[NeutrinoTiming:getPMTwf()] check3.4 " << std::endl;
       fitS2->SetParameters(pLL[0],pLL[1],pLL[2],pLL[3],pLL[4],pLL[5],pLL[6],pLL[7],tickFit1);
       for(int i=0; i<8; i++){fitS2->FixParameter(i,pLL[i]);}
-      std::cout << "[NeutrinoTiming:getPMTwf()] check3.5 " << std::endl;
+      //std::cout << "[NeutrinoTiming:getPMTwf()] check3.5 " << std::endl;
       g2->Fit("fitS2","Q","",tick-30, tick+250);  tickFit2=fitS2->GetParameter(8);
       //timing is the risign edge half height
       TT[q]=tickFit2/0.064; max[q]=maxZhelp3;
-    }
+    }// if not saturated
     //-------------------------------------------------------------------------------------------------------
-    std::cout << "[NeutrinoTiming:getPMTwf()] check3a " << std::endl;
+    //std::cout << "[NeutrinoTiming:getPMTwf()] check3a " << std::endl;
     H_time->Fill(TT[q]);
-    std::cout << "[NeutrinoTiming:getPMTwf()] check3b " << std::endl;
+    //std::cout << "[NeutrinoTiming:getPMTwf()] check3b " << std::endl;
     }
     //-------------------------------------------------------------------------------------------------------
     
-    std::cout << "[NeutrinoTiming:getPMTwf()] check4 " << std::endl;
-    for(int q=0; q<32; q++){_maxP[q]=max[q]; _timeP[q]=TT[q];} //only two variables needed
+    //std::cout << "[NeutrinoTiming:getPMTwf()] check4 " << std::endl;
+    for(int q=0; q<32; q++){
+      _maxP[q]=max[q];
+      _timeP[q]=TT[q];
+      //std::cout << "[NeutrinoTimingDebug] : PMT "  << q << " has maximum @ tick " << _timeP[q] << " with value " << _maxP[q] << std::endl;
+    } //only two variables needed
     
   }
   
   
   void NeutrinoTiming::getBeamWF(
 				 std::vector<double> *wf_w_03
-				   //art::Handle< std::vector< raw::OpDetWaveform > > wf_handle_beam
-				   )
+				 //art::Handle< std::vector< raw::OpDetWaveform > > wf_handle_beam
+				 )
   {
 
     
@@ -574,7 +617,9 @@ namespace analysis
     pca=fit->GetParameter(0); pcb=fit->GetParameter(1); pcc=fit->GetParameter(2);
     //timing is the risign edge half height
     TT=(pca-abs(pcb*TMath::Power(-log(0.5/pcc),0.25)))/0.064;
+    //std::cout << "[NeutrinoTimingDebug] RWM time : " << TT << std::endl;
     H_t0_Beam->Fill(TT);
+    _RWM_T = TT;
 
     }
 }
@@ -602,6 +647,8 @@ namespace analysis
     Float_t x =	_nuvtx_x;
     Float_t y =	_nuvtx_y;
     Float_t z =	_nuvtx_z;
+
+    //std::cout << "[NeutrinoTimingDebug] vertex @ (" << x << ", " << y << ", " << z << ")" << std::endl;
     
     std::vector<float> *sps_x = new std::vector<float>;
     std::vector<float> *sps_y = new std::vector<float>;
@@ -617,12 +664,17 @@ namespace analysis
       }
     }
     
+    //std::cout << "[NeutrinoTimingDebug] there are " << sps_z->size() << " spacepoints" << std::endl;
     
     double max[32],time[32];
     double BeamT0 = -99999.;
-    for (int ii=0; ii < 32; ii++){time[ii] = 0;}
+    for (int ii=0; ii < 32; ii++){
+      time[ii] = _timeP[ii];
+      max[ii] = _maxP[ii];
+    }
     
     //getPMTwf(e,max,time);
+    BeamT0 = _RWM_T;
     
     double PMT0[3]={-11.4545, -28.625, 990.356};  double PMT1[3]={-11.4175, 27.607, 989.712};
     double PMT2[3]={-11.7755, -56.514, 951.865};  double PMT3[3]={-11.6415, 55.313, 951.861};
@@ -665,9 +717,16 @@ namespace analysis
     //===================================================================================================================
     Ph_Tot=0.;
     N_pmt.clear();
-    for(int q=0; q<32; q++){max[q]=max[q]/calib[q];
-      if((max[q]>MaxLim && q!=17 && q!=28) && (time[q]>3000.0 && time[q]<5000.0)){N_pmt.push_back(q); Ph_Tot=Ph_Tot+max[q];}} 
+    for(int q=0; q<32; q++) {
+      max[q]=max[q]/calib[q];
+      //std::cout << "[NeutrinoTimingDebug] max[q] for q = " << q << " is " << max[q] << std::endl;
+      if((max[q]>MaxLim && q!=17 && q!=28) && (time[q]>3000.0 && time[q]<5000.0)) {
+	N_pmt.push_back(q);
+	Ph_Tot=Ph_Tot+max[q];
+      }
+    } 
    //--------------------------------------------------------------------------------------------------------------------
+    //std::cout << "[NeutrinoTimingDebug] PMT size : " << N_pmt.size() << std::endl;
     if(N_pmt.size()>2){
       RWM_T=BeamT0;
       nuToF=z*0.033356;
@@ -696,24 +755,29 @@ namespace analysis
 	//all the corrections
 	TT3_array[i]=(time[N_pmt.at(i)])-RWM_T+RWM_offset-nuToF-timeProp[i]-offset[N_pmt.at(i)]+ccnd1+ccnd2+ccnd3;
       }
+      //for (int yy=0; yy < 32; yy++) { std::cout << "[NeutrinoTimingDebug] PMT " << yy << " timing " << TT3_array[yy] << std::endl;}
       Med_TT3=TMath::Median((Long64_t)N_pmt.size(),TT3_array);
       //Fill a 2d histogram with  TT3_array[i] vs max[N_pmt.at(i)] this is usefull to check for any errors
       for(uint i=0; i<N_pmt.size(); i++){
 	H_TimeVsPh->Fill( TT3_array[i]-Med_TT3, max[N_pmt.at(i)]);
       }
-    }
+    }// if PMT size > 2
+
     _evtTimeNS = Med_TT3;
-    std::cout<<"evtTimeNS: "<< Med_TT3<<std::endl;
+    //std::cout<<"[NeutrinoTimingDebug] evtTimeNS: "<< Med_TT3<<std::endl;
     //Merge Peaks
     double Shift=3166.9;
     double TThelp=Med_TT3-Shift+gap*0.5;
+
+    _evtTimeNS = TThelp;
     
+    //std::cout << "[NeutrinoTimingDebug] TThelp : "  << TThelp << std::endl;
     //merge peaks
     if(TThelp>=0 && TThelp<gap*81.0){
       TT_merged=(TThelp-(int((TThelp)/gap))*gap)-gap*0.5;
     }
     else {TT_merged=-9999;}
-    
+
     _evtDeltaTimeNS = TT_merged;
     
     //std::cout<<"evtDeltaTimeNS: "<< TT_merged<<std::endl;
