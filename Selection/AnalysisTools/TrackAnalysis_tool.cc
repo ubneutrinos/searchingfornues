@@ -207,6 +207,10 @@ private:
   std::vector<float> _trk_calo_energy_v_v;
   std::vector<float> _trk_calo_energy_y_v;
 
+  std::vector<int> _trk_nhits_u_v;
+  std::vector<int> _trk_nhits_v_v;
+  std::vector<int> _trk_nhits_y_v;
+
   std::vector<float> _trk_trunk_dEdx_u_v;
   std::vector<float> _trk_trunk_dEdx_v_v;
   std::vector<float> _trk_trunk_dEdx_y_v;
@@ -770,6 +774,10 @@ void TrackAnalysis::fillDefault()
   _trk_llr_pid_v.push_back(std::numeric_limits<float>::lowest());
   _trk_llr_pid_score_v.push_back(std::numeric_limits<float>::lowest());
 
+  _trk_nhits_u_v.push_back(std::numeric_limits<int>::lowest());
+  _trk_nhits_v_v.push_back(std::numeric_limits<int>::lowest());
+  _trk_nhits_y_v.push_back(std::numeric_limits<int>::lowest());
+
   _trk_trunk_dEdx_u_v.push_back(std::numeric_limits<float>::lowest());
   _trk_trunk_dEdx_v_v.push_back(std::numeric_limits<float>::lowest());
   _trk_trunk_dEdx_y_v.push_back(std::numeric_limits<float>::lowest());
@@ -868,6 +876,10 @@ void TrackAnalysis::setBranches(TTree *_tree)
   _tree->Branch("trk_llr_pid_v", "std::vector<float>", &_trk_llr_pid_v);
   _tree->Branch("trk_llr_pid_score_v", "std::vector<float>", &_trk_llr_pid_score_v);
 
+  _tree->Branch("trk_nhits_u_v", "std::vector<int>", &_trk_nhits_u_v);
+  _tree->Branch("trk_nhits_v_v", "std::vector<int>", &_trk_nhits_v_v);
+  _tree->Branch("trk_nhits_y_v", "std::vector<int>", &_trk_nhits_y_v);
+
   _tree->Branch("trk_trunk_dEdx_u_v", "std::vector<float>", &_trk_trunk_dEdx_u_v);
   _tree->Branch("trk_trunk_dEdx_v_v", "std::vector<float>", &_trk_trunk_dEdx_v_v);
   _tree->Branch("trk_trunk_dEdx_y_v", "std::vector<float>", &_trk_trunk_dEdx_y_v);
@@ -965,6 +977,10 @@ void TrackAnalysis::resetTTree(TTree *_tree)
   _trk_llr_pid_y_v.clear();
   _trk_llr_pid_v.clear();
   _trk_llr_pid_score_v.clear();
+  
+  _trk_nhits_u_v.clear();
+  _trk_nhits_v_v.clear();
+  _trk_nhits_y_v.clear();
 
   _trk_trunk_dEdx_u_v.clear();
   _trk_trunk_dEdx_v_v.clear();
