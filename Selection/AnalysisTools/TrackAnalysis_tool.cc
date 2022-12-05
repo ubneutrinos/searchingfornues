@@ -117,7 +117,6 @@ private:
   float fEnergyThresholdForMCHits;
   std::vector<float> fADCtoE; // vector of ADC to # of e- conversion [to be taken from production reco2 fhicl files]
   float fEndSpacepointDistance;
-
   int _run, _sub, _evt;
 
   std::vector<size_t> _trk_pfp_id_v;
@@ -206,6 +205,9 @@ private:
 
   std::vector<float> _trk_avg_deflection_mean_v;
   std::vector<float> _trk_avg_deflection_stdev_v;
+  std::vector<float> _trk_avg_deflection_separation_mean_v;
+
+  std::vector<int> _trk_end_spacepoints_v;
 };
 
 //----------------------------------------------------------------------------
@@ -326,6 +328,8 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
   for (size_t i_sp = 0; i_sp < spacePointHandle->size(); i_sp++) {
     spacePointCollection.emplace_back(spacePointHandle, i_sp);
   }
+  art::ValidHandle<std::vector<recob::PFParticle>> inputPfParticle = e.getValidHandle<std::vector<recob::PFParticle>>(fCLSproducer);
+  auto assocSpacePoint = std::unique_ptr<art::FindManyP<recob::SpacePoint>>(new art::FindManyP<recob::SpacePoint>(inputPfParticle, e, fCLSproducer));
 
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
   {
@@ -680,10 +684,12 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       if (validPoints.size() < 3) {
         _trk_avg_deflection_mean_v.push_back(0);
         _trk_avg_deflection_stdev_v.push_back(0);
+        _trk_avg_deflection_separation_mean_v.push_back(0);
       }
       else {
         std::vector<float> thetaVector;
         float thetaSum = 0.f;
+        float separationSum = 0.f;
         for (unsigned int i = 1; i < validPoints.size(); ++i) {
           auto dir = trk->DirectionAtPoint(validPoints.at(i));
           auto dirPrev = trk->DirectionAtPoint(validPoints.at(i - 1));
@@ -694,9 +700,16 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 
           thetaSum += theta;
           thetaVector.push_back(theta);
+
+          // separation between points
+          TVector3 point(trk->LocationAtPoint(validPoints.at(i)).X(), trk->LocationAtPoint(validPoints.at(i)).Y(), trk->LocationAtPoint(validPoints.at(i)).Z());
+          TVector3 pointPrev(trk->LocationAtPoint(validPoints.at(i - 1)).X(), trk->LocationAtPoint(validPoints.at(i - 1)).Y(), trk->LocationAtPoint(validPoints.at(i - 1)).Z());
+          TVector3 separation = point - pointPrev; 
+          separationSum += separation.Mag();
         }
 
         float thetaMean = thetaSum / static_cast<float>(thetaVector.size());
+        float separationMean = separationSum / static_cast<float>(thetaVector.size());
 
         float thetaDiffSum = 0.f;
         for (const auto &theta : thetaVector) {
@@ -707,7 +720,20 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 
         _trk_avg_deflection_mean_v.push_back(thetaMean);
         _trk_avg_deflection_stdev_v.push_back(std::sqrt(variance));
+        _trk_avg_deflection_separation_mean_v.push_back(separationMean);
       }
+      
+      // count number of spacepoints at end of track (potential daughters)
+      int nPoints = 0;
+      std::vector<art::Ptr<recob::SpacePoint>> spcpnts = assocSpacePoint->at(i_pfp);
+      TVector3 trkEnd(trk->End().X(), trk->End().Y(), trk->End().Z());
+      float distSquared = fEndSpacepointDistance*fEndSpacepointDistance;
+      for (auto &sp : spcpnts) {
+        TVector3 spacePoint(sp->XYZ()[0], sp->XYZ()[1], sp->XYZ()[2]); 
+        if ((trkEnd - spacePoint).Mag2() < distSquared) nPoints++;
+      }
+      _trk_end_spacepoints_v.push_back(nPoints);
+      
     }
     else
     {
@@ -803,6 +829,11 @@ void TrackAnalysis::fillDefault()
 
   _trk_avg_deflection_mean_v.push_back(std::numeric_limits<float>::lowest());
   _trk_avg_deflection_stdev_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_avg_deflection_separation_mean_v.push_back(std::numeric_limits<float>::lowest());
+
+  _trk_end_spacepoints_v.push_back(std::numeric_limits<int>::lowest());
+
+
 }
 
 void TrackAnalysis::setBranches(TTree *_tree)
@@ -889,6 +920,9 @@ void TrackAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("trk_avg_deflection_mean_v", "std::vector<float>", &_trk_avg_deflection_mean_v);
   _tree->Branch("trk_avg_deflection_stdev_v", "std::vector<float>", &_trk_avg_deflection_stdev_v);
+  _tree->Branch("trk_avg_deflection_separation_mean_v", "std::vector<float>", &_trk_avg_deflection_separation_mean_v);
+
+  _tree->Branch("trk_end_spacepoints_v", "std::vector<int>", &_trk_end_spacepoints_v);
 }
 
 void TrackAnalysis::resetTTree(TTree *_tree)
@@ -977,6 +1011,9 @@ void TrackAnalysis::resetTTree(TTree *_tree)
 
   _trk_avg_deflection_mean_v.clear();
   _trk_avg_deflection_stdev_v.clear();
+  _trk_avg_deflection_separation_mean_v.clear();
+
+  _trk_end_spacepoints_v.clear();
 }
 
 float TrackAnalysis::CalculateTrackTrunkdEdx(const std::vector<float> &dEdx_values) {
