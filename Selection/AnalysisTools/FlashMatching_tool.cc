@@ -233,7 +233,7 @@ namespace analysis
 	_flash_time  = flash.Time();
 	_flash_y = flash.YCenter();
 	_flash_z = flash.ZCenter();
-	_flash_ywidth = flash.TimeWidth();
+	_flash_timewidth = flash.TimeWidth();
 	_flash_ywidth = flash.YWidth();
 	_flash_zwidth = flash.ZWidth();
 	ibeamFlash = f;
