@@ -1,0 +1,28 @@
+#include "run_neutrinoselectionfilter_run1_data.fcl"
+
+services.NuRandomService: @local::microboone_seedservice #might not be necessary
+services.DetectorClocksService.TrigModuleName: "triggersim"
+
+physics.filters.nuselection.IsFakeData: true
+
+physics.filters.nuselection.AnalysisTools: {
+        default: @local::DefaultAnalysisTool
+        # you can add more analysis tools here
+        #slicepurcompl: @local::SlicePurComplTool
+        containment:   @local::ContainmentAnalysis
+        #shower:        @local::ShowerAnalysisTool
+        #showerstart:        @local::ShowerStartPointTool
+        track:         @local::TrackAnalysisTool
+        #vertex:         @local::VertexAnalysisTool
+        #calorimetry:   @local::CalorimetryAnalysisTool
+	#mcs:           @local::MCSTool
+        #cosmicip:      @local::CosmicIPTool
+        flashmatchid:  @local::FlashMatchingTool
+        pmtwf:         @local::PMTWaveformTool
+        simphoton:     @local::SimPhotonTool
+        secondshower:  @local::SecondShowerTaggerTool
+    }
+
+
+#physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
+physics.filters.nuselection.IsData: false

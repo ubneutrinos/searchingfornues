@@ -219,6 +219,21 @@ FlashMatchingTool: {
     FlashMatchConfig: @local::flash_neutrino_id_tool_data.FlashMatchConfig
 }
 
+PMTWaveformTool: {
+    tool_type: "PMTWaveform"
+    #FLASHproducer: "simpleFlashBeam::DataOpticalFilter" # for data
+    FLASHproducer: "simpleFlashBeam::OverlayStage1a" # for overlay
+    #FLASHCALIBproducer: "simpleFlashBeam::DataStage1Optical" # for data
+    FLASHCALIBproducer: "simpleFlashBeam::OverlayStage1Optical" # for overlay
+    PMTWFproducer: "pmtreadout:OpdetBeamHighGain"
+}
+
+SimPhotonTool: {
+    tool_type: "SimPhoton"
+    SimPhotonProducer: "lyscaling"
+}
+
+
 shrreco3dDATA: @local::ShrReco3DPandora
 shrreco3dDATA.BacktrackTag:  ""
 shrreco3dDATA.ADCtoE:  @local::microboone_reco_data_producers.shrreco3d.ADCtoE # [238.4,238.4,238.4] # e-/ADC
