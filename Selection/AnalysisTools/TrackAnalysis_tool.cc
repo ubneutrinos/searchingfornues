@@ -144,6 +144,7 @@ private:
 
   std::vector<float> _trk_bragg_p_v;
   std::vector<float> _trk_bragg_mu_v;
+  std::vector<float> _trk_bragg_pion_v;
   std::vector<float> _trk_bragg_mip_v;
   std::vector<float> _trk_pid_chipr_v;
   std::vector<float> _trk_pid_chika_v;
@@ -153,6 +154,7 @@ private:
 
   std::vector<float> _trk_bragg_p_u_v;
   std::vector<float> _trk_bragg_mu_u_v;
+  std::vector<float> _trk_bragg_pion_u_v;
   std::vector<float> _trk_bragg_mip_u_v;
   std::vector<float> _trk_pid_chipr_u_v;
   std::vector<float> _trk_pid_chika_u_v;
@@ -162,6 +164,7 @@ private:
 
   std::vector<float> _trk_bragg_p_v_v;
   std::vector<float> _trk_bragg_mu_v_v;
+  std::vector<float> _trk_bragg_pion_v_v;
   std::vector<float> _trk_bragg_mip_v_v;
   std::vector<float> _trk_pid_chipr_v_v;
   std::vector<float> _trk_pid_chika_v_v;
@@ -318,6 +321,9 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       float bragg_mu = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 2),
                                 searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 2));
 
+      float bragg_pion = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 211, 2),
+                                  searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 211, 2));
+
       float bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
 
       float pidchipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 2);
@@ -329,6 +335,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 
       _trk_bragg_p_v.push_back(bragg_p);
       _trk_bragg_mu_v.push_back(bragg_mu);
+      _trk_bragg_pion_v.push_back(bragg_pion);
       _trk_bragg_mip_v.push_back(bragg_mip);
       _trk_pid_chipr_v.push_back(pidchipr);
       _trk_pid_chimu_v.push_back(pidchimu);
@@ -343,6 +350,9 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       float bragg_mu_u = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 0),
                                   searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 0));
 
+      float bragg_pion_u = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 211, 0),
+                                    searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 211, 0));
+
       float bragg_mip_u = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 0);
 
       float pidchipr_u = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 0);
@@ -354,6 +364,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 
       _trk_bragg_p_u_v.push_back(bragg_p_u);
       _trk_bragg_mu_u_v.push_back(bragg_mu_u);
+      _trk_bragg_pion_u_v.push_back(bragg_pion_u);
       _trk_bragg_mip_u_v.push_back(bragg_mip_u);
       _trk_pid_chipr_u_v.push_back(pidchipr_u);
       _trk_pid_chimu_u_v.push_back(pidchimu_u);
@@ -368,6 +379,9 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       float bragg_mu_v = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 1),
                                   searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 1));
 
+      float bragg_pion_v = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 211, 1),
+                                    searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 211, 1));
+
       float bragg_mip_v = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 1);
 
       float pidchipr_v = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 1);
@@ -379,6 +393,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
 
       _trk_bragg_p_v_v.push_back(bragg_p_v);
       _trk_bragg_mu_v_v.push_back(bragg_mu_v);
+      _trk_bragg_pion_v_v.push_back(bragg_pion_v);
       _trk_bragg_mip_v_v.push_back(bragg_mip_v);
       _trk_pid_chipr_v_v.push_back(pidchipr_v);
       _trk_pid_chimu_v_v.push_back(pidchimu_v);
@@ -536,6 +551,7 @@ void TrackAnalysis::fillDefault()
 
   _trk_bragg_p_v.push_back(std::numeric_limits<float>::lowest());
   _trk_bragg_mu_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_bragg_pion_v.push_back(std::numeric_limits<float>::lowest());
   _trk_bragg_mip_v.push_back(std::numeric_limits<float>::lowest());
   _trk_pid_chipr_v.push_back(std::numeric_limits<float>::lowest());
   _trk_pid_chika_v.push_back(std::numeric_limits<float>::lowest());
@@ -545,6 +561,7 @@ void TrackAnalysis::fillDefault()
 
   _trk_bragg_p_u_v.push_back(std::numeric_limits<float>::lowest());
   _trk_bragg_mu_u_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_bragg_pion_u_v.push_back(std::numeric_limits<float>::lowest());
   _trk_bragg_mip_u_v.push_back(std::numeric_limits<float>::lowest());
   _trk_pid_chipr_u_v.push_back(std::numeric_limits<float>::lowest());
   _trk_pid_chika_u_v.push_back(std::numeric_limits<float>::lowest());
@@ -554,6 +571,7 @@ void TrackAnalysis::fillDefault()
 
   _trk_bragg_p_v_v.push_back(std::numeric_limits<float>::lowest());
   _trk_bragg_mu_v_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_bragg_pion_v_v.push_back(std::numeric_limits<float>::lowest());
   _trk_bragg_mip_v_v.push_back(std::numeric_limits<float>::lowest());
   _trk_pid_chipr_v_v.push_back(std::numeric_limits<float>::lowest());
   _trk_pid_chika_v_v.push_back(std::numeric_limits<float>::lowest());
@@ -580,6 +598,7 @@ void TrackAnalysis::setBranches(TTree *_tree)
 {
   _tree->Branch("trk_bragg_p_v", "std::vector< float >", &_trk_bragg_p_v);
   _tree->Branch("trk_bragg_mu_v", "std::vector< float >", &_trk_bragg_mu_v);
+  _tree->Branch("trk_bragg_pion_v", "std::vector< float >", &_trk_bragg_pion_v);
   _tree->Branch("trk_bragg_mip_v", "std::vector< float >", &_trk_bragg_mip_v);
   _tree->Branch("trk_pida_v", "std::vector< float >", &_trk_pida_v);
   _tree->Branch("trk_pid_chipr_v", "std::vector< float >", &_trk_pid_chipr_v);
@@ -589,6 +608,7 @@ void TrackAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("trk_bragg_p_u_v", "std::vector< float >", &_trk_bragg_p_u_v);
   _tree->Branch("trk_bragg_mu_u_v", "std::vector< float >", &_trk_bragg_mu_u_v);
+  _tree->Branch("trk_bragg_pion_u_v", "std::vector< float >", &_trk_bragg_pion_u_v);
   _tree->Branch("trk_bragg_mip_u_v", "std::vector< float >", &_trk_bragg_mip_u_v);
   _tree->Branch("trk_pida_u_v", "std::vector< float >", &_trk_pida_u_v);
   _tree->Branch("trk_pid_chipr_u_v", "std::vector< float >", &_trk_pid_chipr_u_v);
@@ -598,6 +618,7 @@ void TrackAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("trk_bragg_p_v_v", "std::vector< float >", &_trk_bragg_p_v_v);
   _tree->Branch("trk_bragg_mu_v_v", "std::vector< float >", &_trk_bragg_mu_v_v);
+  _tree->Branch("trk_bragg_pion_v_v", "std::vector< float >", &_trk_bragg_pion_v_v);
   _tree->Branch("trk_bragg_mip_v_v", "std::vector< float >", &_trk_bragg_mip_v_v);
   _tree->Branch("trk_pida_v_v", "std::vector< float >", &_trk_pida_v_v);
   _tree->Branch("trk_pid_chipr_v_v", "std::vector< float >", &_trk_pid_chipr_v_v);
@@ -650,6 +671,7 @@ void TrackAnalysis::resetTTree(TTree *_tree)
 {
   _trk_bragg_p_v.clear();
   _trk_bragg_mu_v.clear();
+  _trk_bragg_pion_v.clear();
   _trk_bragg_mip_v.clear();
   _trk_pida_v.clear();
   _trk_pid_chipr_v.clear();
@@ -659,6 +681,7 @@ void TrackAnalysis::resetTTree(TTree *_tree)
 
   _trk_bragg_p_u_v.clear();
   _trk_bragg_mu_u_v.clear();
+  _trk_bragg_pion_u_v.clear();
   _trk_bragg_mip_u_v.clear();
   _trk_pida_u_v.clear();
   _trk_pid_chipr_u_v.clear();
@@ -668,6 +691,7 @@ void TrackAnalysis::resetTTree(TTree *_tree)
 
   _trk_bragg_p_v_v.clear();
   _trk_bragg_mu_v_v.clear();
+  _trk_bragg_pion_v_v.clear();
   _trk_bragg_mip_v_v.clear();
   _trk_pida_v_v.clear();
   _trk_pid_chipr_v_v.clear();
