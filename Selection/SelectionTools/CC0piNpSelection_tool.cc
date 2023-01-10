@@ -135,8 +135,10 @@ private:
     unsigned int _n_tracks_contained;  /**< Number of tracks fully contained in the fiducial volume */
     unsigned int _shr_hits_max;        /**< Number of hits of the leading shower */
     unsigned int _shr_hits_2nd;        /**< Number of hits of the 2nd leading shower */
+    unsigned int _shr_hits_3rd;        /**< Number of hits of the 3rd leading shower */
     unsigned int _trk_hits_max;        /**< Number of hits of the leading track */
     unsigned int _trk_hits_2nd;        /**< Number of hits of the 2nd leading track */
+    unsigned int _trk_hits_3rd;        /**< Number of hits of the 3rd leading track */
     unsigned int _shr_hits_tot;        /**< Total number of shower hits */
     unsigned int _trk_hits_tot;        /**< Total number of track hits */
     unsigned int _trk_hits_y_tot;      /**< Total number of track hits on the Y plane */
@@ -180,6 +182,7 @@ private:
 
     size_t _shr_pfp_id; /**< Index of the leading shower in the PFParticle vector */
     size_t _shr2_pfp_id; /**< Index of the 2nd leading shower in the PFParticle vector */
+    size_t _shr3_pfp_id; /**< Index of the 3rd leading shower in the PFParticle vector */
 
     std::vector<int> _all_shr_hits; /** vector of hits for each shower **/
     std::vector<float> _all_shr_energies; /** vector of energies for all showers **/
@@ -195,8 +198,10 @@ private:
     float _trk_distance;        /**< Distance between longest track and reconstructed neutrino vertex */
     float _trk_theta;           /**< Reconstructed theta angle for the longest track */
     float _trk_phi;             /**< Reconstructed phi angle for the longest track */
+    
     size_t _trk_pfp_id;         /**< Index of the longest track in the PFParticle vector */
     size_t _trk2_pfp_id;         /**< Index of the 2nd longest track in the PFParticle vector */
+    size_t _trk3_pfp_id;         /**< Index of the 3rd longest track in the PFParticle vector */
 
     std::vector<int> _all_trk_hits; /** vector of hits for each tracks **/
     std::vector<float> _all_trk_energies; /** vector of energies for all tracks **/
@@ -647,20 +652,34 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                 _shr_hits_tot += shr_hits;
                 _all_shr_hits.push_back(shr_hits); 
 
-                if (shr_hits > _shr_hits_2nd)
-                {
+                if (shr_hits > _shr_hits_3rd) {
+
+                  if (shr_hits > _shr_hits_2nd)
+                  {
                     if (shr_hits > _shr_hits_max)
                     {
-                    // set 2nd to max (max will be updated to current below)
-                    _shr_hits_2nd = _shr_hits_max;
-                            _shr2_pfp_id = _shr_pfp_id;
+                      // set 2nd to max, 3rd to 2nd, max will be updated to current below
+                      _shr3_pfp_id = _shr2_pfp_id;
+                      _shr_hits_3rd = _shr_hits_2nd;
+
+                      _shr_hits_2nd = _shr_hits_max;
+                      _shr2_pfp_id = _shr_pfp_id;
                     }
                     else
                     {
-                    // set 2nd to current, leave max unchanged
-                    _shr_hits_2nd = shr_hits;
-                            _shr2_pfp_id = i_pfp;
+                      // set 2nd to current, 3rd to 2nd, leave max unchanged
+                      _shr3_pfp_id = _shr2_pfp_id;
+                      _shr_hits_3rd = _shr_hits_2nd;
+
+                      _shr_hits_2nd = shr_hits;
+                      _shr2_pfp_id = i_pfp;
                     }
+                  }
+                  else {
+                    // set 3rd to current, leave 2nd and max unchanged
+                    _shr_hits_3rd = shr_hits;
+                    _shr3_pfp_id  = i_pfp; 
+                  }
                 }
 
                 // if this is the shower with most hits, take as the main shower
@@ -1099,20 +1118,35 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                         _trk_pidchimu_worst = chimu;
                 }
 
-                if (trk_hits > _trk_hits_2nd)
+                if (trk_hits > _trk_hits_3rd) 
                 {
+                  if (trk_hits > _trk_hits_2nd)
+                  {
                     if (trk_hits > _trk_hits_max)
                     {
-                    // set 2nd to max (max will be updated to current below)
-                    _trk_hits_2nd = _trk_hits_max;
-                            _trk2_pfp_id = _trk_pfp_id;
+                      // set 2nd to max, 3rd to 2nd, max will be updated to current below
+                      _trk3_pfp_id  = _trk2_pfp_id;
+                      _trk_hits_3rd = _trk_hits_2nd;
+                      
+                      _trk2_pfp_id  = _trk_pfp_id;
+                      _trk_hits_2nd = _trk_hits_max; 
                     }
                     else
                     {
-                    // set 2nd to current, leave max unchanged
-                    _trk_hits_2nd = trk_hits;
-                            _trk2_pfp_id = i_pfp;
+                      // set 2nd to current, 3rd to 2nd, leave max unchanged
+                      _trk_hits_3rd = _trk_hits_2nd;
+                      _trk3_pfp_id  = _trk2_pfp_id;  
+
+                      _trk_hits_2nd = trk_hits;
+                      _trk2_pfp_id  = i_pfp;                    
                     }
+                  }
+                  else 
+                  {
+                    // set 3rd to current, leave 2nd and max unchanged
+                    _trk_hits_3rd = trk_hits;
+                    _trk3_pfp_id  = i_pfp; 
+                  }
                 }
 
                 if (trk_hits > _trk_hits_max)
@@ -1354,12 +1388,15 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _trk_pfp_id = 0;
     _shr2_pfp_id = 0;
     _trk2_pfp_id = 0;
+    _shr3_pfp_id = 0;
+    _trk3_pfp_id = 0;
 
     _trk_hits_max = 0;
-    
     _shr_hits_max = 0;
     _trk_hits_2nd = 0;
     _shr_hits_2nd = 0;
+    _trk_hits_3rd = 0;
+    _shr_hits_3rd = 0;
 
     _shr_dedx_Y = std::numeric_limits<float>::lowest();
     _shr_dedx_V = std::numeric_limits<float>::lowest();
@@ -1576,6 +1613,8 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_id", &_shr_pfp_id, "shr_pfp_id/i");
     _tree->Branch("trk2_id", &_trk2_pfp_id, "trk2_pfp_id/i");
     _tree->Branch("shr2_id", &_shr2_pfp_id, "shr2_pfp_id/i");
+    _tree->Branch("trk3_id", &_trk3_pfp_id, "trk3_pfp_id/i");
+    _tree->Branch("shr3_id", &_shr3_pfp_id, "shr3_pfp_id/i");
 
     _tree->Branch("shr_energy_tot", &_shr_energy_tot, "shr_energy_tot/F");
     _tree->Branch("shr_energy", &_shr_energy, "shr_energy/F");
@@ -1720,6 +1759,8 @@ void CC0piNpSelection::setBranches(TTree *_tree)
     _tree->Branch("shr_hits_max", &_shr_hits_max, "shr_hits_max/i");
     _tree->Branch("trk_hits_2nd", &_trk_hits_2nd, "trk_hits_2nd/i");
     _tree->Branch("shr_hits_2nd", &_shr_hits_2nd, "shr_hits_2nd/i");
+    _tree->Branch("trk_hits_3rd", &_trk_hits_3rd, "trk_hits_3rd/i");
+    _tree->Branch("shr_hits_3rd", &_shr_hits_3rd, "shr_hits_3rd/i");
 
     _tree->Branch("trkshrhitdist0", &_trkshrhitdist0, "trkshrhitdist0/F");
     _tree->Branch("trkshrhitdist1", &_trkshrhitdist1, "trkshrhitdist1/F");
