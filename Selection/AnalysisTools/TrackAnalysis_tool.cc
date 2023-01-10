@@ -92,6 +92,9 @@ public:
   void resetTTree(TTree *_tree) override;
 
 private:
+
+  float CalculateTrackTrunkdEdx(const std::vector<float> &dEdx_values);
+
   const trkf::TrackMomentumCalculator _trkmom;
   const trkf::TrajectoryMCSFitter _mcsfitter;
 
@@ -186,6 +189,10 @@ private:
   std::vector<float> _trk_calo_energy_u_v;
   std::vector<float> _trk_calo_energy_v_v;
   std::vector<float> _trk_calo_energy_y_v;
+
+  std::vector<float> _trk_trunk_dEdx_u_v;
+  std::vector<float> _trk_trunk_dEdx_v_v;
+  std::vector<float> _trk_trunk_dEdx_y_v;
 };
 
 //----------------------------------------------------------------------------
@@ -458,11 +465,17 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       _trk_llr_pid_v.push_back(0);
       _trk_llr_pid_score_v.push_back(0);
 
+      // track trunk dEdx
+      _trk_trunk_dEdx_u_v.push_back(std::numeric_limits<float>::lowest());
+      _trk_trunk_dEdx_v_v.push_back(std::numeric_limits<float>::lowest());
+      _trk_trunk_dEdx_y_v.push_back(std::numeric_limits<float>::lowest());
+
       auto calo_v = calo_proxy[trk.key()].get<anab::Calorimetry>();
       for (auto const &calo : calo_v)
       {
         auto const &plane = calo->PlaneID().Plane;
         auto const &dqdx_values = calo->dQdx();
+        auto const &dedx_values = calo->dEdx();
         auto const &rr = calo->ResidualRange();
         auto const &pitch = calo->TrkPitchVec();
         auto const& xyz_v = calo->XYZ();
@@ -491,21 +504,27 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
           calo_energy += aux_dedx * pitch[i];
         }
 
+        float trk_trunk_dEdx = CalculateTrackTrunkdEdx(dedx_values);
+
         float llr_pid = llr_pid_calculator.LLR_many_hits_one_plane(dedx_values_corrected, par_values, plane);
+
         if (plane == 0)
         {
           _trk_llr_pid_u_v.back() = llr_pid;
           _trk_calo_energy_u_v.back() = calo_energy;
+          _trk_trunk_dEdx_u_v.back() = trk_trunk_dEdx;
         }
         else if (plane == 1)
         {
           _trk_llr_pid_v_v.back() = llr_pid;
           _trk_calo_energy_v_v.back() = calo_energy;
+          _trk_trunk_dEdx_v_v.back() = trk_trunk_dEdx;
         }
         else if (plane == 2)
         {
           _trk_llr_pid_y_v.back() = llr_pid;
           _trk_calo_energy_y_v.back() = calo_energy;
+          _trk_trunk_dEdx_y_v.back() = trk_trunk_dEdx;
         }
         _trk_llr_pid_v.back() += llr_pid;
       }
@@ -592,6 +611,10 @@ void TrackAnalysis::fillDefault()
   _trk_llr_pid_y_v.push_back(std::numeric_limits<float>::lowest());
   _trk_llr_pid_v.push_back(std::numeric_limits<float>::lowest());
   _trk_llr_pid_score_v.push_back(std::numeric_limits<float>::lowest());
+
+  _trk_trunk_dEdx_u_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_trunk_dEdx_v_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_trunk_dEdx_y_v.push_back(std::numeric_limits<float>::lowest());
 }
 
 void TrackAnalysis::setBranches(TTree *_tree)
@@ -665,6 +688,10 @@ void TrackAnalysis::setBranches(TTree *_tree)
   _tree->Branch("trk_llr_pid_y_v", "std::vector<float>", &_trk_llr_pid_y_v);
   _tree->Branch("trk_llr_pid_v", "std::vector<float>", &_trk_llr_pid_v);
   _tree->Branch("trk_llr_pid_score_v", "std::vector<float>", &_trk_llr_pid_score_v);
+
+  _tree->Branch("trk_trunk_dEdx_u_v", "std::vector<float>", &_trk_trunk_dEdx_u_v);
+  _tree->Branch("trk_trunk_dEdx_v_v", "std::vector<float>", &_trk_trunk_dEdx_v_v);
+  _tree->Branch("trk_trunk_dEdx_y_v", "std::vector<float>", &_trk_trunk_dEdx_y_v);
 }
 
 void TrackAnalysis::resetTTree(TTree *_tree)
@@ -740,6 +767,71 @@ void TrackAnalysis::resetTTree(TTree *_tree)
   _trk_llr_pid_y_v.clear();
   _trk_llr_pid_v.clear();
   _trk_llr_pid_score_v.clear();
+
+  _trk_trunk_dEdx_u_v.clear();
+  _trk_trunk_dEdx_v_v.clear();
+  _trk_trunk_dEdx_y_v.clear();
+}
+
+float TrackAnalysis::CalculateTrackTrunkdEdx(const std::vector<float> &dEdx_values) {
+  
+  unsigned int trk_nhits = dEdx_values.size();
+
+  // initial offset of 3 hits
+  int firstHitIdx = trk_nhits - 3 - 1;
+
+  // find max hit corresponding to first third of track hits
+  int lastHitIdx = trk_nhits - (int)(trk_nhits/3) - 1; 
+
+  // check at least 5 hits remain, otherwise set as invalid for this track (too short)
+  if (firstHitIdx - lastHitIdx < 5) {
+    return std::numeric_limits<float>::lowest();
+  }
+  else {
+    // loop through hits extracting relevant dE/dx values
+    std::vector<float> trk_trunk_dEdx_values;
+    trk_trunk_dEdx_values.reserve(firstHitIdx - lastHitIdx); 
+
+    for (int i = trk_nhits - 1; i >= 0; i--) {
+
+      // skip first part of track
+      if (i > firstHitIdx) continue;
+
+      trk_trunk_dEdx_values.push_back(dEdx_values[i]);
+
+      // skip last part of track
+      if (i < lastHitIdx) break;  
+    }
+
+    // calculate mean, median and standard deviation
+    // median
+    float median;
+    std::sort(trk_trunk_dEdx_values.begin(), trk_trunk_dEdx_values.end());
+    if (trk_trunk_dEdx_values.size() % 2 == 0) median = 0.5 * (trk_trunk_dEdx_values[trk_trunk_dEdx_values.size()/2 - 1] + trk_trunk_dEdx_values[trk_trunk_dEdx_values.size()/2]);
+    else median = trk_trunk_dEdx_values[trk_trunk_dEdx_values.size()/2];
+
+    // mean
+    double sum = std::accumulate(std::begin(trk_trunk_dEdx_values), std::end(trk_trunk_dEdx_values), 0.0);
+    double m =  sum / trk_trunk_dEdx_values.size();
+    
+    // standard deviation
+    double accum = 0.0;
+    std::for_each(std::begin(trk_trunk_dEdx_values), std::end(trk_trunk_dEdx_values), [&](const double d) {accum += (d - m) * (d - m);});
+    double stdev = sqrt(accum / (trk_trunk_dEdx_values.size()-1));
+
+    // create trimmed dE/dx vector,  removing any dE/dx greater than 1 standard deviation above the median 
+    std::vector<float> trk_trunk_dEdx_values_trimmed;
+    trk_trunk_dEdx_values_trimmed.reserve(firstHitIdx - lastHitIdx);
+    for (unsigned int i = 0; i < trk_trunk_dEdx_values.size(); i++) {
+      if (trk_trunk_dEdx_values[i] <= median + stdev) trk_trunk_dEdx_values_trimmed.push_back(trk_trunk_dEdx_values[i]);
+    }
+
+    // calculate mean of trimmed dE/dx vector
+    double sum_trimmed = std::accumulate(std::begin(trk_trunk_dEdx_values_trimmed), std::end(trk_trunk_dEdx_values_trimmed), 0.0);
+    double trk_dEdx_trunk =  sum_trimmed / trk_trunk_dEdx_values_trimmed.size();
+
+    return trk_dEdx_trunk;
+  }
 }
 
 DEFINE_ART_CLASS_TOOL(TrackAnalysis)
