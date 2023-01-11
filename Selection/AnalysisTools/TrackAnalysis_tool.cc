@@ -193,6 +193,10 @@ private:
   std::vector<float> _trk_trunk_dEdx_u_v;
   std::vector<float> _trk_trunk_dEdx_v_v;
   std::vector<float> _trk_trunk_dEdx_y_v;
+
+  std::vector<int> _trk_nhits_u_v;
+  std::vector<int> _trk_nhits_v_v;
+  std::vector<int> _trk_nhits_y_v;
 };
 
 //----------------------------------------------------------------------------
@@ -466,6 +470,9 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       _trk_llr_pid_score_v.push_back(0);
 
       // track trunk dEdx
+      _trk_nhits_u_v.push_back(0);
+      _trk_nhits_v_v.push_back(0);
+      _trk_nhits_y_v.push_back(0);
       _trk_trunk_dEdx_u_v.push_back(std::numeric_limits<float>::lowest());
       _trk_trunk_dEdx_v_v.push_back(std::numeric_limits<float>::lowest());
       _trk_trunk_dEdx_y_v.push_back(std::numeric_limits<float>::lowest());
@@ -504,6 +511,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
           calo_energy += aux_dedx * pitch[i];
         }
 
+        float trk_nhits = dedx_values.size();
         float trk_trunk_dEdx = CalculateTrackTrunkdEdx(dedx_values);
 
         float llr_pid = llr_pid_calculator.LLR_many_hits_one_plane(dedx_values_corrected, par_values, plane);
@@ -512,18 +520,21 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
         {
           _trk_llr_pid_u_v.back() = llr_pid;
           _trk_calo_energy_u_v.back() = calo_energy;
+          _trk_nhits_u_v.back() = trk_nhits;
           _trk_trunk_dEdx_u_v.back() = trk_trunk_dEdx;
         }
         else if (plane == 1)
         {
           _trk_llr_pid_v_v.back() = llr_pid;
           _trk_calo_energy_v_v.back() = calo_energy;
+          _trk_nhits_v_v.back() = trk_nhits;
           _trk_trunk_dEdx_v_v.back() = trk_trunk_dEdx;
         }
         else if (plane == 2)
         {
           _trk_llr_pid_y_v.back() = llr_pid;
           _trk_calo_energy_y_v.back() = calo_energy;
+          _trk_nhits_y_v.back() = trk_nhits;
           _trk_trunk_dEdx_y_v.back() = trk_trunk_dEdx;
         }
         _trk_llr_pid_v.back() += llr_pid;
@@ -615,6 +626,10 @@ void TrackAnalysis::fillDefault()
   _trk_trunk_dEdx_u_v.push_back(std::numeric_limits<float>::lowest());
   _trk_trunk_dEdx_v_v.push_back(std::numeric_limits<float>::lowest());
   _trk_trunk_dEdx_y_v.push_back(std::numeric_limits<float>::lowest());
+
+  _trk_nhits_u_v.push_back(std::numeric_limits<int>::lowest());
+  _trk_nhits_v_v.push_back(std::numeric_limits<int>::lowest());
+  _trk_nhits_y_v.push_back(std::numeric_limits<int>::lowest());
 }
 
 void TrackAnalysis::setBranches(TTree *_tree)
@@ -692,6 +707,10 @@ void TrackAnalysis::setBranches(TTree *_tree)
   _tree->Branch("trk_trunk_dEdx_u_v", "std::vector<float>", &_trk_trunk_dEdx_u_v);
   _tree->Branch("trk_trunk_dEdx_v_v", "std::vector<float>", &_trk_trunk_dEdx_v_v);
   _tree->Branch("trk_trunk_dEdx_y_v", "std::vector<float>", &_trk_trunk_dEdx_y_v);
+
+  _tree->Branch("trk_nhits_u_v", "std::vector<int>", &_trk_nhits_u_v);
+  _tree->Branch("trk_nhits_v_v", "std::vector<int>", &_trk_nhits_v_v);
+  _tree->Branch("trk_nhits_y_v", "std::vector<int>", &_trk_nhits_y_v);
 }
 
 void TrackAnalysis::resetTTree(TTree *_tree)
@@ -771,6 +790,10 @@ void TrackAnalysis::resetTTree(TTree *_tree)
   _trk_trunk_dEdx_u_v.clear();
   _trk_trunk_dEdx_v_v.clear();
   _trk_trunk_dEdx_y_v.clear();
+
+  _trk_nhits_u_v.clear();
+  _trk_nhits_v_v.clear();
+  _trk_nhits_y_v.clear();
 }
 
 float TrackAnalysis::CalculateTrackTrunkdEdx(const std::vector<float> &dEdx_values) {
