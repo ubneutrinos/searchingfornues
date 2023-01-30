@@ -1,0 +1,13 @@
+#include "run_neutrinoselectionfilter_run3_overlay.fcl"
+
+physics.filters.nuselection.AnalysisTools: {
+        default: @local::DefaultAnalysisTool
+        containment:   @local::ContainmentAnalysis
+        track:         @local::TrackAnalysisTool
+        flashmatchid:  @local::FlashMatchingTool
+        pmtwf:         @local::PMTWaveformTool
+        simphoton:     @local::SimPhotonTool
+        secondshower:  @local::SecondShowerTaggerTool
+    }
+
+physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool
