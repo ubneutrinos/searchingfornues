@@ -95,6 +95,7 @@ public:
 private:
 
   float CalculateTrackTrunkdEdx(const std::vector<float> &dEdx_values);
+  float GetMultiplaneBraggLikelihood(const art::Ptr<anab::ParticleID> pid, const int pdg, const anab::kTrackDir dir, const float yzAngle, const float sin2AngleThreshold, const int nHitsU, const int nHitsV);
 
   const trkf::TrackMomentumCalculator _trkmom;
   const trkf::TrajectoryMCSFitter _mcsfitter;
@@ -152,6 +153,7 @@ private:
   std::vector<float> _trk_bragg_mu_v;
   std::vector<float> _trk_bragg_pion_v;
   std::vector<float> _trk_bragg_mip_v;
+  
   std::vector<float> _trk_pid_chipr_v;
   std::vector<float> _trk_pid_chika_v;
   std::vector<float> _trk_pid_chipi_v;
@@ -177,6 +179,18 @@ private:
   std::vector<float> _trk_pid_chipi_v_v;
   std::vector<float> _trk_pid_chimu_v_v;
   std::vector<float> _trk_pida_v_v;
+
+  // The Bragg likelihoods using the collection plane when possible and induction planes as fallback
+  // Forward (fwd) direction 
+  std::vector<float> _trk_bragg_fwd_p_uvy_v; // Proton
+  std::vector<float> _trk_bragg_fwd_mu_uvy_v; // Muon
+  std::vector<float> _trk_bragg_fwd_pion_uvy_v; // Pion
+  std::vector<float> _trk_bragg_fwd_mip_uvy_v; // MIP
+  // Backward (bwd) direction
+  std::vector<float> _trk_bragg_bwd_p_uvy_v; // Proton
+  std::vector<float> _trk_bragg_bwd_mu_uvy_v; // Muon
+  std::vector<float> _trk_bragg_bwd_pion_uvy_v; // Pion
+  std::vector<float> _trk_bragg_bwd_mip_uvy_v; // MIP
 
   std::vector<float> _trk_llr_pid_u_v;
   std::vector<float> _trk_llr_pid_v_v;
@@ -669,8 +683,30 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
         }        
       }
 
-      // average of deflections along track ("wiggliness")
-      // get track valid points
+      // Combined planes bragg lieklihoods
+      const float sin2AngleThreshold = 0.175;
+      const auto yzAngle = std::atan2(_trk_dir_z_v.back(), _trk_dir_y_v.back());
+      const float bragg_fwd_p_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 2212, anab::kForward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
+      const float bragg_fwd_mu_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 13, anab::kForward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
+      const float bragg_fwd_pion_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 211, anab::kForward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
+      const float bragg_fwd_mip_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 0, anab::kForward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
+
+      const float bragg_bwd_p_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 2212, anab::kBackward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
+      const float bragg_bwd_mu_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 13, anab::kBackward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
+      const float bragg_bwd_pion_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 211, anab::kBackward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
+      const float bragg_bwd_mip_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 0, anab::kBackward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());      
+
+      _trk_bragg_fwd_p_uvy_v.push_back(bragg_fwd_p_uvy_v);
+      _trk_bragg_fwd_mu_uvy_v.push_back(bragg_fwd_mu_uvy_v);
+      _trk_bragg_fwd_pion_uvy_v.push_back(bragg_fwd_pion_uvy_v);
+      _trk_bragg_fwd_mip_uvy_v.push_back(bragg_fwd_mip_uvy_v);
+      _trk_bragg_bwd_p_uvy_v.push_back(bragg_bwd_p_uvy_v);
+      _trk_bragg_bwd_mu_uvy_v.push_back(bragg_bwd_mu_uvy_v);
+      _trk_bragg_bwd_pion_uvy_v.push_back(bragg_bwd_pion_uvy_v);
+      _trk_bragg_bwd_mip_uvy_v.push_back(bragg_bwd_mip_uvy_v);
+
+      // Average of deflections along track ("wiggliness")
+      // Get track valid points
       std::vector<size_t> validPoints;
       auto firstValidPoint = trk->FirstValidPoint();
       validPoints.push_back(firstValidPoint);
@@ -681,12 +717,14 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
           nextValidPoint = trk->NextValidPoint(nextValidPoint + 1);
       }
       // determine average deflection between sequential valid points
-      if (validPoints.size() < 3) {
+      if (validPoints.size() < 3) 
+      {
         _trk_avg_deflection_mean_v.push_back(0);
         _trk_avg_deflection_stdev_v.push_back(0);
         _trk_avg_deflection_separation_mean_v.push_back(0);
       }
-      else {
+      else 
+      {
         std::vector<float> thetaVector;
         float thetaSum = 0.f;
         float separationSum = 0.f;
@@ -803,6 +841,15 @@ void TrackAnalysis::fillDefault()
   _trk_pid_chimu_v_v.push_back(std::numeric_limits<float>::lowest());
   _trk_pida_v_v.push_back(std::numeric_limits<float>::lowest());
 
+  _trk_bragg_fwd_p_uvy_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_bragg_fwd_mu_uvy_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_bragg_fwd_pion_uvy_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_bragg_fwd_mip_uvy_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_bragg_bwd_p_uvy_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_bragg_bwd_mu_uvy_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_bragg_bwd_pion_uvy_v.push_back(std::numeric_limits<float>::lowest());
+  _trk_bragg_bwd_mip_uvy_v.push_back(std::numeric_limits<float>::lowest());
+
   _trk_mcs_muon_mom_v.push_back(std::numeric_limits<float>::lowest());
   _trk_range_muon_mom_v.push_back(std::numeric_limits<float>::lowest());
   _trk_energy_proton_v.push_back(std::numeric_limits<float>::lowest());
@@ -867,6 +914,25 @@ void TrackAnalysis::setBranches(TTree *_tree)
   _tree->Branch("trk_pid_chipi_v_v", "std::vector< float >", &_trk_pid_chipi_v_v);
   _tree->Branch("trk_pid_chika_v_v", "std::vector< float >", &_trk_pid_chika_v_v);
   _tree->Branch("trk_pid_chimu_v_v", "std::vector< float >", &_trk_pid_chimu_v_v);
+
+  _tree->Branch("trk_bragg_p_v_v", "std::vector< float >", &_trk_bragg_p_v_v);
+  _tree->Branch("trk_bragg_mu_v_v", "std::vector< float >", &_trk_bragg_mu_v_v);
+  _tree->Branch("trk_bragg_pion_v_v", "std::vector< float >", &_trk_bragg_pion_v_v);
+  _tree->Branch("trk_bragg_mip_v_v", "std::vector< float >", &_trk_bragg_mip_v_v);
+  _tree->Branch("trk_pida_v_v", "std::vector< float >", &_trk_pida_v_v);
+  _tree->Branch("trk_pid_chipr_v_v", "std::vector< float >", &_trk_pid_chipr_v_v);
+  _tree->Branch("trk_pid_chipi_v_v", "std::vector< float >", &_trk_pid_chipi_v_v);
+  _tree->Branch("trk_pid_chika_v_v", "std::vector< float >", &_trk_pid_chika_v_v);
+  _tree->Branch("trk_pid_chimu_v_v", "std::vector< float >", &_trk_pid_chimu_v_v);
+
+  _tree->Branch("trk_bragg_fwd_p_uvy_v", "std::vector< float >", &_trk_bragg_fwd_p_uvy_v);
+  _tree->Branch("trk_bragg_fwd_mu_uvy_v", "std::vector< float >", &_trk_bragg_fwd_mu_uvy_v);
+  _tree->Branch("trk_bragg_fwd_pion_uvy_v", "std::vector< float >", &_trk_bragg_fwd_pion_uvy_v);
+  _tree->Branch("trk_bragg_fwd_mip_uvy_v", "std::vector< float >", &_trk_bragg_fwd_mip_uvy_v);
+  _tree->Branch("trk_bragg_bwd_p_uvy_v", "std::vector< float >", &_trk_bragg_bwd_p_uvy_v);
+  _tree->Branch("trk_bragg_bwd_mu_uvy_v", "std::vector< float >", &_trk_bragg_bwd_mu_uvy_v);
+  _tree->Branch("trk_bragg_bwd_pion_uvy_v", "std::vector< float >", &_trk_bragg_bwd_pion_uvy_v);
+  _tree->Branch("trk_bragg_bwd_mip_uvy_v", "std::vector< float >", &_trk_bragg_bwd_mip_uvy_v);
 
   _tree->Branch("trk_pfp_id_v", "std::vector< size_t >", &_trk_pfp_id_v);
   _tree->Branch("trk_dir_x_v", "std::vector< float >", &_trk_dir_x_v);
@@ -957,6 +1023,15 @@ void TrackAnalysis::resetTTree(TTree *_tree)
   _trk_pid_chipi_v_v.clear();
   _trk_pid_chimu_v_v.clear();
 
+  _trk_bragg_fwd_p_uvy_v.clear();
+  _trk_bragg_fwd_mu_uvy_v.clear();
+  _trk_bragg_fwd_pion_uvy_v.clear();
+  _trk_bragg_fwd_mip_uvy_v.clear();
+  _trk_bragg_bwd_p_uvy_v.clear();
+  _trk_bragg_bwd_mu_uvy_v.clear();
+  _trk_bragg_bwd_pion_uvy_v.clear();
+  _trk_bragg_bwd_mip_uvy_v.clear();
+
   _trk_pfp_id_v.clear();
 
   _trk_start_x_v.clear();
@@ -1017,7 +1092,7 @@ void TrackAnalysis::resetTTree(TTree *_tree)
 }
 
 float TrackAnalysis::CalculateTrackTrunkdEdx(const std::vector<float> &dEdx_values) {
-  
+
   unsigned int trk_nhits = dEdx_values.size();
 
   // initial offset of 3 hits
@@ -1075,6 +1150,39 @@ float TrackAnalysis::CalculateTrackTrunkdEdx(const std::vector<float> &dEdx_valu
 
     return trk_dEdx_trunk;
   }
+}
+
+float TrackAnalysis::GetMultiplaneBraggLikelihood(const art::Ptr<anab::ParticleID> pid, const int pdg, const anab::kTrackDir dir, const float yzAngle, const float sin2AngleThreshold, const int nHitsU, const int nHitsV)
+{
+  const auto piBy3 = std::acos(0.5f);
+
+  const auto likelihoodW = searchingfornues::PID(pid, "BraggPeakLLH", anab::kLikelihood, dir, pdg, 2);
+  const bool isTrackAlongWWire = (std::pow(std::sin(yzAngle), 2) < sin2AngleThreshold);
+  const auto hasW = (likelihoodW > -1.f && !isTrackAlongWWire);
+
+  if (hasW)
+      return likelihoodW;
+
+  // Otherwise the track is along the W wire direction, so just average the other two planes weighted by the number of degrees of freedom
+  const auto likelihoodU = searchingfornues::PID(pid, "BraggPeakLLH", anab::kLikelihood, dir, pdg, 0);
+  const bool isTrackAlongUWire = (std::pow(std::sin(yzAngle - piBy3), 2) < sin2AngleThreshold);
+  const auto hasU = (likelihoodU > -1.f && !isTrackAlongUWire);
+
+  const auto likelihoodV = searchingfornues::PID(pid, "BraggPeakLLH", anab::kLikelihood, dir, pdg, 1);
+  const bool isTrackAlongVWire = (std::pow(std::sin(yzAngle + piBy3), 2) < sin2AngleThreshold);
+  const auto hasV = (likelihoodV > -1.f && !isTrackAlongVWire);
+
+  const auto dofU = hasU ? static_cast<float>(nHitsU) : 0.f;
+  const auto dofV = hasV ? static_cast<float>(nHitsV) : 0.f;
+  const auto dofUV = dofU + dofV;
+
+  const auto weightU = hasU ? (likelihoodU * dofU) : 0.f;
+  const auto weightV = hasV ? (likelihoodV * dofV) : 0.f;
+
+  if ((!hasU && !hasV) || (nHitsU == 0 && nHitsV == 0) || dofUV <= std::numeric_limits<float>::epsilon())
+      return -std::numeric_limits<float>::max();
+
+  return (weightU + weightV) / dofUV;
 }
 
 DEFINE_ART_CLASS_TOOL(TrackAnalysis)
