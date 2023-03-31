@@ -244,6 +244,7 @@ TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p) : _mcsfitter(fhicl::T
   fADCtoE = p.get<std::vector<float>>("ADCtoE");
   fEndSpacepointDistance = p.get<float>("EndSpacepointDistance", 5.0);
 
+
   // set dedx pdf parameters
   llr_pid_calculator.set_dedx_binning(0, protonmuon_parameters.dedx_edges_pl_0);
   llr_pid_calculator.set_par_binning(0, protonmuon_parameters.parameters_edges_pl_0);
@@ -343,7 +344,6 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
     spacePointCollection.emplace_back(spacePointHandle, i_sp);
   }
   art::ValidHandle<std::vector<recob::PFParticle>> inputPfParticle = e.getValidHandle<std::vector<recob::PFParticle>>(fCLSproducer);
-  auto assocSpacePoint = std::unique_ptr<art::FindManyP<recob::SpacePoint>>(new art::FindManyP<recob::SpacePoint>(inputPfParticle, e, fCLSproducer));
 
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
   {
@@ -505,7 +505,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       _trk_llr_pid_v.push_back(0);
       _trk_llr_pid_score_v.push_back(0);
 
-      // track trunk dEdx
+      // // track trunk dEdx
       _trk_nhits_u_v.push_back(0);
       _trk_nhits_v_v.push_back(0);
       _trk_nhits_y_v.push_back(0);
@@ -589,13 +589,13 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       }
       _trk_end_spacepoints_v.push_back(nPoints);
 
-      // track first third dEdx
-      _trk_nhits_u_v.push_back(0);
-      _trk_nhits_v_v.push_back(0);
-      _trk_nhits_y_v.push_back(0);
-      _trk_trunk_dEdx_u_v.push_back(9999);
-      _trk_trunk_dEdx_v_v.push_back(9999);
-      _trk_trunk_dEdx_y_v.push_back(9999);
+      // // track first third dEdx
+      // _trk_nhits_u_v.push_back(0);
+      // _trk_nhits_v_v.push_back(0);
+      // _trk_nhits_y_v.push_back(0);
+      // _trk_trunk_dEdx_u_v.push_back(9999);
+      // _trk_trunk_dEdx_v_v.push_back(9999);
+      // _trk_trunk_dEdx_y_v.push_back(9999);
 
       for (auto const &calo : calo_v) {
 
@@ -614,15 +614,15 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
         if (firstHitIdx - lastHitIdx < 5) {
           if (plane == 0) {
             _trk_nhits_u_v.back() = trk_nhits;
-            _trk_trunk_dEdx_u_v.back() = 9999;
+            _trk_trunk_dEdx_u_v.back() = std::numeric_limits<float>::lowest();
           }
           else if (plane == 1) {
             _trk_nhits_v_v.back() = trk_nhits;
-            _trk_trunk_dEdx_v_v.back() = 9999;
+            _trk_trunk_dEdx_v_v.back() = std::numeric_limits<float>::lowest();
           }
           else if (plane == 2) {
             _trk_nhits_y_v.back() = trk_nhits;
-            _trk_trunk_dEdx_y_v.back() = 9999;
+            _trk_trunk_dEdx_y_v.back() = std::numeric_limits<float>::lowest();
           }
         }
         else {
@@ -750,7 +750,8 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
         float separationMean = separationSum / static_cast<float>(thetaVector.size());
 
         float thetaDiffSum = 0.f;
-        for (const auto &theta : thetaVector) {
+        for (const auto &theta : thetaVector) 
+        {
           thetaDiffSum += std::pow(theta - thetaMean, 2);
         }
 
@@ -761,13 +762,14 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
         _trk_avg_deflection_separation_mean_v.push_back(separationMean);
       }
       
-      // count number of spacepoints at end of track (potential daughters)
+      // count number of spacepoints at end of track
       int nPoints = 0;
-      std::vector<art::Ptr<recob::SpacePoint>> spcpnts = assocSpacePoint->at(i_pfp);
-      TVector3 trkEnd(trk->End().X(), trk->End().Y(), trk->End().Z());
-      float distSquared = fEndSpacepointDistance*fEndSpacepointDistance;
-      for (auto &sp : spcpnts) {
-        TVector3 spacePoint(sp->XYZ()[0], sp->XYZ()[1], sp->XYZ()[2]); 
+      const auto distSquared = fEndSpacepointDistance*fEndSpacepointDistance;
+      TVector3 trkEnd(_trk_end_sce[0], _trk_end_sce[1], _trk_end_sce[2]);
+      for (auto &sp : spacePointCollection) {
+        float _sp_sce[3];
+        searchingfornues::ApplySCECorrectionXYZ(sp.XYZ()[0], sp.XYZ()[1], sp.XYZ()[2], _sp_sce);
+        const TVector3 spacePoint(_sp_sce[0], _sp_sce[1], _sp_sce[2]);
         if ((trkEnd - spacePoint).Mag2() < distSquared) nPoints++;
       }
       _trk_end_spacepoints_v.push_back(nPoints);
