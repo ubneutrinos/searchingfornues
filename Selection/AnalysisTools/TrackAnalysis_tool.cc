@@ -507,7 +507,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       _trk_llr_pid_v.push_back(0);
       _trk_llr_pid_score_v.push_back(0);
 
-      // track trunk dEdx
+      // // track trunk dEdx
       _trk_nhits_u_v.push_back(0);
       _trk_nhits_v_v.push_back(0);
       _trk_nhits_y_v.push_back(0);
