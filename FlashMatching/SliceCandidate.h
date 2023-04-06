@@ -13,6 +13,9 @@
 #include "larevt/CalibrationDBI/Interface/PmtGainService.h"
 #include "larevt/CalibrationDBI/Interface/PmtGainProvider.h"
 
+#include "ubevt/Database/UbooneElectronLifetimeProvider.h"
+#include "ubevt/Database/UbooneElectronLifetimeService.h"
+
 #include "ubreco/LLSelectionTool/OpT0Finder/Base/OpT0FinderTypes.h"
 #include "ubreco/LLSelectionTool/OpT0Finder/Base/FlashMatchManager.h"
 #include "Objects/CartesianVector.h"
@@ -459,6 +462,23 @@ namespace flashmatch {
       // ATTN here we only use the neutrino hypothesis, in theory this should work with either (or indeed both with some thought)
       //PFParticleVector allParticlesInSlice;
       //this->CollectDownstreamPFParticles(pfParticleMap, slice.GetTargetHypothesis(), allParticlesInSlice);
+
+      //--------------------------------------------------------------------
+      // implementing electron lifetime correction [D. Caratelli 08/12/2022]
+      const detinfo::DetectorProperties* detprop;
+      detprop = art::ServiceHandle<detinfo::DetectorPropertiesService>()->provider();
+
+      //handle to electron lifetime calibration provider
+      const lariov::UBElectronLifetimeProvider& elifetimeCalibProvider
+	= art::ServiceHandle<lariov::UBElectronLifetimeService>()->GetProvider();
+
+      float elifetime  = elifetimeCalibProvider.Lifetime(); // [ms]
+      float driftvelocity = detprop->DriftVelocity(); // [cm/us]
+
+      //std::cout << "LIFETIMECORRECTION [FlashNeutrinoId][GetDepositionVector] lifetime is : "
+      //      << elifetime << " [ms] and drift velocity is " << driftvelocity << " [cm/us]" << std::endl;
+      // implementing electron lifetime correction [D. Caratelli 08/12/2022]
+      //--------------------------------------------------------------------
 	
       DepositionVector depositionVector;
 	
@@ -484,12 +504,19 @@ namespace flashmatch {
 	  // Add the charged point to the vector
 	  const auto &position(spacepoint->XYZ());
 	  const auto charge(hit->Integral());
+	  //------------------------------------------------------
+	  // implement lifetime correction [D. Caratelli 08/12/22]
+	  float lifetimecorrection = exp( (position[0]) / (elifetime * driftvelocity * 1000.0));
+	  //std::cout << "LIFETIMECORRECTION [FlashNeutrinoId][GetDepositionVector]: lifetime correction @ lifetime of " << elifetime << " [ms] "
+	  //      << "@ position of " << position[0] << " [cm] is " << lifetimecorrection << std::endl;
+	  // implement lifetime correction [D. Caratelli 08/12/22]
+	  //------------------------------------------------------
 	
 	  // ADC -> MeV
 	  //float ADCtoMeV = 240. * (23.6/1e6) / 0.5;
 
 	  //depositionVector.emplace_back(position[0], position[1], position[2], charge, this->GetNPhotons(charge, particle));
-	  depositionVector.emplace_back(position[0], position[1], position[2], charge, charge * m_chargeToNPhotonsTrack);
+	  depositionVector.emplace_back(position[0], position[1], position[2], charge * lifetimecorrection, charge * lifetimecorrection * m_chargeToNPhotonsTrack);
 	  //std::cout << "adding to deposition vector @ location [" << position[0] << ", " << position[1] << ", " << position[2] 
 	  //	      << " with charge " << charge * m_chargeToNPhotonsTrack << std::endl;
 	}// for all hits/spacepoints
@@ -504,6 +531,23 @@ namespace flashmatch {
       // ATTN here we only use the neutrino hypothesis, in theory this should work with either (or indeed both with some thought)
       //PFParticleVector allParticlesInSlice;
       //this->CollectDownstreamPFParticles(pfParticleMap, slice.GetTargetHypothesis(), allParticlesInSlice);
+
+      //--------------------------------------------------------------------
+      // implementing electron lifetime correction [D. Caratelli 08/12/2022]
+      const detinfo::DetectorProperties* detprop;
+      detprop = art::ServiceHandle<detinfo::DetectorPropertiesService>()->provider();
+
+      //handle to electron lifetime calibration provider
+      const lariov::UBElectronLifetimeProvider& elifetimeCalibProvider
+	= art::ServiceHandle<lariov::UBElectronLifetimeService>()->GetProvider();
+
+      float elifetime  = elifetimeCalibProvider.Lifetime(); // [ms]
+      float driftvelocity = detprop->DriftVelocity(); // [cm/us]
+
+      //std::cout << "LIFETIMECORRECTION [FlashNeutrinoId][GetDepositionVector] lifetime is : "
+      //      << elifetime << " [ms] and drift velocity is " << driftvelocity << " [cm/us]" << std::endl;
+      // implementing electron lifetime correction [D. Caratelli 08/12/2022]
+      //--------------------------------------------------------------------
 
       DepositionVector depositionVector;
 	
@@ -521,9 +565,16 @@ namespace flashmatch {
 	// Add the charged point to the vector
 	const auto &position(spacepoint->XYZ());
 	const auto charge(hit->Integral());
+	//------------------------------------------------------
+	// implement lifetime correction [D. Caratelli 08/12/22]
+	float lifetimecorrection = exp( (position[0]) / (elifetime * driftvelocity * 1000.0));
+	//std::cout << "LIFETIMECORRECTION [FlashNeutrinoId][GetDepositionVector]: lifetime correction @ lifetime of " << elifetime << " [ms] "
+	//      << "@ position of " << position[0] << " [cm] is " << lifetimecorrection << std::endl;
+	// implement lifetime correction [D. Caratelli 08/12/22]
+	//------------------------------------------------------
 	  
 	//depositionVector.emplace_back(position[0], position[1], position[2], charge, this->GetNPhotons(charge, particle));
-	depositionVector.emplace_back(position[0], position[1], position[2], charge, charge * m_chargeToNPhotonsTrack);
+	depositionVector.emplace_back(position[0], position[1], position[2], charge * lifetimecorrection, charge * lifetimecorrection * m_chargeToNPhotonsTrack);
       }// for all hits/spacepoints
 
       return depositionVector;
