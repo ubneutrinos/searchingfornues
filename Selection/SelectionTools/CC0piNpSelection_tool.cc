@@ -412,12 +412,12 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
 
     fADCtoE = pset.get<std::vector<float>>("ADCtoE");
 
-    fFidvolZstart = pset.get<float>("FidvolZstart", 10);
-    fFidvolZend = pset.get<float>("FidvolZend", 50);
-    fFidvolYstart = pset.get<float>("FidvolYstart", 15);
-    fFidvolYend = pset.get<float>("FidvolYend", 15);
-    fFidvolXstart = pset.get<float>("FidvolXstart", 10);
-    fFidvolXend = pset.get<float>("FidvolXend", 10);
+    fFidvolZstart = pset.get<float>("FidvolZstart");
+    fFidvolZend = pset.get<float>("FidvolZend");
+    fFidvolYstart = pset.get<float>("FidvolYstart");
+    fFidvolYend = pset.get<float>("FidvolYend");
+    fFidvolXstart = pset.get<float>("FidvolXstart");
+    fFidvolXend = pset.get<float>("FidvolXend");
 
     fdEdxcmSkip = pset.get<float>("dEdxcmSkip", 0.0);     // how many cm to skip @ vtx for dE/dx calculation
     fdEdxcmLen = pset.get<float>("dEdxcmLen", 4.0);       // how long the dE/dx segment should be
