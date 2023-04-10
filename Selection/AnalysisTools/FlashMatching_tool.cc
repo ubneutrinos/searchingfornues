@@ -110,6 +110,7 @@ namespace analysis
     std::map<unsigned int, unsigned int> _pfpmap;
 
     flashana::FlashMatchManager    m_flashMatchManager;       ///< The flash match manager
+    bool m_applyLifetimeCorr;
   };
   
   //----------------------------------------------------------------------------
@@ -134,6 +135,7 @@ namespace analysis
     m_chargeToNPhotonsTrack = p.get< float >("ChargeToNPhotonsTrack");
     m_chargeToNPhotonsShower = p.get< float >("ChargeToNPhotonsShower");
     m_flashMatchManager.Configure(p.get<flashana::Config_t>("FlashMatchConfig"));
+    m_applyLifetimeCorr = p.get<bool>("ApplyLifetimeCorr");
   }
   
   //----------------------------------------------------------------------------
@@ -267,7 +269,27 @@ namespace analysis
 
       // only primary PFPs have a flash-match score
       if (pfp.IsPrimary() == false) continue;
-      if ( !(pfp.PdgCode() == 12 || pfp.PdgCode() == 14) ) continue;
+
+      // get metadata
+      if (pfp_meta_assn_v.size() <= p) { std::cout << "NO METADATA!" << std::endl; continue; }
+      auto metadatalist = pfp_meta_assn_v.at(p);
+      float nuscore = -1;
+      bool clearcosmic = false;
+      if (metadatalist.empty() == false) {
+	for (unsigned int j=0; j<metadatalist.size(); ++j) {
+	  const art::Ptr<larpandoraobj::PFParticleMetadata> &metadata(metadatalist.at(j));
+	  auto particleproperties = metadata->GetPropertiesMap();
+	  if (!particleproperties.empty())
+	    for (std::map<std::string, float>::const_iterator it = particleproperties.begin(); it != particleproperties.end(); ++it) {
+	      if ( it->first == "IsClearCosmic" )
+		clearcosmic = true;
+	      if ( it->first == "NuScore" )
+		nuscore = it->second;
+	    }// for all metadata items in the particle metadata
+	}// for entries in list
+      }// if there is metadata available
+
+      if ( !(pfp.PdgCode() == 12 || pfp.PdgCode() == 14 || clearcosmic) ) continue;
 
       // now build vectors of PFParticles, space-points, and hits for this slice
       std::vector<art::Ptr<recob::PFParticle> > pfp_ptr_v;
@@ -292,8 +314,8 @@ namespace analysis
 	hit_v_v.push_back( hit_ptr_v );
 	//std::cout << "size sps=" << spacepoint_ptr_v.size() << " hits=" << hit_ptr_v.size() << std::endl;
       }// for all pfp pointers
-      flashmatch::SliceCandidate slice(pfp_ptr_v, spacepoint_v_v, hit_v_v, m_chargeToNPhotonsTrack, m_chargeToNPhotonsShower);
-      float fmscore = -1.;
+      flashmatch::SliceCandidate slice(pfp_ptr_v, spacepoint_v_v, hit_v_v, m_chargeToNPhotonsTrack, m_chargeToNPhotonsShower, m_applyLifetimeCorr);
+      float fmscore = 1e6;
       if (ibeamFlash != flash_h->size()) {
 	flashmatch::FlashCandidate beamFlash(e,flash_h->at(ibeamFlash));
 	fmscore = slice.GetFlashMatchScore(beamFlash, m_flashMatchManager);
@@ -310,53 +332,37 @@ namespace analysis
 
       //std::cout << "center Z=" << slice.m_centerZ << std::endl;
       // if not the neutrino...
-      _cosmic_flashmatch_score_v.push_back( fmscore );
-      _cosmic_centerX_v.push_back( slice.m_centerX );
-      _cosmic_centerY_v.push_back( slice.m_centerY );
-      _cosmic_centerZ_v.push_back( slice.m_centerZ );
-      _cosmic_totalCharge_v.push_back( slice.m_totalCharge );
 
-      auto aslice = assocPfpSlice->at(pfp_ptr.key());
-      int nhits = 0, nunhits = 0;
-      if (aslice.size()>0) {
-	auto slhits = assocSliceHit->at(aslice[0].key());
-	nhits = slhits.size();
-	if (!fData) {
-	  for (size_t ih=0;ih<slhits.size();ih++) {
-	    if (assocMCPart->at(slhits[ih].key()).size()) nunhits++;
+      if (clearcosmic) {
+	if ( fmscore>-1. && fmscore < _best_obviouscosmic_flashmatch_score ) _best_obviouscosmic_flashmatch_score = fmscore;
+      } else {
+
+	_cosmic_flashmatch_score_v.push_back( fmscore );
+	_cosmic_centerX_v.push_back( slice.m_centerX );
+	_cosmic_centerY_v.push_back( slice.m_centerY );
+	_cosmic_centerZ_v.push_back( slice.m_centerZ );
+	_cosmic_totalCharge_v.push_back( slice.m_totalCharge );
+
+	auto aslice = assocPfpSlice->at(pfp_ptr.key());
+	int nhits = 0, nunhits = 0;
+	if (aslice.size()>0) {
+	  auto slhits = assocSliceHit->at(aslice[0].key());
+	  nhits = slhits.size();
+	  if (!fData) {
+	    for (size_t ih=0;ih<slhits.size();ih++) {
+	      if (assocMCPart->at(slhits[ih].key()).size()) nunhits++;
+	    }
 	  }
 	}
+	_cosmic_nhits_v.push_back( nhits );
+	_cosmic_nunhits_v.push_back( nunhits );
+
+	if (fmscore < _best_cosmic_flashmatch_score) { _best_cosmic_flashmatch_score = fmscore; }
+
+	_cosmic_isclear_v.push_back( clearcosmic );
+	_cosmic_topological_score_v.push_back( nuscore );
+	std::cout << "Slice has flash-match score of " << fmscore << " with NuScore of " << nuscore << std::endl;
       }
-      _cosmic_nhits_v.push_back( nhits );
-      _cosmic_nunhits_v.push_back( nunhits );
-
-      // get metadata
-      if (pfp_meta_assn_v.size() <= p) { std::cout << "NO METADATA!" << std::endl; continue; }
-
-      auto metadatalist = pfp_meta_assn_v.at(p);
-      float nuscore = -1;
-      bool clearcosmic = false;
-      if (metadatalist.empty() == false) {
-	for (unsigned int j=0; j<metadatalist.size(); ++j) {
-	  const art::Ptr<larpandoraobj::PFParticleMetadata> &metadata(metadatalist.at(j));
-	  auto particleproperties = metadata->GetPropertiesMap();
-	  if (!particleproperties.empty())
-	    for (std::map<std::string, float>::const_iterator it = particleproperties.begin(); it != particleproperties.end(); ++it) {
-	      if ( it->first == "IsClearCosmic" )
-		clearcosmic = true;
-	      if ( it->first == "NuScore" )
-		nuscore = it->second;
-	    }// for all metadata items in the particle metadata
-	}// for entries in list
-      }// if there is metadata available
-
-      if (fmscore < _best_cosmic_flashmatch_score) { _best_cosmic_flashmatch_score = fmscore; }
-      if ( (clearcosmic == true) && (fmscore < _best_obviouscosmic_flashmatch_score) )
-	_best_obviouscosmic_flashmatch_score = fmscore;
-
-      _cosmic_isclear_v.push_back( clearcosmic );
-      _cosmic_topological_score_v.push_back( nuscore );
-      std::cout << "Slice has flash-match score of " << fmscore << " with NuScore of " << nuscore << std::endl;
 
     }// for all PFPs
 

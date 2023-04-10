@@ -243,7 +243,8 @@ namespace flashmatch {
 		 const std::vector< std::vector<art::Ptr<recob::SpacePoint> > > &spacepoint_v_v,
 		 const std::vector< std::vector<art::Ptr<recob::Hit> > > &hit_v_v,
 		 const float chargeToNPhotonsTrack, 
-		 const float chargeToNPhotonsShower)
+		 const float chargeToNPhotonsShower,
+		 bool applyLifetimeCorr = true)
     : m_sliceId(-std::numeric_limits<int>::max()),
       m_hasDeposition(false),
       m_totalCharge(-std::numeric_limits<float>::max()),
@@ -267,7 +268,8 @@ namespace flashmatch {
       m_hasBestFlashMatchScore(false),
       m_chargeToNPhotonsTrack(chargeToNPhotonsTrack),
       m_chargeToNPhotonsShower(chargeToNPhotonsShower),
-      m_xclCoef(-std::numeric_limits<float>::max())
+      m_xclCoef(-std::numeric_limits<float>::max()),
+      m_applyLifetimeCorr(applyLifetimeCorr)
 	{
 	
 	  const auto chargeDeposition(this->GetDepositionVector(pfp_v, spacepoint_v_v, hit_v_v));
@@ -289,7 +291,8 @@ namespace flashmatch {
   SliceCandidate(const std::vector<art::Ptr<recob::SpacePoint> > &spacepoint_v,
 		 const std::vector<art::Ptr<recob::Hit> > &hit_v,
 		 const float chargeToNPhotonsTrack, 
-		 const float chargeToNPhotonsShower)
+		 const float chargeToNPhotonsShower,
+		 bool applyLifetimeCorr = true)
     : m_sliceId(-std::numeric_limits<int>::max()),
       m_hasDeposition(false),
       m_totalCharge(-std::numeric_limits<float>::max()),
@@ -313,7 +316,8 @@ namespace flashmatch {
       m_hasBestFlashMatchScore(false),
       m_chargeToNPhotonsTrack(chargeToNPhotonsTrack),
       m_chargeToNPhotonsShower(chargeToNPhotonsShower),
-      m_xclCoef(-std::numeric_limits<float>::max())
+      m_xclCoef(-std::numeric_limits<float>::max()),
+      m_applyLifetimeCorr(applyLifetimeCorr)
 	{
 	
 	  const auto chargeDeposition(this->GetDepositionVector(spacepoint_v, hit_v));
@@ -331,7 +335,6 @@ namespace flashmatch {
 	
 	  m_minX = this->GetMinimumXPosition(chargeDeposition);
 	}
-
 
     /**
      *  @breif  Determine if a given slice is compatible with the beam flash by applying pre-selection cuts
@@ -506,7 +509,8 @@ namespace flashmatch {
 	  const auto charge(hit->Integral());
 	  //------------------------------------------------------
 	  // implement lifetime correction [D. Caratelli 08/12/22]
-	  float lifetimecorrection = exp( (position[0]) / (elifetime * driftvelocity * 1000.0));
+	  float lifetimecorrection = 1.;
+	  if (m_applyLifetimeCorr) lifetimecorrection = exp( (position[0]) / (elifetime * driftvelocity * 1000.0));
 	  //std::cout << "LIFETIMECORRECTION [FlashNeutrinoId][GetDepositionVector]: lifetime correction @ lifetime of " << elifetime << " [ms] "
 	  //      << "@ position of " << position[0] << " [cm] is " << lifetimecorrection << std::endl;
 	  // implement lifetime correction [D. Caratelli 08/12/22]
@@ -567,7 +571,8 @@ namespace flashmatch {
 	const auto charge(hit->Integral());
 	//------------------------------------------------------
 	// implement lifetime correction [D. Caratelli 08/12/22]
-	float lifetimecorrection = exp( (position[0]) / (elifetime * driftvelocity * 1000.0));
+	float lifetimecorrection = 1.;
+	if (m_applyLifetimeCorr) lifetimecorrection = exp( (position[0]) / (elifetime * driftvelocity * 1000.0));
 	//std::cout << "LIFETIMECORRECTION [FlashNeutrinoId][GetDepositionVector]: lifetime correction @ lifetime of " << elifetime << " [ms] "
 	//      << "@ position of " << position[0] << " [cm] is " << lifetimecorrection << std::endl;
 	// implement lifetime correction [D. Caratelli 08/12/22]
@@ -703,6 +708,7 @@ namespace flashmatch {
     float                m_chargeToNPhotonsShower;   ///< The conversion factor between charge and number of photons for showers
     float                m_xclCoef;                  ///< m_xclCoef*log10(chargeToLightRatio)- centerX
     flashana::QCluster_t m_lightCluster;             ///< The hypothesised light produced - used by flashmatching
+    bool                 m_applyLifetimeCorr;        ///< Whether we want the lifetime correction to be applied when computing the deposition vector
 
   }; // end of SliceCandidate class
 

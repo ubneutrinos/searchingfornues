@@ -226,6 +226,7 @@ FlashMatchingTool: {
     ChargeToNPhotonsTrack: 164.0
     ChargeToNPhotonsShower: 512.815
     FlashMatchConfig: @local::flash_neutrino_id_tool_data.FlashMatchConfig
+    ApplyLifetimeCorr: false
 }
 
 PMTWaveformTool: {
