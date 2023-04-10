@@ -310,6 +310,7 @@ NuSelectionFilter:{
         pmtnoise:      @local::PMTNoiseTool
 	mcs:           @local::MCSTool
         pi0truth:      @local::Pi0TruthAnalysisTool
+        nutiming:      @local::NeutrinoTimingAnalysisTool
         cosmicip:      @local::CosmicIPTool
         nuenergy:      @local::NeutrinoEnergyTool
         flashmatchid:  @local::FlashMatchingTool
