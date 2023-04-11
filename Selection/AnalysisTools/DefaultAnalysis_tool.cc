@@ -279,6 +279,8 @@ private:
   std::vector<float> _mc_py;
   std::vector<float> _mc_pz;
 
+  std::vector<float> _mc_end_p; // final particle momentum 
+
   std::vector<float> _mc_vx;
   std::vector<float> _mc_vy;
   std::vector<float> _mc_vz;
@@ -1095,6 +1097,8 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("mc_py", "std::vector< float >", &_mc_py);
   _tree->Branch("mc_pz", "std::vector< float >", &_mc_pz);
 
+  _tree->Branch("mc_end_p", "std::vector< float >", &_mc_end_p);
+
   _tree->Branch("mc_completeness", "std::vector< float >", &_mc_completeness);
   _tree->Branch("mc_purity", "std::vector< float >", &_mc_purity);
 
@@ -1266,6 +1270,8 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _mc_px.clear();
   _mc_py.clear();
   _mc_pz.clear();
+
+  _mc_end_p.clear();
 
   _mc_vx.clear();
   _mc_vy.clear();
@@ -1530,6 +1536,8 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     _mc_px.push_back(mcp.Px());
     _mc_py.push_back(mcp.Py());
     _mc_pz.push_back(mcp.Pz());
+
+    _mc_end_p.push_back(mcp.EndMomentum().Vect().Mag());
 
     _mc_vx.push_back(mcp.Vx());
     _mc_vy.push_back(mcp.Vy());
