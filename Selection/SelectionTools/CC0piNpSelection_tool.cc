@@ -149,8 +149,11 @@ private:
     unsigned int _shr_hits_u_tot;      /**< Total number of shower hits on the U plane */
     float _shr_energy;                 /**< Energy of the shower with the largest number of hits (in GeV) */
     float _shr_energy_second;          /**< Energy of the shower with the second largest number of hits (in GeV) */
+    float _shr_energy_third;
     float _shr_energy_tot;             /**< Sum of the energy of the showers (in GeV) */
     float _shr_energy_cali;            /**< Energy of the calibrated shower with the largest number of hits (in GeV) */
+    float _shr_energy_second_cali;
+    float _shr_energy_third_cali;
     float _shr_energy_tot_cali;        /**< Sum of the energy of the calibrated showers (in GeV) */
     float _shr_dedx_Y;                 /**< dE/dx of the leading shower on the Y plane with the 1x4 cm box method */
     float _shr_dedx_V;                 /**< dE/dx of the leading shower on the V plane with the 1x4 cm box method */
@@ -661,24 +664,37 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                       // set 2nd to max, 3rd to 2nd, max will be updated to current below
                       _shr3_pfp_id = _shr2_pfp_id;
                       _shr_hits_3rd = _shr_hits_2nd;
+                      _shr_energy_third = _shr_energy_second;
+                      _shr_energy_third_cali = _shr_energy_second_cali;
 
                       _shr_hits_2nd = _shr_hits_max;
                       _shr2_pfp_id = _shr_pfp_id;
+                      _shr_energy_second = _shr_energy;
+                      _shr_energy_second_cali = _shr_energy_cali;
+         
                     }
                     else
                     {
                       // set 2nd to current, 3rd to 2nd, leave max unchanged
                       _shr3_pfp_id = _shr2_pfp_id;
                       _shr_hits_3rd = _shr_hits_2nd;
+                      _shr_energy_third = _shr_energy_second;
+                      _shr_energy_third_cali = _shr_energy_second_cali;
 
                       _shr_hits_2nd = shr_hits;
                       _shr2_pfp_id = i_pfp;
+                      _shr_energy_second = shr->Energy()[2] / 1000;
+                      _shr_energy_second_cali = shr->Energy()[2] / 1000 * cali_corr[2];
+                       
                     }
                   }
                   else {
                     // set 3rd to current, leave 2nd and max unchanged
                     _shr_hits_3rd = shr_hits;
-                    _shr3_pfp_id  = i_pfp; 
+                    _shr3_pfp_id  = i_pfp;
+                    _shr_energy_third = shr->Energy()[2] / 1000;
+                    _shr_energy_third_cali = shr->Energy()[2] / 1000 * cali_corr[2];
+                  
                   }
                 }
 
@@ -733,8 +749,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr_start_x = shr->ShowerStart().X();
                     _shr_start_y = shr->ShowerStart().Y();
                     _shr_start_z = shr->ShowerStart().Z();
-
-                    _shr_energy_second = _shr_energy; 
+ 
                     _shr_energy = shr->Energy()[2] / 1000; // GeV
                     _shr_energy_cali = _shr_energy * cali_corr[2];
 
@@ -1406,7 +1421,11 @@ void CC0piNpSelection::resetTTree(TTree *_tree)
     _shr_dedx_U_cali = std::numeric_limits<float>::lowest();
     _shr_score = std::numeric_limits<float>::lowest();
     _shr_energy = 0;
+    _shr_energy_second = 0;
+    _shr_energy_third = 0;
     _shr_energy_cali = 0;
+    _shr_energy_second_cali = 0;
+    _shr_energy_third_cali = 0;
     _shr_energy_tot_cali = 0;
     _shr_energy_tot = 0;
     _shr_distance = std::numeric_limits<float>::lowest();
@@ -1618,8 +1637,12 @@ void CC0piNpSelection::setBranches(TTree *_tree)
 
     _tree->Branch("shr_energy_tot", &_shr_energy_tot, "shr_energy_tot/F");
     _tree->Branch("shr_energy", &_shr_energy, "shr_energy/F");
+    _tree->Branch("shr_energy_second", &_shr_energy_second, "shr_energy_second/F");
+    _tree->Branch("shr_energy_third", &_shr_energy_third, "shr_energy_third/F");
     _tree->Branch("shr_energy_tot_cali", &_shr_energy_tot_cali, "shr_energy_tot_cali/F");
     _tree->Branch("shr_energy_cali", &_shr_energy_cali, "shr_energy_cali/F");
+    _tree->Branch("shr_energy_second_cali", &_shr_energy_second_cali, "shr_energy_second_cali/F");
+    _tree->Branch("shr_energy_third_cali", &_shr_energy_third_cali, "shr_energy_third_cali/F");
     _tree->Branch("shr_theta", &_shr_theta, "shr_theta/F");
     _tree->Branch("shr_phi", &_shr_phi, "shr_phi/F");
     _tree->Branch("shr_pca_0", &_shr_pca_0, "shr_pca_0/F");
