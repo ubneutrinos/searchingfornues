@@ -24,6 +24,7 @@
 #include "larreco/RecoAlg/TrajectoryMCSFitter.h"
 #include "ubana/ParticleID/Algorithms/uB_PlaneIDBitsetHelperFunctions.h"
 #include "larreco/RecoAlg/TrackMomentumCalculator.h"
+#include "lardataobj/RecoBase/SpacePoint.h"
 
 namespace analysis
 {
@@ -110,9 +111,12 @@ private:
   art::InputTag fTRKproducer;
   art::InputTag fBacktrackTag;
   art::InputTag fHproducer;
+  art::InputTag fCLSproducer;
+  
   bool fRecalibrateHits;
   float fEnergyThresholdForMCHits;
   std::vector<float> fADCtoE; // vector of ADC to # of e- conversion [to be taken from production reco2 fhicl files]
+  float fEndSpacepointDistance;
 
   int _run, _sub, _evt;
 
@@ -197,6 +201,8 @@ private:
   std::vector<int> _trk_nhits_u_v;
   std::vector<int> _trk_nhits_v_v;
   std::vector<int> _trk_nhits_y_v;
+  
+  std::vector<int> _trk_end_spacepoints_v;
 };
 
 //----------------------------------------------------------------------------
@@ -213,9 +219,11 @@ TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p) : _mcsfitter(fhicl::T
   fTRKproducer = p.get<art::InputTag>("TRKproducer");
   fBacktrackTag = p.get<art::InputTag>("BacktrackTag", "gaushitTruthMatch");
   fHproducer = p.get<art::InputTag>("Hproducer", "gaushit");
+  fCLSproducer = p.get<art::InputTag>("CLSproducer", "pandora");
   fEnergyThresholdForMCHits = p.get<float>("EnergyThresholdForMCHits", 0.1);
   fRecalibrateHits = p.get<bool>("RecalibrateHits", false);
   fADCtoE = p.get<std::vector<float>>("ADCtoE");
+  fEndSpacepointDistance = p.get<float>("EndSpacepointDistance", 5.0);
 
   // set dedx pdf parameters
   llr_pid_calculator.set_dedx_binning(0, protonmuon_parameters.dedx_edges_pl_0);
@@ -308,6 +316,13 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
     art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
     assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
   }
+  
+  // get spacepoint information to look for activity at end of tracks
+  auto spacePointHandle = e.getValidHandle<std::vector<recob::SpacePoint>>(fCLSproducer);
+  std::vector< art::Ptr<recob::SpacePoint> > spacePointCollection;
+  for (size_t i_sp = 0; i_sp < spacePointHandle->size(); i_sp++) {
+    spacePointCollection.emplace_back(spacePointHandle, i_sp);
+  }   
 
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
   {
@@ -417,7 +432,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       float range_momentum_muon = _trkmom.GetTrackMomentum(searchingfornues::GetSCECorrTrackLength(trk), 13);
       float energy_proton = std::sqrt(std::pow(_trkmom.GetTrackMomentum(searchingfornues::GetSCECorrTrackLength(trk), 2212), 2) + std::pow(proton->Mass(), 2)) - proton->Mass();
       float energy_muon = std::sqrt(std::pow(mcs_momentum_muon, 2) + std::pow(muon->Mass(), 2)) - muon->Mass();
-
+     
       _trk_mcs_muon_mom_v.push_back(mcs_momentum_muon);
       _trk_range_muon_mom_v.push_back(range_momentum_muon);
       _trk_energy_proton_v.push_back(energy_proton);
@@ -539,13 +554,25 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
         }
         _trk_llr_pid_v.back() += llr_pid;
       }
-      _trk_llr_pid_score_v.back() = atan(_trk_llr_pid_v.back() / 100.) * 2 / 3.14159266;
+      _trk_llr_pid_score_v.back() = atan(_trk_llr_pid_v.back() / 100.) * 2 / 3.14159266;  
+    
+      // track end spacepoints
+      int nPoints = 0;
+      float distSquared = fEndSpacepointDistance*fEndSpacepointDistance;
+      TVector3 trkEnd(_trk_end_sce[0], _trk_end_sce[1], _trk_end_sce[2]);
+      for (auto &sp : spacePointCollection) {
+        float _sp_sce[3];
+        searchingfornues::ApplySCECorrectionXYZ(sp->XYZ()[0], sp->XYZ()[1], sp->XYZ()[2], _sp_sce);
+        TVector3 spacePoint(_sp_sce[0], _sp_sce[1], _sp_sce[2]);
+        if ((trkEnd - spacePoint).Mag2() < distSquared) nPoints++;
+      }
+      _trk_end_spacepoints_v.push_back(nPoints);
     }
     else
     {
       fillDefault();
     }
-  } // for all PFParticles
+  } // for all PFParticles   
 }
 
 void TrackAnalysis::fillDefault()
@@ -630,6 +657,8 @@ void TrackAnalysis::fillDefault()
   _trk_nhits_u_v.push_back(std::numeric_limits<int>::lowest());
   _trk_nhits_v_v.push_back(std::numeric_limits<int>::lowest());
   _trk_nhits_y_v.push_back(std::numeric_limits<int>::lowest());
+  
+  _trk_end_spacepoints_v.push_back(std::numeric_limits<int>::lowest());
 }
 
 void TrackAnalysis::setBranches(TTree *_tree)
@@ -711,6 +740,8 @@ void TrackAnalysis::setBranches(TTree *_tree)
   _tree->Branch("trk_nhits_u_v", "std::vector<int>", &_trk_nhits_u_v);
   _tree->Branch("trk_nhits_v_v", "std::vector<int>", &_trk_nhits_v_v);
   _tree->Branch("trk_nhits_y_v", "std::vector<int>", &_trk_nhits_y_v);
+  
+  _tree->Branch("trk_end_spacepoints_v", "std::vector<int>", &_trk_end_spacepoints_v);
 }
 
 void TrackAnalysis::resetTTree(TTree *_tree)
@@ -794,6 +825,8 @@ void TrackAnalysis::resetTTree(TTree *_tree)
   _trk_nhits_u_v.clear();
   _trk_nhits_v_v.clear();
   _trk_nhits_y_v.clear();
+
+  _trk_end_spacepoints_v.clear();
 }
 
 float TrackAnalysis::CalculateTrackTrunkdEdx(const std::vector<float> &dEdx_values) {
