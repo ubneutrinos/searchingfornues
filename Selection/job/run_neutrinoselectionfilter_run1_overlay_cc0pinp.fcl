@@ -2,5 +2,6 @@
 
 physics.filters.nuselection.AnalysisTools.shower:      @local::ShowerAnalysisTool
 physics.filters.nuselection.AnalysisTools.zbdt: @local::BDTTool
+physics.filters.nuselection.AnalysisTools.blip: @local::BlipAnalysisTool
 
 physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool

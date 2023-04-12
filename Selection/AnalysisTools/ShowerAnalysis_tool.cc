@@ -172,6 +172,8 @@ private:
   std::vector<float> _shr_llr_pid_y_v;
   std::vector<float> _shr_llr_pid_v;
   std::vector<float> _shr_llr_pid_score_v;
+
+  std::vector<bool>  _shower_neutron_flag; //did shower originate from final state neutron
 };
 
 //----------------------------------------------------------------------------
@@ -282,6 +284,8 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
   for (size_t i_pfp = 0; i_pfp < slice_pfp_v.size(); i_pfp++)
   {
     auto PDG = fabs(slice_pfp_v[i_pfp]->PdgCode());
+
+    
 
     if (PDG == 12 || PDG == 14)
     {

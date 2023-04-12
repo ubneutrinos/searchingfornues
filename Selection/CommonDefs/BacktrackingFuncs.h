@@ -138,6 +138,8 @@ public:
   float start_x, start_y, start_z, start_t;
 };
 
+
+//This function has been edited by Burke Irwin to track neutron scatter products
 std::vector<BtPart> initBacktrackingParticleVec(const std::vector<sim::MCShower> &inputMCShower,
                                                 const std::vector<sim::MCTrack> &inputMCTrack,
                                                 const std::vector<recob::Hit> &inputHits,
@@ -146,12 +148,12 @@ std::vector<BtPart> initBacktrackingParticleVec(const std::vector<sim::MCShower>
   //
   // Notes for reference: in this way we have the full history of electrons and photons
   // however, we do not attach delta-rays nor michel electrons to muon (which is probably good),
-  // but also we do not attach the scatter products to pi+ nor neutrons.
+  // but also we do not attach the scatter products to pi+.
   // Note that the only non-primary particles stored are photons (also dalitz electrons!) from pi0 (which are not stored).
   std::vector<BtPart> btparts_v;
   for (auto mcs : inputMCShower)
   {
-    if (mcs.Process() == "primary" || (mcs.MotherPdgCode() == 111 && mcs.Process() == "Decay" && mcs.MotherProcess() == "primary"))
+    if (mcs.Process() == "primary" || (mcs.MotherPdgCode() == 111 && mcs.Process() == "Decay" && mcs.MotherProcess() == "primary") || (mcs.PdgCode() == 2212 && mcs.Process() == "neutronInelastic"))
     {
       sim::MCStep mc_step_shower_start = mcs.DetProfile();
       btparts_v.push_back(BtPart(mcs.PdgCode(), mcs.Start().Momentum().Px() * 0.001, mcs.Start().Momentum().Py() * 0.001,
@@ -161,8 +163,7 @@ std::vector<BtPart> initBacktrackingParticleVec(const std::vector<sim::MCShower>
   }
   for (auto mct : inputMCTrack)
   {
-
-    if (mct.Process() == "primary")
+    if (mct.Process() == "primary" || (mct.PdgCode() == 2212 && mct.Process() == "neutronInelastic"))
     {
       sim::MCStep mc_step_track_start = mct.Start();
       btparts_v.push_back(BtPart(mct.PdgCode(), mct.Start().Momentum().Px() * 0.001, mct.Start().Momentum().Py() * 0.001,
@@ -192,6 +193,7 @@ std::vector<BtPart> initBacktrackingParticleVec(const std::vector<sim::MCShower>
   }
   return btparts_v;
 }
+
 
 // BackTrack a single hit collection (i.e. from a PFParticle)
 // backtrack based on #hits, not on energy... could be done but it's a bit more complicated
