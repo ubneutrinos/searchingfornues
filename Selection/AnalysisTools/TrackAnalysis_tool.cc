@@ -254,58 +254,6 @@ void TrackAnalysis::analyzeEvent(art::Event const &e, bool fData)
   _sub = e.subRun();
   _run = e.run();
   std::cout << "[TrackAnalysis::analyzeEvent] Run: " << _run << ", SubRun: " << _sub << ", Event: " << _evt << std::endl;
-
-  ProxyPfpColl_t const &pfp_proxy = proxy::getCollection<std::vector<recob::PFParticle>>(e, fPFPproducer,
-                                            proxy::withAssociated<larpandoraobj::PFParticleMetadata>(fPFPproducer),
-                                            proxy::withAssociated<recob::Cluster>(fCLSproducer),
-                                            proxy::withAssociated<recob::Slice>(fSLCproducer),
-                                            proxy::withAssociated<recob::Track>(fTRKproducer),
-                                            proxy::withAssociated<recob::Vertex>(fVTXproducer),
-                                            proxy::withAssociated<recob::PCAxis>(fPCAproducer),
-                                            proxy::withAssociated<recob::Shower>(fSHRproducer),
-                                            proxy::withAssociated<recob::SpacePoint>(fPFPproducer));
-  ProxyClusColl_t const &clus_proxy = proxy::getCollection<std::vector<recob::Cluster>>(e, fCLSproducer,
-                                                                                        proxy::withAssociated<recob::Hit>(fCLSproducer));
-
-  for (auto &pfp : pfp_proxy)
-  {
-
-    auto trk_v = pfp.get<recob::Track>();
-    if (trk_v.size() == 1)
-    {
-      auto trk = trk_v.at(0);
-
-      // get trk proxy in order to fetch PID
-      auto trkpxy2 = pid_proxy[trk.key()];
-      auto pidpxy_v = trkpxy2.get<anab::ParticleID>();
-
-      //collection plane
-      float bragg_p = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 2212, 2),
-                               searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 2212, 2));
-
-      float bragg_mu = std::max(searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 13, 2),
-                                searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kBackward, 13, 2));
-
-      float bragg_mip = searchingfornues::PID(pidpxy_v[0], "BraggPeakLLH", anab::kLikelihood, anab::kForward, 0, 2);
-
-      float pidchipr = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 2212, 2);
-      float pidchimu = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 13, 2);
-      float pidchipi = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 211, 2);
-      float pidchika = searchingfornues::PID(pidpxy_v[0], "Chi2", anab::kGOF, anab::kForward, 321, 2);
-
-      float pida_mean = searchingfornues::PID(pidpxy_v[0], "PIDA_mean", anab::kPIDA, anab::kForward, 0, 2);
-
-      _trk_bragg_p_v.push_back(bragg_p);
-      _trk_bragg_mu_v.push_back(bragg_mu);
-      _trk_bragg_mip_v.push_back(bragg_mip);
-      _trk_pid_chipr_v.push_back(pidchipr);
-      _trk_pid_chimu_v.push_back(pidchimu);
-      _trk_pid_chipi_v.push_back(pidchipi);
-      _trk_pid_chika_v.push_back(pidchika);
-      _trk_pida_v.push_back(pida_mean);
-
-
-
 }
 
 void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
