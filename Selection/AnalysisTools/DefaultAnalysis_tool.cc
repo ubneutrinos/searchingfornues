@@ -358,14 +358,14 @@ DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
   fPionThreshold = p.get<float>("PionThreshold", 0.04);
   fElectronThreshold = p.get<float>("ElectronThreshold", 0.03);
 
-  fFidvolXstart = p.get<double>("fidvolXstart", 10);
-  fFidvolXend = p.get<double>("fidvolXend", 10);
+  fFidvolXstart = p.get<double>("fidvolXstart");
+  fFidvolXend = p.get<double>("fidvolXend");
 
-  fFidvolYstart = p.get<double>("fidvolYstart", 10);
-  fFidvolYend = p.get<double>("fidvolYend", 10);
+  fFidvolYstart = p.get<double>("fidvolYstart");
+  fFidvolYend = p.get<double>("fidvolYend");
 
-  fFidvolZstart = p.get<double>("fidvolZstart", 10);
-  fFidvolZend = p.get<double>("fidvolZend", 50);
+  fFidvolZstart = p.get<double>("fidvolZstart");
+  fFidvolZend = p.get<double>("fidvolZend");
 
   fMakeNuMINtuple = p.get<bool>("makeNuMINtuple", false);
   NuMIOpFilterProd = p.get<std::string>("NuMIOpFiltProcName","");

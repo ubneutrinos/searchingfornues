@@ -38,7 +38,7 @@ services.SpaceCharge.EnableCorrSCE: true
 services.SpaceCharge.EnableSimEFieldSCE: true
 services.SpaceCharge.EnableSimSpatialSCE: true
 
-services.PmtGainService: @local::PMTService
+services.PmtGainService: @local::microboone_pmtgain_service
 
 
 #source is now a root file

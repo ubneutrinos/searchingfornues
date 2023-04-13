@@ -7,6 +7,15 @@
 #include "backtrackerservice.fcl"
 #include "particleinventoryservice.fcl"
 
+FidVol: {
+    Xstart: 10.
+    Xend:   10.
+    Ystart: 15.
+    Yend:   15.
+    Zstart: 10.
+    Zend:   50.
+}
+
 EventFilterTool: {
     tool_type: "EventFilter"
 }
@@ -127,12 +136,12 @@ DefaultAnalysisTool: {
     VTXproducer: "pandora"
     PCAproducer: "pandora"
     ProtonThreshold: 0.04 # GeV
-    fidvolXstart: 5.
-    fidvolXend: 5.
-    fidvolYstart: 6.
-    fidvolYend: 6.
-    fidvolZstart: 20.
-    fidvolZend: 50.
+    fidvolXstart: @local::FidVol.Xstart
+    fidvolXend:   @local::FidVol.Xend
+    fidvolYstart: @local::FidVol.Ystart
+    fidvolYend:   @local::FidVol.Yend
+    fidvolZstart: @local::FidVol.Zstart
+    fidvolZend:   @local::FidVol.Zend
     makeNuMINtuple: false
     NuMIOpFiltProcName:    "DataStage1Optical"
     NuMISWTriggerProcName: "DataOverlayOpticalNuMI"
@@ -151,12 +160,12 @@ MCSTool: {
     SLCproducer: "pandora"
     MCPproducer: "largeant"
     ProtonThreshold: 0.04 # GeV
-    fidvolXstart: 10.
-    fidvolXend: 10.
-    fidvolYstart: 15.
-    fidvolYend: 15.
-    fidvolZstart: 10.
-    fidvolZend: 50.
+    FidvolXstart: @local::FidVol.Xstart
+    FidvolXend:   @local::FidVol.Xend
+    FidvolYstart: @local::FidVol.Ystart
+    FidvolYend:   @local::FidVol.Yend
+    FidvolZstart: @local::FidVol.Zstart
+    FidvolZend:   @local::FidVol.Zend
 }
 
 MCFilterAnalysisTool: {
@@ -230,6 +239,7 @@ FlashMatchingTool: {
     ChargeToNPhotonsTrack: 164.0
     ChargeToNPhotonsShower: 512.815
     FlashMatchConfig: @local::flash_neutrino_id_tool_data.FlashMatchConfig
+    ApplyLifetimeCorr: false
 }
 
 PMTWaveformTool: {
@@ -313,6 +323,7 @@ NuSelectionFilter:{
         pmtnoise:      @local::PMTNoiseTool
 	mcs:           @local::MCSTool
         pi0truth:      @local::Pi0TruthAnalysisTool
+        nutiming:      @local::NeutrinoTimingAnalysisTool
         cosmicip:      @local::CosmicIPTool
         nuenergy:      @local::NeutrinoEnergyTool
         flashmatchid:  @local::FlashMatchingTool
@@ -366,6 +377,12 @@ CC0PiNpSelectionTool: {
     # ADC to E conversion taken from reco2 production fhicl file
     ADCtoE: @local::microboone_reco_data_producers.shrreco3d.ADCtoE
     RecalibrateHits: true
+    FidvolXstart: @local::FidVol.Xstart
+    FidvolXend:   @local::FidVol.Xend
+    FidvolYstart: @local::FidVol.Ystart
+    FidvolYend:   @local::FidVol.Yend
+    FidvolZstart: @local::FidVol.Zstart
+    FidvolZend:   @local::FidVol.Zend
 }
 
 # run 3 neutrino selection [ w/ crt veto ]

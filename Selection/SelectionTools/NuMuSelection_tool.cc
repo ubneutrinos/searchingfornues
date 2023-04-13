@@ -272,12 +272,12 @@ namespace selection
         fBacktrackTag = pset.get<art::InputTag>("BacktrackTag", "gaushitTruthMatch");
         fMCPproducer = pset.get<art::InputTag>("MCPproducer", "largeant");
         
-        fFidvolZstart = pset.get<float>("FidvolZstart", 10);
-        fFidvolZend = pset.get<float>("FidvolZend", 50);
-        fFidvolYstart = pset.get<float>("FidvolYstart", 15);
-        fFidvolYend = pset.get<float>("FidvolYend", 15);
-        fFidvolXstart = pset.get<float>("FidvolXstart", 10);
-        fFidvolXend = pset.get<float>("FidvolXend", 10);
+        fFidvolZstart = pset.get<float>("FidvolZstart");
+        fFidvolZend = pset.get<float>("FidvolZend");
+        fFidvolYstart = pset.get<float>("FidvolYstart");
+        fFidvolYend = pset.get<float>("FidvolYend");
+        fFidvolXstart = pset.get<float>("FidvolXstart");
+        fFidvolXend = pset.get<float>("FidvolXend");
     }
     
     //----------------------------------------------------------------------------

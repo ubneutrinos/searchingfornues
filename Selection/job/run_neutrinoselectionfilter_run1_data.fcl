@@ -144,30 +144,5 @@ microboone_tfile_metadata: {
    fileFormat: "root"
 }
 
-###############################################################################################################################
-###################################### make sure the setup in v41 is consistent with v33 ######################################
-###############################################################################################################################
-physics.producers.pandoraTrackcali.ELifetimeCorrection: false
-physics.producers.shrreco3dKalmanShowercali.ELifetimeCorrection: false
-services.TPCEnergyCalibService.TPCEnergyCalibProvider.YZCorrectionProvider_Plane0.DatabaseRetrievalAlg.DBTag: "v2r3"
-services.TPCEnergyCalibService.TPCEnergyCalibProvider.YZCorrectionProvider_Plane1.DatabaseRetrievalAlg.DBTag: "v2r3"
-services.TPCEnergyCalibService.TPCEnergyCalibProvider.YZCorrectionProvider_Plane2.DatabaseRetrievalAlg.DBTag: "v2r3"
-services.TPCEnergyCalibService.TPCEnergyCalibProvider.YZCorrectionProvider_Plane0.DatabaseRetrievalAlg.UseSQLite: @erase
-services.TPCEnergyCalibService.TPCEnergyCalibProvider.YZCorrectionProvider_Plane1.DatabaseRetrievalAlg.UseSQLite: @erase
-services.TPCEnergyCalibService.TPCEnergyCalibProvider.YZCorrectionProvider_Plane2.DatabaseRetrievalAlg.UseSQLite: @erase
-services.UBElectronLifetimeService.ElectronLifetimeProvider.DatabaseRetrievalAlg.DBTag: "v1r1"
-services.UBElectronLifetimeService.ElectronLifetimeProvider.DatabaseRetrievalAlg.UseSQLite: @erase
-services.ElectronicsCalibService.ElectronicsCalibProvider.DatabaseRetrievalAlg.DBTag: "v1r3"
-services.ElectronicsCalibService.ElectronicsCalibProvider.DatabaseRetrievalAlg.UseSQLite: @erase
-services.ChannelStatusService.ChannelStatusProvider.DatabaseRetrievalAlg.DBTag: "v3r2"
-services.ChannelStatusService.ChannelStatusProvider.DatabaseRetrievalAlg.UseSQLite: @erase
-services.LightYieldService.LightYieldProvider.DatabaseRetrievalAlg.DBTag: "v2r0"
-services.LightYieldService.LightYieldProvider.DatabaseRetrievalAlg.UseSQLite: @erase
-services.CRTChannelStatusService.ChannelStatusProvider.DatabaseRetrievalAlg.UseSQLite: @erase
-services.DetPedestalService.DetPedestalRetrievalAlg.DatabaseRetrievalAlg.UseSQLite: @erase
-services.PmtGainService.PmtGainProvider.DatabaseRetrievalAlg.UseSQLite: @erase
-services.TPCEnergyCalibService.TPCEnergyCalibProvider.XNormCorrectionProvider.DatabaseRetrievalAlg.UseSQLite: @erase
-services.TPCEnergyCalibService.TPCEnergyCalibProvider.XShapeCorrectionProvider_Plane0.DatabaseRetrievalAlg.UseSQLite: @erase
-services.TPCEnergyCalibService.TPCEnergyCalibProvider.XShapeCorrectionProvider_Plane1.DatabaseRetrievalAlg.UseSQLite: @erase
-services.TPCEnergyCalibService.TPCEnergyCalibProvider.XShapeCorrectionProvider_Plane2.DatabaseRetrievalAlg.UseSQLite: @erase
-###############################################################################################################################
+physics.producers.pandoraTrackcali.ELifetimeCorrection: true
+physics.producers.shrreco3dKalmanShowercali.ELifetimeCorrection: true

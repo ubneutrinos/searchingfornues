@@ -12,6 +12,7 @@ EventWeightTreeTool: {
     createSplineTimesTuneBranch: true
     createPPFXBranch: true
     makeNuMINtuple: true
+    GenieAllUniverses: 600
 }
 
 #For Nicolo

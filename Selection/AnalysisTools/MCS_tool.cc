@@ -277,12 +277,12 @@ MCS::MCS(const fhicl::ParameterSet &p)
   fPCADistThreshold = p.get<float>("PCADistThreshold", 10); //5 cm from vertex
   fTrkShrscore = p.get<float>("TrkShrscore", 0.5);
 
-  fFidvolZstart = p.get<float>("FidvolZstart", 10);
-  fFidvolZend = p.get<float>("FidvolZend", 50);
-  fFidvolYstart = p.get<float>("FidvolYstart", 15);
-  fFidvolYend = p.get<float>("FidvolYend", 15);
-  fFidvolXstart = p.get<float>("FidvolXstart", 10);
-  fFidvolXend = p.get<float>("FidvolXend", 10);
+  fFidvolZstart = p.get<float>("FidvolZstart");
+  fFidvolZend = p.get<float>("FidvolZend");
+  fFidvolYstart = p.get<float>("FidvolYstart");
+  fFidvolYend = p.get<float>("FidvolYend");
+  fFidvolXstart = p.get<float>("FidvolXstart");
+  fFidvolXend = p.get<float>("FidvolXend");
 
 }
 

@@ -2,6 +2,14 @@
 
 physics.producers.eventweightGenieKnobs: @local::EventweightGenieKnobs
 physics.filters.nuselection.AnalysisTools.eventweighttree.createGenieUpDnVecs: true
+
+services.UBEventWeight.module_type: "UBEventWeight"
+
+physics.producers.eventweightGenieKnobs.weight_functions: [
+  @sequence::microboone_eventweight_genie_single_knobs.weight_functions_genie,
+  @sequence::microboone_eventweight_genie_knobs.weight_functions_spline
+]
+
 physics.p1: [
       "nuslicehits",
       "proximity",

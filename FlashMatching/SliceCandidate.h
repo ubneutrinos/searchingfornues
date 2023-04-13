@@ -13,6 +13,9 @@
 #include "larevt/CalibrationDBI/Interface/PmtGainService.h"
 #include "larevt/CalibrationDBI/Interface/PmtGainProvider.h"
 
+#include "ubevt/Database/UbooneElectronLifetimeProvider.h"
+#include "ubevt/Database/UbooneElectronLifetimeService.h"
+
 #include "ubreco/LLSelectionTool/OpT0Finder/Base/OpT0FinderTypes.h"
 #include "ubreco/LLSelectionTool/OpT0Finder/Base/FlashMatchManager.h"
 #include "Objects/CartesianVector.h"
@@ -240,7 +243,8 @@ namespace flashmatch {
 		 const std::vector< std::vector<art::Ptr<recob::SpacePoint> > > &spacepoint_v_v,
 		 const std::vector< std::vector<art::Ptr<recob::Hit> > > &hit_v_v,
 		 const float chargeToNPhotonsTrack, 
-		 const float chargeToNPhotonsShower)
+		 const float chargeToNPhotonsShower,
+		 bool applyLifetimeCorr = true)
     : m_sliceId(-std::numeric_limits<int>::max()),
       m_hasDeposition(false),
       m_totalCharge(-std::numeric_limits<float>::max()),
@@ -264,7 +268,8 @@ namespace flashmatch {
       m_hasBestFlashMatchScore(false),
       m_chargeToNPhotonsTrack(chargeToNPhotonsTrack),
       m_chargeToNPhotonsShower(chargeToNPhotonsShower),
-      m_xclCoef(-std::numeric_limits<float>::max())
+      m_xclCoef(-std::numeric_limits<float>::max()),
+      m_applyLifetimeCorr(applyLifetimeCorr)
 	{
 	
 	  const auto chargeDeposition(this->GetDepositionVector(pfp_v, spacepoint_v_v, hit_v_v));
@@ -286,7 +291,8 @@ namespace flashmatch {
   SliceCandidate(const std::vector<art::Ptr<recob::SpacePoint> > &spacepoint_v,
 		 const std::vector<art::Ptr<recob::Hit> > &hit_v,
 		 const float chargeToNPhotonsTrack, 
-		 const float chargeToNPhotonsShower)
+		 const float chargeToNPhotonsShower,
+		 bool applyLifetimeCorr = true)
     : m_sliceId(-std::numeric_limits<int>::max()),
       m_hasDeposition(false),
       m_totalCharge(-std::numeric_limits<float>::max()),
@@ -310,7 +316,8 @@ namespace flashmatch {
       m_hasBestFlashMatchScore(false),
       m_chargeToNPhotonsTrack(chargeToNPhotonsTrack),
       m_chargeToNPhotonsShower(chargeToNPhotonsShower),
-      m_xclCoef(-std::numeric_limits<float>::max())
+      m_xclCoef(-std::numeric_limits<float>::max()),
+      m_applyLifetimeCorr(applyLifetimeCorr)
 	{
 	
 	  const auto chargeDeposition(this->GetDepositionVector(spacepoint_v, hit_v));
@@ -328,7 +335,6 @@ namespace flashmatch {
 	
 	  m_minX = this->GetMinimumXPosition(chargeDeposition);
 	}
-
 
     /**
      *  @breif  Determine if a given slice is compatible with the beam flash by applying pre-selection cuts
@@ -459,6 +465,23 @@ namespace flashmatch {
       // ATTN here we only use the neutrino hypothesis, in theory this should work with either (or indeed both with some thought)
       //PFParticleVector allParticlesInSlice;
       //this->CollectDownstreamPFParticles(pfParticleMap, slice.GetTargetHypothesis(), allParticlesInSlice);
+
+      //--------------------------------------------------------------------
+      // implementing electron lifetime correction [D. Caratelli 08/12/2022]
+      const detinfo::DetectorProperties* detprop;
+      detprop = art::ServiceHandle<detinfo::DetectorPropertiesService>()->provider();
+
+      //handle to electron lifetime calibration provider
+      const lariov::UBElectronLifetimeProvider& elifetimeCalibProvider
+	= art::ServiceHandle<lariov::UBElectronLifetimeService>()->GetProvider();
+
+      float elifetime  = elifetimeCalibProvider.Lifetime(); // [ms]
+      float driftvelocity = detprop->DriftVelocity(); // [cm/us]
+
+      //std::cout << "LIFETIMECORRECTION [FlashNeutrinoId][GetDepositionVector] lifetime is : "
+      //      << elifetime << " [ms] and drift velocity is " << driftvelocity << " [cm/us]" << std::endl;
+      // implementing electron lifetime correction [D. Caratelli 08/12/2022]
+      //--------------------------------------------------------------------
 	
       DepositionVector depositionVector;
 	
@@ -484,12 +507,20 @@ namespace flashmatch {
 	  // Add the charged point to the vector
 	  const auto &position(spacepoint->XYZ());
 	  const auto charge(hit->Integral());
+	  //------------------------------------------------------
+	  // implement lifetime correction [D. Caratelli 08/12/22]
+	  float lifetimecorrection = 1.;
+	  if (m_applyLifetimeCorr) lifetimecorrection = exp( (position[0]) / (elifetime * driftvelocity * 1000.0));
+	  //std::cout << "LIFETIMECORRECTION [FlashNeutrinoId][GetDepositionVector]: lifetime correction @ lifetime of " << elifetime << " [ms] "
+	  //      << "@ position of " << position[0] << " [cm] is " << lifetimecorrection << std::endl;
+	  // implement lifetime correction [D. Caratelli 08/12/22]
+	  //------------------------------------------------------
 	
 	  // ADC -> MeV
 	  //float ADCtoMeV = 240. * (23.6/1e6) / 0.5;
 
 	  //depositionVector.emplace_back(position[0], position[1], position[2], charge, this->GetNPhotons(charge, particle));
-	  depositionVector.emplace_back(position[0], position[1], position[2], charge, charge * m_chargeToNPhotonsTrack);
+	  depositionVector.emplace_back(position[0], position[1], position[2], charge * lifetimecorrection, charge * lifetimecorrection * m_chargeToNPhotonsTrack);
 	  //std::cout << "adding to deposition vector @ location [" << position[0] << ", " << position[1] << ", " << position[2] 
 	  //	      << " with charge " << charge * m_chargeToNPhotonsTrack << std::endl;
 	}// for all hits/spacepoints
@@ -504,6 +535,23 @@ namespace flashmatch {
       // ATTN here we only use the neutrino hypothesis, in theory this should work with either (or indeed both with some thought)
       //PFParticleVector allParticlesInSlice;
       //this->CollectDownstreamPFParticles(pfParticleMap, slice.GetTargetHypothesis(), allParticlesInSlice);
+
+      //--------------------------------------------------------------------
+      // implementing electron lifetime correction [D. Caratelli 08/12/2022]
+      const detinfo::DetectorProperties* detprop;
+      detprop = art::ServiceHandle<detinfo::DetectorPropertiesService>()->provider();
+
+      //handle to electron lifetime calibration provider
+      const lariov::UBElectronLifetimeProvider& elifetimeCalibProvider
+	= art::ServiceHandle<lariov::UBElectronLifetimeService>()->GetProvider();
+
+      float elifetime  = elifetimeCalibProvider.Lifetime(); // [ms]
+      float driftvelocity = detprop->DriftVelocity(); // [cm/us]
+
+      //std::cout << "LIFETIMECORRECTION [FlashNeutrinoId][GetDepositionVector] lifetime is : "
+      //      << elifetime << " [ms] and drift velocity is " << driftvelocity << " [cm/us]" << std::endl;
+      // implementing electron lifetime correction [D. Caratelli 08/12/2022]
+      //--------------------------------------------------------------------
 
       DepositionVector depositionVector;
 	
@@ -521,9 +569,17 @@ namespace flashmatch {
 	// Add the charged point to the vector
 	const auto &position(spacepoint->XYZ());
 	const auto charge(hit->Integral());
+	//------------------------------------------------------
+	// implement lifetime correction [D. Caratelli 08/12/22]
+	float lifetimecorrection = 1.;
+	if (m_applyLifetimeCorr) lifetimecorrection = exp( (position[0]) / (elifetime * driftvelocity * 1000.0));
+	//std::cout << "LIFETIMECORRECTION [FlashNeutrinoId][GetDepositionVector]: lifetime correction @ lifetime of " << elifetime << " [ms] "
+	//      << "@ position of " << position[0] << " [cm] is " << lifetimecorrection << std::endl;
+	// implement lifetime correction [D. Caratelli 08/12/22]
+	//------------------------------------------------------
 	  
 	//depositionVector.emplace_back(position[0], position[1], position[2], charge, this->GetNPhotons(charge, particle));
-	depositionVector.emplace_back(position[0], position[1], position[2], charge, charge * m_chargeToNPhotonsTrack);
+	depositionVector.emplace_back(position[0], position[1], position[2], charge * lifetimecorrection, charge * lifetimecorrection * m_chargeToNPhotonsTrack);
       }// for all hits/spacepoints
 
       return depositionVector;
@@ -652,6 +708,7 @@ namespace flashmatch {
     float                m_chargeToNPhotonsShower;   ///< The conversion factor between charge and number of photons for showers
     float                m_xclCoef;                  ///< m_xclCoef*log10(chargeToLightRatio)- centerX
     flashana::QCluster_t m_lightCluster;             ///< The hypothesised light produced - used by flashmatching
+    bool                 m_applyLifetimeCorr;        ///< Whether we want the lifetime correction to be applied when computing the deposition vector
 
   }; // end of SliceCandidate class
 

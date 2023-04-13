@@ -38,28 +38,7 @@ services.SpaceCharge.EnableCorrSCE: true
 services.SpaceCharge.EnableSimEFieldSCE: true
 services.SpaceCharge.EnableSimSpatialSCE: true
 
-services.PmtGainService: {
-    CalibrationHelper: {
-        EventMixingModuleLabel: "retriever"
-        }
-    PmtGainProvider: {
-        DatabaseRetrievalAlg: {
-            AlgName: "DatabaseRetrievalAlg"
-            DBFolderName: "detpmtgains_data"
-            DBTag: "v1r0"
-            DBUrl: "http://dbdata0vm.fnal.gov:8186/uboonecon_prod/app/"
-            }
-        DefaultAmplitudeGain: 20
-        DefaultAmplitudeGainErr: 1e-2
-        DefaultBaselineMean: 0
-        DefaultBaselineRms: 6e-1
-        DefaultGain: 130
-        DefaultGainErr: 1e-1
-        UseDB: true
-        UseFile: false
-        }
-    service_provider: "UboonePmtGainService"
-    }
+services.PmtGainService: @local::microboone_pmtgain_service
 
 #source is now a root file
 source:
