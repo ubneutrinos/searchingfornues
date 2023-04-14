@@ -1,5 +1,5 @@
 #ifndef TRUTHCONTAINMENT_H
-#define CONTAINMENT_H
+#define TRUTHCONTAINMENT_H
 
 // services for detector properties
 #include "larevt/SpaceChargeServices/SpaceChargeService.h"

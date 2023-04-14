@@ -259,7 +259,7 @@ void ShowerAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_
 {
 
   art::InputTag clusproducer("pandora");
-  ProxyClusColl_t const &clus_proxy = proxy::getCollection<std::vector<recob::Cluster>>(e, clusproducer, proxy::withAssociated<recob::Hit>(clusproducer));
+  //ProxyClusColl_t const &clus_proxy = proxy::getCollection<std::vector<recob::Cluster>>(e, clusproducer, proxy::withAssociated<recob::Hit>(clusproducer));
 
   searchingfornues::ProxyCaloColl_t const *tkcalo_proxy = NULL;
   if (fTRKproducer != "")

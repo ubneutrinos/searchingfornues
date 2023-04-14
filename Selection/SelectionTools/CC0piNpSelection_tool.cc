@@ -671,7 +671,6 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                       _shr2_pfp_id = _shr_pfp_id;
                       _shr_energy_second = _shr_energy;
                       _shr_energy_second_cali = _shr_energy_cali;
-         
                     }
                     else
                     {
@@ -685,7 +684,6 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                       _shr2_pfp_id = i_pfp;
                       _shr_energy_second = shr->Energy()[2] / 1000;
                       _shr_energy_second_cali = shr->Energy()[2] / 1000 * cali_corr[2];
-                       
                     }
                   }
                   else {
@@ -694,7 +692,6 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr3_pfp_id  = i_pfp;
                     _shr_energy_third = shr->Energy()[2] / 1000;
                     _shr_energy_third_cali = shr->Energy()[2] / 1000 * cali_corr[2];
-                  
                   }
                 }
 
@@ -749,7 +746,7 @@ bool CC0piNpSelection::selectEvent(art::Event const &e,
                     _shr_start_x = shr->ShowerStart().X();
                     _shr_start_y = shr->ShowerStart().Y();
                     _shr_start_z = shr->ShowerStart().Z();
- 
+
                     _shr_energy = shr->Energy()[2] / 1000; // GeV
                     _shr_energy_cali = _shr_energy * cali_corr[2];
 

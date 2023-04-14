@@ -61,12 +61,12 @@ namespace analysis
     /**
      * @brief set branches for TTree
      */
-    void setBranches(TTree* _tree);
+    void setBranches(TTree* _tree) override;
 
     /**
      * @brief reset ttree branches
      */
-    void resetTTree(TTree* _tree);
+    void resetTTree(TTree* _tree) override;
     
   private:
 
@@ -194,7 +194,7 @@ void SecondShowerTagger::analyzeEvent(art::Event const &e, bool fData)
       
       // loop through clusters
       for (size_t c=0; c < cluster_h->size(); c++) {
-	auto clus = cluster_h->at(c);
+	//auto clus = cluster_h->at(c);
 	
 	// get associated hits
 	auto clus_hit_v = clus_hit_assn_v.at( c );

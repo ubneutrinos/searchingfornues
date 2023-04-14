@@ -133,7 +133,7 @@ private:
   const int k_nc_pi0 = 31;
   const int k_cosmic = 4;
   const int k_outfv = 5;
-  const int k_other = 6;
+  //const int k_other = 6;
   const int k_data = 0;
   // kinematic thresholds to define signal
   float fProtonThreshold;

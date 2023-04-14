@@ -308,7 +308,7 @@ void MCS::configure(fhicl::ParameterSet const &p)
 void MCS::analyzeEvent(art::Event const &e, bool fData)
 {
   std::cout << "[MCS::analyzeEvent] Run: " << e.run() << ", SubRun: " << e.subRun() << ", Event: " << e.event() << std::endl;
-  art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
+  //art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
   //evnhits = inputHits->size();
 }
 

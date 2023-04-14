@@ -2,6 +2,15 @@
 
 BEGIN_PROLOG
 
+FidVol: {
+    Xstart: 10.
+    Xend:   10.
+    Ystart: 15.
+    Yend:   15.
+    Zstart: 10.
+    Zend:   50.
+}
+
 microboone_antibdtfilter: 
 {
     module_type: "NeutrinoSelectionFilter"
@@ -35,6 +44,12 @@ microboone_antibdtfilter:
         # ADC to E conversion taken from reco2 production fhicl file
         ADCtoE: [232,249,243.7] # e-/ADC @local::microboone_reco_data_producers.shrreco3d.ADCtoE
         RecalibrateHits: true
+        FidvolXstart: @local::FidVol.Xstart
+        FidvolXend:   @local::FidVol.Xend
+        FidvolYstart: @local::FidVol.Ystart
+        FidvolYend:   @local::FidVol.Yend
+        FidvolZstart: @local::FidVol.Zstart
+        FidvolZend:   @local::FidVol.Zend
     }
     AnalysisTools: {
        cosmicip: {
@@ -55,12 +70,12 @@ microboone_antibdtfilter:
             SLCproducer: "pandora"
             MCPproducer: "largeant"
             ProtonThreshold: 0.04 # GeV
-            fidvolXstart: 5.
-            fidvolXend: 5.
-            fidvolYstart: 6.
-            fidvolYend: 6.
-            fidvolZstart: 20.
-            fidvolZend: 50.
+            fidvolXstart: @local::FidVol.Xstart
+            fidvolXend:   @local::FidVol.Xend
+            fidvolYstart: @local::FidVol.Ystart
+            fidvolYend:   @local::FidVol.Yend
+            fidvolZstart: @local::FidVol.Zstart
+            fidvolZend:   @local::FidVol.Zend
        }
        zbdt: {
           tool_type: "BDT"

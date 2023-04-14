@@ -102,14 +102,14 @@ namespace analysis
     TH2F *H_TimeVsPh;
 
     // beam timing variables
-    int _tickSum;
-    int _tickP[32];
-    double _maxSum; 
-    double _timeSum; 
+    //int _tickSum;
+    //int _tickP[32];
+    //double _maxSum; 
+    //double _timeSum; 
     double _maxP[32]; 
     double _timeP[32];
     double _RWM_T;
-    double _BeamT0;
+    //double _BeamT0;
 
     float f_shiftoffset;
     bool f_isrun3;
