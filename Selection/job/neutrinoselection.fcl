@@ -2,6 +2,10 @@
 #include "mcreco.fcl"
 #include "proximityclustering.fcl"
 #include "eventweight_microboone_genie_knobs.fcl"
+#include "services_microboone.fcl"
+#include "blipreco_configs.fcl"
+#include "backtrackerservice.fcl"
+#include "particleinventoryservice.fcl"
 
 FidVol: {
     Xstart: 10.
@@ -80,6 +84,27 @@ TrackAnalysisTool: {
     RecalibrateHits: true
 }
 
+BlipAnalysisTool: {
+    tool_type: "BlipAnalysis"
+    BlipAlg: @local::microboone_blipalg
+}
+
+NeutronAnalysisTool: {
+    tool_type: "NeutronAnalysis"
+    TRKproducer: "pandoraTrack"
+    PFPproducer: "pandora"
+    PCAproducer: "pandora"
+    VTXproducer: "pandora"
+    SHRproducer: "shrreco3d"
+    CLSproducer: "pandora"
+    MCTproducer: "generator"
+    MCPproducer: "largeant"
+    Hproducer: "gaushit"
+    BacktrackTag: "gaushitTruthMatch"
+    MCRproducer: "mcreco"
+    SLCproducer: "pandora"
+    MCFluxproducer: "generator"
+}
 
 CosmicIPTool: {
     tool_type: "CosmicIP"
@@ -122,13 +147,18 @@ DefaultAnalysisTool: {
     MCRproducer: "mcreco"
     SLCproducer: "pandora"
     MCPproducer: "largeant"
+    PFPproducer: "pandora"
+    SHRproducer: "shrreco3d" #"pandora" #if you change this, remember to change also the inputs to ShowerAnalysisTool!
+    MCFluxproducer: "generator"    TRKproducer: "pandoraTrack"
+    VTXproducer: "pandora"
+    PCAproducer: "pandora"
     ProtonThreshold: 0.04 # GeV
-    fidvolXstart: @local::FidVol.Xstart
-    fidvolXend:   @local::FidVol.Xend
-    fidvolYstart: @local::FidVol.Ystart
-    fidvolYend:   @local::FidVol.Yend
-    fidvolZstart: @local::FidVol.Zstart
-    fidvolZend:   @local::FidVol.Zend
+    fidvolXstart: 5.
+    fidvolXend: 5.
+    fidvolYstart: 6.
+    fidvolYend: 6.
+    fidvolZstart: 20.
+    fidvolZend: 50.
     makeNuMINtuple: false
     NuMIOpFiltProcName:    "DataStage1Optical"
     NuMISWTriggerProcName: "DataOverlayOpticalNuMI"
@@ -310,15 +340,16 @@ NuSelectionFilter:{
         pmtnoise:      @local::PMTNoiseTool
 	mcs:           @local::MCSTool
         pi0truth:      @local::Pi0TruthAnalysisTool
-        nutiming:      @local::NeutrinoTimingAnalysisTool
         cosmicip:      @local::CosmicIPTool
         nuenergy:      @local::NeutrinoEnergyTool
         flashmatchid:  @local::FlashMatchingTool
         pi0tagger:     @local::Pi0TaggerTool
-        #zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
+        zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
         secondshower:  @local::SecondShowerTaggerTool
         eventfilter:   @local::EventFilterTool
         mcfilter:      @local::MCFilterAnalysisTool
+	blip:          @local::BlipAnalysisTool	
+        neutron:       @local::NeutronAnalysisTool
     }
 }
 

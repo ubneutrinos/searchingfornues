@@ -141,7 +141,7 @@ public:
 std::vector<BtPart> initBacktrackingParticleVec(const std::vector<sim::MCShower> &inputMCShower,
                                                 const std::vector<sim::MCTrack> &inputMCTrack,
                                                 const std::vector<recob::Hit> &inputHits,
-                                                const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart)
+                                                const std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> &assocMCPart, bool doNeutrons = false)
 {
   //
   // Notes for reference: in this way we have the full history of electrons and photons
@@ -158,11 +158,25 @@ std::vector<BtPart> initBacktrackingParticleVec(const std::vector<sim::MCShower>
                                  mcs.Start().Momentum().Pz() * 0.001, mcs.Start().Momentum().E() * 0.001, mcs.DaughterTrackID(),
                                  mc_step_shower_start.X(), mc_step_shower_start.Y(), mc_step_shower_start.Z(), mc_step_shower_start.T()));
     }
+    if (doNeutrons && mcs.PdgCode() == 2212 && mcs.Process() == "neutronInelastic")
+    {
+      sim::MCStep mc_step_shower_start = mcs.DetProfile();
+      btparts_v.push_back(BtPart(mcs.PdgCode(), mcs.Start().Momentum().Px() * 0.001, mcs.Start().Momentum().Py() * 0.001,
+                                 mcs.Start().Momentum().Pz() * 0.001, mcs.Start().Momentum().E() * 0.001, mcs.DaughterTrackID(),
+                                 mc_step_shower_start.X(), mc_step_shower_start.Y(), mc_step_shower_start.Z(), mc_step_shower_start.T()));
+    }
   }
   for (auto mct : inputMCTrack)
   {
 
     if (mct.Process() == "primary")
+    {
+      sim::MCStep mc_step_track_start = mct.Start();
+      btparts_v.push_back(BtPart(mct.PdgCode(), mct.Start().Momentum().Px() * 0.001, mct.Start().Momentum().Py() * 0.001,
+                                 mct.Start().Momentum().Pz() * 0.001, mct.Start().Momentum().E() * 0.001, mct.TrackID(),
+                                 mc_step_track_start.X(), mc_step_track_start.Y(), mc_step_track_start.Z(), mc_step_track_start.T()));
+    }
+    if (doNeutrons && mct.PdgCode() == 2212 && mct.Process() == "neutronInelastic")
     {
       sim::MCStep mc_step_track_start = mct.Start();
       btparts_v.push_back(BtPart(mct.PdgCode(), mct.Start().Momentum().Px() * 0.001, mct.Start().Momentum().Py() * 0.001,
