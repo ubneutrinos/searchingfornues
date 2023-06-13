@@ -95,7 +95,11 @@ public:
 private:
 
   float CalculateTrackTrunkdEdx(const std::vector<float> &dEdx_values);
+  float CalculateTrackTrunkdEdx2(const std::vector<float> &dedxPerHit, const std::vector<float> &residualRangePerHit);
+  art::Ptr<anab::ParticleID> GetPID(const art::Event &event, const art::Ptr<recob::Track> &track);
   float GetMultiplaneBraggLikelihood(const art::Ptr<anab::ParticleID> pid, const int pdg, const anab::kTrackDir dir, const float yzAngle, const float sin2AngleThreshold, const int nHitsU, const int nHitsV);
+  float GetBraggLikelihood(const art::Ptr<anab::ParticleID>& pid, const int& pdg, const geo::View_t& view, const anab::kTrackDir& dir);
+  art::Ptr<anab::ParticleID> GetSingleAssociatedFromTrack(const art::Ptr<recob::Track> &track, const art::Event &event);
 
   const trkf::TrackMomentumCalculator _trkmom;
   const trkf::TrajectoryMCSFitter _mcsfitter;
@@ -118,6 +122,7 @@ private:
   float fEnergyThresholdForMCHits;
   std::vector<float> fADCtoE; // vector of ADC to # of e- conversion [to be taken from production reco2 fhicl files]
   float fEndSpacepointDistance;
+
   int _run, _sub, _evt;
 
   std::vector<size_t> _trk_pfp_id_v;
@@ -153,7 +158,6 @@ private:
   std::vector<float> _trk_bragg_mu_v;
   std::vector<float> _trk_bragg_pion_v;
   std::vector<float> _trk_bragg_mip_v;
-  
   std::vector<float> _trk_pid_chipr_v;
   std::vector<float> _trk_pid_chika_v;
   std::vector<float> _trk_pid_chipi_v;
@@ -207,15 +211,13 @@ private:
   std::vector<float> _trk_calo_energy_v_v;
   std::vector<float> _trk_calo_energy_y_v;
 
-  std::vector<int> _trk_nhits_u_v;
-  std::vector<int> _trk_nhits_v_v;
-  std::vector<int> _trk_nhits_y_v;
-
-  std::vector<int> _trk_end_spacepoints_v;
-
   std::vector<float> _trk_trunk_dEdx_u_v;
   std::vector<float> _trk_trunk_dEdx_v_v;
   std::vector<float> _trk_trunk_dEdx_y_v;
+
+  std::vector<int> _trk_nhits_u_v;
+  std::vector<int> _trk_nhits_v_v;
+  std::vector<int> _trk_nhits_y_v;
 
   std::vector<float> _trk_avg_deflection_mean_v;
   std::vector<float> _trk_avg_deflection_stdev_v;
@@ -243,7 +245,6 @@ TrackAnalysis::TrackAnalysis(const fhicl::ParameterSet &p) : _mcsfitter(fhicl::T
   fRecalibrateHits = p.get<bool>("RecalibrateHits", false);
   fADCtoE = p.get<std::vector<float>>("ADCtoE");
   fEndSpacepointDistance = p.get<float>("EndSpacepointDistance", 5.0);
-
 
   // set dedx pdf parameters
   llr_pid_calculator.set_dedx_binning(0, protonmuon_parameters.dedx_edges_pl_0);
@@ -505,7 +506,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       _trk_llr_pid_v.push_back(0);
       _trk_llr_pid_score_v.push_back(0);
 
-      // // track trunk dEdx
+      // track trunk dEdx
       _trk_nhits_u_v.push_back(0);
       _trk_nhits_v_v.push_back(0);
       _trk_nhits_y_v.push_back(0);
@@ -548,7 +549,16 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
         }
 
         float trk_nhits = dedx_values.size();
-        float trk_trunk_dEdx = CalculateTrackTrunkdEdx(dedx_values);
+        float trk_trunk_dEdx = CalculateTrackTrunkdEdx2(dedx_values, rr);
+        float trk_trunk_dEdx2 = CalculateTrackTrunkdEdx(dedx_values);
+
+        std::cout<<"DEBUG plane: "<<plane<<" trk_trunk_dEdx jdetje: "<<trk_trunk_dEdx<<" vs pgreen: "<<trk_trunk_dEdx2<<std::endl;
+        std::cout<<"DEBUG dedx_values: ";
+        for(unsigned int i = 0; i<dedx_values.size(); i++)
+        {
+          std::cout<<" ,"<<dedx_values.at(i)<<"("<<rr.at(i)<<")";
+        }
+        std::cout<<std::endl;
 
         float llr_pid = llr_pid_calculator.LLR_many_hits_one_plane(dedx_values_corrected, par_values, plane);
 
@@ -589,6 +599,8 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       }
       _trk_end_spacepoints_v.push_back(nPoints);
 
+      std::cout<<"DEBUG "<<_trk_llr_pid_u_v.back()<<", "<<_trk_llr_pid_v_v.back()<<", "<<_trk_llr_pid_y_v.back()<<" total: "<<_trk_llr_pid_v.back()<<" score: "<<_trk_llr_pid_score_v.back()<<std::endl;
+
       // // track first third dEdx
       // _trk_nhits_u_v.push_back(0);
       // _trk_nhits_v_v.push_back(0);
@@ -597,95 +609,107 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       // _trk_trunk_dEdx_v_v.push_back(9999);
       // _trk_trunk_dEdx_y_v.push_back(9999);
 
-      for (auto const &calo : calo_v) {
+      // for (auto const &calo : calo_v) {
 
-        auto plane = calo->PlaneID().Plane;
+      //   auto plane = calo->PlaneID().Plane;
 
-        auto trk_nhits = calo->dEdx().size();
-        auto trk_dedx_values = calo->dEdx();
+      //   auto trk_nhits = calo->dEdx().size();
+      //   auto trk_dedx_values = calo->dEdx();
 
-        // initial offset of 3 hits
-        int firstHitIdx = trk_nhits - 3 - 1;
+      //   // initial offset of 3 hits
+      //   int firstHitIdx = trk_nhits - 3 - 1;
 
-        // find max hit corresponding to first third of track hits
-        int lastHitIdx = trk_nhits - (int)(trk_nhits/3) - 1; 
+      //   // find max hit corresponding to first third of track hits
+      //   int lastHitIdx = trk_nhits - (int)(trk_nhits/3) - 1;
 
-        // check at least 5 hits remain, otherwise set as invalid for this track
-        if (firstHitIdx - lastHitIdx < 5) {
-          if (plane == 0) {
-            _trk_nhits_u_v.back() = trk_nhits;
-            _trk_trunk_dEdx_u_v.back() = std::numeric_limits<float>::lowest();
-          }
-          else if (plane == 1) {
-            _trk_nhits_v_v.back() = trk_nhits;
-            _trk_trunk_dEdx_v_v.back() = std::numeric_limits<float>::lowest();
-          }
-          else if (plane == 2) {
-            _trk_nhits_y_v.back() = trk_nhits;
-            _trk_trunk_dEdx_y_v.back() = std::numeric_limits<float>::lowest();
-          }
-        }
-        else {
-          // loop through hits extracting relevant dE/dx values
-          std::vector<float> trk_trunk_dEdx_values;
-          trk_trunk_dEdx_values.reserve(firstHitIdx - lastHitIdx); 
+      //   // check at least 5 hits remain, otherwise set as invalid for this track
+      //   if (firstHitIdx - lastHitIdx < 5) {
+      //     if (plane == 0) {
+      //       _trk_nhits_u_v.back() = trk_nhits;
+      //       _trk_trunk_dEdx_u_v.back() = std::numeric_limits<float>::lowest();
+      //     }
+      //     else if (plane == 1) {
+      //       _trk_nhits_v_v.back() = trk_nhits;
+      //       _trk_trunk_dEdx_v_v.back() = std::numeric_limits<float>::lowest();
+      //     }
+      //     else if (plane == 2) {
+      //       _trk_nhits_y_v.back() = trk_nhits;
+      //       _trk_trunk_dEdx_y_v.back() = std::numeric_limits<float>::lowest();
+      //     }
+      //   }
+      //   else {
+      //     // loop through hits extracting relevant dE/dx values
+      //     std::vector<float> trk_trunk_dEdx_values;
+      //     trk_trunk_dEdx_values.reserve(firstHitIdx - lastHitIdx); 
 
-          for (int i = trk_nhits - 1; i >= 0; i--) {
+      //     for (int i = trk_nhits - 1; i >= 0; i--) {
 
-            // skip first part of track
-            if (i > firstHitIdx) continue;
-    
-            trk_trunk_dEdx_values.push_back(trk_dedx_values[i]);
+      //       // skip first part of track
+      //       if (i > firstHitIdx) continue;
 
-            // skip last part of track
-            if (i < lastHitIdx) break;  
-          }
+      //       trk_trunk_dEdx_values.push_back(trk_dedx_values[i]);
 
-          // calculate mean, median and standard deviation
-          // median
-          float median;
-          std::sort(trk_trunk_dEdx_values.begin(), trk_trunk_dEdx_values.end());
-          if (trk_trunk_dEdx_values.size() % 2 == 0) median = 0.5 * (trk_trunk_dEdx_values[trk_trunk_dEdx_values.size()/2 - 1] + trk_trunk_dEdx_values[trk_trunk_dEdx_values.size()/2]);
-          else median = trk_trunk_dEdx_values[trk_trunk_dEdx_values.size()/2];
-  
-          // mean
-          double sum = std::accumulate(std::begin(trk_trunk_dEdx_values), std::end(trk_trunk_dEdx_values), 0.0);
-          double m =  sum / trk_trunk_dEdx_values.size();
-          // standard deviation
-          double accum = 0.0;
-          std::for_each(std::begin(trk_trunk_dEdx_values), std::end(trk_trunk_dEdx_values), [&](const double d) {accum += (d - m) * (d - m);});
-          double stdev = sqrt(accum / (trk_trunk_dEdx_values.size()-1));
+      //       // skip last part of track
+      //       if (i < lastHitIdx) break;
+      //     }
 
-          // create trimmed dE/dx vector,  remove any dE/dx greater than 1 standard deviation above the median 
-          std::vector<float> trk_trunk_dEdx_values_trimmed;
-          trk_trunk_dEdx_values_trimmed.reserve(firstHitIdx - lastHitIdx);
-          for (unsigned int i = 0; i < trk_trunk_dEdx_values.size(); i++) {
-            if (trk_trunk_dEdx_values[i] <= median + stdev) trk_trunk_dEdx_values_trimmed.push_back(trk_trunk_dEdx_values[i]);
-          }
+      //     // calculate mean, median and standard deviation
+      //     // median
+      //     float median;
+      //     std::sort(trk_trunk_dEdx_values.begin(), trk_trunk_dEdx_values.end());
+      //     if (trk_trunk_dEdx_values.size() % 2 == 0) median = 0.5 * (trk_trunk_dEdx_values[trk_trunk_dEdx_values.size()/2 - 1] + trk_trunk_dEdx_values[trk_trunk_dEdx_values.size()/2]);
+      //     else median = trk_trunk_dEdx_values[trk_trunk_dEdx_values.size()/2];
 
-          // calculate mean of trimmed dE/dx vector
-          double sum_trimmed = std::accumulate(std::begin(trk_trunk_dEdx_values_trimmed), std::end(trk_trunk_dEdx_values_trimmed), 0.0);
-          double trk_dEdx_trunk =  sum_trimmed / trk_trunk_dEdx_values_trimmed.size();
+      //     // mean
+      //     double sum = std::accumulate(std::begin(trk_trunk_dEdx_values), std::end(trk_trunk_dEdx_values), 0.0);
+      //     double m =  sum / trk_trunk_dEdx_values.size();
+      //     // standard deviation
+      //     double accum = 0.0;
+      //     std::for_each(std::begin(trk_trunk_dEdx_values), std::end(trk_trunk_dEdx_values), [&](const double d) {accum += (d - m) * (d - m);});
+      //     double stdev = sqrt(accum / (trk_trunk_dEdx_values.size()-1));
 
-          // save
-          if (plane == 0) {
-            _trk_nhits_u_v.back() = trk_nhits;
-            _trk_trunk_dEdx_u_v.back() = trk_dEdx_trunk;
-          }
-          else if (plane == 1) {
-            _trk_nhits_v_v.back() = trk_nhits;
-            _trk_trunk_dEdx_v_v.back() = trk_dEdx_trunk;
-          }
-          else if (plane == 2) {
-            _trk_nhits_y_v.back() = trk_nhits;
-            _trk_trunk_dEdx_y_v.back() = trk_dEdx_trunk;
-          }
-        }        
-      }
+      //     // create trimmed dE/dx vector,  remove any dE/dx greater than 1 standard deviation above the median 
+      //     std::vector<float> trk_trunk_dEdx_values_trimmed;
+      //     trk_trunk_dEdx_values_trimmed.reserve(firstHitIdx - lastHitIdx);
+      //     for (unsigned int i = 0; i < trk_trunk_dEdx_values.size(); i++) {
+      //       if (trk_trunk_dEdx_values[i] <= median + stdev) trk_trunk_dEdx_values_trimmed.push_back(trk_trunk_dEdx_values[i]);
+      //     }
+
+      //     // calculate mean of trimmed dE/dx vector
+      //     double sum_trimmed = std::accumulate(std::begin(trk_trunk_dEdx_values_trimmed), std::end(trk_trunk_dEdx_values_trimmed), 0.0);
+      //     double trk_dEdx_trunk =  sum_trimmed / trk_trunk_dEdx_values_trimmed.size();
+
+      //     // save
+      //     if (plane == 0) {
+      //       _trk_nhits_u_v.back() = trk_nhits;
+      //       _trk_trunk_dEdx_u_v.back() = trk_dEdx_trunk;
+      //     }
+      //     else if (plane == 1) {
+      //       _trk_nhits_v_v.back() = trk_nhits;
+      //       _trk_trunk_dEdx_v_v.back() = trk_dEdx_trunk;
+      //     }
+      //     else if (plane == 2) {
+      //       _trk_nhits_y_v.back() = trk_nhits;
+      //       _trk_trunk_dEdx_y_v.back() = trk_dEdx_trunk;
+      //     }
+      //   }
+      // }
 
       // Combined planes bragg lieklihoods
       const float sin2AngleThreshold = 0.175;
       const auto yzAngle = std::atan2(_trk_dir_z_v.back(), _trk_dir_y_v.back());
+
+      //////////// todo remove
+      // Create a pointer to the track trk
+      // const art::Ptr<recob::Track> pTrk(trk);
+      const auto pid1 = GetPID(e, trk);
+      const float bragg_fwd_p_uvy_v_alt1 = GetMultiplaneBraggLikelihood(pid1, 2212, anab::kForward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
+      const auto pid2 = GetSingleAssociatedFromTrack(trk, e);
+      const float bragg_fwd_p_uvy_v_alt2 = GetMultiplaneBraggLikelihood(pid2, 2212, anab::kForward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
+      const float bragg_fwd_p_uvy_v_orig = GetMultiplaneBraggLikelihood(pidpxy_v[0], 2212, anab::kForward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
+      std::cout<<"DEBUG pid comparison - alt1:"<<bragg_fwd_p_uvy_v_alt1<<"  alt2:"<<bragg_fwd_p_uvy_v_alt2<<"  orig: "<<bragg_fwd_p_uvy_v_orig<<std::endl;
+
+      std::cout<<"DEBUG yzAngle: "<<yzAngle<<std::endl;
       const float bragg_fwd_p_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 2212, anab::kForward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
       const float bragg_fwd_mu_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 13, anab::kForward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
       const float bragg_fwd_pion_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 211, anab::kForward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
@@ -694,7 +718,8 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       const float bragg_bwd_p_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 2212, anab::kBackward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
       const float bragg_bwd_mu_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 13, anab::kBackward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
       const float bragg_bwd_pion_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 211, anab::kBackward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
-      const float bragg_bwd_mip_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 0, anab::kBackward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());      
+      const float bragg_bwd_mip_uvy_v = GetMultiplaneBraggLikelihood(pidpxy_v[0], 0, anab::kBackward, yzAngle, sin2AngleThreshold, _trk_nhits_u_v.back(), _trk_nhits_v_v.back());
+
 
       _trk_bragg_fwd_p_uvy_v.push_back(bragg_fwd_p_uvy_v);
       _trk_bragg_fwd_mu_uvy_v.push_back(bragg_fwd_mu_uvy_v);
@@ -866,15 +891,13 @@ void TrackAnalysis::fillDefault()
   _trk_llr_pid_v.push_back(std::numeric_limits<float>::lowest());
   _trk_llr_pid_score_v.push_back(std::numeric_limits<float>::lowest());
 
-  _trk_nhits_u_v.push_back(std::numeric_limits<int>::lowest());
-  _trk_nhits_v_v.push_back(std::numeric_limits<int>::lowest());
-  _trk_nhits_y_v.push_back(std::numeric_limits<int>::lowest());
-
-  _trk_end_spacepoints_v.push_back(std::numeric_limits<int>::lowest());
-
   _trk_trunk_dEdx_u_v.push_back(std::numeric_limits<float>::lowest());
   _trk_trunk_dEdx_v_v.push_back(std::numeric_limits<float>::lowest());
   _trk_trunk_dEdx_y_v.push_back(std::numeric_limits<float>::lowest());
+
+  _trk_nhits_u_v.push_back(std::numeric_limits<int>::lowest());
+  _trk_nhits_v_v.push_back(std::numeric_limits<int>::lowest());
+  _trk_nhits_y_v.push_back(std::numeric_limits<int>::lowest());
 
   _trk_avg_deflection_mean_v.push_back(std::numeric_limits<float>::lowest());
   _trk_avg_deflection_stdev_v.push_back(std::numeric_limits<float>::lowest());
@@ -906,16 +929,6 @@ void TrackAnalysis::setBranches(TTree *_tree)
   _tree->Branch("trk_pid_chipi_u_v", "std::vector< float >", &_trk_pid_chipi_u_v);
   _tree->Branch("trk_pid_chika_u_v", "std::vector< float >", &_trk_pid_chika_u_v);
   _tree->Branch("trk_pid_chimu_u_v", "std::vector< float >", &_trk_pid_chimu_u_v);
-
-  _tree->Branch("trk_bragg_p_v_v", "std::vector< float >", &_trk_bragg_p_v_v);
-  _tree->Branch("trk_bragg_mu_v_v", "std::vector< float >", &_trk_bragg_mu_v_v);
-  _tree->Branch("trk_bragg_pion_v_v", "std::vector< float >", &_trk_bragg_pion_v_v);
-  _tree->Branch("trk_bragg_mip_v_v", "std::vector< float >", &_trk_bragg_mip_v_v);
-  _tree->Branch("trk_pida_v_v", "std::vector< float >", &_trk_pida_v_v);
-  _tree->Branch("trk_pid_chipr_v_v", "std::vector< float >", &_trk_pid_chipr_v_v);
-  _tree->Branch("trk_pid_chipi_v_v", "std::vector< float >", &_trk_pid_chipi_v_v);
-  _tree->Branch("trk_pid_chika_v_v", "std::vector< float >", &_trk_pid_chika_v_v);
-  _tree->Branch("trk_pid_chimu_v_v", "std::vector< float >", &_trk_pid_chimu_v_v);
 
   _tree->Branch("trk_bragg_p_v_v", "std::vector< float >", &_trk_bragg_p_v_v);
   _tree->Branch("trk_bragg_mu_v_v", "std::vector< float >", &_trk_bragg_mu_v_v);
@@ -976,15 +989,13 @@ void TrackAnalysis::setBranches(TTree *_tree)
   _tree->Branch("trk_llr_pid_v", "std::vector<float>", &_trk_llr_pid_v);
   _tree->Branch("trk_llr_pid_score_v", "std::vector<float>", &_trk_llr_pid_score_v);
 
-  _tree->Branch("trk_nhits_u_v", "std::vector<int>", &_trk_nhits_u_v);
-  _tree->Branch("trk_nhits_v_v", "std::vector<int>", &_trk_nhits_v_v);
-  _tree->Branch("trk_nhits_y_v", "std::vector<int>", &_trk_nhits_y_v);
-
-  _tree->Branch("trk_end_spacepoints_v", "std::vector<int>", &_trk_end_spacepoints_v);
-
   _tree->Branch("trk_trunk_dEdx_u_v", "std::vector<float>", &_trk_trunk_dEdx_u_v);
   _tree->Branch("trk_trunk_dEdx_v_v", "std::vector<float>", &_trk_trunk_dEdx_v_v);
   _tree->Branch("trk_trunk_dEdx_y_v", "std::vector<float>", &_trk_trunk_dEdx_y_v);
+
+  _tree->Branch("trk_nhits_u_v", "std::vector<int>", &_trk_nhits_u_v);
+  _tree->Branch("trk_nhits_v_v", "std::vector<int>", &_trk_nhits_v_v);
+  _tree->Branch("trk_nhits_y_v", "std::vector<int>", &_trk_nhits_y_v);
 
   _tree->Branch("trk_avg_deflection_mean_v", "std::vector<float>", &_trk_avg_deflection_mean_v);
   _tree->Branch("trk_avg_deflection_stdev_v", "std::vector<float>", &_trk_avg_deflection_stdev_v);
@@ -1084,8 +1095,6 @@ void TrackAnalysis::resetTTree(TTree *_tree)
   _trk_nhits_v_v.clear();
   _trk_nhits_y_v.clear();
 
-  _trk_end_spacepoints_v.clear();
-
   _trk_avg_deflection_mean_v.clear();
   _trk_avg_deflection_stdev_v.clear();
   _trk_avg_deflection_separation_mean_v.clear();
@@ -1154,23 +1163,274 @@ float TrackAnalysis::CalculateTrackTrunkdEdx(const std::vector<float> &dEdx_valu
   }
 }
 
+
+
+float TrackAnalysis::CalculateTrackTrunkdEdx2(const std::vector<float> &dedxPerHit, const std::vector<float> &residualRangePerHit)
+{
+    const auto nHitsToSkip = 3u;
+    const auto lengthFraction = 0.333333333f;
+    if (dedxPerHit.size() != residualRangePerHit.size())
+        throw cet::exception("RecoHelper::GetTruncatedMeandEdxAtTrackStart") << " - dEdx per hit and residual range vectors have different sizes" << std::endl;
+
+    // Check if the variable is calculable
+    if (residualRangePerHit.size() <= nHitsToSkip)
+        return -std::numeric_limits<float>::max();
+
+    // Make the vector of pairs to keep track of the incides, and find the maximum residual range
+    std::vector<std::pair<float, unsigned int> > residualRangeIndices;
+    float maxResidualRange = -std::numeric_limits<float>::max();
+    for (unsigned int i = 0; i < residualRangePerHit.size(); ++i)
+    {
+        const auto residualRange = residualRangePerHit.at(i);
+        maxResidualRange = std::max(maxResidualRange, residualRange);
+
+        residualRangeIndices.emplace_back(residualRange, i);
+    }
+
+    const auto residualRangeCutoff = maxResidualRange * lengthFraction;
+
+    // Sort the residual ranges such that the largest residual range (closest to the start of the track) is first
+    std::sort(residualRangeIndices.begin(), residualRangeIndices.end(), [](auto &a, auto &b) {
+        return a.first > b.first;
+    });
+
+    // Get the dEdx of the hits at the start of the track
+    std::vector<float> dedxPerHitAtStart;
+    for (unsigned int i = nHitsToSkip; i < residualRangeIndices.size(); ++i)
+    {
+        const auto entry = residualRangeIndices.at(i);
+        const auto residualRange = entry.first;
+        const auto hitIndex = entry.second;
+
+        // ATTN small residual ranges are at the start of the track
+        if (residualRange < residualRangeCutoff)
+            continue;
+
+        dedxPerHitAtStart.push_back(dedxPerHit.at(hitIndex));
+    }
+
+    const auto nHits = dedxPerHitAtStart.size();
+    if (nHits == 0)
+        return -std::numeric_limits<float>::max();
+
+    // Sort the dEdx so we can find the median
+    std::sort(dedxPerHitAtStart.begin(), dedxPerHitAtStart.end());
+    const auto median = dedxPerHitAtStart.at(nHits / 2);
+
+    //  #### Find the mean #### 
+    float total = 0.f;
+    for (const auto &dEdx : dedxPerHitAtStart)
+        total += dEdx;
+    const auto mean = total / static_cast<float>(nHits);
+
+    // #### Find the variance ####
+    float squareSum = 0.f;
+    for (const auto &dEdx : dedxPerHitAtStart)
+        squareSum += std::pow(dEdx - mean, 2);
+    const auto variance = squareSum / static_cast<float>(nHits);
+
+    // Get the mean dEdx of the hits within one standard deviation of the median
+    float truncatedTotal = 0.f;
+    unsigned int nTruncatedHits = 0;
+    for (const auto &dEdx : dedxPerHitAtStart)
+    {
+        if (std::pow(dEdx - median, 2) > variance)
+            continue;
+
+        truncatedTotal += dEdx;
+        nTruncatedHits++;
+    }
+
+    if (nTruncatedHits == 0)
+        return -std::numeric_limits<float>::max();
+
+    return truncatedTotal / static_cast<float>(nTruncatedHits);
+}
+
+
+
+
+
+float TrackAnalysis::GetBraggLikelihood(const art::Ptr<anab::ParticleID>& pid, const int& pdg, const geo::View_t& view, const anab::kTrackDir& dir) {
+    bool found = false;
+    float score = -std::numeric_limits<float>::max();
+
+    for (const auto& algo : pid->ParticleIDAlgScores()) {
+        const std::bitset<8> planeMask(algo.fPlaneMask);
+
+        const bool usesW = planeMask.test(2);
+        const bool usesU = planeMask.test(0);
+        const bool usesV = planeMask.test(1);
+
+        if (algo.fAlgName == "BraggPeakLLH" && algo.fTrackDir == dir && algo.fAssumedPdg == pdg && 
+          ((usesW && !usesU && !usesV && view == geo::kW) || (usesU && !usesW && !usesV && view == geo::kU) || (usesV && !usesU && !usesW && view == geo::kV))) 
+        {
+            if (found) {
+                throw cet::exception("RecoHelper::GetBraggLikelihood") << " - Ambiguous criteria supplied." << std::endl;
+            }
+
+            found = true;
+            score = algo.fValue;
+        }
+    }
+
+    return score;
+}
+
+
+  // double PID(art::Ptr<anab::ParticleID> selected_pid, std::string AlgName, anab::kVariableType VariableType, anab::kTrackDir TrackDirection, int pdgCode, int selectedPlane)
+  // {
+  //   std::vector<anab::sParticleIDAlgScores> AlgScoresVec = selected_pid->ParticleIDAlgScores();
+  //   for (size_t i_algscore = 0; i_algscore < AlgScoresVec.size(); i_algscore++)
+  //   {
+  //     anab::sParticleIDAlgScores AlgScore = AlgScoresVec.at(i_algscore);
+  //     int planeid = UBPID::uB_getSinglePlane(AlgScore.fPlaneMask);
+
+  //     if (selectedPlane == 0 || selectedPlane == 1 || selectedPlane == 2)
+  //     {
+  //       if (selectedPlane != planeid) continue;
+  //     }
+
+  //     if (AlgScore.fAlgName == AlgName)
+  //     {
+  //       if (anab::kVariableType(AlgScore.fVariableType) == VariableType && anab::kTrackDir(AlgScore.fTrackDir) == TrackDirection) // diff: VariableType!!!, kTrackdir ?
+  //       {
+  //         if (AlgScore.fAssumedPdg == pdgCode)
+  //         {
+  //           double alg_value = AlgScore.fValue;
+  //           return alg_value; // diff: returns first matching value
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return std::numeric_limits<double>::lowest();
+  // }
+
+// Definition of a function that returns an art pointer to an anab::ParticleID object that is associated to a single input track
+art::Ptr<anab::ParticleID> TrackAnalysis::GetSingleAssociatedFromTrack(const art::Ptr<recob::Track> &track, const art::Event &event) {
+    // Definition of labels for the tracks and the particle identification object (PID) labels
+    std::cout<<"DEBUG GSAFT Point 0"<<std::endl;
+    art::InputTag TrackLabel("pandoraTrack");
+    art::InputTag PIDLabel("pandoraTrackcalipid");
+    // const std::string TrackLabel = "passsndora";
+    // const std::string PIDLabel = "pandoracalipidSCE";
+    std::cout<<"DEBUG GSAFT Point 1"<<std::endl;
+
+    // Definition of an unordered map that associates each track with a vector of PIDs
+    using Association = std::unordered_map< art::Ptr<recob::Track>, std::vector< art::Ptr<anab::ParticleID> > >;
+    Association trackToPIDs;
+    std::cout<<"DEBUG GSAFT Point 2"<<std::endl;
+
+    // Retrieval of a handle to the track collection and the PID association
+    const auto handle = event.getValidHandle< std::vector<recob::Track> >(TrackLabel);
+    std::cout<<"DEBUG GSAFT Point 3"<<std::endl;
+    const art::FindManyP<anab::ParticleID> assoc(handle, event, PIDLabel);
+    std::cout<<"DEBUG GSAFT Point 4"<<std::endl;
+
+    // Loop over all the tracks in the track collection and associate them with their corresponding PIDs
+    for (unsigned int i = 0; i < handle->size(); ++i) {
+        const art::Ptr<recob::Track> objectL(handle, i);
+        std::cout<<"DEBUG GSAFT Point 4.1"<<std::endl;
+        for (const auto &objectR : assoc.at(objectL.key())) {
+            trackToPIDs[objectL].push_back(objectR);
+            std::cout<<"DEBUG GSAFT Point 4.2"<<std::endl;
+        }
+    }
+    std::cout<<"DEBUG GSAFT Point 5 - trackToPIDs size: "<<trackToPIDs.size()<<std::endl;
+    // Todo remove
+    for (const auto& kv : trackToPIDs) {
+    // Print out the key (track) and value (vector of ParticleID objects)
+    std::cout << "DEBUG trackToPIDs - Track " << kv.first.key() << " - length: "<<kv.first->Length()<< ":\n";
+    for (const auto& pid : kv.second) {
+        for (const auto& algo : pid->ParticleIDAlgScores()) {
+            std::cout<<"DEBUG trackToPIDs algo.fAlgName: " << algo.fAlgName << " - algo.fValue: " << algo.fValue << " - algo.fVariableType: " << algo.fVariableType << " - algo.fTrackDir: " << algo.fTrackDir << " - algo.fAssumedPdg: " << algo.fAssumedPdg << " - algo.fPlaneMask: " << algo.fPlaneMask << std::endl;
+            break;
+        }
+    }
+    }
+    std::cout<<std::endl;
+
+
+    // Find the track associated with the input track and return its PID pointer
+    const auto iter = trackToPIDs.find(track);
+    std::cout<<"DEBUG GSAFT Point 6"<<std::endl;
+    if (iter == trackToPIDs.end()) {
+        return art::Ptr<anab::ParticleID>();
+    }
+    std::cout<<"DEBUG GSAFT Point 7"<<std::endl;
+    const auto& objects = iter->second;
+    if (objects.size() != 1) {
+        throw cet::exception("GetSingleAssociatedFromTrack") << " - Found " << objects.size() << " objects associated to the input track. Expected 1." << std::endl;
+    }
+    std::cout<<"DEBUG GSAFT Point 8"<<std::endl;
+    return objects.front();
+}
+
+// art::Ptr<anab::ParticleID> TrackAnalysis::GetSingleAssociatedFromTrack(const art::Ptr<recob::Track> &track, const art::Event &event)
+// {
+//     // template <typename L, typename R>
+//     // using Association = std::unordered_map< art::Ptr<L>, Collection<R> >;  ///< An association from L->R
+//     // template <typename T>
+//     // using Collection = std::vector< art::Ptr<T> >;  ///< A collection of objects of type T
+
+//     const std::string trackLabel = "pandora";
+//     const std::string pidLabel = "pandoracalipidSCE";
+
+//     std::unordered_map< art::Ptr<recob::Track>, std::vector< art::Ptr<anab::ParticleID> > > trackToPIDs;
+//     const auto handle = event.getValidHandle< std::vector<recob::Track> >(trackLabel);
+//     const art::FindManyP<anab::ParticleID> assoc(handle, event, pidLabel);
+
+//     for (unsigned int i = 0; i < handle->size(); ++i)getpid
+//     {
+//         const art::Ptr<recob::Track> objectL(handle, i);
+
+//         for (const auto &objectR : assoc.at(objectL.key()))
+//             trackToPIDs[objectL].push_back(objectR);
+//     }
+
+//     const auto iter = trackToPIDs.find(track);
+//     const auto objects = iter == trackToPIDs.end() ? std::vector< art::Ptr<anab::ParticleID> >() : iter->second;
+
+//     if (objects.size() != 1)
+//         throw cet::exception("TrackAnalysis::GetSingleAssociatedFromTrack") << " - Found " << objects.size() << " objects associated to the input object. Expected 1." << std::endl;
+
+//     return objects.front();
+// }
+
 float TrackAnalysis::GetMultiplaneBraggLikelihood(const art::Ptr<anab::ParticleID> pid, const int pdg, const anab::kTrackDir dir, const float yzAngle, const float sin2AngleThreshold, const int nHitsU, const int nHitsV)
 {
+  // When no PID object is provided:
+  if (!pid) return -std::numeric_limits<float>::max();
+
+  // for (const auto& algo : pid->ParticleIDAlgScores()) {
+  //   std::cout<<"DEBUG TrackAnalysis::GetMultiplaneBraggLikelihood algo.fAlgName: " << algo.fAlgName << " - algo.fValue: " << algo.fValue << " - algo.fVariableType: " << algo.fVariableType << " - algo.fTrackDir: " << algo.fTrackDir << " - algo.fAssumedPdg: " << algo.fAssumedPdg << " - algo.fPlaneMask: " << algo.fPlaneMask << std::endl;
+  // }
+  std::cout<<"DEBUG TrackAnalysis::GetMultiplaneBraggLikelihood pdg: "<<pdg<<" - dir: "<<dir<<" - yzAngle: "<<yzAngle<<" - sin2AngleThreshold: "<<sin2AngleThreshold<<" - nHitsU: "<<nHitsU<<" - nHitsV: "<<nHitsV<<std::endl;
   const auto piBy3 = std::acos(0.5f);
 
+  std::cout<<"DEBUG GetMultiplaneBraggLikelihood Point -2"<<std::endl;
   const auto likelihoodW = searchingfornues::PID(pid, "BraggPeakLLH", anab::kLikelihood, dir, pdg, 2);
+  std::cout<<"DEBUG GetMultiplaneBraggLikelihood Point -1"<<std::endl;
+  const auto likelihoodWTest = TrackAnalysis::GetBraggLikelihood(pid, pdg, geo::kW, dir);
+  std::cout<<"DEBUG GetMultiplaneBraggLikelihood: likelihoodW = "<<likelihoodW<<", likelihoodWTest = "<<likelihoodWTest<<std::endl;
   const bool isTrackAlongWWire = (std::pow(std::sin(yzAngle), 2) < sin2AngleThreshold);
   const auto hasW = (likelihoodW > -1.f && !isTrackAlongWWire);
 
+  std::cout<<"DEBUG GetMultiplaneBraggLikelihood  Point 0"<<std::endl;
   if (hasW)
       return likelihoodW;
+  std::cout<<"DEBUG GetMultiplaneBraggLikelihood  Point 1"<<std::endl;
 
   // Otherwise the track is along the W wire direction, so just average the other two planes weighted by the number of degrees of freedom
   const auto likelihoodU = searchingfornues::PID(pid, "BraggPeakLLH", anab::kLikelihood, dir, pdg, 0);
+  const auto likelihoodUTest = TrackAnalysis::GetBraggLikelihood(pid, pdg, geo::kU, dir);
+  std::cout<<"\tDEBUG GetMultiplaneBraggLikelihood: likelihoodU = "<<likelihoodU<<", likelihoodUTest = "<<likelihoodUTest<<std::endl;
   const bool isTrackAlongUWire = (std::pow(std::sin(yzAngle - piBy3), 2) < sin2AngleThreshold);
   const auto hasU = (likelihoodU > -1.f && !isTrackAlongUWire);
 
   const auto likelihoodV = searchingfornues::PID(pid, "BraggPeakLLH", anab::kLikelihood, dir, pdg, 1);
+  const auto likelihoodVTest = TrackAnalysis::GetBraggLikelihood(pid, pdg, geo::kV, dir);
+  std::cout<<"\tDEBUG GetMultiplaneBraggLikelihood: likelihoodV = "<<likelihoodV<<", likelihoodVTest = "<<likelihoodVTest<<std::endl;
   const bool isTrackAlongVWire = (std::pow(std::sin(yzAngle + piBy3), 2) < sin2AngleThreshold);
   const auto hasV = (likelihoodV > -1.f && !isTrackAlongVWire);
 
@@ -1184,7 +1444,95 @@ float TrackAnalysis::GetMultiplaneBraggLikelihood(const art::Ptr<anab::ParticleI
   if ((!hasU && !hasV) || (nHitsU == 0 && nHitsV == 0) || dofUV <= std::numeric_limits<float>::epsilon())
       return -std::numeric_limits<float>::max();
 
-  return (weightU + weightV) / dofUV;
+  const auto likelihood = (weightU + weightV) / dofUV;
+  if(likelihood > -1.f) return likelihood;
+  else return -std::numeric_limits<float>::max();
+}
+
+art::Ptr<anab::ParticleID> TrackAnalysis::GetPID(const art::Event &event, const art::Ptr<recob::Track> &track)// const recob::PFParticle pfParticle)
+{
+	const art::InputTag collectionLabel("pandoraTrack");
+	const art::InputTag associationLabel("pandoraTrackcalipid");
+  // const art::InputTag associationLabel("PIDproducer");
+
+	// // pfParticleToTracks
+	// std::unordered_map< art::Ptr<recob::PFParticle>, std::vector< art::Ptr<recob::Track>> > pfParticleToTracks; // Association in ubcc1pi
+
+	// const auto handle = event.getValidHandle< std::vector<recob::PFParticle> >(collectionLabel);
+	// const art::FindManyP<recob::Track> assoc(handle, event, associationLabel);
+
+	// for (unsigned int i = 0; i < handle->size(); ++i)
+	// {
+	// 	const art::Ptr<recob::PFParticle> objectL(handle, i);
+
+	// 	for (const auto &objectR : assoc.at(objectL.key()))
+	// 		pfParticleToTracks[objectL].push_back(objectR);
+	// }
+
+
+	// trackToPIDs
+	std::unordered_map< art::Ptr<recob::Track>, std::vector< art::Ptr<anab::ParticleID>> > trackToPIDs; // Association in ubcc1pi
+
+	const auto handle = event.getValidHandle< std::vector<recob::Track> >(collectionLabel);
+	const art::FindManyP<anab::ParticleID> assoc(handle, event, associationLabel);
+  std::vector< art::Ptr<anab::ParticleID>> objects; // Collection in ubcc1pi
+	for (unsigned int i = 0; i < handle->size(); ++i)
+	{
+		const art::Ptr<recob::Track> objectL(handle, i);
+
+		for (const auto &objectR : assoc.at(objectL.key()))
+    {
+			trackToPIDs[objectL].push_back(objectR);
+      std::cout<<"DEBUG GetPID Point -1 - i: "<<i<<" - NPoints: "<<objectL->NPoints()<<" ParticleId: "<<objectL->ParticleId()<<" - ptr: "<<objectL<<std::endl;
+      if(objectL->Vertex()==track->Vertex() && objectL->End()==track->End())
+      {
+        std::cout<<"Identical tracks"<<std::endl;
+        objects.push_back(objectR);
+      }
+    }
+	}
+
+  for (const auto &[key, value] : trackToPIDs)
+			std::cout<<"DEBUG GetPID Point -0.1 - key->NPoints: "<<key->NPoints()<<" - ptr: "<<key<<" - value size: "<<value.size()<<std::endl;
+
+  std::cout<<"DEBUG GetPID Point 0 - trackToPIDs.size(): "<<trackToPIDs.size()<<" - trk->NPoints: "<<track->NPoints()<<" - ptr: "<<track<<std::endl;
+
+	// // track
+	// const auto iter = pfParticleToTracks.find(pfParticle);
+
+	// if (iter == pfParticleToTracks.end())
+	// 	throw cet::exception("CollectionHelper::GetManyAssociated") << " - No association entry found for the input object." << std::endl;
+
+	// Collection<recob::Track> objects;
+	// for (const auto &entry : iter->second)
+	// 	objects.push_back(entry.first);
+
+	// if (objects.size() != 1)
+	// 	throw cet::exception("CollectionHelper::GetSingleAssociated") << " - Found " << objects.size() << " objects associated to the input object. Expected 1." << std::endl;
+
+	// const auto track = objects.front();
+
+
+	// // pid
+	// const auto iter = trackToPIDs.find(track);
+
+	// if (iter == trackToPIDs.end())
+  // {
+  //   std::cout<<"DEBUG GetPID Point 1 - No association entry found for the input object."<<std::endl;
+  //   return art::Ptr<anab::ParticleID>();
+	// 	// throw cet::exception("TrackAnalysis::GetPID") << " - No association entry found for the input object." << std::endl;
+  // }
+
+	// std::vector< art::Ptr<anab::ParticleID>> objects; // Collection in ubcc1pi
+	// for (const auto &entry : pPID)//iter->second)
+	// 	objects.push_back(entry);//.first);
+
+	if (objects.size() != 1)
+		throw cet::exception("TrackAnalysis::GetPID") << " - Found " << objects.size() << " objects associated to the input object. Expected 1." << std::endl;
+
+	const auto pid = objects.front();
+
+	return pid;
 }
 
 DEFINE_ART_CLASS_TOOL(TrackAnalysis)
