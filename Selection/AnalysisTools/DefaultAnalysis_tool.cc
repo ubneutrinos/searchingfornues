@@ -283,7 +283,6 @@ private:
   std::vector<float> _mc_px;
   std::vector<float> _mc_py;
   std::vector<float> _mc_pz;
-
   std::vector<float> _mc_end_p; // final particle momentum 
 
   std::vector<float> _mc_vx;
@@ -1549,7 +1548,6 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
 
     auto nElastic = 0u;
     auto nInelastic = 0u;
-    // Get art::Ptr<simb::MCParticle> mcpPtr for mcp
     const art::Ptr<simb::MCParticle> mcpPtr(mcp_h, p);
     art::Ptr<simb::MCParticle> finalScatteredParticle;
     searchingfornues::GetNScatters(mcp_h, mcpPtr, finalScatteredParticle, nElastic, nInelastic);
@@ -1559,13 +1557,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
     _mc_px.push_back(mcp.Px());
     _mc_py.push_back(mcp.Py());
     _mc_pz.push_back(mcp.Pz());
-
     _mc_end_p.push_back(finalScatteredParticle->Momentum(std::max(0u, finalScatteredParticle->NumberTrajectoryPoints() - 2)).Vect().Mag());
-    const auto nomPrev = finalScatteredParticle->Momentum(std::max(0u, finalScatteredParticle->NumberTrajectoryPoints() - 3)).Vect().Mag(); //Debug
-    const auto nom = finalScatteredParticle->Momentum(std::max(0u, finalScatteredParticle->NumberTrajectoryPoints() - 2)).Vect().Mag(); //Debug
-    const auto nomNext = finalScatteredParticle->Momentum(std::max(0u, finalScatteredParticle->NumberTrajectoryPoints()-1)).Vect().Mag(); //Debug
-    const auto nomNext2 = finalScatteredParticle->Momentum(std::max(0u, finalScatteredParticle->NumberTrajectoryPoints()-1)).Vect().Mag(); //Debug
-    std::cout<<"DEBUG end momentum - #points: "<<finalScatteredParticle->NumberTrajectoryPoints()<<" - "<<nomPrev<<", "<<nom<<", "<<nomNext<<", "<<nomNext2<<std::endl;
 
     _mc_vx.push_back(mcp.Vx());
     _mc_vy.push_back(mcp.Vy());

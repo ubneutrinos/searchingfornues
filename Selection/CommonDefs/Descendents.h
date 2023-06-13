@@ -3,6 +3,9 @@
 
 #include "larpandora/LArPandoraInterface/LArPandoraHelper.h"
 
+// Recursive functions for finding descendents in the PFParticle hierarchy 
+//////////////////////////////////////////////////////////////////////////
+
 namespace searchingfornues
 {
     lar_pandora::PFParticleVector GetDaughters(const art::Ptr<recob::PFParticle> &particle, const lar_pandora::PFParticleMap &pfParticleMap)
@@ -11,10 +14,7 @@ namespace searchingfornues
         for (int i = 0; i < particle->NumDaughters(); ++i)
         {
             const auto daughterIter = pfParticleMap.find(particle->Daughter(i));
-            if (daughterIter == pfParticleMap.end())
-                throw cet::exception("GetDaughters") << " - Couldn't find daughter PFParticle in hierarchy." << std::endl;
-
-            daughters.push_back(daughterIter->second);
+            if (daughterIter != pfParticleMap.end()) daughters.push_back(daughterIter->second);
         }
 
         return daughters;
