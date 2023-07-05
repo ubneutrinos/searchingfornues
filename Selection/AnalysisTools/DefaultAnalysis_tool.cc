@@ -265,6 +265,9 @@ private:
   std::vector<uint> _shr_daughters; // number of shower daughters
   std::vector<uint> _trk_daughters; // number of track daughters
   std::vector<uint> _n_descendents; // number of descendents (daughters + granddaughters + ...)
+  std::vector<float> _pfp_vtx_x;    // x position of particle vertex
+  std::vector<float> _pfp_vtx_y;    // y position of particle vertex
+  std::vector<float> _pfp_vtx_z;    // z position of particle vertex
 
   unsigned int _n_pfps;
   std::vector<float> _trk_score_v;
@@ -610,6 +613,21 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     _shr_daughters.push_back(this_num_shr_d);
     _trk_daughters.push_back(this_num_trk_d);
     _n_descendents.push_back(searchingfornues::GetNDescendents(particleMap.at(pfp->Self()), particleMap));
+
+    // Get pfp vertex
+    const auto vertices = pfp.get<recob::Vertex>();
+    if(vertices.size() == 1)
+    {
+      _pfp_vtx_x.push_back(vertices.at(0)->position().X());
+      _pfp_vtx_y.push_back(vertices.at(0)->position().Y());
+      _pfp_vtx_z.push_back(vertices.at(0)->position().Z());
+    }
+    else
+    {
+      _pfp_vtx_x.push_back(std::numeric_limits<float>::lowest());
+      _pfp_vtx_y.push_back(std::numeric_limits<float>::lowest());
+      _pfp_vtx_z.push_back(std::numeric_limits<float>::lowest());
+    }
 
     // store track score
     float trkscore = searchingfornues::GetTrackShowerScore(pfp);
@@ -1067,6 +1085,9 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("pfp_trk_daughters_v", "std::vector< uint >", &_trk_daughters);
   _tree->Branch("pfp_shr_daughters_v", "std::vector< uint >", &_shr_daughters);
   _tree->Branch("pfp_n_descendents_v", "std::vector< uint >", &_n_descendents);
+  _tree->Branch("pfp_vtx_x_v", "std::vector< float >", &_pfp_vtx_x);
+  _tree->Branch("pfp_vtx_y_v", "std::vector< float >", &_pfp_vtx_y);
+  _tree->Branch("pfp_vtx_z_v", "std::vector< float >", &_pfp_vtx_z);
 
   _tree->Branch("trk_score_v", "std::vector< float >", &_trk_score_v);
 
@@ -1268,6 +1289,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _shr_daughters.clear();
   _trk_daughters.clear();
   _n_descendents.clear();
+  _pfp_vtx_x.clear();
+  _pfp_vtx_y.clear();
+  _pfp_vtx_z.clear();
 
   slclustfrac = std::numeric_limits<float>::lowest();
 

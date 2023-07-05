@@ -426,8 +426,6 @@ void CC0piNpSelection::configure(fhicl::ParameterSet const &pset)
     fdEdxcmLen = pset.get<float>("dEdxcmLen", 4.0);       // how long the dE/dx segment should be
     fSaveMoreDedx = pset.get<bool>("SaveMoreDedx", true); // save additional track fit dedx definitions
     fLocaldEdx = pset.get<bool>("LocaldEdx", true);       // use dE/dx from calo?
-
-    std::cout << "FID VOL ANALYSER: " << fFidvolZend << std::endl;
 }
 
 //----------------------------------------------------------------------------
