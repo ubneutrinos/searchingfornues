@@ -96,6 +96,7 @@ private:
 
   float CalculateTrackTrunkdEdxByHits(const std::vector<float> &dedxPerHit);
   float CalculateTrackTrunkdEdxByRange(const std::vector<float> &dedxPerHit, const std::vector<float> &residualRangePerHit);
+  void CalculateTrackDeflections(const art::Ptr<recob::Track> &trk, std::vector<float> &mean_v, std::vector<float> &stdev_v, std::vector<float> &separation_mean_v);
 
   const trkf::TrackMomentumCalculator _trkmom;
   const trkf::TrajectoryMCSFitter _mcsfitter;
@@ -631,62 +632,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
       }
       _trk_llr_pid_score_v.back() = atan(_trk_llr_pid_v.back() / 100.) * 2 / 3.14159266;  
 
-      // Average of deflections along track ("wiggliness")
-      // Get track valid points
-      std::vector<size_t> validPoints;
-      auto firstValidPoint = trk->FirstValidPoint();
-      validPoints.push_back(firstValidPoint);
-      auto nextValidPoint = trk->NextValidPoint(firstValidPoint + 1);
-      while (nextValidPoint != recob::TrackTrajectory::InvalidIndex)
-      {
-          validPoints.push_back(nextValidPoint);
-          nextValidPoint = trk->NextValidPoint(nextValidPoint + 1);
-      }
-      // determine average deflection between sequential valid points
-      if (validPoints.size() < 3) 
-      {
-        _trk_avg_deflection_mean_v.push_back(0);
-        _trk_avg_deflection_stdev_v.push_back(0);
-        _trk_avg_deflection_separation_mean_v.push_back(0);
-      }
-      else 
-      {
-        std::vector<float> thetaVector;
-        float thetaSum = 0.f;
-        float separationSum = 0.f;
-        for (unsigned int i = 1; i < validPoints.size(); ++i) {
-          const auto dir = trk->DirectionAtPoint(validPoints.at(i));
-          const auto dirPrev = trk->DirectionAtPoint(validPoints.at(i - 1));
-
-          // Bind between -1 and 1 at floating precision to avoid issues with cast from double
-          const auto cosTheta = std::min(1.f, std::max(-1.f, static_cast<float>(dir.Dot(dirPrev))));
-          const auto theta = std::acos(cosTheta);
-
-          thetaSum += theta;
-          thetaVector.push_back(theta);
-
-          // separation between points
-          const TVector3 point(trk->LocationAtPoint(validPoints.at(i)).X(), trk->LocationAtPoint(validPoints.at(i)).Y(), trk->LocationAtPoint(validPoints.at(i)).Z());
-          const TVector3 pointPrev(trk->LocationAtPoint(validPoints.at(i - 1)).X(), trk->LocationAtPoint(validPoints.at(i - 1)).Y(), trk->LocationAtPoint(validPoints.at(i - 1)).Z());
-          const TVector3 separation = point - pointPrev; 
-          separationSum += separation.Mag();
-        }
-
-        float thetaMean = thetaSum / static_cast<float>(thetaVector.size());
-        float separationMean = separationSum / static_cast<float>(thetaVector.size());
-
-        float thetaDiffSum = 0.f;
-        for (const auto &theta : thetaVector) 
-        {
-          thetaDiffSum += std::pow(theta - thetaMean, 2);
-        }
-
-        const auto variance = thetaDiffSum / static_cast<float>(thetaVector.size() - 1);
-
-        _trk_avg_deflection_mean_v.push_back(thetaMean);
-        _trk_avg_deflection_stdev_v.push_back(std::sqrt(variance));
-        _trk_avg_deflection_separation_mean_v.push_back(separationMean);
-      }
+      CalculateTrackDeflections(trk, _trk_avg_deflection_mean_v, _trk_avg_deflection_stdev_v, _trk_avg_deflection_separation_mean_v);
 
       // Count number of spacepoints at the end of the track
       int nPoints = 0;
@@ -1038,8 +984,8 @@ void TrackAnalysis::resetTTree(TTree *_tree)
   _trk_end_spacepoints_v.clear();
 }
 
-float TrackAnalysis::CalculateTrackTrunkdEdxByHits(const std::vector<float> &dEdx_values) {
-  
+float TrackAnalysis::CalculateTrackTrunkdEdxByHits(const std::vector<float> &dEdx_values) 
+{
   unsigned int trk_nhits = dEdx_values.size();
 
   // initial offset of 3 hits
@@ -1101,82 +1047,143 @@ float TrackAnalysis::CalculateTrackTrunkdEdxByHits(const std::vector<float> &dEd
 
 float TrackAnalysis::CalculateTrackTrunkdEdxByRange(const std::vector<float> &dedxPerHit, const std::vector<float> &residualRangePerHit)
 {
-    const auto nHitsToSkip = 3u;
-    const auto lengthFraction = 1.f/3;
+  const auto nHitsToSkip = 3u;
+  const auto lengthFraction = 1.f/3;
 
-    // Check if the variable is calculable
-    if (residualRangePerHit.size() <= nHitsToSkip)
-        return -std::numeric_limits<float>::max();
+  // Check if the variable is calculable
+  if (residualRangePerHit.size() <= nHitsToSkip)
+      return -std::numeric_limits<float>::max();
 
-    // Make the vector of pairs to keep track of the incides, and find the maximum residual range
-    std::vector<std::pair<float, unsigned int> > residualRangeIndices;
-    float maxResidualRange = -std::numeric_limits<float>::max();
-    for (unsigned int i = 0; i < residualRangePerHit.size(); ++i)
-    {
-        const auto residualRange = residualRangePerHit.at(i);
-        maxResidualRange = std::max(maxResidualRange, residualRange);
-        residualRangeIndices.emplace_back(residualRange, i);
-    }
+  // Make the vector of pairs to keep track of the incides, and find the maximum residual range
+  std::vector<std::pair<float, unsigned int> > residualRangeIndices;
+  float maxResidualRange = -std::numeric_limits<float>::max();
+  for (unsigned int i = 0; i < residualRangePerHit.size(); ++i)
+  {
+      const auto residualRange = residualRangePerHit.at(i);
+      maxResidualRange = std::max(maxResidualRange, residualRange);
+      residualRangeIndices.emplace_back(residualRange, i);
+  }
 
-    const auto residualRangeCutoff = maxResidualRange * lengthFraction;
+  const auto residualRangeCutoff = maxResidualRange * lengthFraction;
 
-    // Sort the residual ranges such that the largest residual range (closest to the start of the track) is first
-    std::sort(residualRangeIndices.begin(), residualRangeIndices.end(), [](auto &a, auto &b) {
-        return a.first > b.first;
-    });
+  // Sort the residual ranges such that the largest residual range (closest to the start of the track) is first
+  std::sort(residualRangeIndices.begin(), residualRangeIndices.end(), [](auto &a, auto &b) {
+      return a.first > b.first;
+  });
 
-    // Get the dEdx of the hits at the start of the track
-    std::vector<float> dedxPerHitAtStart;
-    for (unsigned int i = nHitsToSkip; i < residualRangeIndices.size(); ++i)
-    {
-        const auto entry = residualRangeIndices.at(i);
-        const auto residualRange = entry.first;
-        const auto hitIndex = entry.second;
+  // Get the dEdx of the hits at the start of the track
+  std::vector<float> dedxPerHitAtStart;
+  for (unsigned int i = nHitsToSkip; i < residualRangeIndices.size(); ++i)
+  {
+      const auto entry = residualRangeIndices.at(i);
+      const auto residualRange = entry.first;
+      const auto hitIndex = entry.second;
 
-        // ATTN small residual ranges are at the start of the track
-        if (residualRange < residualRangeCutoff)
-            continue;
+      // ATTN small residual ranges are at the start of the track
+      if (residualRange < residualRangeCutoff)
+          continue;
 
-        dedxPerHitAtStart.push_back(dedxPerHit.at(hitIndex));
-    }
+      dedxPerHitAtStart.push_back(dedxPerHit.at(hitIndex));
+  }
 
-    const auto nHits = dedxPerHitAtStart.size();
-    if (nHits == 0)
-        return -std::numeric_limits<float>::max();
+  const auto nHits = dedxPerHitAtStart.size();
+  if (nHits == 0)
+      return -std::numeric_limits<float>::max();
 
-    // Sort the dEdx so we can find the median
-    std::sort(dedxPerHitAtStart.begin(), dedxPerHitAtStart.end());
-    const auto median = dedxPerHitAtStart.at(nHits / 2);
+  // Sort the dEdx so we can find the median
+  std::sort(dedxPerHitAtStart.begin(), dedxPerHitAtStart.end());
+  const auto median = dedxPerHitAtStart.at(nHits / 2);
 
-    //  #### Find the mean #### 
-    float total = 0.f;
-    for (const auto &dEdx : dedxPerHitAtStart)
-        total += dEdx;
-    const auto mean = total / static_cast<float>(nHits);
+  //  #### Find the mean #### 
+  float total = 0.f;
+  for (const auto &dEdx : dedxPerHitAtStart)
+      total += dEdx;
+  const auto mean = total / static_cast<float>(nHits);
 
-    // #### Find the variance ####
-    float squareSum = 0.f;
-    for (const auto &dEdx : dedxPerHitAtStart)
-        squareSum += std::pow(dEdx - mean, 2);
-    const auto variance = squareSum / static_cast<float>(nHits);
+  // #### Find the variance ####
+  float squareSum = 0.f;
+  for (const auto &dEdx : dedxPerHitAtStart)
+      squareSum += std::pow(dEdx - mean, 2);
+  const auto variance = squareSum / static_cast<float>(nHits);
 
-    // Get the mean dEdx of the hits within one standard deviation of the median
-    float truncatedTotal = 0.f;
-    unsigned int nTruncatedHits = 0;
-    for (const auto &dEdx : dedxPerHitAtStart)
-    {
-        if (std::pow(dEdx - median, 2) > variance)
-            continue;
+  // Get the mean dEdx of the hits within one standard deviation of the median
+  float truncatedTotal = 0.f;
+  unsigned int nTruncatedHits = 0;
+  for (const auto &dEdx : dedxPerHitAtStart)
+  {
+      if (std::pow(dEdx - median, 2) > variance)
+          continue;
 
-        truncatedTotal += dEdx;
-        nTruncatedHits++;
-    }
+      truncatedTotal += dEdx;
+      nTruncatedHits++;
+  }
 
-    if (nTruncatedHits == 0)
-        return -std::numeric_limits<float>::max();
+  if (nTruncatedHits == 0)
+      return -std::numeric_limits<float>::max();
 
-    return truncatedTotal / static_cast<float>(nTruncatedHits);
+  return truncatedTotal / static_cast<float>(nTruncatedHits);
 }
+
+// Average of deflections along track ("wiggliness")
+void TrackAnalysis::CalculateTrackDeflections(const art::Ptr<recob::Track> &trk, std::vector<float> &mean_v, std::vector<float> &stdev_v, std::vector<float> &separation_mean_v)
+{
+  // Get track valid points
+  std::vector<size_t> validPoints;
+  auto firstValidPoint = trk->FirstValidPoint();
+  validPoints.push_back(firstValidPoint);
+  auto nextValidPoint = trk->NextValidPoint(firstValidPoint + 1);
+  while (nextValidPoint != recob::TrackTrajectory::InvalidIndex)
+  {
+      validPoints.push_back(nextValidPoint);
+      nextValidPoint = trk->NextValidPoint(nextValidPoint + 1);
+  }
+  // determine average deflection between sequential valid points
+  if (validPoints.size() < 3) 
+  {
+    mean_v.push_back(0);
+    stdev_v.push_back(0);
+    separation_mean_v.push_back(0);
+  }
+  else 
+  {
+    std::vector<float> thetaVector;
+    float thetaSum = 0.f;
+    float separationSum = 0.f;
+    for (unsigned int i = 1; i < validPoints.size(); ++i) {
+      const auto dir = trk->DirectionAtPoint(validPoints.at(i));
+      const auto dirPrev = trk->DirectionAtPoint(validPoints.at(i - 1));
+
+      // Bind between -1 and 1 at floating precision to avoid issues with cast from double
+      const auto cosTheta = std::min(1.f, std::max(-1.f, static_cast<float>(dir.Dot(dirPrev))));
+      const auto theta = std::acos(cosTheta);
+
+      thetaSum += theta;
+      thetaVector.push_back(theta);
+
+      // separation between points
+      const TVector3 point(trk->LocationAtPoint(validPoints.at(i)).X(), trk->LocationAtPoint(validPoints.at(i)).Y(), trk->LocationAtPoint(validPoints.at(i)).Z());
+      const TVector3 pointPrev(trk->LocationAtPoint(validPoints.at(i - 1)).X(), trk->LocationAtPoint(validPoints.at(i - 1)).Y(), trk->LocationAtPoint(validPoints.at(i - 1)).Z());
+      const TVector3 separation = point - pointPrev; 
+      separationSum += separation.Mag();
+    }
+
+    float thetaMean = thetaSum / static_cast<float>(thetaVector.size());
+    float separationMean = separationSum / static_cast<float>(thetaVector.size());
+
+    float thetaDiffSum = 0.f;
+    for (const auto &theta : thetaVector) 
+    {
+      thetaDiffSum += std::pow(theta - thetaMean, 2);
+    }
+
+    const auto variance = thetaDiffSum / static_cast<float>(thetaVector.size() - 1);
+
+    mean_v.push_back(thetaMean);
+    stdev_v.push_back(std::sqrt(variance));
+    separation_mean_v.push_back(separationMean);
+  }
+}
+
 
 DEFINE_ART_CLASS_TOOL(TrackAnalysis)
 } // namespace analysis
