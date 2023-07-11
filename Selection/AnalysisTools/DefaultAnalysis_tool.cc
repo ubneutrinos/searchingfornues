@@ -19,6 +19,8 @@
 #include "../CommonDefs/Containment.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "../CommonDefs/ProximityClustering.h"
+#include "../CommonDefs/Descendents.h"
+#include "../CommonDefs/Scatters.h"
 
 // save info associated to common optical filter
 #include "ubobj/Optical/UbooneOpticalFilter.h"
@@ -262,6 +264,10 @@ private:
   std::vector<uint> _generation;    // generation, 1 is primary
   std::vector<uint> _shr_daughters; // number of shower daughters
   std::vector<uint> _trk_daughters; // number of track daughters
+  std::vector<uint> _n_descendents; // number of descendents (daughters + granddaughters + ...)
+  std::vector<float> _pfp_vtx_x;    // x position of particle vertex
+  std::vector<float> _pfp_vtx_y;    // y position of particle vertex
+  std::vector<float> _pfp_vtx_z;    // z position of particle vertex
 
   unsigned int _n_pfps;
   std::vector<float> _trk_score_v;
@@ -274,10 +280,13 @@ private:
 
   std::vector<int> _mc_pdg;
   std::vector<float> _mc_E;
+  std::vector<uint> _mc_n_elastic; // number of elastic scatters
+  std::vector<uint> _mc_n_inelastic; // number of inelastic scatters
 
   std::vector<float> _mc_px;
   std::vector<float> _mc_py;
   std::vector<float> _mc_pz;
+  std::vector<float> _mc_end_p; // final particle momentum 
 
   std::vector<float> _mc_vx;
   std::vector<float> _mc_vy;
@@ -603,6 +612,22 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     }
     _shr_daughters.push_back(this_num_shr_d);
     _trk_daughters.push_back(this_num_trk_d);
+    _n_descendents.push_back(searchingfornues::GetNDescendents(particleMap.at(pfp->Self()), particleMap));
+
+    // Get pfp vertex
+    const auto vertices = pfp.get<recob::Vertex>();
+    if(vertices.size() == 1)
+    {
+      _pfp_vtx_x.push_back(vertices.at(0)->position().X());
+      _pfp_vtx_y.push_back(vertices.at(0)->position().Y());
+      _pfp_vtx_z.push_back(vertices.at(0)->position().Z());
+    }
+    else
+    {
+      _pfp_vtx_x.push_back(std::numeric_limits<float>::lowest());
+      _pfp_vtx_y.push_back(std::numeric_limits<float>::lowest());
+      _pfp_vtx_z.push_back(std::numeric_limits<float>::lowest());
+    }
 
     // store track score
     float trkscore = searchingfornues::GetTrackShowerScore(pfp);
@@ -1059,6 +1084,10 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("pfp_generation_v", "std::vector< uint >", &_generation);
   _tree->Branch("pfp_trk_daughters_v", "std::vector< uint >", &_trk_daughters);
   _tree->Branch("pfp_shr_daughters_v", "std::vector< uint >", &_shr_daughters);
+  _tree->Branch("pfp_n_descendents_v", "std::vector< uint >", &_n_descendents);
+  _tree->Branch("pfp_vtx_x_v", "std::vector< float >", &_pfp_vtx_x);
+  _tree->Branch("pfp_vtx_y_v", "std::vector< float >", &_pfp_vtx_y);
+  _tree->Branch("pfp_vtx_z_v", "std::vector< float >", &_pfp_vtx_z);
 
   _tree->Branch("trk_score_v", "std::vector< float >", &_trk_score_v);
 
@@ -1083,6 +1112,9 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("mc_pdg", "std::vector< int >", &_mc_pdg);
   _tree->Branch("mc_E", "std::vector< float >", &_mc_E);
 
+  _tree->Branch("mc_n_elastic", "std::vector< uint >", &_mc_n_elastic);
+  _tree->Branch("mc_n_inelastic", "std::vector< uint >", &_mc_n_inelastic);
+
   _tree->Branch("mc_vx", "std::vector< float >", &_mc_vx);
   _tree->Branch("mc_vy", "std::vector< float >", &_mc_vy);
   _tree->Branch("mc_vz", "std::vector< float >", &_mc_vz);
@@ -1094,6 +1126,8 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("mc_px", "std::vector< float >", &_mc_px);
   _tree->Branch("mc_py", "std::vector< float >", &_mc_py);
   _tree->Branch("mc_pz", "std::vector< float >", &_mc_pz);
+
+  _tree->Branch("mc_end_p", "std::vector< float >", &_mc_end_p);
 
   _tree->Branch("mc_completeness", "std::vector< float >", &_mc_completeness);
   _tree->Branch("mc_purity", "std::vector< float >", &_mc_purity);
@@ -1254,6 +1288,11 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _generation.clear();
   _shr_daughters.clear();
   _trk_daughters.clear();
+  _n_descendents.clear();
+  _pfp_vtx_x.clear();
+  _pfp_vtx_y.clear();
+  _pfp_vtx_z.clear();
+
   slclustfrac = std::numeric_limits<float>::lowest();
 
   _hits_u = 0;
@@ -1261,11 +1300,15 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _hits_y = 0;
 
   _mc_E.clear();
+  _mc_n_elastic.clear();
+  _mc_n_inelastic.clear();
   _mc_pdg.clear();
 
   _mc_px.clear();
   _mc_py.clear();
   _mc_pz.clear();
+
+  _mc_end_p.clear();
 
   _mc_vx.clear();
   _mc_vy.clear();
@@ -1527,9 +1570,18 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
 
     _mc_pdg.push_back(mcp.PdgCode());
 
+    auto nElastic = 0u;
+    auto nInelastic = 0u;
+    const art::Ptr<simb::MCParticle> mcpPtr(mcp_h, p);
+    art::Ptr<simb::MCParticle> finalScatteredParticle;
+    searchingfornues::GetNScatters(mcp_h, mcpPtr, finalScatteredParticle, nElastic, nInelastic);
+    _mc_n_elastic.push_back(nElastic);
+    _mc_n_inelastic.push_back(nInelastic);
+
     _mc_px.push_back(mcp.Px());
     _mc_py.push_back(mcp.Py());
     _mc_pz.push_back(mcp.Pz());
+    _mc_end_p.push_back(finalScatteredParticle->Momentum(std::max(0u, finalScatteredParticle->NumberTrajectoryPoints() - 2)).Vect().Mag());
 
     _mc_vx.push_back(mcp.Vx());
     _mc_vy.push_back(mcp.Vy());
