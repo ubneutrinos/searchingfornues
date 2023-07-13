@@ -291,6 +291,7 @@ void TrackAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
   {
     if (pfp->IsPrimary())
     {
+      std::cout << "\n TRACK ANALYSIS: pfp pdg" << pfp->PdgCode() <<"\n"<< std::endl;
       double xyz[3] = {};
       auto vtx = pfp.get<recob::Vertex>();
       if (vtx.size() != 1)

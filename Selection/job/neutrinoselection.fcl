@@ -104,6 +104,10 @@ NeutronAnalysisTool: {
     MCRproducer: "mcreco"
     SLCproducer: "pandora"
     MCFluxproducer: "generator"
+    PIDproducer: "pandoraTrackcalipid"
+    CALOproducer: "pandoraTrackcali"
+    ADCtoE: @local::microboone_reco_data_producers.shrreco3d.ADCtoE
+    RecalibrateHits: true
 }
 
 CosmicIPTool: {
@@ -152,6 +156,8 @@ DefaultAnalysisTool: {
     MCFluxproducer: "generator"    TRKproducer: "pandoraTrack"
     VTXproducer: "pandora"
     PCAproducer: "pandora"
+    TRKproducer: "pandoraTrack"
+
     ProtonThreshold: 0.04 # GeV
     fidvolXstart: 5.
     fidvolXend: 5.

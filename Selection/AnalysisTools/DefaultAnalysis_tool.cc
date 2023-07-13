@@ -101,6 +101,13 @@ private:
   TParticlePDG *electron_neutrino = TDatabasePDG::Instance()->GetParticle(12);
   TParticlePDG *muon_neutrino = TDatabasePDG::Instance()->GetParticle(14);
 
+  //Producers required for the pfp_proxy
+  art::InputTag fPCAproducer;
+  art::InputTag fPFPproducer;
+  art::InputTag fTRKproducer;
+  art::InputTag fVTXproducer;
+  art::InputTag fSHRproducer;
+
   art::InputTag fCRTVetoproducer; // producer for CRT veto ass tag [anab::T0 <-> recob::OpFlash]
   art::InputTag fCLSproducer;     // cluster associated to PFP
   art::InputTag fMCTproducer;     // MCTruth from neutrino generator
@@ -143,6 +150,8 @@ private:
   float fMuonThreshold;
 
   int _category; // event category
+
+  std::vector<float>  _topo_score_v;
 
   float _true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z;
   float _true_nu_vtx_sce_x, _true_nu_vtx_sce_y, _true_nu_vtx_sce_z;
@@ -307,6 +316,12 @@ private:
 ///
 DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
 {
+  fPFPproducer = p.get<art::InputTag>("PFPproducer");
+  fPCAproducer = p.get<art::InputTag>("PCAproducer");
+  fTRKproducer = p.get<art::InputTag>("TRKproducer");
+  fVTXproducer = p.get<art::InputTag>("VTXproducer");
+  fSHRproducer = p.get<art::InputTag>("SHRproducer");
+
   fCRTVetoproducer = p.get<art::InputTag>("CRTVetoproducer", ""); // default is no CRT veto
   fCLSproducer = p.get<art::InputTag>("CLSproducer");
   fMCTproducer = p.get<art::InputTag>("MCTproducer");
@@ -358,7 +373,43 @@ void DefaultAnalysis::configure(fhicl::ParameterSet const &p)
 void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
   std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << e.run() << ", SubRun: " << e.subRun() << ", Event: " << e.event() << std::endl;
-  
+ 
+  searchingfornues::ProxyPfpColl_t const &pfp_proxy = proxy::getCollection<std::vector<recob::PFParticle>>(e, fPFPproducer,
+                                            proxy::withAssociated<larpandoraobj::PFParticleMetadata>(fPFPproducer),
+                                            proxy::withAssociated<recob::Cluster>(fCLSproducer),
+                                            proxy::withAssociated<recob::Slice>(fSLCproducer),
+                                            proxy::withAssociated<recob::Track>(fTRKproducer),
+                                            proxy::withAssociated<recob::Vertex>(fVTXproducer),
+                                            proxy::withAssociated<recob::PCAxis>(fPCAproducer),
+                                            proxy::withAssociated<recob::Shower>(fSHRproducer),
+                                            proxy::withAssociated<recob::SpacePoint>(fPFPproducer));
+
+  for (const ProxyPfpElem_t &pfp : pfp_proxy)
+  {
+    auto metadata_pxy_v = pfp.get<larpandoraobj::PFParticleMetadata>();
+    if (metadata_pxy_v.size() != 0)
+    {
+      for (unsigned int j = 0; j < metadata_pxy_v.size(); ++j)
+      {
+        const art::Ptr<larpandoraobj::PFParticleMetadata> &pfParticleMetadata(metadata_pxy_v.at(j));
+        auto pfParticlePropertiesMap = pfParticleMetadata->GetPropertiesMap();
+        if (!pfParticlePropertiesMap.empty())
+        {
+	  auto it = pfParticlePropertiesMap.begin();
+	  _topo_score_v.push_back(pfParticlePropertiesMap.at(it->first));
+        } // if PFP metadata exists!
+	else
+	{
+	  _topo_score_v.push_back(std::numeric_limits<float>::lowest());
+	}
+      }
+    }
+    else
+    {
+      _topo_score_v.push_back(std::numeric_limits<float>::lowest());
+    }
+  }
+
   // store common optical filter tag
   if (!fData&&(!fMakeNuMINtuple)) {
     art::Handle<uboone::UbooneOpticalFilter> CommonOpticalFilter_h;
@@ -566,6 +617,7 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         auto nuvtx = TVector3(xyz[0], xyz[1], xyz[2]);
 
         _reco_nu_vtx_x = nuvtx.X();
+	std::cout<<"_nonprim_slc_id_v.push_back passed"<<std::endl;
         _reco_nu_vtx_y = nuvtx.Y();
         _reco_nu_vtx_z = nuvtx.Z();
 
@@ -911,6 +963,8 @@ void DefaultAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("true_e_visible", &_true_e_visible, "true_e_visible/F");
   
+  _tree->Branch("topo_score_v","std::vector< float >", &_topo_score_v);
+
   // common optical filter output (useful for overlay -> EXT)
   _tree->Branch("_opfilter_pe_beam",&_opfilter_pe_beam,"opfilter_pe_beam/F");
   _tree->Branch("_opfilter_pe_veto",&_opfilter_pe_veto,"opfilter_pe_veto/F");
@@ -1110,6 +1164,8 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _nu_l = std::numeric_limits<float>::lowest();
   _theta = std::numeric_limits<float>::lowest();
   _nu_pt = std::numeric_limits<float>::lowest();
+
+  _topo_score_v.clear();
 
   if(fMakeNuMINtuple){
   // By default let the swtrigger value be 1

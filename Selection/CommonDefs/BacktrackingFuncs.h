@@ -158,7 +158,8 @@ std::vector<BtPart> initBacktrackingParticleVec(const std::vector<sim::MCShower>
                                  mcs.Start().Momentum().Pz() * 0.001, mcs.Start().Momentum().E() * 0.001, mcs.DaughterTrackID(),
                                  mc_step_shower_start.X(), mc_step_shower_start.Y(), mc_step_shower_start.Z(), mc_step_shower_start.T()));
     }
-    if (doNeutrons && mcs.PdgCode() == 2212 && mcs.Process() == "neutronInelastic")
+    //if (doNeutrons && mcs.PdgCode() == 2212 && mcs.Process() == "neutronInelastic")
+    if (doNeutrons && mcs.Process() != "Primary" && mcs.PdgCode() != 22 && mcs.PdgCode() != 11 && mcs.PdgCode() != -11)
     {
       sim::MCStep mc_step_shower_start = mcs.DetProfile();
       btparts_v.push_back(BtPart(mcs.PdgCode(), mcs.Start().Momentum().Px() * 0.001, mcs.Start().Momentum().Py() * 0.001,
@@ -176,7 +177,8 @@ std::vector<BtPart> initBacktrackingParticleVec(const std::vector<sim::MCShower>
                                  mct.Start().Momentum().Pz() * 0.001, mct.Start().Momentum().E() * 0.001, mct.TrackID(),
                                  mc_step_track_start.X(), mc_step_track_start.Y(), mc_step_track_start.Z(), mc_step_track_start.T()));
     }
-    if (doNeutrons && mct.PdgCode() == 2212 && mct.Process() == "neutronInelastic")
+    //if (doNeutrons && mct.PdgCode() == 2212 && mct.Process() == "neutronInelastic")
+    if (doNeutrons && mct.Process() != "Primary" && mct.PdgCode() != 22 && mct.PdgCode() != 11 && mct.PdgCode() != -11)
     {
       sim::MCStep mc_step_track_start = mct.Start();
       btparts_v.push_back(BtPart(mct.PdgCode(), mct.Start().Momentum().Px() * 0.001, mct.Start().Momentum().Py() * 0.001,
