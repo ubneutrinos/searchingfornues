@@ -150,11 +150,6 @@ DefaultAnalysisTool: {
     SLCproducer: "pandora"
     MCPproducer: "largeant"
     PFPproducer: "pandora"
-    SHRproducer: "shrreco3d" #"pandora" #if you change this, remember to change also the inputs to ShowerAnalysisTool!
-    MCFluxproducer: "generator"    TRKproducer: "pandoraTrack"
-    VTXproducer: "pandora"
-    PCAproducer: "pandora"
-    TRKproducer: "pandoraTrack"
 
     ProtonThreshold: 0.04 # GeV
     fidvolXstart: @local::FidVol.Xstart

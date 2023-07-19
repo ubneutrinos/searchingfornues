@@ -104,11 +104,7 @@ private:
   TParticlePDG *muon_neutrino = TDatabasePDG::Instance()->GetParticle(14);
 
   //Producers required for the pfp_proxy
-  art::InputTag fPCAproducer;
   art::InputTag fPFPproducer;
-  art::InputTag fTRKproducer;
-  art::InputTag fVTXproducer;
-  art::InputTag fSHRproducer;
 
   art::InputTag fCRTVetoproducer; // producer for CRT veto ass tag [anab::T0 <-> recob::OpFlash]
   art::InputTag fCLSproducer;     // cluster associated to PFP
@@ -327,11 +323,6 @@ private:
 DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
 {
   fPFPproducer = p.get<art::InputTag>("PFPproducer");
-  fPCAproducer = p.get<art::InputTag>("PCAproducer");
-  fTRKproducer = p.get<art::InputTag>("TRKproducer");
-  fVTXproducer = p.get<art::InputTag>("VTXproducer");
-  fSHRproducer = p.get<art::InputTag>("SHRproducer");
-
   fCRTVetoproducer = p.get<art::InputTag>("CRTVetoproducer", ""); // default is no CRT veto
   fCLSproducer = p.get<art::InputTag>("CLSproducer");
   fMCTproducer = p.get<art::InputTag>("MCTproducer");
@@ -384,20 +375,14 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
   std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << e.run() << ", SubRun: " << e.subRun() << ", Event: " << e.event() << std::endl;
  
-  searchingfornues::ProxyPfpColl_t const &pfp_proxy = proxy::getCollection<std::vector<recob::PFParticle>>(e, fPFPproducer,
-                                            proxy::withAssociated<larpandoraobj::PFParticleMetadata>(fPFPproducer),
-                                            proxy::withAssociated<recob::Cluster>(fCLSproducer),
-                                            proxy::withAssociated<recob::Slice>(fSLCproducer),
-                                            proxy::withAssociated<recob::Track>(fTRKproducer),
-                                            proxy::withAssociated<recob::Vertex>(fVTXproducer),
-                                            proxy::withAssociated<recob::PCAxis>(fPCAproducer),
-                                            proxy::withAssociated<recob::Shower>(fSHRproducer),
-                                            proxy::withAssociated<recob::SpacePoint>(fPFPproducer));
+  searchingfornues::ProxySliceColl_t const &pfp_proxy = proxy::getCollection<std::vector<recob::PFParticle>>(e, fPFPproducer,
+													     proxy::withAssociated<larpandoraobj::PFParticleMetadata>(fPFPproducer),
+													     proxy::withAssociated<recob::Slice>(fSLCproducer));
 
   int pfp_slice_id;
   int temp_pfp_slice_id; //to find the max slice index. used to set the temp slice vector size
   int max_slice_id = 0;
-  for (const ProxyPfpElem_t &pfp : pfp_proxy)
+  for (const searchingfornues::ProxySliceElem_t &pfp : pfp_proxy)
   {
     auto temp_slice_pxy_v = pfp.get<recob::Slice>();
     if (temp_slice_pxy_v.size() != 0)
@@ -413,7 +398,7 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   std::vector<float> temp_slice_topo_score_v(max_slice_id+1);
   fill(temp_slice_topo_score_v.begin(), temp_slice_topo_score_v.end(), std::numeric_limits<float>::lowest()); // initialize all slice topo values to 0.i
 
-  for (const ProxyPfpElem_t &pfp : pfp_proxy)
+  for (const searchingfornues::ProxySliceElem_t &pfp : pfp_proxy)
   {
     auto metadata_pxy_v = pfp.get<larpandoraobj::PFParticleMetadata>();
     auto slice_pxy_v = pfp.get<recob::Slice>();
