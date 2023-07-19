@@ -103,6 +103,13 @@ private:
   TParticlePDG *electron_neutrino = TDatabasePDG::Instance()->GetParticle(12);
   TParticlePDG *muon_neutrino = TDatabasePDG::Instance()->GetParticle(14);
 
+  //Producers required for the pfp_proxy
+  art::InputTag fPCAproducer;
+  art::InputTag fPFPproducer;
+  art::InputTag fTRKproducer;
+  art::InputTag fVTXproducer;
+  art::InputTag fSHRproducer;
+
   art::InputTag fCRTVetoproducer; // producer for CRT veto ass tag [anab::T0 <-> recob::OpFlash]
   art::InputTag fCLSproducer;     // cluster associated to PFP
   art::InputTag fMCTproducer;     // MCTruth from neutrino generator
@@ -145,6 +152,8 @@ private:
   float fMuonThreshold;
 
   int _category; // event category
+
+  std::vector<float> _slice_topo_score_v;
 
   float _true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z;
   float _true_nu_vtx_sce_x, _true_nu_vtx_sce_y, _true_nu_vtx_sce_z;
@@ -247,6 +256,7 @@ private:
   int evnhits;                     // number of hits in event
   int slpdg;                       // PDG code of primary pfp in slice
   int slnhits;                     // number of hits in slice
+  int _slice_id;
   float _topo_score;               /**< topological score of the slice */
   std::vector<int> pfpdg;          // PDG code of pfp in slice
   std::vector<int> pfnhits;        // number of hits in pfp
@@ -316,6 +326,12 @@ private:
 ///
 DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
 {
+  fPFPproducer = p.get<art::InputTag>("PFPproducer");
+  fPCAproducer = p.get<art::InputTag>("PCAproducer");
+  fTRKproducer = p.get<art::InputTag>("TRKproducer");
+  fVTXproducer = p.get<art::InputTag>("VTXproducer");
+  fSHRproducer = p.get<art::InputTag>("SHRproducer");
+
   fCRTVetoproducer = p.get<art::InputTag>("CRTVetoproducer", ""); // default is no CRT veto
   fCLSproducer = p.get<art::InputTag>("CLSproducer");
   fMCTproducer = p.get<art::InputTag>("MCTproducer");
@@ -367,7 +383,69 @@ void DefaultAnalysis::configure(fhicl::ParameterSet const &p)
 void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
   std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << e.run() << ", SubRun: " << e.subRun() << ", Event: " << e.event() << std::endl;
-  
+ 
+  searchingfornues::ProxyPfpColl_t const &pfp_proxy = proxy::getCollection<std::vector<recob::PFParticle>>(e, fPFPproducer,
+                                            proxy::withAssociated<larpandoraobj::PFParticleMetadata>(fPFPproducer),
+                                            proxy::withAssociated<recob::Cluster>(fCLSproducer),
+                                            proxy::withAssociated<recob::Slice>(fSLCproducer),
+                                            proxy::withAssociated<recob::Track>(fTRKproducer),
+                                            proxy::withAssociated<recob::Vertex>(fVTXproducer),
+                                            proxy::withAssociated<recob::PCAxis>(fPCAproducer),
+                                            proxy::withAssociated<recob::Shower>(fSHRproducer),
+                                            proxy::withAssociated<recob::SpacePoint>(fPFPproducer));
+
+  int pfp_slice_id;
+  int temp_pfp_slice_id; //to find the max slice index. used to set the temp slice vector size
+  int max_slice_id = 0;
+  for (const ProxyPfpElem_t &pfp : pfp_proxy)
+  {
+    auto temp_slice_pxy_v = pfp.get<recob::Slice>();
+    if (temp_slice_pxy_v.size() != 0)
+    {
+      temp_pfp_slice_id = temp_slice_pxy_v.at(0)->ID();
+      if (temp_pfp_slice_id > max_slice_id)
+      {
+	max_slice_id = temp_pfp_slice_id;
+      }
+    }
+  }
+
+  std::vector<float> temp_slice_topo_score_v(max_slice_id+1);
+  fill(temp_slice_topo_score_v.begin(), temp_slice_topo_score_v.end(), std::numeric_limits<float>::lowest()); // initialize all slice topo values to 0.i
+
+  for (const ProxyPfpElem_t &pfp : pfp_proxy)
+  {
+    auto metadata_pxy_v = pfp.get<larpandoraobj::PFParticleMetadata>();
+    auto slice_pxy_v = pfp.get<recob::Slice>();
+    if (slice_pxy_v.size() != 0)
+    {
+      pfp_slice_id = slice_pxy_v.at(0)->ID();
+    
+      if (metadata_pxy_v.size() != 0)
+      {
+        for (unsigned int j = 0; j < metadata_pxy_v.size(); ++j)
+        {
+          const art::Ptr<larpandoraobj::PFParticleMetadata> &pfParticleMetadata(metadata_pxy_v.at(j));
+          auto pfParticlePropertiesMap = pfParticleMetadata->GetPropertiesMap();
+          if (!pfParticlePropertiesMap.empty() && temp_slice_topo_score_v.at(pfp_slice_id) == std::numeric_limits<float>::lowest())
+          {
+	    auto it = pfParticlePropertiesMap.begin();
+	    while (it != pfParticlePropertiesMap.end())
+	    {
+              if (it->first == "NuScore")
+  	      {
+	        temp_slice_topo_score_v.at(pfp_slice_id) = pfParticlePropertiesMap.at(it->first);
+	        //continue;
+	      }
+	      it++;
+	    }
+          } // if PFP metadata exists!
+        }
+      }
+    }
+  }
+  _slice_topo_score_v = temp_slice_topo_score_v;
+
   // store common optical filter tag
   if (!fData&&(!fMakeNuMINtuple)) {
     art::Handle<uboone::UbooneOpticalFilter> CommonOpticalFilter_h;
@@ -550,6 +628,8 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       slnhits = slicehits.size();
 
       auto metadata_pxy_v = pfp.get<larpandoraobj::PFParticleMetadata>();
+     
+      _slice_id = slice_pxy_v.at(0)->ID();
 
       if (metadata_pxy_v.size() != 0)
       {
@@ -563,7 +643,6 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           } // if PFP metadata exists!
         }
       }
-
       // grab vertex
       double xyz[3] = {};
 
@@ -1106,6 +1185,8 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("hits_u", &_hits_u, "hits_u/i");
   _tree->Branch("hits_v", &_hits_v, "hits_v/i");
   _tree->Branch("hits_y", &_hits_y, "hits_y/i");
+  _tree->Branch("slice_id",&_slice_id, "slice_id/i");
+  _tree->Branch("slice_topo_score_v", "std::vector< float >", &_slice_topo_score_v);
   _tree->Branch("topological_score", &_topo_score, "topological_score/F");
   _tree->Branch("slclustfrac", &slclustfrac, "slclustfrac/F");
 
@@ -1272,7 +1353,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
 
   evnhits = std::numeric_limits<int>::lowest();
   slpdg = std::numeric_limits<int>::lowest();
+  _slice_id = std::numeric_limits<int>::lowest();
   _topo_score = std::numeric_limits<float>::lowest();
+  _slice_topo_score_v.clear();
   slnhits = std::numeric_limits<int>::lowest();
   pfpdg.clear();
   pfnhits.clear();
