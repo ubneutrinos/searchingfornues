@@ -151,7 +151,7 @@ private:
 
   int _category; // event category
 
-  std::vector<float>  _topo_score_v;
+  std::vector<float> _slice_topo_score_v;
 
   float _true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z;
   float _true_nu_vtx_sce_x, _true_nu_vtx_sce_y, _true_nu_vtx_sce_z;
@@ -254,6 +254,7 @@ private:
   int evnhits;                     // number of hits in event
   int slpdg;                       // PDG code of primary pfp in slice
   int slnhits;                     // number of hits in slice
+  int _slice_id;
   float _topo_score;               /**< topological score of the slice */
   std::vector<int> pfpdg;          // PDG code of pfp in slice
   std::vector<int> pfnhits;        // number of hits in pfp
@@ -384,31 +385,57 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
                                             proxy::withAssociated<recob::Shower>(fSHRproducer),
                                             proxy::withAssociated<recob::SpacePoint>(fPFPproducer));
 
+  int pfp_slice_id;
+  int temp_pfp_slice_id; //to find the max slice index. used to set the temp slice vector size
+  int max_slice_id = 0;
+  for (const ProxyPfpElem_t &pfp : pfp_proxy)
+  {
+    auto temp_slice_pxy_v = pfp.get<recob::Slice>();
+    if (temp_slice_pxy_v.size() != 0)
+    {
+      temp_pfp_slice_id = temp_slice_pxy_v.at(0)->ID();
+      if (temp_pfp_slice_id > max_slice_id)
+      {
+	max_slice_id = temp_pfp_slice_id;
+      }
+    }
+  }
+
+  std::vector<float> temp_slice_topo_score_v(max_slice_id+1);
+  fill(temp_slice_topo_score_v.begin(), temp_slice_topo_score_v.end(), std::numeric_limits<float>::lowest()); // initialize all slice topo values to 0.i
+
   for (const ProxyPfpElem_t &pfp : pfp_proxy)
   {
     auto metadata_pxy_v = pfp.get<larpandoraobj::PFParticleMetadata>();
-    if (metadata_pxy_v.size() != 0)
+    auto slice_pxy_v = pfp.get<recob::Slice>();
+    if (slice_pxy_v.size() != 0)
     {
-      for (unsigned int j = 0; j < metadata_pxy_v.size(); ++j)
+      pfp_slice_id = slice_pxy_v.at(0)->ID();
+    
+      if (metadata_pxy_v.size() != 0)
       {
-        const art::Ptr<larpandoraobj::PFParticleMetadata> &pfParticleMetadata(metadata_pxy_v.at(j));
-        auto pfParticlePropertiesMap = pfParticleMetadata->GetPropertiesMap();
-        if (!pfParticlePropertiesMap.empty())
+        for (unsigned int j = 0; j < metadata_pxy_v.size(); ++j)
         {
-	  auto it = pfParticlePropertiesMap.begin();
-	  _topo_score_v.push_back(pfParticlePropertiesMap.at(it->first));
-        } // if PFP metadata exists!
-	else
-	{
-	  _topo_score_v.push_back(std::numeric_limits<float>::lowest());
-	}
+          const art::Ptr<larpandoraobj::PFParticleMetadata> &pfParticleMetadata(metadata_pxy_v.at(j));
+          auto pfParticlePropertiesMap = pfParticleMetadata->GetPropertiesMap();
+          if (!pfParticlePropertiesMap.empty() && temp_slice_topo_score_v.at(pfp_slice_id) == std::numeric_limits<float>::lowest())
+          {
+	    auto it = pfParticlePropertiesMap.begin();
+	    while (it != pfParticlePropertiesMap.end())
+	    {
+              if (it->first == "NuScore")
+  	      {
+	        temp_slice_topo_score_v.at(pfp_slice_id) = pfParticlePropertiesMap.at(it->first);
+	        //continue;
+	      }
+	      it++;
+	    }
+          } // if PFP metadata exists!
+        }
       }
     }
-    else
-    {
-      _topo_score_v.push_back(std::numeric_limits<float>::lowest());
-    }
   }
+  _slice_topo_score_v = temp_slice_topo_score_v;
 
   // store common optical filter tag
   if (!fData&&(!fMakeNuMINtuple)) {
@@ -592,6 +619,8 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
       slnhits = slicehits.size();
 
       auto metadata_pxy_v = pfp.get<larpandoraobj::PFParticleMetadata>();
+     
+      _slice_id = slice_pxy_v.at(0)->ID();
 
       if (metadata_pxy_v.size() != 0)
       {
@@ -605,7 +634,6 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
           } // if PFP metadata exists!
         }
       }
-
       // grab vertex
       double xyz[3] = {};
 
@@ -617,7 +645,6 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
         auto nuvtx = TVector3(xyz[0], xyz[1], xyz[2]);
 
         _reco_nu_vtx_x = nuvtx.X();
-	std::cout<<"_nonprim_slc_id_v.push_back passed"<<std::endl;
         _reco_nu_vtx_y = nuvtx.Y();
         _reco_nu_vtx_z = nuvtx.Z();
 
@@ -963,8 +990,6 @@ void DefaultAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("true_e_visible", &_true_e_visible, "true_e_visible/F");
   
-  _tree->Branch("topo_score_v","std::vector< float >", &_topo_score_v);
-
   // common optical filter output (useful for overlay -> EXT)
   _tree->Branch("_opfilter_pe_beam",&_opfilter_pe_beam,"opfilter_pe_beam/F");
   _tree->Branch("_opfilter_pe_veto",&_opfilter_pe_veto,"opfilter_pe_veto/F");
@@ -1131,6 +1156,8 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("hits_u", &_hits_u, "hits_u/i");
   _tree->Branch("hits_v", &_hits_v, "hits_v/i");
   _tree->Branch("hits_y", &_hits_y, "hits_y/i");
+  _tree->Branch("slice_id",&_slice_id, "slice_id/i");
+  _tree->Branch("slice_topo_score_v", "std::vector< float >", &_slice_topo_score_v);
   _tree->Branch("topological_score", &_topo_score, "topological_score/F");
   _tree->Branch("slclustfrac", &slclustfrac, "slclustfrac/F");
 
@@ -1164,8 +1191,6 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _nu_l = std::numeric_limits<float>::lowest();
   _theta = std::numeric_limits<float>::lowest();
   _nu_pt = std::numeric_limits<float>::lowest();
-
-  _topo_score_v.clear();
 
   if(fMakeNuMINtuple){
   // By default let the swtrigger value be 1
@@ -1294,7 +1319,9 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
 
   evnhits = std::numeric_limits<int>::lowest();
   slpdg = std::numeric_limits<int>::lowest();
+  _slice_id = std::numeric_limits<int>::lowest();
   _topo_score = std::numeric_limits<float>::lowest();
+  _slice_topo_score_v.clear();
   slnhits = std::numeric_limits<int>::lowest();
   pfpdg.clear();
   pfnhits.clear();

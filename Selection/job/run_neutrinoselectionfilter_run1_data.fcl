@@ -12,8 +12,6 @@ services:
     @table::microboone_reco_data_services
     message:      @local::standard_info
     FileCatalogMetadata:  @local::art_file_catalog_data   # or _mc or _overlay
-    BackTrackerService:                       @local::microboone_backtrackerservice
-    ParticleInventoryService:                 @local::standard_particleinventoryservice
 }
 services.DatabaseUtil.ShouldConnect: false
 services.TPCEnergyCalibService.TPCEnergyCalibProvider: @local::microboone_tpcenergycalib_provider_data
