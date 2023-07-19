@@ -2,9 +2,6 @@
 #include "mcreco.fcl"
 #include "proximityclustering.fcl"
 #include "eventweight_microboone_genie_knobs.fcl"
-#include "services_microboone.fcl"
-#include "backtrackerservice.fcl"
-#include "particleinventoryservice.fcl"
 
 # #include "blipreco_configs.fcl"
 
@@ -355,8 +352,8 @@ NuSelectionFilter:{
         secondshower:  @local::SecondShowerTaggerTool
         eventfilter:   @local::EventFilterTool
         mcfilter:      @local::MCFilterAnalysisTool
-	blip:          @local::BlipAnalysisTool	
-        neutron:       @local::NeutronAnalysisTool
+        #blip:          @local::BlipAnalysisTool
+        #neutron:       @local::NeutronAnalysisTool
     }
 }
 
