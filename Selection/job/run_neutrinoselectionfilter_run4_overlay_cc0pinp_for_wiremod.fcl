@@ -1,0 +1,7 @@
+################################################
+# Version for WIREMOD detector variation files #
+################################################
+#include "run_neutrinoselectionfilter_run4_overlay_cc0pinp.fcl"
+
+physics.filters.nuselection.AnalysisTools.slicepurcompl.OrigHTproducer: "gaushitTruthMatch::OverlayWireModRecoStage1b"
+physics.filters.nuselection.AnalysisTools.slicepurcompl.OrigHproducer: "gaushit::OverlayWireModRecoStage1a"
