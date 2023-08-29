@@ -116,7 +116,7 @@ private:
   std::vector<float> _nonprim_backtracked_sce_start_U;
   std::vector<float> _nonprim_backtracked_sce_start_V;
   std::vector<float> _nonprim_backtracked_sce_start_Y;
-  std::vector<std::__cxx11::string> _nonprim_backtracked_process;
+  std::vector<std::string> _nonprim_backtracked_process;
 
   std::vector<int> nonprim_pfpdg;          // PDG code of non primary pfp
   //std::vector<uint> _nonprim_generation;    // generation, 1 is primary
@@ -142,7 +142,7 @@ private:
 
   std::vector<float> _all_mc_completeness;
   std::vector<float> _all_mc_purity;
-  std::vector<std::__cxx11::string>  _all_mc_process;
+  std::vector<std::string>  _all_mc_process;
 
   std::vector<int> _all_mc_mother;
   std::vector<int> _all_mc_trkid;
@@ -340,8 +340,8 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
     searchingfornues::ProxyCaloColl_t const &calo_proxy = proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer,
                                                                                                         proxy::withAssociated<anab::Calorimetry>(fCALOproducer));
 
-    searchingfornues::ProxyPIDColl_t const &pid_proxy = proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer,
-                                                                                                      proxy::withAssociated<anab::ParticleID>(fPIDproducer));
+    //searchingfornues::ProxyPIDColl_t const &pid_proxy = proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer,
+    //proxy::withAssociated<anab::ParticleID>(fPIDproducer));
 
     BuildPFPMap(pfp_proxy);
     
@@ -372,7 +372,7 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
     {
       auto trk_v = pfp.get<recob::Track>();
       auto clus_pxy_v = pfp.get<recob::Cluster>();
-      std::__cxx11::string backtracked_process;
+      std::string backtracked_process;
 
       nonprim_pfpdg.push_back(pfp->PdgCode());
       //_nonprim_generation.push_back(larpandora.GetGeneration(particleMap, particleMap.at(pfp->Self())));
