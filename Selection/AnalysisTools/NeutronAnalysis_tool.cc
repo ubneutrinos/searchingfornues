@@ -180,6 +180,8 @@ private:
   std::vector<float> _nonprim_trk_sce_start_y_v;
   std::vector<float> _nonprim_trk_sce_start_z_v;
 
+  std::vector<float> _nonprim_trk_charge_v;
+
   std::vector<float> _nonprim_trk_distance_v;
   std::vector<float> _nonprim_trk_theta_v;
   std::vector<float> _nonprim_trk_phi_v;
@@ -377,6 +379,7 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
       auto trk_v = pfp.get<recob::Track>();
       auto clus_pxy_v = pfp.get<recob::Cluster>();
       std::string backtracked_process;
+      float trk_charge = 0;
       //std::__cxx11::string backtracked_process;
 
       nonprim_pfpdg.push_back(pfp->PdgCode());
@@ -554,6 +557,7 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
 
           for (size_t i = 0; i < dqdx_values_corrected.size(); i++)
           {
+	    trk_charge += dqdx_values_corrected[i];
             float aux_dedx;
             aux_dedx = searchingfornues::ModBoxCorrection(dqdx_values_corrected[i]*fADCtoE[plane], xyz_v[i].X(), xyz_v[i].Y(), xyz_v[i].Z());
             dedx_values_corrected.push_back(aux_dedx);
@@ -582,6 +586,7 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
 	  _nonprim_trk_llr_pid_v.back() += llr_pid;
 	  } // Calo loop
 	  _nonprim_trk_llr_pid_score_v.back() = atan(_nonprim_trk_llr_pid_v.back() / 100.) * 2 / 3.14159266;
+	  _nonprim_trk_charge_v.push_back(trk_charge);
 	  }//if trk_v.size() == 1
 	  else{
 	    _nonprim_trk_score_v.push_back(std::numeric_limits<float>::lowest());
@@ -612,6 +617,7 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
 	    _nonprim_trk_nhits_u_v.push_back(std::numeric_limits<int>::lowest());
 	    _nonprim_trk_nhits_v_v.push_back(std::numeric_limits<int>::lowest());
 	    _nonprim_trk_nhits_y_v.push_back(std::numeric_limits<int>::lowest());
+	    _nonprim_trk_charge_v.push_back(std::numeric_limits<float>::lowest());
 	  }
        //Cluster Loop 
       pfp_counter += 1;
@@ -750,6 +756,8 @@ void NeutronAnalysis::setBranches(TTree *_tree)
   _tree->Branch("nonprim_trk_sce_start_y_v", "std::vector< float >", &_nonprim_trk_sce_start_y_v);
   _tree->Branch("nonprim_trk_sce_start_z_v", "std::vector< float >", &_nonprim_trk_sce_start_z_v);
 
+  _tree->Branch("nonprim_trk_charge_v", "std::vector< float >", &_nonprim_trk_charge_v);
+
   _tree->Branch("nonprim_trk_distance_v", "std::vector< float >", &_nonprim_trk_distance_v);
   _tree->Branch("nonprim_trk_theta_v", "std::vector< float >", &_nonprim_trk_theta_v);
   _tree->Branch("nonprim_trk_phi_v", "std::vector< float >", &_nonprim_trk_phi_v);
@@ -848,6 +856,8 @@ void NeutronAnalysis::resetTTree(TTree *_tree)
   _nonprim_trk_sce_start_x_v.clear();
   _nonprim_trk_sce_start_y_v.clear();
   _nonprim_trk_sce_start_z_v.clear();
+
+  _nonprim_trk_charge_v.clear();
 
   _nonprim_trk_distance_v.clear();
   _nonprim_trk_theta_v.clear();

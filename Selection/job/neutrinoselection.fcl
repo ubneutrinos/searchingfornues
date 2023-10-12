@@ -6,7 +6,7 @@
 #include "backtrackerservice.fcl"
 #include "particleinventoryservice.fcl"
 
-# #include "blipreco_configs.fcl"
+#include "blipreco_configs.fcl"
 
 FidVol: {
     Xstart: 10.
@@ -85,10 +85,10 @@ TrackAnalysisTool: {
     RecalibrateHits: true
 }
 
-#BlipAnalysisTool: {
-#    tool_type: "BlipAnalysis"
-#    BlipAlg: @local::microboone_blipalg
-#}
+BlipAnalysisTool: {
+    tool_type: "BlipAnalysis"
+    BlipAlg: @local::microboone_blipalg
+}
 
 NeutronAnalysisTool: {
     tool_type: "NeutronAnalysis"

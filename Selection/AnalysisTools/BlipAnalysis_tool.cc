@@ -117,6 +117,8 @@ private:
   std::vector<float> _blip_dYZ;
   std::vector<float> _blip_Charge;
 
+  std::vector<int>   _blip_LeadG4ID;
+
   //Blip Truth
   std::vector<int>         _blip_pdg;
   std::vector<std::string> _blip_process;
@@ -191,6 +193,7 @@ void BlipAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t>
     _blip_dX.push_back(blipVec[i].dX);
     _blip_dYZ.push_back(blipVec[i].dYZ);
     _blip_Charge.push_back(blipVec[i].Charge);
+    _blip_LeadG4ID.push_back(blipVec[i].truth.LeadG4ID);
 
     // Blip Truth
     // Default values if no matching is performed
@@ -304,6 +307,7 @@ void BlipAnalysis::setBranches(TTree *_tree)
   _tree->Branch("blip_dX", "std::vector< float >", &_blip_dX);
   _tree->Branch("blip_dYZ", "std::vector< float >", &_blip_dYZ);
   _tree->Branch("blip_Charge","std::vector< float >", &_blip_Charge);
+  _tree->Branch("blip_LeadG4ID","std::vector< int >", &_blip_LeadG4ID);
 
   // Blip Truth
   _tree->Branch("blip_pdg", "std::vector< int >", &_blip_pdg);
@@ -338,6 +342,7 @@ void BlipAnalysis::resetTTree(TTree *_tree)
   _blip_dX.clear();
   _blip_dYZ.clear();
   _blip_Charge.clear();
+  _blip_LeadG4ID.clear();
 
   // Blip Truth
   _blip_pdg.clear();
