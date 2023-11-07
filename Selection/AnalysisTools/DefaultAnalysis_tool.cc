@@ -1409,7 +1409,7 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   // load MCFlux
   auto const& mcflux_h = e.getValidHandle<std::vector<simb::MCFlux>>(fMCFluxproducer);
 
-  if (mcflux_h.isValid()){ 
+  if (mcflux_h.isValid() && mcflux_h->size()!=0){ 
     // reference: http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/
     /*
       Decay mode that produced neutrino:
@@ -1456,41 +1456,43 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   }// if flux handle is valid
   
   auto mct = mct_h->at(0);
-  auto neutrino = mct.GetNeutrino();
-  auto nu = neutrino.Nu();
-  
-  _ccnc = neutrino.CCNC();
-  _interaction = neutrino.Mode();
-  _nu_pdg = nu.PdgCode();
-  _nu_e = nu.Trajectory().E(0);
 
-  _lep_e = neutrino.Lepton().E();
+  if (mct.NeutrinoSet()){ // NeutrinoSet(): whether the neutrino information has been set
+    auto neutrino = mct.GetNeutrino();
+    auto nu = neutrino.Nu();
+    _ccnc = neutrino.CCNC();
+    _interaction = neutrino.Mode();
+    _nu_pdg = nu.PdgCode();
+    _nu_e = nu.Trajectory().E(0);
 
-  _true_nu_vtx_t = nu.T();
-  _true_nu_vtx_x = nu.Vx();
-  _true_nu_vtx_y = nu.Vy();
-  _true_nu_vtx_z = nu.Vz();
+    _lep_e = neutrino.Lepton().E();
 
-  if(fMakeNuMINtuple){
-    _true_nu_px = nu.Px();
-    _true_nu_py = nu.Py();
-    _true_nu_pz = nu.Pz();
+    _true_nu_vtx_t = nu.T();
+    _true_nu_vtx_x = nu.Vx();
+    _true_nu_vtx_y = nu.Vy();
+    _true_nu_vtx_z = nu.Vz();
+
+    if(fMakeNuMINtuple){
+      _true_nu_px = nu.Px();
+      _true_nu_py = nu.Py();
+      _true_nu_pz = nu.Pz();
+    }
+
+    float _true_nu_vtx_sce[3];
+    searchingfornues::True2RecoMappingXYZ(_true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z, _true_nu_vtx_sce);
+
+    _true_nu_vtx_sce_x = _true_nu_vtx_sce[0];
+    _true_nu_vtx_sce_y = _true_nu_vtx_sce[1];
+    _true_nu_vtx_sce_z = _true_nu_vtx_sce[2];
+
+    _theta = neutrino.Theta();
+    _nu_pt = neutrino.Pt();
+
+    double vtx[3] = {_true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z};
+    _isVtxInFiducial = searchingfornues::isFiducial(vtx,
+                                                    fFidvolXstart, fFidvolYstart, fFidvolZstart,
+                                                    fFidvolXend, fFidvolYend, fFidvolZend);
   }
-
-  float _true_nu_vtx_sce[3];
-  searchingfornues::True2RecoMappingXYZ(_true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z, _true_nu_vtx_sce);
-
-  _true_nu_vtx_sce_x = _true_nu_vtx_sce[0];
-  _true_nu_vtx_sce_y = _true_nu_vtx_sce[1];
-  _true_nu_vtx_sce_z = _true_nu_vtx_sce[2];
-
-  _theta = neutrino.Theta();
-  _nu_pt = neutrino.Pt();
-
-  double vtx[3] = {_true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z};
-  _isVtxInFiducial = searchingfornues::isFiducial(vtx,
-                                                  fFidvolXstart, fFidvolYstart, fFidvolZstart,
-                                                  fFidvolXend, fFidvolYend, fFidvolZend);
 
   _nelec = 0;
   _nmuon = 0;
