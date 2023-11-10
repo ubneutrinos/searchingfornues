@@ -775,6 +775,13 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
     _pi0_dir2_y = 0;
     _pi0_dir2_z = 0;
 
+    _pi0_dedx1_fit_Y = 0;
+    _pi0_dedx2_fit_Y = 0;
+    _pi0_dedx1_fit_V = 0;
+    _pi0_dedx2_fit_V = 0;
+    _pi0_dedx1_fit_U = 0;
+    _pi0_dedx2_fit_U = 0;
+
     _pi0_dot1 = -1;
     _pi0_dot2 = -1;
     _pi0_radlen1 = -1;
