@@ -159,6 +159,7 @@ DefaultAnalysisTool: {
     fidvolZstart: @local::FidVol.Zstart
     fidvolZend:   @local::FidVol.Zend
     makeNuMINtuple: false
+    ignoreMCFlux: false
     NuMIOpFiltProcName:    "DataStage1Optical"
     NuMISWTriggerProcName: "DataOverlayOpticalNuMI"
 }
