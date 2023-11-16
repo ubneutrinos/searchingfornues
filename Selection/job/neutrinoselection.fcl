@@ -257,7 +257,7 @@ FlashMatchingTool: {
     SpacePointproducer: "pandora"
     AllPFPproducer: "pandoraPatRec:allOutcomes"
     AllSpacePointproducer: "pandoraPatRec:allOutcomes"
-    #AllT0producer: "flashmatchAllOutcomes"
+    AllT0producer: "flashmatchAllOutcomes"
     Hproducer: "gaushit"
     HTproducer: "gaushitTruthMatch"
     ChargeToNPhotonsTrack: 164.0
