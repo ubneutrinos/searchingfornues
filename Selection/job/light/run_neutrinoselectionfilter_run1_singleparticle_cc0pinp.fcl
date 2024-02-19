@@ -26,3 +26,4 @@ physics.filters.nuselection.AnalysisTools: {
 
 #physics.filters.nuselection.AnalysisTools.default.BacktrackTag: "gaushitTruthMatch"
 physics.filters.nuselection.IsData: false
+physics.filters.nuselection.AnalysisTools.default.ignoreMCFlux: true

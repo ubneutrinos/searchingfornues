@@ -19,6 +19,8 @@
 #include "../CommonDefs/Containment.h"
 #include "../CommonDefs/TrackShowerScoreFuncs.h"
 #include "../CommonDefs/ProximityClustering.h"
+#include "../CommonDefs/Descendents.h"
+#include "../CommonDefs/Scatters.h"
 
 // save info associated to common optical filter
 #include "ubobj/Optical/UbooneOpticalFilter.h"
@@ -102,11 +104,7 @@ private:
   TParticlePDG *muon_neutrino = TDatabasePDG::Instance()->GetParticle(14);
 
   //Producers required for the pfp_proxy
-  art::InputTag fPCAproducer;
   art::InputTag fPFPproducer;
-  art::InputTag fTRKproducer;
-  art::InputTag fVTXproducer;
-  art::InputTag fSHRproducer;
 
   art::InputTag fCRTVetoproducer; // producer for CRT veto ass tag [anab::T0 <-> recob::OpFlash]
   art::InputTag fCLSproducer;     // cluster associated to PFP
@@ -130,6 +128,7 @@ private:
   float fFidvolZend;
 
   bool fMakeNuMINtuple;
+  bool fIgnoreMCFlux;
 
   const int k_nu_e_other = 1;
   const int k_nu_e_cc0pi0p = 10;
@@ -272,6 +271,10 @@ private:
   std::vector<uint> _generation;    // generation, 1 is primary
   std::vector<uint> _shr_daughters; // number of shower daughters
   std::vector<uint> _trk_daughters; // number of track daughters
+  std::vector<uint> _n_descendents; // number of descendents (daughters + granddaughters + ...)
+  std::vector<float> _pfp_vtx_x;    // x position of particle vertex
+  std::vector<float> _pfp_vtx_y;    // y position of particle vertex
+  std::vector<float> _pfp_vtx_z;    // z position of particle vertex
 
   unsigned int _n_pfps;
   std::vector<float> _trk_score_v;
@@ -284,10 +287,13 @@ private:
 
   std::vector<int> _mc_pdg;
   std::vector<float> _mc_E;
+  std::vector<uint> _mc_n_elastic; // number of elastic scatters
+  std::vector<uint> _mc_n_inelastic; // number of inelastic scatters
 
   std::vector<float> _mc_px;
   std::vector<float> _mc_py;
   std::vector<float> _mc_pz;
+  std::vector<float> _mc_end_p; // final particle momentum 
 
   std::vector<float> _mc_vx;
   std::vector<float> _mc_vy;
@@ -318,11 +324,6 @@ private:
 DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
 {
   fPFPproducer = p.get<art::InputTag>("PFPproducer");
-  fPCAproducer = p.get<art::InputTag>("PCAproducer");
-  fTRKproducer = p.get<art::InputTag>("TRKproducer");
-  fVTXproducer = p.get<art::InputTag>("VTXproducer");
-  fSHRproducer = p.get<art::InputTag>("SHRproducer");
-
   fCRTVetoproducer = p.get<art::InputTag>("CRTVetoproducer", ""); // default is no CRT veto
   fCLSproducer = p.get<art::InputTag>("CLSproducer");
   fMCTproducer = p.get<art::InputTag>("MCTproducer");
@@ -349,6 +350,7 @@ DefaultAnalysis::DefaultAnalysis(const fhicl::ParameterSet &p)
   fFidvolZend = p.get<double>("fidvolZend");
 
   fMakeNuMINtuple = p.get<bool>("makeNuMINtuple", false);
+  fIgnoreMCFlux = p.get<bool>("ignoreMCFlux", false);
   NuMIOpFilterProd = p.get<std::string>("NuMIOpFiltProcName","");
   NuMISWTrigProd   = p.get<std::string>("NuMISWTriggerProcName","" );
 }
@@ -375,20 +377,14 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
 {
   std::cout << "[DefaultAnalysis::analyzeEvent] Run: " << e.run() << ", SubRun: " << e.subRun() << ", Event: " << e.event() << std::endl;
  
-  searchingfornues::ProxyPfpColl_t const &pfp_proxy = proxy::getCollection<std::vector<recob::PFParticle>>(e, fPFPproducer,
-                                            proxy::withAssociated<larpandoraobj::PFParticleMetadata>(fPFPproducer),
-                                            proxy::withAssociated<recob::Cluster>(fCLSproducer),
-                                            proxy::withAssociated<recob::Slice>(fSLCproducer),
-                                            proxy::withAssociated<recob::Track>(fTRKproducer),
-                                            proxy::withAssociated<recob::Vertex>(fVTXproducer),
-                                            proxy::withAssociated<recob::PCAxis>(fPCAproducer),
-                                            proxy::withAssociated<recob::Shower>(fSHRproducer),
-                                            proxy::withAssociated<recob::SpacePoint>(fPFPproducer));
+  searchingfornues::ProxySliceColl_t const &pfp_proxy = proxy::getCollection<std::vector<recob::PFParticle>>(e, fPFPproducer,
+													     proxy::withAssociated<larpandoraobj::PFParticleMetadata>(fPFPproducer),
+													     proxy::withAssociated<recob::Slice>(fSLCproducer));
 
   int pfp_slice_id;
   int temp_pfp_slice_id; //to find the max slice index. used to set the temp slice vector size
   int max_slice_id = 0;
-  for (const ProxyPfpElem_t &pfp : pfp_proxy)
+  for (const searchingfornues::ProxySliceElem_t &pfp : pfp_proxy)
   {
     auto temp_slice_pxy_v = pfp.get<recob::Slice>();
     if (temp_slice_pxy_v.size() != 0)
@@ -404,7 +400,7 @@ void DefaultAnalysis::analyzeEvent(art::Event const &e, bool fData)
   std::vector<float> temp_slice_topo_score_v(max_slice_id+1);
   fill(temp_slice_topo_score_v.begin(), temp_slice_topo_score_v.end(), std::numeric_limits<float>::lowest()); // initialize all slice topo values to 0.i
 
-  for (const ProxyPfpElem_t &pfp : pfp_proxy)
+  for (const searchingfornues::ProxySliceElem_t &pfp : pfp_proxy)
   {
     auto metadata_pxy_v = pfp.get<larpandoraobj::PFParticleMetadata>();
     auto slice_pxy_v = pfp.get<recob::Slice>();
@@ -682,6 +678,22 @@ void DefaultAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem
     }
     _shr_daughters.push_back(this_num_shr_d);
     _trk_daughters.push_back(this_num_trk_d);
+    _n_descendents.push_back(searchingfornues::GetNDescendents(particleMap.at(pfp->Self()), particleMap));
+
+    // Get pfp vertex
+    const auto vertices = pfp.get<recob::Vertex>();
+    if(vertices.size() == 1)
+    {
+      _pfp_vtx_x.push_back(vertices.at(0)->position().X());
+      _pfp_vtx_y.push_back(vertices.at(0)->position().Y());
+      _pfp_vtx_z.push_back(vertices.at(0)->position().Z());
+    }
+    else
+    {
+      _pfp_vtx_x.push_back(std::numeric_limits<float>::lowest());
+      _pfp_vtx_y.push_back(std::numeric_limits<float>::lowest());
+      _pfp_vtx_z.push_back(std::numeric_limits<float>::lowest());
+    }
 
     // store track score
     float trkscore = searchingfornues::GetTrackShowerScore(pfp);
@@ -1138,6 +1150,10 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("pfp_generation_v", "std::vector< uint >", &_generation);
   _tree->Branch("pfp_trk_daughters_v", "std::vector< uint >", &_trk_daughters);
   _tree->Branch("pfp_shr_daughters_v", "std::vector< uint >", &_shr_daughters);
+  _tree->Branch("pfp_n_descendents_v", "std::vector< uint >", &_n_descendents);
+  _tree->Branch("pfp_vtx_x_v", "std::vector< float >", &_pfp_vtx_x);
+  _tree->Branch("pfp_vtx_y_v", "std::vector< float >", &_pfp_vtx_y);
+  _tree->Branch("pfp_vtx_z_v", "std::vector< float >", &_pfp_vtx_z);
 
   _tree->Branch("trk_score_v", "std::vector< float >", &_trk_score_v);
 
@@ -1164,6 +1180,9 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("mc_pdg", "std::vector< int >", &_mc_pdg);
   _tree->Branch("mc_E", "std::vector< float >", &_mc_E);
 
+  _tree->Branch("mc_n_elastic", "std::vector< uint >", &_mc_n_elastic);
+  _tree->Branch("mc_n_inelastic", "std::vector< uint >", &_mc_n_inelastic);
+
   _tree->Branch("mc_vx", "std::vector< float >", &_mc_vx);
   _tree->Branch("mc_vy", "std::vector< float >", &_mc_vy);
   _tree->Branch("mc_vz", "std::vector< float >", &_mc_vz);
@@ -1175,6 +1194,8 @@ void DefaultAnalysis::setBranches(TTree *_tree)
   _tree->Branch("mc_px", "std::vector< float >", &_mc_px);
   _tree->Branch("mc_py", "std::vector< float >", &_mc_py);
   _tree->Branch("mc_pz", "std::vector< float >", &_mc_pz);
+
+  _tree->Branch("mc_end_p", "std::vector< float >", &_mc_end_p);
 
   _tree->Branch("mc_completeness", "std::vector< float >", &_mc_completeness);
   _tree->Branch("mc_purity", "std::vector< float >", &_mc_purity);
@@ -1188,6 +1209,7 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
 {
   _leeweight = 0;
   _nu_e = std::numeric_limits<float>::lowest();
+  _lep_e = std::numeric_limits<float>::lowest();
   _nu_l = std::numeric_limits<float>::lowest();
   _theta = std::numeric_limits<float>::lowest();
   _nu_pt = std::numeric_limits<float>::lowest();
@@ -1222,6 +1244,7 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
 
   _interaction = std::numeric_limits<int>::lowest();
   _pass = 0;
+  _swtrig = 0;
 
   _opfilter_pe_beam = 0.;
   _opfilter_pe_veto = 0.;
@@ -1243,6 +1266,7 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _reco_nu_vtx_sce_z = std::numeric_limits<float>::lowest();
 
   _isVtxInFiducial = false;
+  _truthFiducial = false;
 
   _nslice = 0;
   _crtveto = 0;
@@ -1337,6 +1361,11 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _generation.clear();
   _shr_daughters.clear();
   _trk_daughters.clear();
+  _n_descendents.clear();
+  _pfp_vtx_x.clear();
+  _pfp_vtx_y.clear();
+  _pfp_vtx_z.clear();
+
   slclustfrac = std::numeric_limits<float>::lowest();
 
   _hits_u = 0;
@@ -1344,11 +1373,15 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _hits_y = 0;
 
   _mc_E.clear();
+  _mc_n_elastic.clear();
+  _mc_n_inelastic.clear();
   _mc_pdg.clear();
 
   _mc_px.clear();
   _mc_py.clear();
   _mc_pz.clear();
+
+  _mc_end_p.clear();
 
   _mc_vx.clear();
   _mc_vy.clear();
@@ -1379,91 +1412,94 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
   auto const &mcp_h = e.getValidHandle<std::vector<simb::MCParticle>>(fMCPproducer);
 
   // load MCFlux
-  auto const& mcflux_h = e.getValidHandle<std::vector<simb::MCFlux>>(fMCFluxproducer);
+  if(!fIgnoreMCFlux)
+  {
+    auto const& mcflux_h = e.getValidHandle<std::vector<simb::MCFlux>>(fMCFluxproducer);
+    if (mcflux_h.isValid()){ 
+      // reference: http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/
+      /*
+        Decay mode that produced neutrino:
+        
+        1  K0L -> nue pi- e+
+        2  K0L -> nuebar pi+ e-
+        3  K0L -> numu pi- mu+
+        4  K0L -> numubar pi+ mu-
+        5  K+  -> numu mu+
+        6  K+  -> nue pi0 e+
+        7  K+  -> numu pi0 mu+
+        8  K-  -> numubar mu-
+        9  K-  -> nuebar pi0 e-
+        10  K-  -> numubar pi0 mu-
+        11  mu+ -> numubar nue e+
+        12  mu- -> numu nuebar e-
+        13  pi+ -> numu mu+
+        14  pi- -> numubar mu-
+      */
+      auto flux = mcflux_h->at(0);
+      _nu_parent_pdg = flux.fptype;
+      _nu_hadron_pdg = flux.ftptype;
+      _nu_decay_mode = flux.fndecay;
+      
+      if(fMakeNuMINtuple){
+        _par_decay_vx = flux.fvx;
+        _par_decay_vy = flux.fvy;
+        _par_decay_vz = flux.fvz;  
+        _par_decay_px = flux.fpdpx;
+        _par_decay_py = flux.fpdpy;
+        _par_decay_pz = flux.fpdpz;  
+        
+        TVector3 Trans_Targ2Det_beam = {5502, 7259, 67270};
+        TVector3 Decay_pos = {flux.fvx, flux.fvy, flux.fvz};
+        // std::cout << "\033[0;31mKrish:" << flux.fvx << " " << flux.fvy << " " << flux.fvz << "\033[0m" << std::endl;
+        
+        TVector3 baseline_vec = Trans_Targ2Det_beam - Decay_pos;
+        _baseline  = baseline_vec.Mag()/100.0;
 
-  if (mcflux_h.isValid()){ 
-    // reference: http://www.hep.utexas.edu/~zarko/wwwgnumi/v19/
-    /*
-      Decay mode that produced neutrino:
+      }
       
-      1  K0L -> nue pi- e+
-      2  K0L -> nuebar pi+ e-
-      3  K0L -> numu pi- mu+
-      4  K0L -> numubar pi+ mu-
-      5  K+  -> numu mu+
-      6  K+  -> nue pi0 e+
-      7  K+  -> numu pi0 mu+
-      8  K-  -> numubar mu-
-      9  K-  -> nuebar pi0 e-
-      10  K-  -> numubar pi0 mu-
-      11  mu+ -> numubar nue e+
-      12  mu- -> numu nuebar e-
-      13  pi+ -> numu mu+
-      14  pi- -> numubar mu-
-    */
-    auto flux = mcflux_h->at(0);
-    _nu_parent_pdg = flux.fptype;
-    _nu_hadron_pdg = flux.ftptype;
-    _nu_decay_mode = flux.fndecay;
-    
-    if(fMakeNuMINtuple){
-      _par_decay_vx = flux.fvx;
-      _par_decay_vy = flux.fvy;
-      _par_decay_vz = flux.fvz;  
-      _par_decay_px = flux.fpdpx;
-      _par_decay_py = flux.fpdpy;
-      _par_decay_pz = flux.fpdpz;  
-      
-      TVector3 Trans_Targ2Det_beam = {5502, 7259, 67270};
-      TVector3 Decay_pos = {flux.fvx, flux.fvy, flux.fvz};
-      // std::cout << "\033[0;31mKrish:" << flux.fvx << " " << flux.fvy << " " << flux.fvz << "\033[0m" << std::endl;
-      
-      TVector3 baseline_vec = Trans_Targ2Det_beam - Decay_pos;
-      _baseline  = baseline_vec.Mag()/100.0;
-
-    }
-    
-    _nu_l = flux.fdk2gen + flux.fgen2vtx;
-    std::cout << "total Lenght = " << flux.fdk2gen << " + " << flux.fgen2vtx << " = " << _nu_l << std::endl;
-  }// if flux handle is valid
+      _nu_l = flux.fdk2gen + flux.fgen2vtx;
+      std::cout << "total Lenght = " << flux.fdk2gen << " + " << flux.fgen2vtx << " = " << _nu_l << std::endl;
+    }// if flux handle is valid
+  }// if ignore MCFlux is false
   
   auto mct = mct_h->at(0);
-  auto neutrino = mct.GetNeutrino();
-  auto nu = neutrino.Nu();
-  
-  _ccnc = neutrino.CCNC();
-  _interaction = neutrino.Mode();
-  _nu_pdg = nu.PdgCode();
-  _nu_e = nu.Trajectory().E(0);
+  if (mct.NeutrinoSet()){ // NeutrinoSet(): whether the neutrino information has been set
+    auto neutrino = mct.GetNeutrino();
+    auto nu = neutrino.Nu();
+    
+    _ccnc = neutrino.CCNC();
+    _interaction = neutrino.Mode();
+    _nu_pdg = nu.PdgCode();
+    _nu_e = nu.Trajectory().E(0);
 
-  _lep_e = neutrino.Lepton().E();
+    _lep_e = neutrino.Lepton().E();
 
-  _true_nu_vtx_t = nu.T();
-  _true_nu_vtx_x = nu.Vx();
-  _true_nu_vtx_y = nu.Vy();
-  _true_nu_vtx_z = nu.Vz();
+    _true_nu_vtx_t = nu.T();
+    _true_nu_vtx_x = nu.Vx();
+    _true_nu_vtx_y = nu.Vy();
+    _true_nu_vtx_z = nu.Vz();
 
-  if(fMakeNuMINtuple){
-    _true_nu_px = nu.Px();
-    _true_nu_py = nu.Py();
-    _true_nu_pz = nu.Pz();
+    if(fMakeNuMINtuple){
+      _true_nu_px = nu.Px();
+      _true_nu_py = nu.Py();
+      _true_nu_pz = nu.Pz();
+    }
+
+    float _true_nu_vtx_sce[3];
+    searchingfornues::True2RecoMappingXYZ(_true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z, _true_nu_vtx_sce);
+
+    _true_nu_vtx_sce_x = _true_nu_vtx_sce[0];
+    _true_nu_vtx_sce_y = _true_nu_vtx_sce[1];
+    _true_nu_vtx_sce_z = _true_nu_vtx_sce[2];
+
+    _theta = neutrino.Theta();
+    _nu_pt = neutrino.Pt();
+
+    double vtx[3] = {_true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z};
+    _isVtxInFiducial = searchingfornues::isFiducial(vtx,
+                                                    fFidvolXstart, fFidvolYstart, fFidvolZstart,
+                                                    fFidvolXend, fFidvolYend, fFidvolZend);
   }
-
-  float _true_nu_vtx_sce[3];
-  searchingfornues::True2RecoMappingXYZ(_true_nu_vtx_t, _true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z, _true_nu_vtx_sce);
-
-  _true_nu_vtx_sce_x = _true_nu_vtx_sce[0];
-  _true_nu_vtx_sce_y = _true_nu_vtx_sce[1];
-  _true_nu_vtx_sce_z = _true_nu_vtx_sce[2];
-
-  _theta = neutrino.Theta();
-  _nu_pt = neutrino.Pt();
-
-  double vtx[3] = {_true_nu_vtx_x, _true_nu_vtx_y, _true_nu_vtx_z};
-  _isVtxInFiducial = searchingfornues::isFiducial(vtx,
-                                                  fFidvolXstart, fFidvolYstart, fFidvolZstart,
-                                                  fFidvolXend, fFidvolYend, fFidvolZend);
-
   _nelec = 0;
   _nmuon = 0;
   _npi0 = 0;
@@ -1610,9 +1646,18 @@ void DefaultAnalysis::SaveTruth(art::Event const &e)
 
     _mc_pdg.push_back(mcp.PdgCode());
 
+    auto nElastic = 0u;
+    auto nInelastic = 0u;
+    const art::Ptr<simb::MCParticle> mcpPtr(mcp_h, p);
+    art::Ptr<simb::MCParticle> finalScatteredParticle;
+    searchingfornues::GetNScatters(mcp_h, mcpPtr, finalScatteredParticle, nElastic, nInelastic);
+    _mc_n_elastic.push_back(nElastic);
+    _mc_n_inelastic.push_back(nInelastic);
+
     _mc_px.push_back(mcp.Px());
     _mc_py.push_back(mcp.Py());
     _mc_pz.push_back(mcp.Pz());
+    _mc_end_p.push_back(finalScatteredParticle->Momentum(std::max(0u, finalScatteredParticle->NumberTrajectoryPoints() - 2)).Vect().Mag());
 
     _mc_vx.push_back(mcp.Vx());
     _mc_vy.push_back(mcp.Vy());

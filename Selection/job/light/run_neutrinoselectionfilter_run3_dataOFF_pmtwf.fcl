@@ -13,3 +13,4 @@ physics.filters.nuselection.AnalysisTools.pmtwf.FLASHproducer: "simpleFlashBeam:
 physics.filters.nuselection.AnalysisTools.pmtwf.FLASHCALIBproducer: "simpleFlashBeam::DataStage1Optical"
 
 physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool
+physics.filters.nuselection.AnalysisTools.default.ignoreMCFlux: true

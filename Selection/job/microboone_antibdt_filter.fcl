@@ -69,6 +69,7 @@ microboone_antibdtfilter:
             MCRproducer: "mcreco"
             SLCproducer: "pandora"
             MCPproducer: "largeant"
+            PFPproducer: "pandora"
             ProtonThreshold: 0.04 # GeV
             fidvolXstart: @local::FidVol.Xstart
             fidvolXend:   @local::FidVol.Xend

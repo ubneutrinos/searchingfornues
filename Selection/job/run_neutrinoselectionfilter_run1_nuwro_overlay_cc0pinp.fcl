@@ -1,0 +1,2 @@
+#include "run_neutrinoselectionfilter_run1_overlay_cc0pinp.fcl"
+physics.filters.nuselection.AnalysisTools.default.ignoreMCFlux: true

@@ -851,8 +851,8 @@ void MCS::resetTTree(TTree *_tree)
 
   _shrPCALen = -1; _n_shrSpcPts = -1;
 
-  _DeltaMed = -1; _DeltaMed1h = -1; _DeltaMed2h = -1;
-  _DeltaMed = -1; _DeltaRMS1h = -1; _DeltaRMS2h = -1;
+  _DeltaMed = -1; _DeltaRMS = -1; _DeltaMed1h = -1; _DeltaMed2h = -1;
+  _DeltaMed = -1; _DeltaRMS = -1; _DeltaRMS1h = -1; _DeltaRMS2h = -1;
 
   _CylFrac_1cm = -1; _CylFrac1h_1cm = -1; _CylFrac2h_1cm = -1;
   _CylFrac_2cm = -1; _CylFrac1h_2cm = -1; _CylFrac2h_2cm = -1;
