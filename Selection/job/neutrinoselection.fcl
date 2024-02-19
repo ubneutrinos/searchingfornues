@@ -3,7 +3,7 @@
 #include "proximityclustering.fcl"
 #include "eventweight_microboone_genie_knobs.fcl"
 
-# #include "blipreco_configs.fcl"
+#include "blipreco_configs.fcl"
 
 FidVol: {
     Xstart: 10.
@@ -82,10 +82,10 @@ TrackAnalysisTool: {
     RecalibrateHits: true
 }
 
-#BlipAnalysisTool: {
-#    tool_type: "BlipAnalysis"
-#    BlipAlg: @local::microboone_blipalg
-#}
+BlipAnalysisTool: {
+    tool_type: "BlipAnalysis"
+    BlipAlg: @local::microboone_blipalg
+}
 
 NeutronAnalysisTool: {
     tool_type: "NeutronAnalysis"
@@ -143,6 +143,7 @@ DefaultAnalysisTool: {
     CRTVetoproducer: ""
     CLSproducer: "pandora"
     MCTproducer: "generator"
+    PCAproducer: "pandora"
     MCFluxproducer: "generator"
     Hproducer: "gaushit"
     BacktrackTag: "gaushitTruthMatch"
@@ -150,8 +151,15 @@ DefaultAnalysisTool: {
     SLCproducer: "pandora"
     MCPproducer: "largeant"
     PFPproducer: "pandora"
+    TRKproducer: "pandoraTrack"
+    VTXproducer: "pandora"
+    SHRproducer: "shrreco3d"
 
+    TrkShrScore: 0.5
+    MuonThreshold: .02
     ProtonThreshold: 0.04 # GeV
+    PionThreshold: .04
+    ElectronThreshold: .03
     fidvolXstart: @local::FidVol.Xstart
     fidvolXend:   @local::FidVol.Xend
     fidvolYstart: @local::FidVol.Ystart
@@ -250,7 +258,7 @@ FlashMatchingTool: {
     SpacePointproducer: "pandora"
     AllPFPproducer: "pandoraPatRec:allOutcomes"
     AllSpacePointproducer: "pandoraPatRec:allOutcomes"
-    #AllT0producer: "flashmatchAllOutcomes"
+    AllT0producer: "flashmatchAllOutcomes"
     Hproducer: "gaushit"
     HTproducer: "gaushitTruthMatch"
     ChargeToNPhotonsTrack: 164.0
@@ -338,7 +346,7 @@ NuSelectionFilter:{
         #vertex:         @local::VertexAnalysisTool
         #calorimetry:   @local::CalorimetryAnalysisTool
         pmtnoise:      @local::PMTNoiseTool
-  mcs:           @local::MCSTool
+	mcs:           @local::MCSTool
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
         nuenergy:      @local::NeutrinoEnergyTool
@@ -348,8 +356,8 @@ NuSelectionFilter:{
         secondshower:  @local::SecondShowerTaggerTool
         eventfilter:   @local::EventFilterTool
         mcfilter:      @local::MCFilterAnalysisTool
-        #blip:          @local::BlipAnalysisTool
-        #neutron:       @local::NeutronAnalysisTool
+        blip:          @local::BlipAnalysisTool
+        neutron:       @local::NeutronAnalysisTool
     }
 }
 
