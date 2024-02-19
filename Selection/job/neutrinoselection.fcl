@@ -2,9 +2,6 @@
 #include "mcreco.fcl"
 #include "proximityclustering.fcl"
 #include "eventweight_microboone_genie_knobs.fcl"
-#include "services_microboone.fcl"
-#include "backtrackerservice.fcl"
-#include "particleinventoryservice.fcl"
 
 #include "blipreco_configs.fcl"
 
@@ -146,6 +143,7 @@ DefaultAnalysisTool: {
     CRTVetoproducer: ""
     CLSproducer: "pandora"
     MCTproducer: "generator"
+    PCAproducer: "pandora"
     MCFluxproducer: "generator"
     Hproducer: "gaushit"
     BacktrackTag: "gaushitTruthMatch"
@@ -153,13 +151,15 @@ DefaultAnalysisTool: {
     SLCproducer: "pandora"
     MCPproducer: "largeant"
     PFPproducer: "pandora"
-    SHRproducer: "shrreco3d" #"pandora" #if you change this, remember to change also the inputs to ShowerAnalysisTool!
-    MCFluxproducer: "generator"    TRKproducer: "pandoraTrack"
-    VTXproducer: "pandora"
-    PCAproducer: "pandora"
     TRKproducer: "pandoraTrack"
+    VTXproducer: "pandora"
+    SHRproducer: "shrreco3d"
 
+    TrkShrScore: 0.5
+    MuonThreshold: .02
     ProtonThreshold: 0.04 # GeV
+    PionThreshold: .04
+    ElectronThreshold: .03
     fidvolXstart: @local::FidVol.Xstart
     fidvolXend:   @local::FidVol.Xend
     fidvolYstart: @local::FidVol.Ystart
@@ -167,6 +167,7 @@ DefaultAnalysisTool: {
     fidvolZstart: @local::FidVol.Zstart
     fidvolZend:   @local::FidVol.Zend
     makeNuMINtuple: false
+    ignoreMCFlux: false
     NuMIOpFiltProcName:    "DataStage1Optical"
     NuMISWTriggerProcName: "DataOverlayOpticalNuMI"
 }
@@ -355,7 +356,7 @@ NuSelectionFilter:{
         secondshower:  @local::SecondShowerTaggerTool
         eventfilter:   @local::EventFilterTool
         mcfilter:      @local::MCFilterAnalysisTool
-	blip:          @local::BlipAnalysisTool	
+        blip:          @local::BlipAnalysisTool
         neutron:       @local::NeutronAnalysisTool
     }
 }
