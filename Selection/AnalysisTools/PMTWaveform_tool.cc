@@ -248,15 +248,15 @@ namespace analysis
     _flash_pe_v = std::vector<float>(32,0);
     _flash_pe_calib_v = std::vector<float>(32,0);
 
-    _tree->Branch("flash_pe_uncalib",&_flash_pe,"flash_pe_uncalib/F");
-    _tree->Branch("flash_pe_uncalib_calib",&_flash_pe_calib,"flash_pe_uncalib_calib/F");
+    _tree->Branch("flash_pe",&_flash_pe,"flash_pe/F");
+    _tree->Branch("flash_pe_calib",&_flash_pe_calib,"flash_pe_calib/F");
     _tree->Branch("flash_time",&_flash_time,"flash_time/F");
     _tree->Branch("flash_zcenter",&_flash_zcenter,"flash_zcenter/F"); 
     _tree->Branch("flash_ycenter",&_flash_ycenter,"flash_ycenter/F");
     _tree->Branch("flash_zwidth",&_flash_zwidth,"flash_zwidth/F");
     _tree->Branch("flash_ywidth",&_flash_ywidth,"flash_ywidth/F");
-    _tree->Branch("flash_pe_uncalib_v","std::vector<float>",&_flash_pe_v);
-    _tree->Branch("flash_pe_uncalib_calib_v","std::vector<float>",&_flash_pe_calib_v);
+    _tree->Branch("flash_pe_v","std::vector<float>",&_flash_pe_v);
+    _tree->Branch("flash_pe_calib_v","std::vector<float>",&_flash_pe_calib_v);
     _tree->Branch("gain_area_v","std::vector<float>",&_gain_area_v);
     _tree->Branch("gain_ampl_v","std::vector<float>",&_gain_ampl_v);
 
