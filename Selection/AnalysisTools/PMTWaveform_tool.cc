@@ -95,10 +95,10 @@ namespace analysis
     art::InputTag fFLASHCALIBproducer;
     art::InputTag fPMTWFproducer;
 
-    float _flash_pe_uncalib, _flash_pe_uncalib_calib;
+    float _flash_pe, _flash_pe_calib;
     float _flash_zcenter, _flash_ycenter, _flash_zwidth, _flash_ywidth;
-    std::vector<float> _flash_pe_uncalib_v;
-    std::vector<float> _flash_pe_uncalib_calib_v;
+    std::vector<float> _flash_pe_v;
+    std::vector<float> _flash_pe_calib_v;
     std::vector<float> _gain_ampl_v, _gain_area_v;
     float _flash_time;
     std::vector< std::vector<short> > _opwf_v;
@@ -181,8 +181,8 @@ namespace analysis
 
       auto flash = flash_h->at(f);
       
-      if (flash.TotalPE() > _flash_pe_uncalib) {
-        _flash_pe_uncalib    = flash.TotalPE();
+      if (flash.TotalPE() > _flash_pe) {
+        _flash_pe    = flash.TotalPE();
         _flash_time  = flash.Time();
         _flash_zcenter = flash.ZCenter();
         _flash_zwidth  = flash.ZWidth();
@@ -190,7 +190,7 @@ namespace analysis
         _flash_ywidth  = flash.YWidth();
 
         for (int pmt=0; pmt < 32; pmt++){
-          _flash_pe_uncalib_v[pmt] = flash.PE(pmt);
+          _flash_pe_v[pmt] = flash.PE(pmt);
         }
       }// if larger then other flashes
 
@@ -204,10 +204,10 @@ namespace analysis
 
       auto flash = flash_calib_h->at(f);
 
-      if (flash.TotalPE() > _flash_pe_uncalib_calib) {
-	      _flash_pe_uncalib_calib = flash.TotalPE();
+      if (flash.TotalPE() > _flash_pe_calib) {
+	      _flash_pe_calib = flash.TotalPE();
         for (int pmt=0; pmt < 32; pmt++){
-          _flash_pe_uncalib_calib_v[pmt] = flash.PE(pmt);
+          _flash_pe_calib_v[pmt] = flash.PE(pmt);
         }
       }// if larger then other flashes                                                                                                                                       
     }// for all calibrated flashes
@@ -245,18 +245,18 @@ namespace analysis
     std::cout << "[PMTWaveformTool] setBranches begin" << std::endl;
 
     _opwf_v = std::vector< std::vector<short> >(32,std::vector<short>(700,0));
-    _flash_pe_uncalib_v = std::vector<float>(32,0);
-    _flash_pe_uncalib_calib_v = std::vector<float>(32,0);
+    _flash_pe_v = std::vector<float>(32,0);
+    _flash_pe_calib_v = std::vector<float>(32,0);
 
-    _tree->Branch("flash_pe_uncalib",&_flash_pe_uncalib,"flash_pe_uncalib/F");
-    _tree->Branch("flash_pe_uncalib_calib",&_flash_pe_uncalib_calib,"flash_pe_uncalib_calib/F");
+    _tree->Branch("flash_pe_uncalib",&_flash_pe,"flash_pe_uncalib/F");
+    _tree->Branch("flash_pe_uncalib_calib",&_flash_pe_calib,"flash_pe_uncalib_calib/F");
     _tree->Branch("flash_time",&_flash_time,"flash_time/F");
     _tree->Branch("flash_zcenter",&_flash_zcenter,"flash_zcenter/F"); 
     _tree->Branch("flash_ycenter",&_flash_ycenter,"flash_ycenter/F");
     _tree->Branch("flash_zwidth",&_flash_zwidth,"flash_zwidth/F");
     _tree->Branch("flash_ywidth",&_flash_ywidth,"flash_ywidth/F");
-    _tree->Branch("flash_pe_uncalib_v","std::vector<float>",&_flash_pe_uncalib_v);
-    _tree->Branch("flash_pe_uncalib_calib_v","std::vector<float>",&_flash_pe_uncalib_calib_v);
+    _tree->Branch("flash_pe_uncalib_v","std::vector<float>",&_flash_pe_v);
+    _tree->Branch("flash_pe_uncalib_calib_v","std::vector<float>",&_flash_pe_calib_v);
     _tree->Branch("gain_area_v","std::vector<float>",&_gain_area_v);
     _tree->Branch("gain_ampl_v","std::vector<float>",&_gain_ampl_v);
 
@@ -272,13 +272,13 @@ namespace analysis
 
     std::cout << "[PMTWaveformTool] resetTTree begin" << std::endl;
 
-    _flash_pe_uncalib   = std::numeric_limits<float>::lowest();
-    _flash_pe_uncalib_calib   = std::numeric_limits<float>::lowest();
+    _flash_pe   = std::numeric_limits<float>::lowest();
+    _flash_pe_calib   = std::numeric_limits<float>::lowest();
     _flash_time = std::numeric_limits<float>::lowest();
     _gain_area_v = std::vector<float>(32,0);
     _gain_ampl_v = std::vector<float>(32,0);
-    _flash_pe_uncalib_v = std::vector<float>(32,0);
-    _flash_pe_uncalib_calib_v = std::vector<float>(32,0);
+    _flash_pe_v = std::vector<float>(32,0);
+    _flash_pe_calib_v = std::vector<float>(32,0);
 
     std::cout << "[PMTWaveformTool] resetTTree end" << std::endl;
 
