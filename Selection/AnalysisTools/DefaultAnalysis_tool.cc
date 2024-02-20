@@ -1209,6 +1209,7 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
 {
   _leeweight = 0;
   _nu_e = std::numeric_limits<float>::lowest();
+  _lep_e = std::numeric_limits<float>::lowest();
   _nu_l = std::numeric_limits<float>::lowest();
   _theta = std::numeric_limits<float>::lowest();
   _nu_pt = std::numeric_limits<float>::lowest();
@@ -1243,6 +1244,7 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
 
   _interaction = std::numeric_limits<int>::lowest();
   _pass = 0;
+  _swtrig = 0;
 
   _opfilter_pe_beam = 0.;
   _opfilter_pe_veto = 0.;
@@ -1264,6 +1266,7 @@ void DefaultAnalysis::resetTTree(TTree *_tree)
   _reco_nu_vtx_sce_z = std::numeric_limits<float>::lowest();
 
   _isVtxInFiducial = false;
+  _truthFiducial = false;
 
   _nslice = 0;
   _crtveto = 0;

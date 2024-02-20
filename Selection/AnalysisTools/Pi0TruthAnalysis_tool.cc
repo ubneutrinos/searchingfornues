@@ -405,6 +405,12 @@ void Pi0TruthAnalysis::resetTTree(TTree *_tree)
   _pi0truth_gamma1_xpos = 0;
   _pi0truth_gamma1_ypos = 0;
   _pi0truth_gamma1_zpos = 0;
+  _pi0truth_gamma1_dist = 0;
+  _pi0truth_gamma2_dist = 0;
+  _pi0truth_gammadot = 0;
+  _pi0truth_run = 0;
+  _pi0truth_sub = 0;
+  _pi0truth_evt = 0;
 
   _pi0truth_gamma2_tid = 0;
   _pi0truth_gamma2_elec1 = 0;

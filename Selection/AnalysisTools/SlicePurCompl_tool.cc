@@ -417,6 +417,8 @@ void SlicePurCompl::setBranches(TTree *_tree)
 void SlicePurCompl::resetTTree(TTree *_tree)
 {
   origevnunhits = std::numeric_limits<int>::min();
+  nu_purity_from_pfp = std::numeric_limits<int>::min();
+  nu_completeness_from_pfp = std::numeric_limits<int>::min();
   //
   evnunhits = std::numeric_limits<int>::min();
   evlepnhits = std::numeric_limits<int>::min();
