@@ -110,16 +110,10 @@ private:
   std::vector<float> _nonprim_backtracked_start_U;
   std::vector<float> _nonprim_backtracked_start_V;
   std::vector<float> _nonprim_backtracked_start_Y;
-  std::vector<float> _nonprim_backtracked_sce_start_x;
-  std::vector<float> _nonprim_backtracked_sce_start_y;
-  std::vector<float> _nonprim_backtracked_sce_start_z;
-  std::vector<float> _nonprim_backtracked_sce_start_U;
-  std::vector<float> _nonprim_backtracked_sce_start_V;
-  std::vector<float> _nonprim_backtracked_sce_start_Y;
-  std::vector<std::string> _nonprim_backtracked_process;
+  //std::vector<std::string> _nonprim_backtracked_process;
 
   std::vector<int> nonprim_pfpdg;          // PDG code of non primary pfp
-  //std::vector<uint> _nonprim_generation;    // generation, 1 is primary
+  std::vector<uint> _nonprim_generation;    // generation, 1 is primary
   std::vector<int> _nonprim_slc_id_v;
   std::vector<int> pfnhits;        // number of hits in pfp
 
@@ -142,7 +136,7 @@ private:
 
   std::vector<float> _all_mc_completeness;
   std::vector<float> _all_mc_purity;
-  std::vector<std::string>  _all_mc_process;
+  std::vector<std::string> _all_mc_process;
 
   std::vector<int> _all_mc_mother;
   std::vector<int> _all_mc_trkid;
@@ -178,6 +172,8 @@ private:
   std::vector<float> _nonprim_trk_sce_start_y_v;
   std::vector<float> _nonprim_trk_sce_start_z_v;
 
+  std::vector<float> _nonprim_trk_charge_v;
+
   std::vector<float> _nonprim_trk_distance_v;
   std::vector<float> _nonprim_trk_theta_v;
   std::vector<float> _nonprim_trk_phi_v;
@@ -191,6 +187,8 @@ private:
   std::vector<float> _nonprim_trk_sce_end_z_v;
 
   std::vector<float> _nonprim_trk_len_v;
+  std::vector<int>   _nonprim_pfp_parent_v;
+  std::vector<int>   _nonprim_pfp_ID_v;
 
   bool fRecalibrateHits;
   float fEnergyThresholdForMCHits;
@@ -330,41 +328,32 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
     }
   }
 
-  if (!fData)
-  {
-    auto const &mcp_h = e.getValidHandle<std::vector<simb::MCParticle>>(fMCPproducer);
-
-    ProxyClusColl_t const &clus_proxy = proxy::getCollection<std::vector<recob::Cluster>>(e, fCLSproducer,
-                                                                                        proxy::withAssociated<recob::Hit>(fCLSproducer));
-
-    searchingfornues::ProxyCaloColl_t const &calo_proxy = proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer,
-                                                                                                        proxy::withAssociated<anab::Calorimetry>(fCALOproducer));
-
-    //searchingfornues::ProxyPIDColl_t const &pid_proxy = proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer,
-    //proxy::withAssociated<anab::ParticleID>(fPIDproducer));
-
+    ProxyClusColl_t const &clus_proxy = proxy::getCollection<std::vector<recob::Cluster>>(e, fCLSproducer, proxy::withAssociated<recob::Hit>(fCLSproducer));
+    searchingfornues::ProxyCaloColl_t const &calo_proxy = proxy::getCollection<std::vector<recob::Track>>(e, fTRKproducer, proxy::withAssociated<anab::Calorimetry>(fCALOproducer));
     BuildPFPMap(pfp_proxy);
     
     // Initialize Backtracker vector and associated MC Particles for Event
     std::vector<searchingfornues::BtPart> btparts_v;
     std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>> assocMCPart;
 
-    // Fill Backtracker vector with all primary showers and tracks plus all showers and tracks created by secondary protons with process neutronInelastic
+  if (!fData)
+    {
     const std::vector<sim::MCShower> &inputMCShower = *(e.getValidHandle<std::vector<sim::MCShower>>(fMCRproducer));
     const std::vector<sim::MCTrack> &inputMCTrack = *(e.getValidHandle<std::vector<sim::MCTrack>>(fMCRproducer));
     art::ValidHandle<std::vector<recob::Hit>> inputHits = e.getValidHandle<std::vector<recob::Hit>>(fHproducer);
     assocMCPart = std::unique_ptr<art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>>(new art::FindManyP<simb::MCParticle, anab::BackTrackerHitMatchingData>(inputHits, e, fBacktrackTag));
     btparts_v = searchingfornues::initBacktrackingParticleVec(inputMCShower, inputMCTrack, *inputHits, assocMCPart,true);
-
+  
     // load MCTruth [from geant]
 
     auto const &mct_h = e.getValidHandle<std::vector<simb::MCTruth>>(fMCTproducer);
     auto mct = mct_h->at(0);
     auto neutrino = mct.GetNeutrino();
     auto nu = neutrino.Nu();
-    
+
     TVector3 mc_nu_vtx;
     mc_nu_vtx.SetXYZ( nu.Vx(), nu.Vy(), nu.Vz());
+    } 
 
     int pfp_counter = 0;
     _n_nonprim_pfps = 0;
@@ -373,9 +362,13 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
       auto trk_v = pfp.get<recob::Track>();
       auto clus_pxy_v = pfp.get<recob::Cluster>();
       std::string backtracked_process;
+      float trk_charge = 0;
+      //std::__cxx11::string backtracked_process;
 
       nonprim_pfpdg.push_back(pfp->PdgCode());
-      //_nonprim_generation.push_back(larpandora.GetGeneration(particleMap, particleMap.at(pfp->Self())));
+      _nonprim_pfp_ID_v.push_back(pfp->Self());
+      _nonprim_pfp_parent_v.push_back(pfp->Parent());
+      _nonprim_generation.push_back(larpandora.GetGeneration(particleMap, particleMap.at(pfp->Self())));
       // get hits associated to this PFParticle through the clusters
       std::vector<art::Ptr<recob::Hit>> hit_v;
       for (auto ass_clus : clus_pxy_v)
@@ -388,7 +381,8 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
           hit_v.push_back(hit);
         } // for all hits in this cluster
       } // for all clusters associated to PFP
-
+      if (!fData)
+      {
       if (clus_pxy_v.size() != 0)
       {
         float purity = 0., completeness = 0., overlay_purity = 0.;
@@ -398,16 +392,16 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
           auto &mcp = btparts_v.at(ibt);  //replace square braces with .at()
           int PDG = mcp.pdg;
 	  // This loop checks to see if the backtracked particle is a neutron Inelasticly produced particle
-	  for (size_t p = 0; p < mcp_h->size(); p++)
-	  {
-	    int mcptrkid = mcp_h->at(p).TrackId();
-	    int ibttrkid = mcp.tids.at(0);
-	    if (ibttrkid == mcptrkid)
-	    {
-	      backtracked_process = mcp_h->at(p).Process();
-	      break;
-	    }
-	  }
+	  //for (size_t p = 0; p < mcp_h->size(); p++)
+	  //{
+	    //int mcptrkid = mcp_h->at(p).TrackId();
+	    //int ibttrkid = mcp.tids.at(0);
+	    //if (ibttrkid == mcptrkid)
+	    //{
+	      //backtracked_process = mcp_h->at(p).Process();
+	      //break;
+	    //}
+	  //}
           _nonprim_backtracked_e.push_back(mcp.e);
           _nonprim_backtracked_tid.push_back(mcp.tids.at(0));
           _nonprim_backtracked_pdg.push_back(PDG);
@@ -424,7 +418,8 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
           _nonprim_backtracked_start_U.push_back(searchingfornues::YZtoPlanecoordinate(mcp.start_y, mcp.start_z, 0));
           _nonprim_backtracked_start_V.push_back(searchingfornues::YZtoPlanecoordinate(mcp.start_y, mcp.start_z, 1));
           _nonprim_backtracked_start_Y.push_back(searchingfornues::YZtoPlanecoordinate(mcp.start_y, mcp.start_z, 2));
-	  _nonprim_backtracked_process.push_back(backtracked_process);
+	  //_nonprim_backtracked_process.push_back(backtracked_process);
+	  //_nonprim_backtracked_process.push_back(mcp.Process());
 	}
 	else
 	{
@@ -444,7 +439,7 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
           _nonprim_backtracked_start_U.push_back(std::numeric_limits<float>::lowest());
           _nonprim_backtracked_start_V.push_back(std::numeric_limits<float>::lowest());
           _nonprim_backtracked_start_Y.push_back(std::numeric_limits<float>::lowest());
-          _nonprim_backtracked_process.push_back("N/A");
+          //_nonprim_backtracked_process.push_back("N/A");
 	}
       } //Cluster Loop
       else{
@@ -464,8 +459,9 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
           _nonprim_backtracked_start_U.push_back(std::numeric_limits<float>::lowest());
           _nonprim_backtracked_start_V.push_back(std::numeric_limits<float>::lowest());
           _nonprim_backtracked_start_Y.push_back(std::numeric_limits<float>::lowest());
-          _nonprim_backtracked_process.push_back("N/A");
+          //_nonprim_backtracked_process.push_back("N/A");
       }
+      } // MC Loop
       if (trk_v.size() == 1){
         _nonprim_trk_score_v.push_back(searchingfornues::GetTrackShowerScore(pfp));
 	auto trk = trk_v.at(0); 
@@ -490,7 +486,7 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
         _nonprim_trk_sce_start_z_v.push_back(_nonprim_trk_start_sce[2]);
 
         float _nonprim_trk_end_sce[3];
-        searchingfornues::ApplySCECorrectionXYZ(trk->Start().X(), trk->Start().Y(), trk->Start().Z(), _nonprim_trk_end_sce);
+        searchingfornues::ApplySCECorrectionXYZ(trk->End().X(), trk->End().Y(), trk->End().Z(), _nonprim_trk_end_sce);
         _nonprim_trk_sce_end_x_v.push_back(_nonprim_trk_end_sce[0]);
         _nonprim_trk_sce_end_y_v.push_back(_nonprim_trk_end_sce[1]);
         _nonprim_trk_sce_end_z_v.push_back(_nonprim_trk_end_sce[2]);
@@ -545,6 +541,7 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
 
           for (size_t i = 0; i < dqdx_values_corrected.size(); i++)
           {
+	    trk_charge += dqdx_values_corrected[i];
             float aux_dedx;
             aux_dedx = searchingfornues::ModBoxCorrection(dqdx_values_corrected[i]*fADCtoE[plane], xyz_v[i].X(), xyz_v[i].Y(), xyz_v[i].Z());
             dedx_values_corrected.push_back(aux_dedx);
@@ -573,6 +570,7 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
 	  _nonprim_trk_llr_pid_v.back() += llr_pid;
 	  } // Calo loop
 	  _nonprim_trk_llr_pid_score_v.back() = atan(_nonprim_trk_llr_pid_v.back() / 100.) * 2 / 3.14159266;
+	  _nonprim_trk_charge_v.push_back(trk_charge);
 	  }//if trk_v.size() == 1
 	  else{
 	    _nonprim_trk_score_v.push_back(std::numeric_limits<float>::lowest());
@@ -603,12 +601,15 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
 	    _nonprim_trk_nhits_u_v.push_back(std::numeric_limits<int>::lowest());
 	    _nonprim_trk_nhits_v_v.push_back(std::numeric_limits<int>::lowest());
 	    _nonprim_trk_nhits_y_v.push_back(std::numeric_limits<int>::lowest());
+	    _nonprim_trk_charge_v.push_back(std::numeric_limits<float>::lowest());
 	  }
        //Cluster Loop 
       pfp_counter += 1;
     } //End pfp loop
   _n_nonprim_pfps = pfp_counter;
-
+  if (!fData)
+  {
+  auto const &mcp_h = e.getValidHandle<std::vector<simb::MCParticle>>(fMCPproducer);
   for (size_t p = 0; p < mcp_h->size(); p++)
   {
     auto mcp = mcp_h->at(p);
@@ -636,8 +637,7 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
       _all_mc_process.push_back(mcp.Process());
     }
   }  // MC Particle Loop
-  
-  }  // End MC
+  }
 }  // End AnalyzeEvent
 
 void NeutronAnalysis::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
@@ -680,18 +680,11 @@ void NeutronAnalysis::setBranches(TTree *_tree)
   _tree->Branch("nonprim_backtracked_start_U", "std::vector<float>", &_nonprim_backtracked_start_U);
   _tree->Branch("nonprim_backtracked_start_V", "std::vector<float>", &_nonprim_backtracked_start_V);
   _tree->Branch("nonprim_backtracked_start_Y", "std::vector<float>", &_nonprim_backtracked_start_Y);
-  _tree->Branch("nonprim_backtracked_sce_start_x", "std::vector<float>", &_nonprim_backtracked_sce_start_x);
-  _tree->Branch("nonprim_backtracked_sce_start_y", "std::vector<float>", &_nonprim_backtracked_sce_start_y);
-  _tree->Branch("nonprim_backtracked_sce_start_z", "std::vector<float>", &_nonprim_backtracked_sce_start_z);
-  _tree->Branch("nonprim_backtracked_sce_start_U", "std::vector<float>", &_nonprim_backtracked_sce_start_U);
-  _tree->Branch("nonprim_backtracked_sce_start_V", "std::vector<float>", &_nonprim_backtracked_sce_start_V);
-  _tree->Branch("nonprim_backtracked_sce_start_Y", "std::vector<float>", &_nonprim_backtracked_sce_start_Y);
-  _tree->Branch("nonprim_backtracked_process","std::vector<std::__cxx11::string>", &_nonprim_backtracked_process);
 
   _tree->Branch("n_nonprim_pfps", &_n_nonprim_pfps, "n_nonprim_pfps/I");
 
   _tree->Branch("nonprim_pfpdg", "std::vector<int>", &nonprim_pfpdg);
-  //_tree->Branch("nonprim_pfp_generation_v", "std::vector< uint >", &_nonprim_generation);
+  _tree->Branch("nonprim_pfp_generation_v", "std::vector< uint >", &_nonprim_generation);
   _tree->Branch("nonprim_topo_score_v","std::vector< float >", &_nonprim_topo_score_v);
   _tree->Branch("nonprim_slc_id_v","std::vector< int >",&_nonprim_slc_id_v);
 
@@ -712,7 +705,7 @@ void NeutronAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("all_mc_mother", "std::vector< int >", &_all_mc_mother);
   _tree->Branch("all_mc_trkid", "std::vector< int >", &_all_mc_trkid);
-  _tree->Branch("all_mc_process", "std::vector< std::__cxx11::string >", &_all_mc_process);
+  _tree->Branch("all_mc_process", "std::vector< std::string >", &_all_mc_process);
   _tree->Branch("all_mc_distance", "std::vector< float >", &_all_mc_distance);
 
   _tree->Branch("nonprim_trk_score_v", "std::vector<float>", &_nonprim_trk_score_v);
@@ -739,6 +732,8 @@ void NeutronAnalysis::setBranches(TTree *_tree)
   _tree->Branch("nonprim_trk_sce_start_y_v", "std::vector< float >", &_nonprim_trk_sce_start_y_v);
   _tree->Branch("nonprim_trk_sce_start_z_v", "std::vector< float >", &_nonprim_trk_sce_start_z_v);
 
+  _tree->Branch("nonprim_trk_charge_v", "std::vector< float >", &_nonprim_trk_charge_v);
+
   _tree->Branch("nonprim_trk_distance_v", "std::vector< float >", &_nonprim_trk_distance_v);
   _tree->Branch("nonprim_trk_theta_v", "std::vector< float >", &_nonprim_trk_theta_v);
   _tree->Branch("nonprim_trk_phi_v", "std::vector< float >", &_nonprim_trk_phi_v);
@@ -752,6 +747,8 @@ void NeutronAnalysis::setBranches(TTree *_tree)
   _tree->Branch("nonprim_trk_sce_end_z_v", "std::vector< float >", &_nonprim_trk_sce_end_z_v);
 
   _tree->Branch("nonprim_trk_len_v", "std::vector< float >", &_nonprim_trk_len_v);
+  _tree->Branch("nonprim_pfp_parent_v", "std::vector< int >", &_nonprim_pfp_parent_v);
+  _tree->Branch("nonprim_pfp_ID_v", "std::vector< int >", &_nonprim_pfp_ID_v);
 
 } //End setBranches
 
@@ -779,16 +776,10 @@ void NeutronAnalysis::resetTTree(TTree *_tree)
   _nonprim_backtracked_start_U.clear();
   _nonprim_backtracked_start_V.clear();
   _nonprim_backtracked_start_Y.clear();
-  _nonprim_backtracked_sce_start_x.clear();
-  _nonprim_backtracked_sce_start_y.clear();
-  _nonprim_backtracked_sce_start_z.clear();
-  _nonprim_backtracked_sce_start_U.clear();
-  _nonprim_backtracked_sce_start_V.clear();
-  _nonprim_backtracked_sce_start_Y.clear();
-  _nonprim_backtracked_process.clear();
+  //_nonprim_backtracked_process.clear();
 
   nonprim_pfpdg.clear();
-  //_nonprim_generation.clear();
+  _nonprim_generation.clear();
   _nonprim_topo_score_v.clear();
   _nonprim_slc_id_v.clear();
 
@@ -836,6 +827,8 @@ void NeutronAnalysis::resetTTree(TTree *_tree)
   _nonprim_trk_sce_start_y_v.clear();
   _nonprim_trk_sce_start_z_v.clear();
 
+  _nonprim_trk_charge_v.clear();
+
   _nonprim_trk_distance_v.clear();
   _nonprim_trk_theta_v.clear();
   _nonprim_trk_phi_v.clear();
@@ -849,6 +842,8 @@ void NeutronAnalysis::resetTTree(TTree *_tree)
   _nonprim_trk_sce_end_z_v.clear();
 
   _nonprim_trk_len_v.clear();
+  _nonprim_pfp_parent_v.clear();
+  _nonprim_pfp_ID_v.clear();
 } //End resetTree
 
 DEFINE_ART_CLASS_TOOL(NeutronAnalysis)
