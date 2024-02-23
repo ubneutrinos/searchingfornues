@@ -1,0 +1,4 @@
+#include "run_neutrinoselectionfilter_run1_data.fcl"
+
+physics.filters.nuselection.AnalysisTools.blip:          @local::BlipAnalysisTool
+physics.filters.nuselection.AnalysisTools.neutron:       @local::NeutronAnalysisTool

@@ -1,0 +1,6 @@
+#include "run_neutrinoselectionfilter_run1_overlay_cc0pinp.fcl"
+
+physics.filters.nuselection.AnalysisTools.blip:          @local::BlipAnalysisTool
+physics.filters.nuselection.AnalysisTools.neutron:       @local::NeutronAnalysisTool
+
+services.ParticleInventoryService:  @local::standard_particleinventoryservice
