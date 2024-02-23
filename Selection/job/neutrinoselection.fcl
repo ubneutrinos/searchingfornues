@@ -143,6 +143,7 @@ DefaultAnalysisTool: {
     CRTVetoproducer: ""
     CLSproducer: "pandora"
     MCTproducer: "generator"
+    PCAproducer: "pandora"
     MCFluxproducer: "generator"
     Hproducer: "gaushit"
     BacktrackTag: "gaushitTruthMatch"
@@ -150,8 +151,15 @@ DefaultAnalysisTool: {
     SLCproducer: "pandora"
     MCPproducer: "largeant"
     PFPproducer: "pandora"
+    TRKproducer: "pandoraTrack"
+    VTXproducer: "pandora"
+    SHRproducer: "shrreco3d"
 
+    TrkShrScore: 0.5
+    MuonThreshold: .02
     ProtonThreshold: 0.04 # GeV
+    PionThreshold: .04
+    ElectronThreshold: .03
     fidvolXstart: @local::FidVol.Xstart
     fidvolXend:   @local::FidVol.Xend
     fidvolYstart: @local::FidVol.Ystart
@@ -250,7 +258,7 @@ FlashMatchingTool: {
     SpacePointproducer: "pandora"
     AllPFPproducer: "pandoraPatRec:allOutcomes"
     AllSpacePointproducer: "pandoraPatRec:allOutcomes"
-    #AllT0producer: "flashmatchAllOutcomes"
+    AllT0producer: "flashmatchAllOutcomes"
     Hproducer: "gaushit"
     HTproducer: "gaushitTruthMatch"
     ChargeToNPhotonsTrack: 164.0
@@ -348,8 +356,8 @@ NuSelectionFilter:{
         secondshower:  @local::SecondShowerTaggerTool
         eventfilter:   @local::EventFilterTool
         mcfilter:      @local::MCFilterAnalysisTool
-        #blip:          @local::BlipAnalysisTool
-        #neutron:       @local::NeutronAnalysisTool
+        blip:          @local::BlipAnalysisTool
+        neutron:       @local::NeutronAnalysisTool
     }
 }
 
