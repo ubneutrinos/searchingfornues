@@ -88,11 +88,11 @@ namespace analysis
     art::InputTag fHproducer;
     art::InputTag fHTproducer;
 
-    float _flash_pe;
-    float _flash_time, _flash_timewidth;
-    float _flash_y, _flash_z, _flash_ywidth, _flash_zwidth;
-    std::vector<float> _flash_pe_v; //* reconstructed PE spectrum across PMT array *//
-    std::vector<float> _slice_pe_v; //* hypothesized PE spectrum based on TPC charge across PMT array *//
+    float _flash_pe_flash_matching;
+    float _flash_time_flash_matching, _flash_timewidth_flash_matching;
+    float _flash_y_flash_matching, _flash_z_flash_matching, _flash_ywidth_flash_matching, _flash_zwidth_flash_matching;
+    std::vector<float> _flash_pe_flash_matching_v; //* reconstructed PE spectrum across PMT array *//
+    std::vector<float> _slice_pe_flash_matching_v; //* hypothesized PE spectrum based on TPC charge across PMT array *//
 
     float _nu_flashmatch_score;
     float _nu_centerX, _nu_centerY, _nu_centerZ, _nu_totalCharge;
@@ -230,15 +230,16 @@ namespace analysis
 
       auto flash = flash_h->at(f);
 
-      if (flash.TotalPE() > _flash_pe) {
-	_flash_pe    = flash.TotalPE();
-	_flash_time  = flash.Time();
-	_flash_y = flash.YCenter();
-	_flash_z = flash.ZCenter();
-	_flash_timewidth = flash.TimeWidth();
-	_flash_ywidth = flash.YWidth();
-	_flash_zwidth = flash.ZWidth();
-	ibeamFlash = f;
+      if (flash.TotalPE() > _flash_pe_flash_matching) {
+        _flash_pe_flash_matching    = flash.TotalPE();
+        _flash_time_flash_matching  = flash.Time();
+        _flash_y_flash_matching = flash.YCenter();
+        _flash_z_flash_matching = flash.ZCenter();
+        _flash_timewidth_flash_matching = flash.TimeWidth();
+        _flash_ywidth_flash_matching = flash.YWidth();
+        _flash_zwidth_flash_matching = flash.ZWidth();
+        ibeamFlash = f;
+
       }// if larger then other flashes
 
     }// for all flashes
@@ -317,11 +318,12 @@ namespace analysis
       flashmatch::SliceCandidate slice(pfp_ptr_v, spacepoint_v_v, hit_v_v, m_chargeToNPhotonsTrack, m_chargeToNPhotonsShower, m_applyLifetimeCorr);
       float fmscore = 1e6;
       if (ibeamFlash != flash_h->size()) {
-	flashmatch::FlashCandidate beamFlash(e,flash_h->at(ibeamFlash));
-	fmscore = slice.GetFlashMatchScore(beamFlash, m_flashMatchManager);
-	// store flash PE spectrum in the ordering as used by Flash-Matching 
-	_flash_pe_v = beamFlash.m_peSpectrum;
-	_slice_pe_v = beamFlash.m_peHypSpectrum;
+        flashmatch::FlashCandidate beamFlash(e,flash_h->at(ibeamFlash));
+        fmscore = slice.GetFlashMatchScore(beamFlash, m_flashMatchManager);
+        // store flash PE spectrum in the ordering as used by Flash-Matching 
+
+        _flash_pe_flash_matching_v = beamFlash.m_peSpectrum;
+        _slice_pe_flash_matching_v = beamFlash.m_peHypSpectrum;
       }
       // get flash-match score (in case there is a valid T0 for all outcomes...)
       // size_t key = pfp_ptr.key();
@@ -373,15 +375,15 @@ namespace analysis
   void FlashMatching::setBranches(TTree* _tree)
   {
 
-    _tree->Branch("flash_pe",&_flash_pe,"flash_pe/F");
-    _tree->Branch("flash_pe_v","std::vector<float>",&_flash_pe_v);
-    _tree->Branch("slice_pe_v","std::vector<float>",&_slice_pe_v);
-    _tree->Branch("flash_time",&_flash_time,"flash_time/F");
-    _tree->Branch("flash_y",&_flash_y,"flash_y/F");
-    _tree->Branch("flash_z",&_flash_z,"flash_z/F");
-    _tree->Branch("flash_timewidth",&_flash_timewidth,"flash_timewidth/F");
-    _tree->Branch("flash_ywidth",&_flash_ywidth,"flash_ywidth/F");
-    _tree->Branch("flash_zwidth",&_flash_zwidth,"flash_zwidth/F");
+    _tree->Branch("flash_pe_flash_matching",&_flash_pe_flash_matching,"flash_pe_flash_matching/F");
+    _tree->Branch("flash_pe_flash_matching_v","std::vector<float>",&_flash_pe_flash_matching_v);
+    _tree->Branch("slice_pe_flash_matching_v","std::vector<float>",&_slice_pe_flash_matching_v);
+    _tree->Branch("flash_time_flash_matching",&_flash_time_flash_matching,"flash_time_flash_matching/F");
+    _tree->Branch("flash_y_flash_matching",&_flash_y_flash_matching,"flash_y_flash_matching/F");
+    _tree->Branch("flash_z_flash_matching",&_flash_z_flash_matching,"flash_z_flash_matching/F");
+    _tree->Branch("flash_timewidth_flash_matching",&_flash_timewidth_flash_matching,"flash_timewidth_flash_matching/F");
+    _tree->Branch("flash_ywidth_flash_matching",&_flash_ywidth_flash_matching,"flash_ywidth_flash_matching/F");
+    _tree->Branch("flash_zwidth_flash_matching",&_flash_zwidth_flash_matching,"flash_zwidth_flash_matching/F");
 
     _tree->Branch("nu_flashmatch_score",&_nu_flashmatch_score,"nu_flashmatch_score/F");
     _tree->Branch("nu_centerX",&_nu_centerX,"nu_centerX/F");
@@ -419,13 +421,13 @@ namespace analysis
     _cosmic_nhits_v.clear();
     _cosmic_nunhits_v.clear();
     _cosmic_isclear_v.clear();
-    _flash_pe   = std::numeric_limits<float>::lowest();
-    _flash_time = std::numeric_limits<float>::lowest();
-    _flash_y = std::numeric_limits<float>::lowest();
-    _flash_z = std::numeric_limits<float>::lowest();
-    _flash_timewidth = std::numeric_limits<float>::lowest();
-    _flash_ywidth = std::numeric_limits<float>::lowest();
-    _flash_zwidth = std::numeric_limits<float>::lowest();
+    _flash_pe_flash_matching   = std::numeric_limits<float>::lowest();
+    _flash_time_flash_matching = std::numeric_limits<float>::lowest();
+    _flash_y_flash_matching = std::numeric_limits<float>::lowest();
+    _flash_z_flash_matching = std::numeric_limits<float>::lowest();
+    _flash_timewidth_flash_matching = std::numeric_limits<float>::lowest();
+    _flash_ywidth_flash_matching = std::numeric_limits<float>::lowest();
+    _flash_zwidth_flash_matching = std::numeric_limits<float>::lowest();
   }
 
   void FlashMatching::AddDaughters(const art::Ptr<recob::PFParticle>& pfp_ptr,  const art::ValidHandle<std::vector<recob::PFParticle> >& pfp_h, std::vector<art::Ptr<recob::PFParticle> > &pfp_v) {
