@@ -8,4 +8,4 @@ physics.filters.nuselection.AnalysisTools.zbdt: @local::BDTTool
 physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool
 
 #services.BackTrackerService:        @local::microboone_backtrackerservice
-services.ParticleInventoryService:  @local::standard_particleinventoryservice
+#services.ParticleInventoryService:  @local::standard_particleinventoryservice
