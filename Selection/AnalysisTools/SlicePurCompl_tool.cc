@@ -6,6 +6,7 @@
 
 #include "nusimdata/SimulationBase/MCTruth.h"
 #include "nusimdata/SimulationBase/MCParticle.h"
+#include "lardataobj/AnalysisBase/MVAOutput.h"
 
 // backtracking tools
 #include "../CommonDefs/BacktrackingFuncs.h"
@@ -100,6 +101,12 @@ private:
                        const std::vector<size_t> &neuid, const std::vector<size_t> &gamid, const std::vector<size_t> &othid,
                        int &nlephits, int &nprohits, int &npi1hits, int &npi0hits, int &nneuhits, int &ngamhits, int &nothhits) const;
 
+  template <typename T, typename A>
+  int arg_max(std::vector<T, A> const& vec)
+  {
+    return static_cast<int>(std::distance(vec.begin(), max_element(vec.begin(), vec.end())));
+  }
+
   // TTree variables
   // per event
   int origevnunhits;
@@ -131,6 +138,28 @@ private:
   std::vector<int> pfneunhits;
   std::vector<int> pfgamnhits;
   std::vector<int> pfothnhits;
+
+  //nu graph slice hit counts
+  int slcng2mip;
+  int slcng2hip;
+  int slcng2shr;
+  int slcng2mcl;
+  int slcng2dfs;
+
+  //nu graph clustered hit counts
+  int clung2mip;
+  int clung2hip;
+  int clung2shr;
+  int clung2mcl;
+  int clung2dfs;
+
+  //nu graph pfp counts
+  std::vector<int> pfng2semlabel;
+  std::vector<float> pfng2mipfrac;
+  std::vector<float> pfng2hipfrac;
+  std::vector<float> pfng2shrfrac;
+  std::vector<float> pfng2mclfrac;
+  std::vector<float> pfng2dfsfrac;
 
   // The completeness/purity of the neutrino from the clustered pfp hits.
   float nu_completeness_from_pfp;
@@ -313,6 +342,24 @@ void SlicePurCompl::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
   art::ValidHandle<std::vector<recob::Slice>> inputSlice = e.getValidHandle<std::vector<recob::Slice>>(fSLCproducer);
   auto assocSliceHit = std::unique_ptr<art::FindManyP<recob::Hit>>(new art::FindManyP<recob::Hit>(inputSlice, e, fSLCproducer));
 
+  // auto GNNDescription = e.getHandle<anab::MVADescription<5>>(art::InputTag("NuGraph", "semantic"));
+
+  auto const& hitsWithScores = proxy::getCollection<std::vector<recob::Hit>>(
+    e,
+    art::InputTag("gaushit"), //tag of the hit collection we ran the GNN on
+    //proxy::withParallelData<anab::FeatureVector<1>>(art::InputTag("NuGraph", "filter")),
+    proxy::withParallelData<anab::FeatureVector<5>>(art::InputTag("gaushit", "semantic")));
+
+  std::vector<int> ng2semclucounts(5,0);
+  std::vector<int> ng2semslccounts(5,0);
+  for (auto& h : hitsWithScores) {
+    auto scores = h.get<anab::FeatureVector<5>>();
+    std::vector<float> ng2semscores;
+    for (size_t i=0;i<scores.size();i++) ng2semscores.push_back(scores[i]);
+    unsigned int sem_label = arg_max(ng2semscores);
+    ng2semslccounts[sem_label]++;
+  }
+
   nu_purity_from_pfp = 0;
   nu_completeness_from_pfp = 0;
   int total_hits = 0;
@@ -372,9 +419,47 @@ void SlicePurCompl::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t
     pfgamnhits.push_back(npfgamhits);
     pfothnhits.push_back(npfothhits);
     nu_completeness_from_pfp += npfnuhits;
+    //
+    if (hit_v.size()>0) {
+      std::vector<int> ng2sempfpcounts(5,0);
+      for (auto& hit : hit_v) {
+	  auto scores = hitsWithScores[hit.key()].get<anab::FeatureVector<5>>();
+	  std::vector<float> ng2semscores;
+	  for (size_t i=0;i<scores.size();i++) ng2semscores.push_back(scores[i]);
+	  unsigned int sem_label = arg_max(ng2semscores);
+	  ng2sempfpcounts[sem_label]++;
+	  ng2semclucounts[sem_label]++;
+      }
+      pfng2semlabel.push_back(arg_max(ng2sempfpcounts));
+      pfng2mipfrac.push_back(float(ng2sempfpcounts[0])/hit_v.size());
+      pfng2hipfrac.push_back(float(ng2sempfpcounts[1])/hit_v.size());
+      pfng2shrfrac.push_back(float(ng2sempfpcounts[2])/hit_v.size());
+      pfng2mclfrac.push_back(float(ng2sempfpcounts[3])/hit_v.size());
+      pfng2dfsfrac.push_back(float(ng2sempfpcounts[4])/hit_v.size());
+    } else {
+      pfng2semlabel.push_back(-1);
+      pfng2mipfrac.push_back(-1);
+      pfng2hipfrac.push_back(-1);
+      pfng2shrfrac.push_back(-1);
+      pfng2mclfrac.push_back(-1);
+      pfng2dfsfrac.push_back(-1);
+    }
+    //
   }
   nu_purity_from_pfp = nu_completeness_from_pfp / total_hits;
   nu_completeness_from_pfp /= origevnunhits;
+  //
+  slcng2mip = ng2semslccounts[0];
+  slcng2hip = ng2semslccounts[1];
+  slcng2shr = ng2semslccounts[2];
+  slcng2mcl = ng2semslccounts[3];
+  slcng2dfs = ng2semslccounts[4];
+  //
+  clung2mip = ng2semclucounts[0];
+  clung2hip = ng2semclucounts[1];
+  clung2shr = ng2semclucounts[2];
+  clung2mcl = ng2semclucounts[3];
+  clung2dfs = ng2semclucounts[4];
 
   return;
 }
@@ -409,6 +494,25 @@ void SlicePurCompl::setBranches(TTree *_tree)
   _tree->Branch("pfneunhits", &pfneunhits);
   _tree->Branch("pfgamnhits", &pfgamnhits);
   _tree->Branch("pfothnhits", &pfothnhits);
+  //
+  _tree->Branch("slcng2mip", &slcng2mip, "slcng2mip/I");
+  _tree->Branch("slcng2hip", &slcng2hip, "slcng2hip/I");
+  _tree->Branch("slcng2shr", &slcng2shr, "slcng2shr/I");
+  _tree->Branch("slcng2mcl", &slcng2mcl, "slcng2mcl/I");
+  _tree->Branch("slcng2dfs", &slcng2dfs, "slcng2dfs/I");
+  //
+  _tree->Branch("clung2mip", &clung2mip, "clung2mip/I");
+  _tree->Branch("clung2hip", &clung2hip, "clung2hip/I");
+  _tree->Branch("clung2shr", &clung2shr, "clung2shr/I");
+  _tree->Branch("clung2mcl", &clung2mcl, "clung2mcl/I");
+  _tree->Branch("clung2dfs", &clung2dfs, "clung2dfs/I");
+  //
+  _tree->Branch("pfng2semlabel", &pfng2semlabel);
+  _tree->Branch("pfng2mipfrac", &pfng2mipfrac);
+  _tree->Branch("pfng2hipfrac", &pfng2hipfrac);
+  _tree->Branch("pfng2shrfrac", &pfng2shrfrac);
+  _tree->Branch("pfng2mclfrac", &pfng2mclfrac);
+  _tree->Branch("pfng2dfsfrac", &pfng2dfsfrac);
 
   _tree->Branch("nu_completeness_from_pfp", &nu_completeness_from_pfp, "nu_completeness_from_pfp/F");
   _tree->Branch("nu_purity_from_pfp", &nu_purity_from_pfp, "nu_purity_from_pfp/F");
@@ -446,6 +550,26 @@ void SlicePurCompl::resetTTree(TTree *_tree)
   pfneunhits.clear();
   pfgamnhits.clear();
   pfothnhits.clear();
+  //nu graph slice hit counts
+  slcng2mip = std::numeric_limits<int>::min();
+  slcng2hip = std::numeric_limits<int>::min();
+  slcng2shr = std::numeric_limits<int>::min();
+  slcng2mcl = std::numeric_limits<int>::min();
+  slcng2dfs = std::numeric_limits<int>::min();
+  //nu graph clustered hit counts
+  clung2mip = std::numeric_limits<int>::min();
+  clung2hip = std::numeric_limits<int>::min();
+  clung2shr = std::numeric_limits<int>::min();
+  clung2mcl = std::numeric_limits<int>::min();
+  clung2dfs = std::numeric_limits<int>::min();
+  //nu graph pfp counts
+  pfng2semlabel.clear();
+  pfng2mipfrac.clear();
+  pfng2hipfrac.clear();
+  pfng2shrfrac.clear();
+  pfng2mclfrac.clear();
+  pfng2dfsfrac.clear();
+
 }
 
 void SlicePurCompl::fillId(const std::vector<double> &p, const simb::MCParticle &mcp, std::vector<size_t> &id)
