@@ -227,6 +227,13 @@ SlicePurComplTool: {
     OrigHTproducer: "gaushitTruthMatch::OverlayRecoStage1b"
 }
 
+NuGraphCountsTool: {
+    tool_type: "NuGraphCounts"
+    CLSproducer: "pandora"
+    SLCproducer: "pandora"
+    NG2producer: "gaushit:semantic"
+}
+
 PMTNoiseTool: {
     tool_type: "PMTNoise"
 }
@@ -330,6 +337,7 @@ NuSelectionFilter:{
         default: @local::DefaultAnalysisTool
         # you can add more analysis tools here
         slicepurcompl: @local::SlicePurComplTool
+        nugraphcounts: @local::NuGraphCountsTool
         containment:   @local::ContainmentAnalysis
         #shower:        @local::ShowerAnalysisTool
         #showerstart:        @local::ShowerStartPointTool
