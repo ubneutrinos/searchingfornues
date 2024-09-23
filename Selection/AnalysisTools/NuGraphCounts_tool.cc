@@ -143,9 +143,6 @@ void NuGraphCounts::analyzeEvent(art::Event const &e, bool fData) {}
 void NuGraphCounts::analyzeSlice(art::Event const &e, std::vector<ProxyPfpElem_t> &slice_pfp_v, bool fData, bool selected)
 {
 
-  // if (fData)
-  //   return;
-
   ProxyClusColl_t const &clus_proxy = proxy::getCollection<std::vector<recob::Cluster>>(e, fCLSproducer, proxy::withAssociated<recob::Hit>(fCLSproducer));
   // somehow proxies don't work for the slice-hit association, so go back to old assns
   art::ValidHandle<std::vector<recob::Slice>> inputSlice = e.getValidHandle<std::vector<recob::Slice>>(fSLCproducer);
