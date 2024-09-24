@@ -1,0 +1,11 @@
+#include "run_neutrinoselectionfilter_run1_overlay.fcl"
+
+physics.filters.nuselection.AnalysisTools.shower:      @local::ShowerAnalysisTool
+physics.filters.nuselection.AnalysisTools.shower.SHRproducer: "showerreco3d"
+
+physics.filters.nuselection.AnalysisTools.zbdt: @local::BDTTool
+
+physics.filters.nuselection.AnalysisTools.eventweighttree.NoWeights: true
+
+physics.filters.nuselection.SelectionTool: @local::CC0PiNpSelectionTool
+
