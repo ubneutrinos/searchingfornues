@@ -83,6 +83,7 @@ namespace analysis
     void ReadTruth(art::Event const& e);
 
     void Reset();
+    void ResetEvent();
 
     // TTree variables
 
@@ -116,6 +117,20 @@ namespace analysis
     float _pi0_mass_Y, _pi0_mass_V, _pi0_mass_U;
     float _pi0_rc_vtx_x, _pi0_rc_vtx_y, _pi0_rc_vtx_z; // reco neutrino vertex
 
+    // reco variables
+    int _evt_pi0_nshower;
+    float _evt_pi0_radlen1, _evt_pi0_radlen2;
+    float _evt_pi0_dot1, _evt_pi0_dot2;
+    float _evt_pi0_dir1_x, _evt_pi0_dir1_y, _evt_pi0_dir1_z;
+    float _evt_pi0_dir2_x, _evt_pi0_dir2_y, _evt_pi0_dir2_z;
+    float _evt_pi0_energy1_Y, _evt_pi0_energy2_Y;
+    float _evt_pi0_dedx1_Y, _evt_pi0_dedx2_Y;
+    float _evt_pi0_energy1_V, _evt_pi0_energy2_V;
+    float _evt_pi0_dedx1_V, _evt_pi0_dedx2_V;
+    float _evt_pi0_energy1_U, _evt_pi0_energy2_U;
+    float _evt_pi0_dedx1_U, _evt_pi0_dedx2_U;
+    float _evt_pi0_gammadot;
+    float _evt_pi0_mass_Y, _evt_pi0_mass_V, _evt_pi0_mass_U;
 
     // module-specific settings
     bool _pi0_onlyshower;   // should we use only showers to reconstruct pi0s?
@@ -128,6 +143,8 @@ namespace analysis
   bool fRecalibrateHits;
   float fEnergyThresholdForMCHits;
 
+    art::InputTag fSHRproducer;
+    art::InputTag fVTXproducer;
     art::InputTag fTRKproducer;
     art::InputTag fCALproducer;
     art::InputTag fHitproducer;
@@ -193,6 +210,8 @@ namespace analysis
     fRecalibrateHits = pset.get<bool>("RecalibrateHits", false);
     fEnergyThresholdForMCHits = pset.get<float>("EnergyThresholdForMCHits", 0.1);
 
+    fTRKproducer = pset.get< art::InputTag > ("SHRproducer", "");
+    fTRKproducer = pset.get< art::InputTag > ("VTXproducer", "");
     fTRKproducer = pset.get< art::InputTag > ("TRKproducer", "");
     fCALproducer = pset.get< art::InputTag > ("CALproducer", "");
     fHitproducer     = pset.get<art::InputTag>("Hitproducer" , "");
@@ -204,9 +223,93 @@ namespace analysis
 void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
 {
 
+  
+  std::cout << "[Pi0Tagger::analyzeEvent] SHRproducer: " << fSHRproducer << std::endl;
+  
+  if ( (fSHRproducer == "") || (fVTXproducer == "") ) { ResetEvent(); return; }
+  
+  // analyze non-pandora showers
+  
+  // load showers
+  auto const& shr_h = e.getValidHandle<std::vector<recob::Shower>>(fSHRproducer);
+
+  _evt_pi0_nshower = shr_h->size();
+
+  // load vertex
+  auto const& vtx_h = e.getValidHandle<std::vector<recob::Vertex>>(fVTXproducer);
+  
+  std::cout << "[Pi0Tagger::analyzeEvent] number of showers: " << shr_h->size() << std::endl;
+  std::cout << "[Pi0Tagger::analyzeEvent] number of vertices: " << vtx_h->size() << std::endl;
+  
+  if (vtx_h->size() != 1) { ResetEvent(); return; }
+  if (shr_h->size() < 2) { ResetEvent(); return; }
+
+  auto const& vtx = vtx_h->at(0);
+  Double_t xyz[3] = {};
+  vtx.XYZ(xyz);
+  TVector3 nuvtx(xyz[0], xyz[1], xyz[2]);
+  
+  // if two or more, sort by energy
+  double e1 = 0; // energy of highest energy reco shower
+  short  i1 = 0; // pfp index for highest energy reco shower
+  double e2 = 0; // energy of 2nd highest energy reco shower
+  short  i2 = 0; // pfp index for 2nd highest energy reco shower
+  
+  // find highest energy shower
+  for (size_t n0=0; n0 < shr_h->size(); n0++) {
+    if (shr_h->at(n0).Energy()[2] > e1) {
+      e1 = shr_h->at(n0).Energy()[2];
+      i1 = n0;
+    }
+  }
+  // find second highest energy shower
+  for (size_t n0=0; n0 < shr_h->size(); n0++) {
+    if (((short)n0) == i1) continue;
+    if (shr_h->at(n0).Energy()[2] > e2) {
+      e2 = shr_h->at(n0).Energy()[2];
+      i2 = n0;
+    }
+  }
+  
+  auto const& shr1 = shr_h->at(i1);
+  auto const& shr2 = shr_h->at(i2);
+  
+  auto vtxcompat1 = VtxCompatibility(nuvtx, shr1.ShowerStart(), shr1.Direction());
+  
+  _evt_pi0_radlen1    = vtxcompat1.second;
+  _evt_pi0_dot1       = vtxcompat1.first;
+  _evt_pi0_energy1_Y  = shr1.Energy()[2];
+  _evt_pi0_dedx1_Y    = shr1.dEdx()[2];
+  _evt_pi0_energy1_V  = shr1.Energy()[1];
+  _evt_pi0_dedx1_V    = shr1.dEdx()[1];
+  _evt_pi0_energy1_U  = shr1.Energy()[0];
+  _evt_pi0_dedx1_U    = shr1.dEdx()[0];
+  _evt_pi0_dir1_x     = shr1.Direction()[0];
+  _evt_pi0_dir1_y     = shr1.Direction()[1];
+  _evt_pi0_dir1_z     = shr1.Direction()[2];
+  
+  auto vtxcompat2 = VtxCompatibility(nuvtx, shr2.ShowerStart(), shr2.Direction());
+  
+  _evt_pi0_radlen2   = vtxcompat2.second;
+  _evt_pi0_dot2      = vtxcompat2.first;
+  _evt_pi0_energy2_Y = shr2.Energy()[2];
+  _evt_pi0_dedx2_Y   = shr2.dEdx()[2];
+  _evt_pi0_energy2_V = shr2.Energy()[1];
+  _evt_pi0_dedx2_V   = shr2.dEdx()[1];
+  _evt_pi0_energy2_U = shr2.Energy()[0];
+  _evt_pi0_dedx2_U   = shr2.dEdx()[0];
+  _evt_pi0_dir2_x    = shr2.Direction()[0];
+  _evt_pi0_dir2_y    = shr2.Direction()[1];
+  _evt_pi0_dir2_z    = shr2.Direction()[2];
+  
+  _evt_pi0_gammadot = shr1.Direction().Dot(shr2.Direction());
+  _evt_pi0_mass_Y = sqrt( 2 * _evt_pi0_energy1_Y * _evt_pi0_energy2_Y * (1 - _evt_pi0_gammadot ) );
+  _evt_pi0_mass_V = sqrt( 2 * _evt_pi0_energy1_V * _evt_pi0_energy2_V * (1 - _evt_pi0_gammadot ) );
+  _evt_pi0_mass_U = sqrt( 2 * _evt_pi0_energy1_U * _evt_pi0_energy2_U * (1 - _evt_pi0_gammadot ) );
+  
   if (!fData)
     ReadTruth(e);
-
+  
 }
 
 
@@ -629,6 +732,36 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
     _tree->Branch("pi0_rc_vtx_y",&_pi0_rc_vtx_y,"pi0_rc_vtx_y/F");
     _tree->Branch("pi0_rc_vtx_z",&_pi0_rc_vtx_z,"pi0_rc_vtx_z/F");
 
+
+    // evt reco
+    _tree->Branch("evt_pi0_nshower",&_evt_pi0_nshower,"evt_pi0_nshower/I");
+    _tree->Branch("evt_pi0_radlen1",&_evt_pi0_radlen1,"evt_pi0_radlen1/F");
+    _tree->Branch("evt_pi0_radlen2",&_evt_pi0_radlen2,"evt_pi0_radlen2/F");
+    _tree->Branch("evt_pi0_dot1",&_evt_pi0_dot1,"evt_pi0_dot1/F");
+    _tree->Branch("evt_pi0_dot2",&_evt_pi0_dot2,"evt_pi0_dot2/F");
+    _tree->Branch("evt_pi0_energy1_Y",&_evt_pi0_energy1_Y,"evt_pi0_energy1_Y/F");
+    _tree->Branch("evt_pi0_energy2_Y",&_evt_pi0_energy2_Y,"evt_pi0_energy2_Y/F");
+    _tree->Branch("evt_pi0_dir1_x",&_evt_pi0_dir1_x,"evt_pi0_dir1_x/F");
+    _tree->Branch("evt_pi0_dir1_y",&_evt_pi0_dir1_y,"evt_pi0_dir1_y/F");
+    _tree->Branch("evt_pi0_dir1_z",&_evt_pi0_dir1_z,"evt_pi0_dir1_z/F");
+    _tree->Branch("evt_pi0_dir2_x",&_evt_pi0_dir2_x,"evt_pi0_dir2_x/F");
+    _tree->Branch("evt_pi0_dir2_y",&_evt_pi0_dir2_y,"evt_pi0_dir2_y/F");
+    _tree->Branch("evt_pi0_dir2_z",&_evt_pi0_dir2_z,"evt_pi0_dir2_z/F");
+    _tree->Branch("evt_pi0_dedx1_Y",&_evt_pi0_dedx1_Y,"evt_pi0_dedx1_Y/F");
+    _tree->Branch("evt_pi0_dedx2_Y",&_evt_pi0_dedx2_Y,"evt_pi0_dedx2_Y/F");
+    _tree->Branch("evt_pi0_energy1_V",&_evt_pi0_energy1_V,"evt_pi0_energy1_V/F");
+    _tree->Branch("evt_pi0_energy2_V",&_evt_pi0_energy2_V,"evt_pi0_energy2_V/F");
+    _tree->Branch("evt_pi0_dedx1_V",&_evt_pi0_dedx1_V,"evt_pi0_dedx1_V/F");
+    _tree->Branch("evt_pi0_dedx2_V",&_evt_pi0_dedx2_V,"evt_pi0_dedx2_V/F");
+    _tree->Branch("evt_pi0_energy1_U",&_evt_pi0_energy1_U,"evt_pi0_energy1_U/F");
+    _tree->Branch("evt_pi0_energy2_U",&_evt_pi0_energy2_U,"evt_pi0_energy2_U/F");
+    _tree->Branch("evt_pi0_dedx1_U",&_evt_pi0_dedx1_U,"evt_pi0_dedx1_U/F");
+    _tree->Branch("evt_pi0_dedx2_U",&_evt_pi0_dedx2_U,"evt_pi0_dedx2_U/F");
+    _tree->Branch("evt_pi0_gammadot",&_evt_pi0_gammadot,"evt_pi0_gammadot/F");
+    _tree->Branch("evt_pi0_mass_Y",&_evt_pi0_mass_Y,"evt_pi0_mass_Y/F");
+    _tree->Branch("evt_pi0_mass_V",&_evt_pi0_mass_V,"evt_pi0_mass_V/F");
+    _tree->Branch("evt_pi0_mass_U",&_evt_pi0_mass_U,"evt_pi0_mass_U/F");
+
     return;
   }
 
@@ -810,6 +943,43 @@ void Pi0Tagger::analyzeEvent(art::Event const &e, bool fData)
 
     return;
   }// end of reset function
+
+
+  void Pi0Tagger::ResetEvent() {
+
+    _evt_pi0_dir1_x = 0;
+    _evt_pi0_dir1_y = 0;
+    _evt_pi0_dir1_z = 0;
+    _evt_pi0_dir2_x = 0;
+    _evt_pi0_dir2_y = 0;
+    _evt_pi0_dir2_z = 0;
+
+    _evt_pi0_dot1 = -1;
+    _evt_pi0_dot2 = -1;
+    _evt_pi0_radlen1 = -1;
+    _evt_pi0_radlen2 = -1;
+    _evt_pi0_energy1_Y = -1;
+    _evt_pi0_energy2_Y = -1;
+    _evt_pi0_dedx1_Y = -1;
+    _evt_pi0_dedx2_Y = -1;
+    _evt_pi0_energy1_V = -1;
+    _evt_pi0_energy2_V = -1;
+    _evt_pi0_dedx1_V = -1;
+    _evt_pi0_dedx2_V = -1;
+    _evt_pi0_energy1_U = -1;
+    _evt_pi0_energy2_U = -1;
+    _evt_pi0_dedx1_U = -1;
+    _evt_pi0_dedx2_U = -1;
+    _evt_pi0_nshower = 0;
+    _evt_pi0_gammadot = -1;
+    _evt_pi0_mass_Y = -1;
+    _evt_pi0_mass_V = -1;
+    _evt_pi0_mass_U = -1;
+
+    return;
+  }// end of reset function
+
+
 
 
   DEFINE_ART_CLASS_TOOL(Pi0Tagger)

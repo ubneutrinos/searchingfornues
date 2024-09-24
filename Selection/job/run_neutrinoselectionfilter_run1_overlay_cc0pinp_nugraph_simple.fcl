@@ -3,6 +3,8 @@
 physics.filters.nuselection.AnalysisTools.shower:      @local::ShowerAnalysisTool
 physics.filters.nuselection.AnalysisTools.shower.SHRproducer: "showerreco3d"
 
+physics.filters.nuselection.AnalysisTools.pi0tagger.SHRproducer: "showerreco3d"
+
 physics.filters.nuselection.AnalysisTools.zbdt: @local::BDTTool
 
 physics.filters.nuselection.AnalysisTools.eventweighttree.NoWeights: true
