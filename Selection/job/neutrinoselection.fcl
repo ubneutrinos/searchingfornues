@@ -294,7 +294,7 @@ shrreco3dKalmanShower:                                       @local::trackproduc
 shrreco3dKalmanShower.inputCollection:                       "pandora"
 shrreco3dKalmanShower.trackFromPF:                           false
 shrreco3dKalmanShower.showerFromPF:                          true
-shrreco3dKalmanShower.showerInputTag:                        "shrreco3d"
+shrreco3dKalmanShower.showerInputTag:                        "pandora" #"shrreco3d"
 shrreco3dKalmanShower.trackMaker.options.defaultPdgId:       11
 shrreco3dKalmanShower.trackMaker.fitter.skipNegProp:         true
 shrreco3dKalmanShower.trackMaker.fitter.maxChi2:             10
@@ -322,7 +322,7 @@ NuSelectionFilter:{
     BDT_branch: ""
     BDT_cut: -1
     PFPproducer: "pandora"
-    SHRproducer: "shrreco3d" #"pandora" #if you change this, remember to change also the inputs to ShowerAnalysisTool!
+    SHRproducer: "pandora" #"shrreco3d" #"pandora" #if you change this, remember to change also the inputs to ShowerAnalysisTool!
     HITproducer: "pandora"
     CLSproducer: "pandora"
     SLCproducer: "pandora"
@@ -349,7 +349,7 @@ NuSelectionFilter:{
         pi0truth:      @local::Pi0TruthAnalysisTool
         cosmicip:      @local::CosmicIPTool
         nuenergy:      @local::NeutrinoEnergyTool
-        flashmatchid:  @local::FlashMatchingTool
+        #flashmatchid:  @local::FlashMatchingTool
         pi0tagger:     @local::Pi0TaggerTool
         #zbdt:          @local::BDTTool #note: analysis tools are run in alphabetical order and this needs to be the last one
         secondshower:  @local::SecondShowerTaggerTool
