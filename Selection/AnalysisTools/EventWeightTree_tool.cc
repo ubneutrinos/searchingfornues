@@ -121,6 +121,14 @@ namespace analysis
       int _subRun;
       int _evt;
       bool fMakeNuMINtuple;
+      bool fUseReweightedFlux;
+
+      std::string _event_weight_process_name_00;
+      std::string _event_weight_process_name_01;
+      std::string _event_weight_process_name_02;
+      std::string _event_weight_process_name_03;
+      std::string _event_weight_process_name_04;
+      std::string _event_weight_process_name_05;
   };
 
   EventWeightTree::EventWeightTree(const fhicl::ParameterSet &p){
@@ -137,7 +145,15 @@ namespace analysis
     _createGenieUpDnVecs = p.get<bool>("createGenieUpDnVecs", false);
     _GenieAllUniverses = p.get<int>("GenieAllUniverses",500);
     fMakeNuMINtuple = p.get<bool>("makeNuMINtuple", false);
-    
+    fUseReweightedFlux = p.get<bool>("useReweightedFlux", false);
+
+    _event_weight_process_name_00 = p.get<std::string>("eventWeightProcessName00", "EventWeightSep24");
+    _event_weight_process_name_01 = p.get<std::string>("eventWeightProcessName01", "EventWeightSep24ExtraGENIE1");
+    _event_weight_process_name_02 = p.get<std::string>("eventWeightProcessName02", "EventWeightSep24ExtraGENIE2");
+    _event_weight_process_name_03 = p.get<std::string>("eventWeightProcessName03", "EventWeightSep24ExtraGENIE3");
+    _event_weight_process_name_04 = p.get<std::string>("eventWeightProcessName04", "EventWeightSep24ExtraGENIE4");
+    _event_weight_process_name_05 = p.get<std::string>("eventWeightProcessName05", "EventWeightSep24ExtraGENIE5");    
+
     if(_createDedicatedTree){
       art::ServiceHandle<art::TFileService> tfs;
       _weightstree = tfs->make<TTree>("EventWeights", "EventWeights TTree");
@@ -163,11 +179,11 @@ namespace analysis
     std::cout << " [ EventWeightTree ]" << " begin " << std::endl;
 
     std::vector<art::InputTag> vecTag;
-    art::InputTag eventweight_tag_00("eventweightSep24","","EventWeightSep24");
-    art::InputTag eventweight_tag_01("eventweightSep24","","EventWeightSep24ExtraGENIE1");
-    art::InputTag eventweight_tag_02("eventweightSep24","","EventWeightSep24ExtraGENIE2");
-    art::InputTag eventweight_tag_03("eventweightSep24","","EventWeightSep24ExtraGENIE3");
-    art::InputTag eventweight_tag_04("eventweightSep24","","EventWeightSep24ExtraGENIE4");
+    art::InputTag eventweight_tag_00("eventweightSep24","",_event_weight_process_name_00);
+    art::InputTag eventweight_tag_01("eventweightSep24","",_event_weight_process_name_01);
+    art::InputTag eventweight_tag_02("eventweightSep24","",_event_weight_process_name_02);
+    art::InputTag eventweight_tag_03("eventweightSep24","",_event_weight_process_name_03);
+    art::InputTag eventweight_tag_04("eventweightSep24","",_event_weight_process_name_04);
     art::InputTag eventweight_tag_knobs("eventweightGenieKnobs");
     
     vecTag.push_back(eventweight_tag_00);
@@ -176,7 +192,7 @@ namespace analysis
     vecTag.push_back(eventweight_tag_03);
     vecTag.push_back(eventweight_tag_04);
     if (fMakeNuMINtuple) {
-      art::InputTag eventweight_tag_05("eventweightSep24","","EventWeightSep24ExtraGENIE5");
+      art::InputTag eventweight_tag_05("eventweightSep24","",_event_weight_process_name_05);
       vecTag.push_back(eventweight_tag_05);
     }
     vecTag.push_back(eventweight_tag_knobs);
@@ -319,10 +335,13 @@ namespace analysis
 
         // Get the PPFX Central Value -- this will be available only for NuMI
 	if (fMakeNuMINtuple){
-	  if(evtwgt_map.find("ppfx_cv_UBPPFXCV") != evtwgt_map.end()) _ppfx_cv = evtwgt_map.find("ppfx_cv_UBPPFXCV")->second[0];
-	  std::cout << "ppfx cv weight: "<< _ppfx_cv<<  std::endl;
-	  // evtwgt_map.erase("ppfx_cv_PPFXCV");
-	}
+          if (fUseReweightedFlux) {
+            if(evtwgt_map.find("ppfx_oldrw_cv_UBOLDPPFXCV") != evtwgt_map.end()) _ppfx_cv = evtwgt_map.find("ppfx_oldrw_cv_UBOLDPPFXCV")->second[0];
+          } 
+          else {
+            if(evtwgt_map.find("ppfx_cv_UBPPFXCV") != evtwgt_map.end()) _ppfx_cv = evtwgt_map.find("ppfx_cv_UBPPFXCV")->second[0];
+          }
+	} 
 
         // old implementation -> just add all weights as they come from the input
         //_mapWeight.insert(evtwgt_map.begin(), evtwgt_map.end());
@@ -356,7 +375,7 @@ namespace analysis
 	  // We need to treat the flux weights differently between NuMI and BNB, so I'll try a nested condition
 	  // we start with the NuMI option
           // if this is a ppfx multisim variation
-          else if ((keyname.find("ppfx_ms_UBPPFX") != std::string::npos)&&fMakeNuMINtuple) {
+          else if ( (keyname.find("ppfx_ms_UBPPFX") != std::string::npos) && fMakeNuMINtuple && !fUseReweightedFlux ) {
             std::cout << " [ EventWeightTree ]" << " Entering PPFX variation number " << PPFXCounter << " " <<keyname << std::endl;
             for(unsigned int i = 0; i < it->second.size(); ++i) {
               if ( (i + (100 * PPFXCounter) ) < _vecWeightsPPFXD.size()) 
@@ -366,6 +385,14 @@ namespace analysis
             //std::cout << " [ EventWeightTree ]" << " ERROR FILLING PPFX WEIGHTS " << std::endl;
             PPFXCounter += 1;
           }// if a ppfx-all variation
+          else if ( (keyname.find("ppfx_oldrw_ms_UBOLDPPFX") != std::string::npos) && fMakeNuMINtuple && fUseReweightedFlux) {
+            std::cout << " [ EventWeightTree ]" << " Entering Reweighted PPFX variation number " << PPFXCounter << " " <<keyname << std::endl;
+            for(unsigned int i = 0; i < it->second.size(); ++i) {
+              if ( (i + (100 * PPFXCounter) ) < _vecWeightsPPFXD.size())
+                _vecWeightsPPFXD[i + (100 * PPFXCounter) ] *= it->second[i];
+            }
+            PPFXCounter += 1;
+          } 
 	  // then BNB
 	  else if(!fMakeNuMINtuple &&
 		  (keyname.find("horncurrent") != std::string::npos ||
