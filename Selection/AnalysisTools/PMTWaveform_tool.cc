@@ -177,20 +177,21 @@ namespace analysis
     // FLASH
     art::Handle<std::vector<recob::OpFlash> > flash_h;
     e.getByLabel( fFLASHproducer , flash_h );   
-    
     for (size_t f=0; f < flash_h->size(); f++) {
 
       auto flash = flash_h->at(f);
       
       if (flash.TotalPE() > _flash_pe) {
-	_flash_pe    = flash.TotalPE();
-	_flash_time  = flash.Time();
-	_flash_zcenter = flash.ZCenter();
-	_flash_zwidth  = flash.ZWidth();
-	_flash_ycenter = flash.YCenter();
-	_flash_ywidth  = flash.YWidth();
-	for (int pmt=0; pmt < 32; pmt++)
-	  _flash_pe_v[pmt] = flash.PE(pmt);
+        _flash_pe    = flash.TotalPE();
+        _flash_time  = flash.Time();
+        _flash_zcenter = flash.ZCenter();
+        _flash_zwidth  = flash.ZWidth();
+        _flash_ycenter = flash.YCenter();
+        _flash_ywidth  = flash.YWidth();
+
+        for (int pmt=0; pmt < 32; pmt++){
+          _flash_pe_v[pmt] = flash.PE(pmt);
+        }
       }// if larger then other flashes
 
     }// for all flashes
@@ -198,15 +199,16 @@ namespace analysis
     // FLASH (CALIBRATED)
     art::Handle<std::vector<recob::OpFlash> > flash_calib_h;
     e.getByLabel( fFLASHCALIBproducer , flash_calib_h );
-
+  
     for (size_t f=0; f < flash_calib_h->size(); f++) {
 
       auto flash = flash_calib_h->at(f);
 
-      if (flash.TotalPE() > _flash_pe) {
-	_flash_pe_calib = flash.TotalPE();
-        for (int pmt=0; pmt < 32; pmt++)
+      if (flash.TotalPE() > _flash_pe_calib) {
+	      _flash_pe_calib = flash.TotalPE();
+        for (int pmt=0; pmt < 32; pmt++){
           _flash_pe_calib_v[pmt] = flash.PE(pmt);
+        }
       }// if larger then other flashes                                                                                                                                       
     }// for all calibrated flashes
     
