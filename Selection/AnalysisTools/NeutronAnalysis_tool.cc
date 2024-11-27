@@ -110,14 +110,14 @@ private:
   std::vector<float> _nonprim_backtracked_start_U;
   std::vector<float> _nonprim_backtracked_start_V;
   std::vector<float> _nonprim_backtracked_start_Y;
-  //std::vector<std::string> _nonprim_backtracked_process;
+  std::vector<std::string> _nonprim_backtracked_process;
 
   std::vector<int> nonprim_pfpdg;          // PDG code of non primary pfp
   std::vector<uint> _nonprim_generation;    // generation, 1 is primary
   std::vector<int> _nonprim_slc_id_v;
   std::vector<int> pfnhits;        // number of hits in pfp
 
-  unsigned int _n_nonprim_pfps;		// Number of non-prime pfps in event
+  unsigned int _n_nonprim_pfps;		// Number of non-prime pfps in event*/
 
   std::vector<int> _all_mc_pdg;
   std::vector<float> _all_mc_E;
@@ -137,6 +137,7 @@ private:
   std::vector<float> _all_mc_completeness;
   std::vector<float> _all_mc_purity;
   std::vector<std::string> _all_mc_process;
+  std::vector<std::string> _all_mc_end_process;
 
   std::vector<int> _all_mc_mother;
   std::vector<int> _all_mc_trkid;
@@ -635,6 +636,7 @@ void NeutronAnalysis::analyzeEvent(art::Event const &e, bool fData)// std::vecto
       _all_mc_endy.push_back(mcp.EndY());
       _all_mc_endz.push_back(mcp.EndZ());
       _all_mc_process.push_back(mcp.Process());
+      _all_mc_end_process.push_back(mcp.EndProcess());
     }
   }  // MC Particle Loop
   }
@@ -660,12 +662,12 @@ void NeutronAnalysis::BuildPFPMap(const ProxyPfpColl_t &pfp_pxy_col)
 
 void NeutronAnalysis::setBranches(TTree *_tree)
 {
-  _tree->Branch("is_nu_reco", &_is_nu_reco, "_is_nu_reco/B");
+  /*_tree->Branch("is_nu_reco", &_is_nu_reco, "_is_nu_reco/B");//start remove
 
   _tree->Branch("nonprim_backtracked_pdg", "std::vector<int>", &_nonprim_backtracked_pdg);
-  _tree->Branch("nonprim_backtracked_e", "std::vector<float>", &_nonprim_backtracked_e);
+  _tree->Branch("nonprim_backtracked_e", "std::vector<float>", &_nonprim_backtracked_e);*/
   _tree->Branch("nonprim_backtracked_tid", "std::vector<int>", &_nonprim_backtracked_tid);
-  _tree->Branch("nonprim_backtracked_purity", "std::vector<float>", &_nonprim_backtracked_purity);
+  /*_tree->Branch("nonprim_backtracked_purity", "std::vector<float>", &_nonprim_backtracked_purity);
   _tree->Branch("nonprim_backtracked_completeness", "std::vector<float>", &_nonprim_backtracked_completeness);
   _tree->Branch("nonprim_backtracked_overlay_purity", "std::vector<float>", &_nonprim_backtracked_overlay_purity);
 
@@ -683,7 +685,7 @@ void NeutronAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("n_nonprim_pfps", &_n_nonprim_pfps, "n_nonprim_pfps/I");
 
-  _tree->Branch("nonprim_pfpdg", "std::vector<int>", &nonprim_pfpdg);
+  _tree->Branch("nonprim_pfpdg", "std::vector<int>", &nonprim_pfpdg);*///end remove
   _tree->Branch("nonprim_pfp_generation_v", "std::vector< uint >", &_nonprim_generation);
   _tree->Branch("nonprim_topo_score_v","std::vector< float >", &_nonprim_topo_score_v);
   _tree->Branch("nonprim_slc_id_v","std::vector< int >",&_nonprim_slc_id_v);
@@ -706,17 +708,18 @@ void NeutronAnalysis::setBranches(TTree *_tree)
   _tree->Branch("all_mc_mother", "std::vector< int >", &_all_mc_mother);
   _tree->Branch("all_mc_trkid", "std::vector< int >", &_all_mc_trkid);
   _tree->Branch("all_mc_process", "std::vector< std::string >", &_all_mc_process);
-  _tree->Branch("all_mc_distance", "std::vector< float >", &_all_mc_distance);
+  _tree->Branch("all_mc_end_process", "std::vector< std::string >", &_all_mc_end_process);
+  //_tree->Branch("all_mc_distance", "std::vector< float >", &_all_mc_distance);
 
   _tree->Branch("nonprim_trk_score_v", "std::vector<float>", &_nonprim_trk_score_v);
   
-  _tree->Branch("nonprim_trk_llr_pid_u_v", "std::vector<float>", &_nonprim_trk_llr_pid_u_v);
+  /*_tree->Branch("nonprim_trk_llr_pid_u_v", "std::vector<float>", &_nonprim_trk_llr_pid_u_v);//start remove
   _tree->Branch("nonprim_trk_llr_pid_v_v", "std::vector<float>", &_nonprim_trk_llr_pid_v_v);
   _tree->Branch("nonprim_trk_llr_pid_y_v", "std::vector<float>", &_nonprim_trk_llr_pid_y_v);
-  _tree->Branch("nonprim_trk_llr_pid_v", "std::vector<float>", &_nonprim_trk_llr_pid_v);
+  _tree->Branch("nonprim_trk_llr_pid_v", "std::vector<float>", &_nonprim_trk_llr_pid_v);*///end remove
   _tree->Branch("nonprim_trk_llr_pid_score_v", "std::vector<float>", &_nonprim_trk_llr_pid_score_v);
 
-  _tree->Branch("nonprim_trk_calo_energy_u_v", "std::vector< float >", &_nonprim_trk_calo_energy_u_v);
+  /*_tree->Branch("nonprim_trk_calo_energy_u_v", "std::vector< float >", &_nonprim_trk_calo_energy_u_v); //start remove
   _tree->Branch("nonprim_trk_calo_energy_v_v", "std::vector< float >", &_nonprim_trk_calo_energy_v_v);
   _tree->Branch("nonprim_trk_calo_energy_y_v", "std::vector< float >", &_nonprim_trk_calo_energy_y_v);
 
@@ -726,29 +729,29 @@ void NeutronAnalysis::setBranches(TTree *_tree)
 
   _tree->Branch("nonprim_trk_start_x_v", "std::vector< float >", &_nonprim_trk_start_x_v);
   _tree->Branch("nonprim_trk_start_y_v", "std::vector< float >", &_nonprim_trk_start_y_v);
-  _tree->Branch("nonprim_trk_start_z_v", "std::vector< float >", &_nonprim_trk_start_z_v);
+  _tree->Branch("nonprim_trk_start_z_v", "std::vector< float >", &_nonprim_trk_start_z_v);*/
 
   _tree->Branch("nonprim_trk_sce_start_x_v", "std::vector< float >", &_nonprim_trk_sce_start_x_v);
   _tree->Branch("nonprim_trk_sce_start_y_v", "std::vector< float >", &_nonprim_trk_sce_start_y_v);
   _tree->Branch("nonprim_trk_sce_start_z_v", "std::vector< float >", &_nonprim_trk_sce_start_z_v);
 
-  _tree->Branch("nonprim_trk_charge_v", "std::vector< float >", &_nonprim_trk_charge_v);
+  //_tree->Branch("nonprim_trk_charge_v", "std::vector< float >", &_nonprim_trk_charge_v);//end remove
 
   _tree->Branch("nonprim_trk_distance_v", "std::vector< float >", &_nonprim_trk_distance_v);
   _tree->Branch("nonprim_trk_theta_v", "std::vector< float >", &_nonprim_trk_theta_v);
   _tree->Branch("nonprim_trk_phi_v", "std::vector< float >", &_nonprim_trk_phi_v);
 
-  _tree->Branch("nonprim_trk_end_x_v", "std::vector< float >", &_nonprim_trk_end_x_v);
+  /*_tree->Branch("nonprim_trk_end_x_v", "std::vector< float >", &_nonprim_trk_end_x_v);//start remove
   _tree->Branch("nonprim_trk_end_y_v", "std::vector< float >", &_nonprim_trk_end_y_v);
-  _tree->Branch("nonprim_trk_end_z_v", "std::vector< float >", &_nonprim_trk_end_z_v);
+  _tree->Branch("nonprim_trk_end_z_v", "std::vector< float >", &_nonprim_trk_end_z_v);*///end remove
 
   _tree->Branch("nonprim_trk_sce_end_x_v", "std::vector< float >", &_nonprim_trk_sce_end_x_v);
   _tree->Branch("nonprim_trk_sce_end_y_v", "std::vector< float >", &_nonprim_trk_sce_end_y_v);
   _tree->Branch("nonprim_trk_sce_end_z_v", "std::vector< float >", &_nonprim_trk_sce_end_z_v);
 
   _tree->Branch("nonprim_trk_len_v", "std::vector< float >", &_nonprim_trk_len_v);
-  _tree->Branch("nonprim_pfp_parent_v", "std::vector< int >", &_nonprim_pfp_parent_v);
-  _tree->Branch("nonprim_pfp_ID_v", "std::vector< int >", &_nonprim_pfp_ID_v);
+  //_tree->Branch("nonprim_pfp_parent_v", "std::vector< int >", &_nonprim_pfp_parent_v);//start remove
+  //_tree->Branch("nonprim_pfp_ID_v", "std::vector< int >", &_nonprim_pfp_ID_v);//end remove
 
 } //End setBranches
 
@@ -801,6 +804,7 @@ void NeutronAnalysis::resetTTree(TTree *_tree)
   _all_mc_mother.clear();
   _all_mc_trkid.clear();
   _all_mc_process.clear();
+  _all_mc_end_process.clear();
   _all_mc_distance.clear();
 
   _nonprim_trk_score_v.clear();
